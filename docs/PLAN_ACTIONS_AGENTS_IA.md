@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.3.0-beta.3`.
 
 ## Objectifs de l’orchestration
 
@@ -12,6 +12,20 @@ Dernière mise à jour du plan : 26 août 2026.
 - Externaliser les données avant de découpler complètement les interfaces.
 - Garder des branches et pull requests petites, relisibles et réversibles.
 - Éviter que deux agents modifient simultanément les mêmes fichiers ou modules partagés.
+
+## État actuel
+
+- La phase 0 de gouvernance est terminée sur `clv/preprod`.
+- La préversion courante est `0.3.0-beta.3` ; la version stable visée est `0.3.0`.
+- Toutes les issues citées dans ce plan sont encore ouvertes au 26 août 2026.
+- L'issue #29 reste ouverte : seule sa première partie documentaire et de gouvernance est amorcée.
+- La prochaine issue fonctionnelle à traiter reste #10, socle des tests automatisés.
+
+## Maintenance obligatoire du plan
+
+Le présent fichier est un document opérationnel. Il doit être actualisé dans la même modification que tout changement affectant l'ordre des travaux, leurs dépendances, l'état d'une phase, les conventions de branches, les versions ou les jalons.
+
+Après chaque tâche, l'agent vérifie explicitement si le plan doit évoluer. Toute mise à jour pertinente doit ajuster les sections concernées, la date et la version de synchronisation. Une étape n'est marquée comme terminée que sur la base d'un commit intégré ou d'une décision humaine explicite.
 
 ## Règles de fonctionnement pour les agents
 
@@ -36,10 +50,25 @@ clv/issue-23-cession-titres
 clv/issue-29-gouvernance
 ```
 
+## Phase 0 — Installer la gouvernance initiale — terminée
+
+Livré dans les préversions `0.3.0-beta.1` à `0.3.0-beta.3` :
+
+- `AGENTS.md`, source commune des consignes pour les agents IA ;
+- `CLAUDE.md`, qui importe les consignes communes pour Claude Code ;
+- `CHANGELOG.md` et `VERSION` ;
+- règles de rédaction des issues, de validation juridique et de vulgarisation technique ;
+- branche permanente `clv/preprod` et branches de travail `clv/*` ;
+- règles `X.Y.Z`, préversions `X.Y.Z-beta.N`, tags et releases ;
+- présent plan d'action et obligation de le maintenir à jour ;
+- consignes personnelles de CLV dans un fichier local ignoré par Git.
+
+Cette phase ne clôt pas l'issue #29. `CODEMAP.md`, `CONTRIBUTING.md`, les templates GitHub, la protection de `main`, la sécurité du rendu et l'accessibilité desktop restent à traiter.
+
 ## Graphe de dépendances simplifié
 
 ```text
-#10 Socle de tests
+Phase 0 Gouvernance ✓ ─> #10 Socle de tests
  ├─> #4 -> #5                  voie IRPP
  ├─> #6 -> #8                  voie IFI / valeurs par défaut
  └─> #11 -> #7                 bornes, unités et arrondis
@@ -247,13 +276,13 @@ Le mobile et le responsive restent hors périmètre.
 
 Ordre interne recommandé :
 
-1. Documentation de travail : `AGENTS.md`, `CODEMAP.md`, `CONTRIBUTING.md`, commandes et règles de modification fiscale.
+1. Documentation restante : `CODEMAP.md`, `CONTRIBUTING.md`, commandes et procédure détaillée de modification fiscale. Maintenir `AGENTS.md`, `CHANGELOG.md`, `VERSION` et le présent plan au fil des changements.
 2. Gouvernance GitHub : protection de `main`, templates, branches courtes, squash merge et releases.
 3. Sécurité du rendu : suppression des injections de données utilisateur dans `innerHTML`, dépendances contrôlées et absence de mot de passe client.
 4. Accessibilité desktop : labels, clavier, focus des modales, annonces des résultats et contrastes.
 5. Nettoyage final : styles et événements inline, exemples explicites, composants partagés et calculs inutiles.
 
-La partie documentation de #29 peut faire l’objet d’une première PR plus tôt, juste après #20, car elle aide les agents suivants. Le reste reste une phase de finition.
+Le socle documentaire commun a déjà été livré en phase 0. Les documents dépendant de l'architecture finale, notamment `CODEMAP.md`, seront complétés après #20. Le reste demeure une phase de finition.
 
 ## Matrice des conflits à éviter
 
@@ -289,7 +318,7 @@ Une issue est terminée lorsque :
 - aucune modification non liée n’est incluse ;
 - la PR explique le comportement avant et après ;
 - la validation humaine requise est obtenue ;
-- la branche est supprimée après fusion.
+- la branche de travail est supprimée après fusion ; la branche permanente `clv/preprod` est conservée.
 
 ## Modèle de consigne à donner à un agent
 
@@ -297,7 +326,7 @@ Une issue est terminée lorsque :
 Tu travailles uniquement sur l’issue #N du dépôt ARBE-Avocat/Simulateurs-fiscaux.
 
 1. Lis entièrement l’issue, ses dépendances et ses issues parentes.
-2. Vérifie que les dépendances sont fusionnées sur main.
+2. Vérifie que les dépendances sont intégrées dans la base applicable : `clv/preprod` pour CLV, branche indiquée ou `main` pour les autres contributeurs.
 3. Vérifie le workflow applicable. Pour CLV, crée `clv/issue-N-<slug>` depuis `clv/preprod` à jour ; sinon utilise la base indiquée ou `main`.
 4. Commence par reproduire le comportement actuel avec un test.
 5. Implémente uniquement le périmètre de l’issue.
@@ -311,13 +340,16 @@ Tu travailles uniquement sur l’issue #N du dépôt ARBE-Avocat/Simulateurs-fis
 
 ## Jalons de release suggérés
 
-Les numéros exacts restent à confirmer lors de la formalisation SemVer de #29.
+Chaque nouvelle version mineure `Y` reste soumise à une validation explicite de l'utilisateur. Les jalons après `0.3.0` sont donc indicatifs.
 
 | Jalon | Contenu minimal | Version indicative |
 |---|---|---|
-| Fiabilité | #4 à #11, tests de base et validation métier suffisante | `v0.2.0` |
-| Données | #2 terminé, #20 et CI données/build | `v0.3.0` |
-| Architecture | #21 terminé et six moteurs découplés | `v0.4.0` |
-| Qualité | #28 et #29 terminés | `v0.5.0` |
+| Gouvernance initiale | Phase 0, consignes, plan, changelog et préprod | `v0.3.0` — actuellement en beta |
+| Fiabilité | #4 à #11, tests de base et validation métier suffisante | `v0.4.0` indicatif |
+| Données | #2 terminé, #20 et CI données/build | `v0.5.0` indicatif |
+| Architecture | #21 terminé et six moteurs découplés | `v0.6.0` indicatif |
+| Qualité | #28 et #29 terminés | `v0.7.0` indicatif |
 
-Avant chaque release : tests complets, validation des référentiels, mise à jour du changelog, tag annoté et GitHub Release.
+Pour CLV, `clv/preprod` utilise `X.Y.Z-beta.N`. Un correctif en beta incrémente `N`, sauf demande contraire. Chaque beta publiée possède son tag annoté et sa GitHub Pre-release.
+
+Pour une version stable, chaque `X.Y.Z` possède un tag annoté immuable. Une seule GitHub Release est conservée par série `X.Y` et rattachée au dernier tag `Z` lors de chaque correctif. Avant toute publication : contrôles applicables, validation des référentiels concernés, `VERSION` et `CHANGELOG.md` à jour.
