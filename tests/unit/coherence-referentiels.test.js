@@ -303,3 +303,57 @@ test('IFI — le barème du référentiel signale ses intervalles non couverts',
     'cinq intervalles d’un euro restent sans taux (issue #7)',
   );
 });
+
+// ── Plus-value immobilière (#17) ────────────────────────────────────────────
+
+test('Plus-value immobilière — le simulateur désigne la variante 17,2 %', () => {
+  assert.match(
+    lireHtml('pv-immobiliere'),
+    /REF_PS\.variante\('ps\.taux\.global', '17-2'\)/,
+    'le simulateur doit désigner explicitement la variante qu’il applique',
+  );
+});
+
+test('Plus-value immobilière — les paliers de surtaxe se suivent sans trou', () => {
+  // La surtaxe est décrite par une table et non par un barème : le schéma ne
+  // peut pas en vérifier la continuité. Ce contrôle le fait ici.
+  const paliers = lecteur('pv-immobiliere').valeur('pv-immobiliere.surtaxe.paliers');
+
+  assert.ok(paliers.length >= 2);
+  assert.equal(paliers[paliers.length - 1].plafond, null, 'le dernier palier est sans plafond');
+
+  paliers.slice(0, -1).forEach((palier, i) => {
+    assert.equal(typeof palier.plafond, 'number', `palier ${i + 1} — plafond`);
+    if (i > 0) {
+      assert.ok(
+        palier.plafond > paliers[i - 1].plafond,
+        `palier ${i + 1} — les plafonds doivent croître`,
+      );
+    }
+    assert.ok(palier.taux >= 0 && palier.taux <= 1, `palier ${i + 1} — taux hors plage`);
+  });
+});
+
+test('Plus-value immobilière — la surtaxe reste continue au-delà du seuil d’entrée', () => {
+  // Une table mal saisie produirait un saut d'impôt à un euro près. On compare
+  // la valeur au plafond d'un palier et un euro au-dessus.
+  //
+  // Le tout premier passage est exclu : le franchissement de 50 000 € est un
+  // seuil d'entrée, et la surtaxe passe réellement de 0 € à environ 500 €. Ce
+  // n'est pas un défaut de la table mais le comportement du simulateur, figé
+  // par ailleurs dans le filet de non-régression.
+  const surtaxe = chargerSimulateur('pv-immobiliere').evaluer('surtaxe');
+  const paliers = lecteur('pv-immobiliere').valeur('pv-immobiliere.surtaxe.paliers');
+
+  paliers.slice(1, -1).forEach((palier) => {
+    const avant = surtaxe(palier.plafond);
+    const apres = surtaxe(palier.plafond + 1);
+    assert.ok(
+      Math.abs(apres - avant) < 1,
+      `saut de ${(apres - avant).toFixed(2)} € au passage du palier de ${palier.plafond} €`,
+    );
+  });
+
+  assert.equal(surtaxe(50000), 0, 'la surtaxe ne s’applique pas jusqu’à 50 000 €');
+  assert.ok(surtaxe(50001) > 400, 'le franchissement du seuil d’entrée est un saut, non un lissage');
+});

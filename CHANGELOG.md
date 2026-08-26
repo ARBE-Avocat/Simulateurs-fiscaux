@@ -6,6 +6,18 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.6] - 2026-08-26
+
+### Modifié
+
+- Le taux d'imposition, les abattements pour durée de détention, les forfaits de frais et de travaux et les onze paliers de la surtaxe du simulateur de plus-value immobilière vivent désormais dans `data/referentiels/pv-immobiliere.json`. **Aucun montant affiché ne change** : les abattements sont vérifiés année par année de 0 à 40 ans, la surtaxe de part et d'autre de chacun de ses paliers, et dix scénarios complets donnent exactement les mêmes montants et pourcentages à l'écran.
+- Les onze paliers de la surtaxe, jusqu'ici écrits en onze conditions successives, sont décrits par une table de données parcourue par une seule boucle. Des contrôles vérifient que les plafonds croissent et que l'impôt reste continu d'un palier à l'autre.
+- Le simulateur désigne explicitement la variante de taux de prélèvements sociaux qu'il applique, comme les deux autres simulateurs concernés.
+
+### Ajouté
+
+- L'import de données accepte un nouveau type de règle, pour celles qui ne sont ni un nombre ni un barème par tranches.
+
 ## [0.5.0-beta.5] - 2026-08-26
 
 ### Modifié

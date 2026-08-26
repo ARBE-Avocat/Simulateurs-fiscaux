@@ -192,3 +192,18 @@ test('génération — le fichier produit est lisible par Node et par un navigat
   vm.runInNewContext(contenu, global_, { filename: 'referentiels.js' });
   assert.deepEqual(Object.keys(global_.REFERENTIELS), ['exemple']);
 });
+
+test('import — une table est lue depuis du JSON, et un JSON invalide est refusé', () => {
+  // Le type `table` sert aux règles qui ne sont ni un nombre ni un barème : les
+  // paliers de surtaxe de la plus-value immobilière, par exemple.
+  const entete = { domaine: 'exemple', libelle: 'Exemple' };
+  const colonnes = 'id;libelle;type;unite;millesime;dateEffet;statutValidation;utilisePar;valeur';
+  const ligne = (valeur) => `${colonnes}\n`
+    + `x.paliers;Paliers;table;sans-unite;2025;;non-valide;irpp;${valeur}\n`;
+
+  const referentiel = importer(ligne('"[{""plafond"":100,""taux"":0.02}]"'), entete);
+  assert.deepEqual(referentiel.entrees[0].valeur, [{ plafond: 100, taux: 0.02 }]);
+
+  assert.throws(() => importer(ligne('pas du json'), entete), /JSON invalide/);
+  assert.throws(() => importer(ligne('"[]"'), entete), /non vide/);
+});

@@ -40,7 +40,7 @@ Clés de simulateur employées : `ir-cehr-cdhr`, `irpp`, `ifi`, `pv-immobiliere`
 | Prélèvements sociaux | `data/referentiels/prelevements-sociaux.json` | les trois qui les appliquent | #14 — **extrait pour deux d'entre eux** |
 | IFI | `data/referentiels/ifi.json` | `ifi`, `irpp` | #15 — **extrait** |
 | Mutations à titre gratuit, usufruit, assurance-vie | `data/referentiels/dmtg.json` | `succession`, `demembrement` | #16 — **extrait** |
-| Plus-value immobilière | `data/referentiels/pv-immobiliere.json` | `pv-immobiliere` | #17 |
+| Plus-value immobilière | `data/referentiels/pv-immobiliere.json` | `pv-immobiliere` | #17 — **extrait** |
 | Plus-value mobilière | `data/referentiels/pv-mobiliere.json` | `irpp`, `ir-cehr-cdhr` | #14 |
 | Taux de change | `data/referentiels/change/` | `ifi`, `pv-immobiliere` | #13 |
 
@@ -187,6 +187,25 @@ données ; leur génération relève d'une étape ultérieure.
 | Surtaxe des plus-values supérieures à 50 000 € — paliers de 2 % à 6 % | `pv-immobiliere` | fonction `surtaxe`, onze paliers en dur | « art. 1609 nonies G CGI / BOI-RFPI-TPVIE-20 » en commentaire | non-valide |
 | Forfait de frais d'acquisition — 7,5 % | `pv-immobiliere` | `0.075` en dur | texte de la page | non-valide |
 | Forfait de travaux — 15 %, immeubles bâtis détenus depuis plus de 5 ans | `pv-immobiliere` | `0.15` en dur | texte de la page | non-valide |
+
+**Extraction réalisée (#17).** Ces valeurs vivent désormais dans
+`data/referentiels/pv-immobiliere.json`, et le taux de prélèvements sociaux dans
+le fichier des prélèvements sociaux, dont ce simulateur désigne explicitement la
+variante 17,2 %.
+
+Les onze paliers de la surtaxe étaient écrits en onze conditions successives.
+Ils forment maintenant une table de données — plafond, taux et coefficient de
+lissage — parcourue par une seule boucle. Des contrôles vérifient que les
+plafonds croissent et que l'impôt reste continu au passage de chaque palier.
+
+**Un point relevé, non signalé comme défaut.** Le franchissement du seuil de
+50 000 € n'est pas lissé : la surtaxe passe de 0 € à environ 500 €. Tous les
+autres raccordements sont continus. Cette asymétrie provient du coefficient de
+la première bande, qui suit la progression régulière des autres coefficients
+plutôt que d'annuler la surtaxe au seuil. Elle correspond à la table publiée que
+le code cite en référence ; elle n'est donc **pas** traitée comme une anomalie,
+et aucune valeur n'a été modifiée. Elle est notée ici pour que le référent
+fiscal puisse la confirmer lors de la validation des sources.
 
 ---
 

@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-beta.5`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-beta.6`.
 
 ## Objectifs de l’orchestration
 
@@ -34,6 +34,7 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-bet
 - #20 est traitée : `docs/ARCHITECTURE_CIBLE.md` fixe l'arborescence, les URL stables, la source de vérité de chaque type de fichier et l'ordre de migration. Aucun fichier n'est encore déplacé.
 - #12 est traitée : `data/schema/README.md` définit le format commun, `scripts/lib/schema-referentiel.js` en est la définition exécutable, et `docs/INVENTAIRE_REFERENTIELS.md` recense les valeurs fiscales, leur simulateur, leur contexte et ce que le dépôt sait de leur source. Aucune valeur n'est encore extraite.
 - #18 est traitée : `npm run donnees:valider`, `npm run donnees:importer` et `npm run donnees:generer` forment la chaîne reproductible qui remplacera la réécriture du HTML. L'import est déterministe et n'écrit rien lorsqu'une donnée est invalide. Procédure et format documentés dans `data/README.md`.
+- #17 est traitée : le référentiel de la plus-value immobilière est extrait, surtaxe comprise, décrite par une table de données. Aucun montant ne bouge. La **vague B est terminée** ; reste la vague C, #13 puis #1, pour le blob de taux de change.
 - #15 est traitée : le référentiel IFI est extrait vers `data/referentiels/ifi.json`, partagé par le simulateur IFI et la section IFI de l'IRPP. Aucun montant ne bouge sur 25 scénarios. La divergence de méthode de la fiche 2.4 n'est pas tranchée et est désormais figée par un test. La vague B est à moitié faite ; #17 reste à traiter.
 - #14 est traitée : les référentiels IR, CEHR, CDHR, PFU et prélèvements sociaux sont extraits vers `data/referentiels/ir.json` et `data/referentiels/prelevements-sociaux.json`. Aucun montant ne bouge : 37 scénarios relevés avant l'extraction donnent les mêmes résultats après. La divergence 17,2 % / 18,6 % est représentée par une entrée `conteste` sans valeur unique, chaque simulateur désignant sa variante. La **vague A est terminée**.
 - #16 est traitée : les référentiels DMTG, usufruit et assurance-vie sont extraits vers `data/referentiels/dmtg.json`, lus par les simulateurs Succession et Démembrement. Aucun montant ne bouge : 42 scénarios relevés avant l'extraction donnent les mêmes résultats après. La vague A est donc à moitié faite ; #14 reste à traiter.
@@ -354,7 +355,7 @@ Le relevé de #16 ne doit jamais être régénéré après une modification : ce
 Vague B, après fusion de la vague A :
 
 - [#15 — Référentiel IFI partagé](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/15) — **réalisée**
-- [#17 — Référentiel de plus-value immobilière](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/17)
+- [#17 — Référentiel de plus-value immobilière](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/17) — **réalisée**
 
 Ces deux issues peuvent être parallélisées si les agents ne modifient pas simultanément les mêmes helpers partagés.
 

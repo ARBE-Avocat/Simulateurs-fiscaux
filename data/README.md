@@ -85,13 +85,17 @@ guillemets doubles. Un BOM éventuel est ignoré.
 | `dateFin` | non | `AAAA-MM-JJ`, ou vide |
 | `statutValidation` | oui | `non-valide`, `valide`, `conteste` |
 | `utilisePar` | oui | clés de simulateurs, séparées par des virgules |
-| `valeur` | selon le type | pour un taux, un montant, une quantité ou un booléen |
+| `valeur` | selon le type | pour un taux, un montant, une quantité ou un booléen ; pour un type `table`, un tableau JSON |
 | `borneInf`, `borneInfIncluse`, `borneSup`, `borneSupIncluse`, `taux` | pour un barème | une ligne par tranche ; `borneSup` vide signifie « sans limite haute » |
 | `varianteCle` | pour une entrée contestée | identifiant de la variante, par exemple `17-2` |
 | `arbitrageDocument`, `arbitragePoint`, `arbitrageQuestion` | pour une entrée contestée | renvoi vers la fiche soumise au référent, et la question posée |
 | `sourceReference`, `sourceUrl`, `sourceDateConsultation` | non | laissées vides, elles deviennent la mention explicite « inconnue » |
 | `validationPar`, `validationDate` | pour une entrée validée | qui a validé, et quand |
 | `notes` | non | précision d'application ou réserve |
+
+Le type `table` sert aux règles qui ne sont ni un nombre ni un barème par
+tranches — des paliers, une correspondance. Sa valeur s'écrit en JSON dans la
+colonne `valeur`, entourée de guillemets doubles si elle contient un `;`.
 
 Les booléens s'écrivent `oui` ou `non`. Les nombres acceptent la virgule
 décimale et les espaces de milliers. **Un taux s'écrit en décimal** : `0,172` et

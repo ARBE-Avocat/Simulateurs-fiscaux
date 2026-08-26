@@ -1,0 +1,799 @@
+{
+  "description": "Instantané du simulateur de plus-value immobilière, relevé AVANT l'extraction de son référentiel (issue #17).",
+  "provenance": "Produit par exécution réelle du simulateur sur la branche clv/y-0.5-donnees, commit 6b1468d, avant toute modification du fichier HTML.",
+  "statutValidation": "NON VALIDÉ — ces valeurs figent le comportement existant afin de prouver qu'une refactorisation ne déplace aucun montant. Elles ne certifient ni les taux d'abattement, ni les paliers de surtaxe.",
+  "tolerance": 0.000001,
+  "abattements": [
+    {
+      "annees": 0,
+      "ir": 0,
+      "ps": 0
+    },
+    {
+      "annees": 1,
+      "ir": 0,
+      "ps": 0
+    },
+    {
+      "annees": 2,
+      "ir": 0,
+      "ps": 0
+    },
+    {
+      "annees": 3,
+      "ir": 0,
+      "ps": 0
+    },
+    {
+      "annees": 4,
+      "ir": 0,
+      "ps": 0
+    },
+    {
+      "annees": 5,
+      "ir": 0,
+      "ps": 0
+    },
+    {
+      "annees": 6,
+      "ir": 0.06,
+      "ps": 0.0165
+    },
+    {
+      "annees": 7,
+      "ir": 0.12,
+      "ps": 0.033
+    },
+    {
+      "annees": 8,
+      "ir": 0.18,
+      "ps": 0.0495
+    },
+    {
+      "annees": 9,
+      "ir": 0.24,
+      "ps": 0.066
+    },
+    {
+      "annees": 10,
+      "ir": 0.3,
+      "ps": 0.0825
+    },
+    {
+      "annees": 11,
+      "ir": 0.36,
+      "ps": 0.099
+    },
+    {
+      "annees": 12,
+      "ir": 0.42,
+      "ps": 0.1155
+    },
+    {
+      "annees": 13,
+      "ir": 0.48,
+      "ps": 0.132
+    },
+    {
+      "annees": 14,
+      "ir": 0.54,
+      "ps": 0.14850000000000002
+    },
+    {
+      "annees": 15,
+      "ir": 0.6,
+      "ps": 0.165
+    },
+    {
+      "annees": 16,
+      "ir": 0.6599999999999999,
+      "ps": 0.1815
+    },
+    {
+      "annees": 17,
+      "ir": 0.72,
+      "ps": 0.198
+    },
+    {
+      "annees": 18,
+      "ir": 0.78,
+      "ps": 0.21450000000000002
+    },
+    {
+      "annees": 19,
+      "ir": 0.84,
+      "ps": 0.231
+    },
+    {
+      "annees": 20,
+      "ir": 0.8999999999999999,
+      "ps": 0.2475
+    },
+    {
+      "annees": 21,
+      "ir": 0.96,
+      "ps": 0.264
+    },
+    {
+      "annees": 22,
+      "ir": 1,
+      "ps": 0.28
+    },
+    {
+      "annees": 23,
+      "ir": 1,
+      "ps": 0.37
+    },
+    {
+      "annees": 24,
+      "ir": 1,
+      "ps": 0.46
+    },
+    {
+      "annees": 25,
+      "ir": 1,
+      "ps": 0.55
+    },
+    {
+      "annees": 26,
+      "ir": 1,
+      "ps": 0.64
+    },
+    {
+      "annees": 27,
+      "ir": 1,
+      "ps": 0.73
+    },
+    {
+      "annees": 28,
+      "ir": 1,
+      "ps": 0.8200000000000001
+    },
+    {
+      "annees": 29,
+      "ir": 1,
+      "ps": 0.91
+    },
+    {
+      "annees": 30,
+      "ir": 1,
+      "ps": 1
+    },
+    {
+      "annees": 31,
+      "ir": 1,
+      "ps": 1
+    },
+    {
+      "annees": 32,
+      "ir": 1,
+      "ps": 1
+    },
+    {
+      "annees": 33,
+      "ir": 1,
+      "ps": 1
+    },
+    {
+      "annees": 34,
+      "ir": 1,
+      "ps": 1
+    },
+    {
+      "annees": 35,
+      "ir": 1,
+      "ps": 1
+    },
+    {
+      "annees": 36,
+      "ir": 1,
+      "ps": 1
+    },
+    {
+      "annees": 37,
+      "ir": 1,
+      "ps": 1
+    },
+    {
+      "annees": 38,
+      "ir": 1,
+      "ps": 1
+    },
+    {
+      "annees": 39,
+      "ir": 1,
+      "ps": 1
+    },
+    {
+      "annees": 40,
+      "ir": 1,
+      "ps": 1
+    }
+  ],
+  "surtaxes": [
+    {
+      "plusValue": 0,
+      "surtaxe": 0
+    },
+    {
+      "plusValue": 49999,
+      "surtaxe": 0
+    },
+    {
+      "plusValue": 50000,
+      "surtaxe": 0
+    },
+    {
+      "plusValue": 50001,
+      "surtaxe": 500.06999999999994
+    },
+    {
+      "plusValue": 55000,
+      "surtaxe": 850
+    },
+    {
+      "plusValue": 59999,
+      "surtaxe": 1199.93
+    },
+    {
+      "plusValue": 60000,
+      "surtaxe": 1200
+    },
+    {
+      "plusValue": 60001,
+      "surtaxe": 1200.02
+    },
+    {
+      "plusValue": 80000,
+      "surtaxe": 1600
+    },
+    {
+      "plusValue": 99999,
+      "surtaxe": 1999.98
+    },
+    {
+      "plusValue": 100000,
+      "surtaxe": 2000
+    },
+    {
+      "plusValue": 100001,
+      "surtaxe": 2000.1299999999997
+    },
+    {
+      "plusValue": 105000,
+      "surtaxe": 2650
+    },
+    {
+      "plusValue": 110000,
+      "surtaxe": 3300
+    },
+    {
+      "plusValue": 110001,
+      "surtaxe": 3300.0299999999997
+    },
+    {
+      "plusValue": 130000,
+      "surtaxe": 3900
+    },
+    {
+      "plusValue": 150000,
+      "surtaxe": 4500
+    },
+    {
+      "plusValue": 150001,
+      "surtaxe": 4500.1900000000005
+    },
+    {
+      "plusValue": 155000,
+      "surtaxe": 5450
+    },
+    {
+      "plusValue": 160000,
+      "surtaxe": 6400
+    },
+    {
+      "plusValue": 160001,
+      "surtaxe": 6400.04
+    },
+    {
+      "plusValue": 180000,
+      "surtaxe": 7200
+    },
+    {
+      "plusValue": 200000,
+      "surtaxe": 8000
+    },
+    {
+      "plusValue": 200001,
+      "surtaxe": 8000.250000000001
+    },
+    {
+      "plusValue": 205000,
+      "surtaxe": 9250
+    },
+    {
+      "plusValue": 210000,
+      "surtaxe": 10500
+    },
+    {
+      "plusValue": 210001,
+      "surtaxe": 10500.050000000001
+    },
+    {
+      "plusValue": 230000,
+      "surtaxe": 11500
+    },
+    {
+      "plusValue": 250000,
+      "surtaxe": 12500
+    },
+    {
+      "plusValue": 250001,
+      "surtaxe": 12500.31
+    },
+    {
+      "plusValue": 255000,
+      "surtaxe": 14050
+    },
+    {
+      "plusValue": 260000,
+      "surtaxe": 15600
+    },
+    {
+      "plusValue": 260001,
+      "surtaxe": 15600.06
+    },
+    {
+      "plusValue": 400000,
+      "surtaxe": 24000
+    },
+    {
+      "plusValue": 1000000,
+      "surtaxe": 60000
+    }
+  ],
+  "scenarios": [
+    {
+      "nom": "détention de 6 ans",
+      "champs": {
+        "devise": "EUR",
+        "prixImmeuble": 800000,
+        "prixAcquitte": 400000,
+        "quotePart": 100,
+        "nbCedants": 1,
+        "dateAcq": "2020-01-15",
+        "dateCes": "2026-03-10"
+      },
+      "attendu": {
+        "montants": [
+          "800 000 €",
+          "490 000 €",
+          "310 000 €",
+          "291 400 €",
+          "304 885 €",
+          "800 000 €",
+          "800 000 €",
+          "400 000 €",
+          "30 000 €",
+          "60 000 €",
+          "490 000 €",
+          "310 000 €",
+          "18 600 €",
+          "291 400 €",
+          "55 366 €",
+          "5 115 €",
+          "304 885 €",
+          "52 440 €",
+          "50 000 €",
+          "17 484 €",
+          "125 290 €"
+        ],
+        "pourcents": [
+          "6 %",
+          "65 %",
+          "7,5 %",
+          "15 %",
+          "6 %",
+          "19 %",
+          "65 %",
+          "17,2 %",
+          "17,2 %"
+        ]
+      }
+    },
+    {
+      "nom": "détention de 16 ans",
+      "champs": {
+        "devise": "EUR",
+        "prixImmeuble": 800000,
+        "prixAcquitte": 400000,
+        "quotePart": 100,
+        "nbCedants": 1,
+        "dateAcq": "2010-05-01",
+        "dateCes": "2026-05-01"
+      },
+      "attendu": {
+        "montants": [
+          "800 000 €",
+          "490 000 €",
+          "310 000 €",
+          "105 400 €",
+          "253 735 €",
+          "800 000 €",
+          "800 000 €",
+          "400 000 €",
+          "30 000 €",
+          "60 000 €",
+          "490 000 €",
+          "310 000 €",
+          "204 600 €",
+          "105 400 €",
+          "20 026 €",
+          "56 265 €",
+          "253 735 €",
+          "43 642 €",
+          "50 000 €",
+          "2 702 €",
+          "66 370 €"
+        ],
+        "pourcents": [
+          "66 %",
+          "15 %",
+          "7,5 %",
+          "15 %",
+          "66 %",
+          "19 %",
+          "15 %",
+          "17,2 %",
+          "17,2 %"
+        ]
+      }
+    },
+    {
+      "nom": "détention de 23 ans",
+      "champs": {
+        "devise": "EUR",
+        "prixImmeuble": 800000,
+        "prixAcquitte": 400000,
+        "quotePart": 100,
+        "nbCedants": 1,
+        "dateAcq": "2003-01-10",
+        "dateCes": "2026-06-30"
+      },
+      "attendu": {
+        "montants": [
+          "800 000 €",
+          "490 000 €",
+          "310 000 €",
+          "195 300 €",
+          "800 000 €",
+          "800 000 €",
+          "400 000 €",
+          "30 000 €",
+          "60 000 €",
+          "490 000 €",
+          "310 000 €",
+          "0 €",
+          "114 700 €",
+          "195 300 €",
+          "33 592 €",
+          "33 592 €"
+        ],
+        "pourcents": [
+          "37 %",
+          "7,5 %",
+          "15 %",
+          "37 %",
+          "17,2 %",
+          "17,2 %"
+        ]
+      }
+    },
+    {
+      "nom": "détention de 32 ans, exonération totale",
+      "champs": {
+        "devise": "EUR",
+        "prixImmeuble": 800000,
+        "prixAcquitte": 400000,
+        "quotePart": 100,
+        "nbCedants": 1,
+        "dateAcq": "1994-02-01",
+        "dateCes": "2026-02-01"
+      },
+      "attendu": {
+        "montants": [
+          "800 000 €",
+          "490 000 €",
+          "310 000 €",
+          "800 000 €",
+          "800 000 €",
+          "400 000 €",
+          "30 000 €",
+          "60 000 €",
+          "490 000 €",
+          "310 000 €",
+          "0 €",
+          "0 €",
+          "0 €"
+        ],
+        "pourcents": [
+          "7,5 %",
+          "15 %",
+          "17,2 %"
+        ]
+      }
+    },
+    {
+      "nom": "détention de 3 ans, aucun abattement",
+      "champs": {
+        "devise": "EUR",
+        "prixImmeuble": 800000,
+        "prixAcquitte": 400000,
+        "quotePart": 100,
+        "nbCedants": 1,
+        "dateAcq": "2023-01-01",
+        "dateCes": "2026-01-01"
+      },
+      "attendu": {
+        "montants": [
+          "800 000 €",
+          "490 000 €",
+          "310 000 €",
+          "310 000 €",
+          "310 000 €",
+          "800 000 €",
+          "800 000 €",
+          "400 000 €",
+          "30 000 €",
+          "60 000 €",
+          "490 000 €",
+          "310 000 €",
+          "0 €",
+          "310 000 €",
+          "58 900 €",
+          "0 €",
+          "310 000 €",
+          "53 320 €",
+          "50 000 €",
+          "18 600 €",
+          "130 820 €"
+        ],
+        "pourcents": [
+          "0 %",
+          "0 %",
+          "7,5 %",
+          "15 %",
+          "0 %",
+          "19 %",
+          "0 %",
+          "17,2 %",
+          "17,2 %"
+        ]
+      }
+    },
+    {
+      "nom": "plus-value soumise à la surtaxe",
+      "champs": {
+        "devise": "EUR",
+        "prixImmeuble": 1500000,
+        "prixAcquitte": 400000,
+        "quotePart": 100,
+        "nbCedants": 1,
+        "dateAcq": "2018-01-01",
+        "dateCes": "2026-01-01"
+      },
+      "attendu": {
+        "montants": [
+          "1 500 000 €",
+          "490 000 €",
+          "1 010 000 €",
+          "828 200 €",
+          "960 005 €",
+          "1 500 000 €",
+          "1 500 000 €",
+          "400 000 €",
+          "30 000 €",
+          "60 000 €",
+          "490 000 €",
+          "1 010 000 €",
+          "181 800 €",
+          "828 200 €",
+          "157 358 €",
+          "49 995 €",
+          "960 005 €",
+          "165 121 €",
+          "50 000 €",
+          "49 692 €",
+          "372 171 €"
+        ],
+        "pourcents": [
+          "18 %",
+          "95 %",
+          "7,5 %",
+          "15 %",
+          "18 %",
+          "19 %",
+          "95 %",
+          "17,2 %",
+          "17,2 %"
+        ]
+      }
+    },
+    {
+      "nom": "frais et travaux réels retenus",
+      "champs": {
+        "devise": "EUR",
+        "prixImmeuble": 800000,
+        "prixAcquitte": 400000,
+        "quotePart": 100,
+        "nbCedants": 1,
+        "dateAcq": "2015-01-01",
+        "dateCes": "2026-01-01",
+        "fraisReel": 35000,
+        "travauxReel": 120000
+      },
+      "attendu": {
+        "montants": [
+          "800 000 €",
+          "555 000 €",
+          "245 000 €",
+          "156 800 €",
+          "220 745 €",
+          "800 000 €",
+          "800 000 €",
+          "400 000 €",
+          "35 000 €",
+          "120 000 €",
+          "555 000 €",
+          "245 000 €",
+          "88 200 €",
+          "156 800 €",
+          "29 792 €",
+          "24 255 €",
+          "220 745 €",
+          "37 968 €",
+          "50 000 €",
+          "5 792 €",
+          "73 552 €"
+        ],
+        "pourcents": [
+          "36 %",
+          "90 %",
+          "36 %",
+          "19 %",
+          "90 %",
+          "17,2 %",
+          "17,2 %"
+        ]
+      }
+    },
+    {
+      "nom": "quote-part et plusieurs cédants",
+      "champs": {
+        "devise": "EUR",
+        "prixImmeuble": 800000,
+        "prixAcquitte": 400000,
+        "quotePart": 60,
+        "nbCedants": 3,
+        "dateAcq": "2015-01-01",
+        "dateCes": "2026-01-01"
+      },
+      "attendu": {
+        "montants": [
+          "800 000 €",
+          "490 000 €",
+          "310 000 €",
+          "198 400 €",
+          "279 310 €",
+          "800 000 €",
+          "800 000 €",
+          "400 000 €",
+          "30 000 €",
+          "60 000 €",
+          "490 000 €",
+          "310 000 €",
+          "111 600 €",
+          "198 400 €",
+          "119 040 €",
+          "22 618 €",
+          "30 690 €",
+          "279 310 €",
+          "167 586 €",
+          "28 825 €",
+          "50 000 €",
+          "3 571 €",
+          "55 014 €",
+          "55 014 €",
+          "18 338 €"
+        ],
+        "pourcents": [
+          "36 %",
+          "90 %",
+          "7,5 %",
+          "15 %",
+          "36 %",
+          "60 %",
+          "19 %",
+          "90 %",
+          "60 %",
+          "17,2 %",
+          "17,2 %"
+        ]
+      }
+    },
+    {
+      "nom": "majorations et minorations du prix de cession",
+      "champs": {
+        "devise": "EUR",
+        "prixImmeuble": 800000,
+        "prixAcquitte": 400000,
+        "quotePart": 100,
+        "nbCedants": 1,
+        "dateAcq": "2015-01-01",
+        "dateCes": "2026-01-01",
+        "majCesCharges": 20000,
+        "majCesAssur": 5000,
+        "minCesTVA": 30000,
+        "minCesDiag": 1500
+      },
+      "attendu": {
+        "montants": [
+          "793 500 €",
+          "490 000 €",
+          "303 500 €",
+          "194 240 €",
+          "273 454 €",
+          "800 000 €",
+          "25 000 €",
+          "31 500 €",
+          "793 500 €",
+          "400 000 €",
+          "30 000 €",
+          "60 000 €",
+          "490 000 €",
+          "303 500 €",
+          "109 260 €",
+          "194 240 €",
+          "36 906 €",
+          "30 047 €",
+          "273 454 €",
+          "47 034 €",
+          "50 000 €",
+          "7 770 €",
+          "91 709 €"
+        ],
+        "pourcents": [
+          "36 %",
+          "90 %",
+          "7,5 %",
+          "15 %",
+          "36 %",
+          "19 %",
+          "90 %",
+          "17,2 %",
+          "17,2 %"
+        ]
+      }
+    },
+    {
+      "nom": "moins-value",
+      "champs": {
+        "devise": "EUR",
+        "prixImmeuble": 300000,
+        "prixAcquitte": 500000,
+        "quotePart": 100,
+        "nbCedants": 1,
+        "dateAcq": "2015-01-01",
+        "dateCes": "2026-01-01"
+      },
+      "attendu": {
+        "montants": [
+          "300 000 €",
+          "612 500 €",
+          "-312 500 €"
+        ],
+        "pourcents": []
+      }
+    }
+  ]
+}

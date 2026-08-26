@@ -102,6 +102,23 @@ function valeurDeLigne(valeurs, ligne, type) {
       return nombre(valeurs.valeur ?? '', ligne, 'valeur');
     case 'booleen':
       return booleen(valeurs.valeur ?? '', ligne, 'valeur');
+    case 'table': {
+      // Une table décrit une règle qui n'est ni un nombre ni un barème par
+      // tranches — des paliers, une correspondance. Elle s'écrit en JSON dans
+      // la colonne `valeur`, entre guillemets si elle contient un point-virgule.
+      const brut = valeurs.valeur ?? '';
+      if (brut === '') echouer(ligne, 'colonne valeur vide, une table JSON est attendue');
+      let table;
+      try {
+        table = JSON.parse(brut);
+      } catch (e) {
+        echouer(ligne, `colonne valeur : JSON invalide pour un type table — ${e.message}`);
+      }
+      if (!Array.isArray(table) || table.length === 0) {
+        echouer(ligne, 'colonne valeur : un tableau JSON non vide est attendu pour un type table');
+      }
+      return table;
+    }
     default:
       echouer(ligne, `type « ${type} » : la colonne valeur n'est pas exploitable ici`);
       return null;
