@@ -316,6 +316,21 @@ dépendance npm.
 
 ---
 
+## 7 bis. Un point resté ouvert : les taux de change
+
+`src/genere/referentiels.js` est chargé par les six simulateurs. Il convient
+aux référentiels fiscaux, qui pèsent quelques kilo-octets.
+
+Il ne conviendra **pas** aux taux de change. L'historique embarqué dans le
+simulateur de plus-value immobilière pèse à lui seul près de 3,8 Mo : le verser
+dans le fichier commun le ferait télécharger à qui ouvre le simulateur de
+succession, qui n'en a aucun usage.
+
+L'issue #13 devra donc produire un **second fichier généré**, chargé par les
+seuls simulateurs qui en ont besoin, et ce document sera complété à ce
+moment-là. Le point est noté ici pour qu'il ne soit pas découvert en cours de
+route.
+
 ## 8. Ce que ce document ne tranche pas
 
 - **Le contenu du schéma des référentiels** : c'est #12. Ce document fixe

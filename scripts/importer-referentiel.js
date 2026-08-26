@@ -76,11 +76,23 @@ function principal(arguments_) {
     ? path.resolve(options.sortie)
     : path.join(DOSSIER_REFERENTIELS, `${domaine}.json`);
 
+  // Sans `--libelle`, on reprend celui du référentiel existant plutôt que le nom
+  // du domaine : le retaper à l'identique à chaque réimport serait une source
+  // d'échecs de `--verifier` sans aucun rapport avec les données.
+  let libelle = options.libelle;
+  if (!libelle && fs.existsSync(sortie)) {
+    try {
+      libelle = JSON.parse(fs.readFileSync(sortie, 'utf8')).libelle;
+    } catch (e) {
+      libelle = undefined;
+    }
+  }
+
   let referentiel;
   try {
     referentiel = importer(fs.readFileSync(chemin, 'utf8'), {
       domaine,
-      libelle: options.libelle || domaine,
+      libelle: libelle || domaine,
     });
   } catch (e) {
     if (e instanceof ErreurImport || e instanceof Error) {

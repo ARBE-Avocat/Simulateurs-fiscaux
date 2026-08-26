@@ -53,7 +53,7 @@ Options :
 | Option | Effet |
 |---|---|
 | `--domaine <id>` | identifiant du domaine ; par défaut, le nom du fichier CSV |
-| `--libelle <texte>` | libellé lisible du domaine |
+| `--libelle <texte>` | libellé lisible du domaine ; par défaut, celui du référentiel existant |
 | `--sortie <chemin>` | fichier produit ; par défaut `data/referentiels/<domaine>.json` |
 | `--verifier` | n'écrit rien, dit seulement si le référentiel existant correspond au CSV |
 
@@ -109,6 +109,25 @@ lignes, sinon le résultat dépendrait de l'ordre du fichier.
 Une entrée contestée occupe **une ligne par variante**, chacune avec sa `valeur`,
 sa `varianteCle` et les simulateurs qui l'emploient. L'entrée produite n'a alors
 **aucune valeur unique** : l'import ne tranche jamais une divergence.
+
+### Réimporter un référentiel existant
+
+Chaque référentiel de `data/referentiels/` a été produit à partir du CSV de même
+nom dans `data/imports/`. Pour vérifier qu'il correspond toujours à sa source,
+sans rien écrire :
+
+```bash
+node scripts/importer-referentiel.js data/imports/dmtg-2025-releve-du-code.csv \
+  --domaine dmtg --verifier
+```
+
+Le libellé du domaine n'a pas à être répété : il est repris du référentiel
+existant.
+
+Les cinq référentiels actuels ont été relevés dans le code des simulateurs, et
+non reçus d'une source officielle. Leurs CSV portent tous le suffixe
+`-releve-du-code` pour que ce soit dit. Ils passeront à des sources officielles
+au fur et à mesure de la validation du référent fiscal.
 
 ### Exemples
 

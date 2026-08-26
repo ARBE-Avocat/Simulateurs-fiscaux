@@ -366,6 +366,15 @@ Vague C, après stabilisation des interfaces IFI et PV immobilière :
 
 Traiter d’abord le service de change commun de #13, puis sa sous-issue #1. Le service doit exister avant d’implémenter les règles de résolution des dates.
 
+Les interfaces IFI et plus-value immobilière sont stabilisées depuis #15 et #17 : la vague C peut commencer.
+
+**Une décision d'architecture est à prendre avant de commencer #13.** Les taux de change ne peuvent pas rejoindre `src/genere/referentiels.js` : ce fichier est chargé par les six simulateurs, et l'historique de change du simulateur de plus-value immobilière pèse à lui seul près de 3,8 Mo. Y verser les changes ferait télécharger cet historique à qui ouvre le simulateur de succession. Il faut donc un **second fichier généré**, chargé par les seuls simulateurs qui en ont besoin, et `docs/ARCHITECTURE_CIBLE.md` doit être complété en conséquence.
+
+Deux points supplémentaires, propres au change :
+
+- ce n'est pas une donnée fiscale : ni date d'effet, ni statut de validation au même sens. Le schéma des référentiels ne lui convient pas tel quel, et lui en imposer un serait forcer le format ;
+- le simulateur IFI appelle deux services de change en ligne au chargement, avec repli sur des taux figés non datés. Externaliser les changes suppose de décider ce qui fait foi : les taux appelés au chargement, ou ceux du dépôt.
+
 ### Étape 2.5 — Ajouter la sélection de millésime
 
 - [#19 — Sélectionner et afficher le millésime fiscal](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/19)
