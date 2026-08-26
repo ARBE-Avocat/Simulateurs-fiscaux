@@ -6,7 +6,7 @@ jugé fautif mais **laissé en l'état** faute de certitude.
 
 Aucune connaissance technique n'est nécessaire pour le lire.
 
-Dernière mise à jour : 26 août 2026 — jalon `0.5`, chantier des référentiels.
+Dernière mise à jour : 27 août 2026 — jalon `0.5`, chantier des référentiels.
 
 **Version interactive :** <https://claude.ai/code/artifact/ed86515a-2108-4df9-b7fc-acc15b0682d3>
 Cette page reprend le contenu ci-dessous et permet de répondre point par point.
@@ -412,6 +412,56 @@ simulateur IFI.
    sont-elles confirmées, et pour quel millésime ?
 4. quelle source citer ?
 
+## 2.5 — IRPP : l'abattement pour durée de détention des plus-values mobilières emploie deux règles opposées
+
+**Ce que voit l'utilisateur.** Le simulateur applique un abattement pour durée
+de détention aux plus-values de cession de titres, avec un régime de droit
+commun et un régime renforcé. Les deux sont calculés dans la même expression,
+mais ne comptent pas les années de la même façon :
+
+| Durée de détention | Abattement de droit commun | Abattement renforcé |
+|---|---|---|
+| 1 an | 0 % | 0 % |
+| **2 ans** | **0 %** | **50 %** |
+| 3 ans | 50 % | 50 % |
+| **4 ans** | 50 % | **65 %** |
+| 7 ans | 50 % | 65 % |
+| **8 ans** | 50 % | **85 %** |
+| 9 ans | 65 % | 85 % |
+
+**Pourquoi cela paraît anormal.** Le régime renforcé applique son palier
+**dès** 2, 4 et 8 ans révolus. Le régime de droit commun ne l'applique
+qu'**au-delà** : à 2 ans exactement, aucun abattement ; à 8 ans exactement,
+toujours celui des 2 ans. Les deux écritures cohabitent dans la même ligne de
+code. Elles ne peuvent pas être justes en même temps.
+
+Le mot employé par le texte fiscal — « au moins deux ans » ou « plus de deux
+ans » — décide de la bonne. Un développeur ne peut pas trancher cela.
+
+**Ce qui a été changé.** Rien. Corriger l'une ou l'autre modifie l'impôt.
+
+**Ce que cela change en euros.** Cession de 1 000 titres achetés 100 € et
+revendus 600 €, soit 500 000 € de plus-value. Salaire de 60 000 €, une part,
+régime de droit commun :
+
+| Durée de détention | Impôt net affiché |
+|---|---|
+| 1 an | 225 822,57 € |
+| **2 ans** | **225 822,57 €** |
+| 3 ans | 113 322,57 € |
+
+Détenir les titres deux ans exactement coûte **112 500 € d'impôt de plus** que
+de les détenir un jour de plus. Si la règle est « au moins deux ans », le
+montant à deux ans devrait être celui de la troisième ligne.
+
+**Ce qui est attendu de vous.** Trois questions :
+
+1. l'abattement de droit commun s'ouvre-t-il **à partir de** deux ans révolus,
+   ou seulement **au-delà** de deux ans ?
+2. la même réponse vaut-elle pour le passage au palier supérieur — huit ans pour
+   le droit commun, quatre et huit ans pour le renforcé ?
+3. quelle source et quel millésime citer ?
+
 ---
 
 # Partie 3 — Points relevés, non corrigés, qui demandent un arbitrage
@@ -448,6 +498,40 @@ qu'il ne repose sur aucune situation réelle.
 
 Le comportement n'a pas été modifié, faute de savoir ce qui doit s'afficher à la
 place. Voir la question posée au point 3.1.
+
+## 3.4 — Plus-value immobilière : le seuil de la surtaxe n'est pas lissé
+
+**Ce que voit l'utilisateur.** La surtaxe sur les plus-values immobilières
+supérieures à 50 000 € comporte des paliers de raccordement, destinés à éviter
+qu'un euro de plus-value supplémentaire ne déclenche brutalement plusieurs
+milliers d'euros d'impôt. Ces raccordements fonctionnent partout, sauf au
+premier seuil :
+
+| Plus-value imposable | Surtaxe |
+|---|---|
+| 50 000 € | 0 € |
+| **50 001 €** | **500,07 €** |
+| 60 000 € | 1 200 € |
+| 100 000 € | 2 000 € |
+| 100 001 € | 2 000,13 € |
+
+Un euro de plus-value supplémentaire coûte 500 € de surtaxe. Au palier suivant,
+le même euro n'en coûte que treize centimes.
+
+**Pourquoi ce point est signalé sans être présenté comme un défaut.** Le
+coefficient employé sur la première bande suit la progression régulière des
+autres — 1/20, puis 1/10, 0,15, 0,20, 0,25 — et correspond à la table publiée
+que le code cite en référence. Il est donc possible que ce ressaut soit voulu
+par le texte lui-même, un seuil d'entrée n'ayant pas la même fonction qu'un
+raccordement entre deux taux.
+
+**Ce qui a été changé.** Rien, et rien ne le sera sans votre réponse. Un
+contrôle automatique constate désormais ce ressaut plutôt que de le laisser
+passer pour une continuité.
+
+**Ce qui est attendu de vous.** Le franchissement de 50 000 € doit-il produire
+ce ressaut de 500 €, ou la première bande doit-elle ramener la surtaxe à zéro au
+seuil, comme le font les autres raccordements ? Quelle source citer ?
 
 ## 3.3 — Les barèmes ne portent ni source ni date
 
