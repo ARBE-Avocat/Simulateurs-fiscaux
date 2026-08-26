@@ -1,0 +1,1077 @@
+<title>Arbitrages fiscaux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style id="css">
+:root {
+  --ground: #f2f4f6;
+  --surface: #ffffff;
+  --surface-2: #f7f9fa;
+  --ink: #15202b;
+  --ink-soft: #55636f;
+  --ink-faint: #8a97a2;
+  --rule: #dbe2e8;
+  --rule-strong: #c3cdd6;
+  --accent: #1f4e79;
+  --accent-ink: #ffffff;
+  --accent-soft: #e7eef6;
+  --ok: #2c6a4e;
+  --ok-soft: #e4efe9;
+  --warn: #85601a;
+  --warn-soft: #f6eeda;
+  --stop: #93332f;
+  --stop-soft: #f7e6e4;
+  --shadow: 0 1px 2px rgba(21, 32, 43, .06), 0 8px 24px -16px rgba(21, 32, 43, .3);
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Spectral", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #11161b;
+    --surface: #181f26;
+    --surface-2: #1e262e;
+    --ink: #e7ecf0;
+    --ink-soft: #9daab5;
+    --ink-faint: #6d7b87;
+    --rule: #2a333c;
+    --rule-strong: #3a4650;
+    --accent: #82b2e2;
+    --accent-ink: #0e1620;
+    --accent-soft: #1a2836;
+    --ok: #74bb97;
+    --ok-soft: #172921;
+    --warn: #d6a751;
+    --warn-soft: #2b2417;
+    --stop: #e28a85;
+    --stop-soft: #2d1c1b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #11161b;
+  --surface: #181f26;
+  --surface-2: #1e262e;
+  --ink: #e7ecf0;
+  --ink-soft: #9daab5;
+  --ink-faint: #6d7b87;
+  --rule: #2a333c;
+  --rule-strong: #3a4650;
+  --accent: #82b2e2;
+  --accent-ink: #0e1620;
+  --accent-soft: #1a2836;
+  --ok: #74bb97;
+  --ok-soft: #172921;
+  --warn: #d6a751;
+  --warn-soft: #2b2417;
+  --stop: #e28a85;
+  --stop-soft: #2d1c1b;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+
+/* ---------- Bandeau ---------- */
+
+.bandeau {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.bandeau-corps {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.marque {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  margin-right: auto;
+}
+
+.marque span { color: var(--ink-faint); font-weight: 400; }
+
+.jauge { display: flex; align-items: center; gap: 12px; }
+
+.jauge-piste {
+  width: 132px;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--rule);
+  overflow: hidden;
+}
+
+.jauge-part { height: 100%; background: var(--accent); width: 0; transition: width .35s ease; }
+
+.jauge-txt {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------- Boutons ---------- */
+
+.btn {
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 8px 15px;
+  border-radius: 7px;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.btn:hover { background: var(--surface-2); border-color: var(--ink-faint); }
+.btn-fort { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn-fort:hover { background: var(--accent); border-color: var(--accent); filter: brightness(1.1); }
+.btn:disabled { opacity: .45; cursor: default; }
+
+:where(button, a, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Ossature ---------- */
+
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px 96px;
+  display: grid;
+  grid-template-columns: 246px minmax(0, 1fr);
+  gap: 44px;
+  align-items: start;
+}
+
+.chapeau { grid-column: 1 / -1; padding: 52px 0 36px; max-width: 62ch; }
+
+.surtitre {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.chapeau h1 {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4.4vw, 45px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+  margin-bottom: 18px;
+}
+
+.chapeau p { color: var(--ink-soft); margin: 0 0 14px; }
+.chapeau p:last-child { margin-bottom: 0; }
+
+/* ---------- Sommaire ---------- */
+
+.sommaire { position: sticky; top: 78px; display: flex; flex-direction: column; gap: 3px; }
+
+.sommaire-titre {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 0 0 10px;
+}
+
+.som-lien {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  line-height: 1.35;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  width: 100%;
+}
+
+.som-lien:hover { background: var(--surface); color: var(--ink); }
+
+.pastille {
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+  flex: 0 0 auto;
+  background: var(--rule-strong);
+}
+
+.pastille[data-etat="repondu"] { background: var(--ok); }
+.som-ref { font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); flex: 0 0 auto; }
+
+/* ---------- Sections ---------- */
+
+.flux { display: flex; flex-direction: column; gap: 40px; min-width: 0; }
+.groupe { display: flex; flex-direction: column; gap: 18px; }
+
+.groupe-tete { display: flex; flex-direction: column; gap: 6px; }
+
+.groupe-tete h2 {
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -.015em;
+}
+
+.groupe-tete p { margin: 0; color: var(--ink-soft); font-size: 14.5px; max-width: 60ch; }
+
+.etiquette {
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 5px;
+}
+
+.etiquette[data-ton="action"] { background: var(--accent-soft); color: var(--accent); }
+.etiquette[data-ton="stop"] { background: var(--stop-soft); color: var(--stop); }
+.etiquette[data-ton="warn"] { background: var(--warn-soft); color: var(--warn); }
+.etiquette[data-ton="calme"] { background: var(--surface-2); color: var(--ink-faint); }
+
+/* ---------- Fiche ---------- */
+
+.fiche {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 11px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  scroll-margin-top: 86px;
+}
+
+.fiche[data-bloquant="oui"] { border-color: var(--stop); }
+
+.fiche-tete {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  padding: 20px 24px 0;
+}
+
+.fiche-ref {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  padding-top: 4px;
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.fiche-tete h3 {
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+}
+
+.fiche-sim {
+  display: inline-block;
+  margin-left: 10px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  vertical-align: middle;
+}
+
+.fiche-corps { padding: 14px 24px 22px; display: flex; flex-direction: column; gap: 15px; }
+.fiche-corps p { margin: 0; }
+.fiche-corps p.doux, p.doux { color: var(--ink-soft); }
+
+.intitule {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 5px;
+}
+
+.bloc { display: flex; flex-direction: column; }
+
+.tableau-enveloppe { overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+
+th, td { padding: 9px 14px; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+thead th { background: var(--surface-2); font-weight: 600; font-size: 12.5px; color: var(--ink-soft); }
+tbody tr:last-child td { border-bottom: none; }
+td.chiffre, th.chiffre { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+td.avant { color: var(--stop); }
+td.apres { color: var(--ok); }
+tr.marque-ligne td { font-weight: 600; }
+
+.encart {
+  border-left: 3px solid var(--warn);
+  background: var(--warn-soft);
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  font-size: 14.5px;
+}
+
+.encart strong { font-weight: 600; }
+
+/* ---------- Réponse ---------- */
+
+.reponse {
+  border-top: 1px solid var(--rule);
+  background: var(--surface-2);
+  padding: 18px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.choix { display: flex; flex-wrap: wrap; gap: 9px; }
+
+.choix button {
+  font: inherit;
+  font-size: 13.5px;
+  padding: 9px 14px;
+  border-radius: 7px;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.choix button:hover { border-color: var(--ink-faint); }
+
+.choix button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+.choix button[aria-pressed="true"][data-ton="ok"] { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); }
+.choix button[aria-pressed="true"][data-ton="stop"] { border-color: var(--stop); background: var(--stop-soft); color: var(--stop); }
+
+.puce { width: 7px; height: 7px; border-radius: 99px; background: currentColor; opacity: .55; flex: 0 0 auto; }
+.choix button[aria-pressed="true"] .puce { opacity: 1; }
+
+textarea {
+  font: inherit;
+  font-size: 14.5px;
+  width: 100%;
+  min-height: 62px;
+  resize: vertical;
+  padding: 11px 13px;
+  border-radius: 8px;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+textarea::placeholder { color: var(--ink-faint); }
+
+.sous-q {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px 15px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: 8px;
+}
+
+.sous-q p { margin: 0; font-size: 14.5px; }
+
+/* ---------- Barre d'enregistrement ---------- */
+
+.barre {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 22px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 14px 11px 20px;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  max-width: calc(100vw - 32px);
+}
+
+.barre[hidden] { display: none; }
+.barre-txt { font-size: 13.5px; color: var(--ink-soft); }
+
+.mot {
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding: 6px 0;
+  min-height: 20px;
+}
+
+.mot[data-ton="ok"] { color: var(--ok); }
+.mot[data-ton="stop"] { color: var(--stop); }
+
+.pied {
+  grid-column: 1 / -1;
+  margin-top: 48px;
+  padding-top: 26px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-faint);
+  font-size: 13.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pied a { color: var(--accent); }
+
+.actions-pied { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+
+@media (max-width: 980px) {
+  .page { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .sommaire { display: none; }
+  .page { padding: 0 20px 110px; }
+  .bandeau-corps { padding: 12px 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+<div id="app"></div>
+
+<script id="etat" type="application/json">{"reponses":{},"maj":null}</script>
+
+<script id="app-js">
+(function () {
+  "use strict";
+
+  var POINTS = [
+    {
+      groupe: "confirmer",
+      ref: "1.1",
+      titre: "Un bien détenu à 0 % était compté en totalité",
+      simulateur: "IFI",
+      constat: "Dans le tableau des biens, la colonne « quote-part » indique le pourcentage de détention. En saisissant 0, le simulateur ne retenait pas 0 % mais 100 % : le bien était intégré en totalité au patrimoine taxable.",
+      raison: "Saisir 0 est une action volontaire et sans ambiguïté. L'origine est un raccourci d'écriture courant en informatique, qui confond la valeur zéro avec une absence de réponse. Rien à l'écran ne signalait le remplacement.",
+      change: "Un champ laissé vide conserve la valeur par défaut de 100 %. Un 0 réellement saisi vaut désormais 0 %.",
+      tableau: {
+        legende: "Bien de 2 000 000 € saisi avec une quote-part de 0 %",
+        colonnes: ["", "Patrimoine brut retenu", "IFI dû"],
+        lignes: [
+          { cells: ["Avant", "2 000 000 €", "7 348,19 €"], ton: "avant" },
+          { cells: ["Après", "0 €", "0 €"], ton: "apres" }
+        ]
+      },
+      question: "Confirmez-vous qu'une quote-part de 0 % doit neutraliser le bien ?",
+      complements: [
+        "Préférez-vous qu'une quote-part de 0 % soit refusée par un message d'erreur plutôt qu'acceptée ?"
+      ]
+    },
+    {
+      groupe: "confirmer",
+      ref: "1.2",
+      titre: "Des frais funéraires à 0 € repassaient à 1 500 €",
+      simulateur: "Succession",
+      constat: "Le champ « Frais funéraires » propose 1 500 € par défaut. En saisissant 0, le simulateur retenait quand même 1 500 € au passif de la succession.",
+      raison: "Même mécanisme qu'au point précédent. Un utilisateur qui indique volontairement qu'aucun frais funéraire n'est déduit — parce qu'ils ont été réglés autrement, ou pour les exclure de la simulation — voyait sa saisie ignorée.",
+      change: "Le champ vide conserve la valeur par défaut de 1 500 €. Un 0 saisi vaut désormais 0 €.",
+      tableau: {
+        legende: "Succession de 800 000 € d'actif, sans autre passif",
+        colonnes: ["Frais funéraires saisis", "Passif retenu", "Actif net taxable"],
+        lignes: [
+          { cells: ["Champ laissé vide", "1 500 €", "798 500 €"] },
+          { cells: ["0 saisi — avant", "1 500 €", "798 500 €"], ton: "avant" },
+          { cells: ["0 saisi — après", "0 €", "800 000 €"], ton: "apres" }
+        ]
+      },
+      question: "Confirmez-vous qu'un utilisateur doit pouvoir ramener ce poste à 0 € ?",
+      complements: [
+        "La valeur par défaut de 1 500 € est-elle toujours d'actualité ? Elle est inscrite en dur dans le simulateur, sans source ni date. Si un montant forfaitaire différent s'applique, merci d'indiquer lequel et sa source."
+      ]
+    },
+    {
+      groupe: "confirmer",
+      ref: "1.3",
+      titre: "Le barème modifiable refusait la valeur zéro",
+      simulateur: "Démembrement",
+      constat: "Le simulateur permet de modifier les paramètres du barème : abattements par lien de parenté, bornes des tranches et taux. En saisissant 0 dans l'un d'eux, la valeur d'origine était silencieusement rétablie.",
+      raison: "Ces champs existent pour tester des hypothèses. Un abattement mis à 0 est une hypothèse légitime, par exemple pour simuler une donation intervenant après épuisement de l'abattement disponible sur la période de rappel fiscal.",
+      change: "Un champ vide conserve la valeur pré-remplie. Un 0 saisi est désormais appliqué.",
+      tableau: {
+        legende: "Donation en nue-propriété de 600 000 €, donateur de 68 ans, deux donataires en ligne directe",
+        colonnes: ["Hypothèse", "Droits avant", "Droits après"],
+        lignes: [
+          { cells: ["Barème inchangé", "28 388,70 €", "28 388,70 €"] },
+          { cells: ["Abattement ramené à 0 €", "28 388,70 € — saisie ignorée", "68 388,70 €"], ton: "apres" },
+          { cells: ["Taux de 1re tranche à 0 %", "28 388,70 € — saisie ignorée", "27 581,50 €"], ton: "apres" }
+        ]
+      },
+      question: "Confirmez-vous que ces paramètres doivent pouvoir être mis à zéro ?",
+      complements: [
+        "Faut-il avertir l'utilisateur qu'il s'écarte du barème en vigueur ? Rien ne le signale aujourd'hui, et un barème modifié ne laisse aucune trace sur les résultats affichés ou exportés.",
+        "Les valeurs pré-remplies de ce barème sont inscrites en dur, sans source ni millésime. Elles devront être confirmées dans le cadre du chantier de référentiels."
+      ]
+    },
+    {
+      groupe: "confirmer",
+      ref: "1.4",
+      titre: "La réduction pour dons ne suivait pas les changements de revenu",
+      simulateur: "IRPP",
+      constat: "La réduction pour dons est plafonnée à 20 % du revenu net imposable. Le simulateur mettait bien ce plafond à jour quand le revenu changeait, mais la réduction elle-même restait figée sur le revenu saisi au moment où les dons avaient été renseignés.",
+      raison: "Deux montants affichés côte à côte devenaient incohérents : un plafond de 12 000 € et une réduction de 13 200 €, supérieure au plafond. Le résultat dépendait de l'ordre de remplissage du formulaire, ce qui n'a aucune justification fiscale.",
+      change: "La réduction est recalculée avec le revenu courant à chaque modification, quelle qu'elle soit.",
+      tableau: {
+        legende: "Revenu ramené de 200 000 € à 60 000 €, avec 20 000 € de dons ouvrant droit à la réduction de 66 %",
+        colonnes: ["", "Plafond affiché", "Réduction retenue", "Impôt net"],
+        lignes: [
+          { cells: ["Avant", "12 000 €", "13 200 €", "0,00 €"], ton: "avant" },
+          { cells: ["Après", "12 000 €", "7 920 €", "3 183,58 €"], ton: "apres" }
+        ]
+      },
+      encart: "L'écart est de <strong>3 183,58 € d'impôt</strong>, dans le sens favorable au contribuable : le simulateur sous-estimait l'impôt dû.",
+      question: "Confirmez-vous que la réduction doit toujours se calculer avec le revenu courant, indépendamment de l'ordre de saisie ?"
+    },
+    {
+      groupe: "bloquant",
+      ref: "2.1",
+      titre: "La décote de la CDHR ne se déclenche jamais",
+      simulateur: "IRPP",
+      constat: "Le tableau « Sans décote / Avec décote » affiche toujours le même montant dans les deux colonnes : la décote calculée est nulle dans tous les cas, quel que soit le revenu. Vérifié pour un célibataire de 200 000 € à 400 000 €.",
+      raison: "La condition qui déclenche la décote ne peut jamais être satisfaite : elle ne s'applique qu'en dessous du seuil d'assujettissement, alors que le calcul qu'elle contient ne produit un résultat qu'au-dessus. Le mécanisme est inatteignable.",
+      change: "Rien n'a été changé. Le dépôt contient deux calculs de décote différents et incompatibles ; choisir entre eux reviendrait à trancher une question fiscale.",
+      comparaison: {
+        legende: "Les deux implémentations présentes dans le dépôt",
+        colonnes: ["", "Simulateur IRPP", "Simulateur « IR, CEHR et CDHR »"],
+        lignes: [
+          { cells: ["Quand elle s'applique", "en dessous du seuil", "dans une bande au-dessus du seuil"] },
+          { cells: ["Bande, célibataire", "—", "250 000 € à 330 000 €"] },
+          { cells: ["Bande, couple", "—", "500 000 € à 660 000 €"] },
+          { cells: ["Ce qui est retranché", "0,825 × (revenu − seuil)", "20 % du revenu − 0,825 × (revenu − seuil)"] },
+          { cells: ["À quel moment", "de la contribution brute", "de la cible de 20 %, avant imputation"] }
+        ]
+      },
+      tableau: {
+        legende: "Célibataire, sans abattement ni impôt déjà retenu",
+        colonnes: ["Revenu retraité", "Contribution brute", "Décote actuelle", "Selon l'autre simulateur", "Écart"],
+        lignes: [
+          { cells: ["250 001 €", "50 000 €", "0 €", "49 999 €", "49 999 €"], marque: true },
+          { cells: ["260 000 €", "52 000 €", "0 €", "43 750 €", "43 750 €"] },
+          { cells: ["280 000 €", "56 000 €", "0 €", "31 250 €", "31 250 €"] },
+          { cells: ["300 000 €", "60 000 €", "0 €", "18 750 €", "18 750 €"] },
+          { cells: ["320 000 €", "64 000 €", "0 €", "6 250 €", "6 250 €"] },
+          { cells: ["330 000 €", "66 000 €", "0 €", "0 €", "0 €"] }
+        ]
+      },
+      encart: "Un indice, qui ne vaut pas validation : avec la formule du second simulateur, la décote atteint exactement zéro lorsque le revenu atteint la borne haute de la bande. Pour un célibataire, 20 % de 330 000 € font 66 000 €, et 0,825 × (330 000 − 250 000) font également 66 000 €. La formule et la bande s'emboîtent parfaitement, ce qui suggère qu'elles proviennent d'une même source. <strong>C'est une observation sur le code, pas une vérification juridique.</strong>",
+      question: "Quelle formule fait foi ?",
+      options: [
+        { cle: "ir", libelle: "Celle du simulateur IR", ton: "ok" },
+        { cle: "autre", libelle: "Une autre formule, précisée ci-dessous", ton: "neutre" },
+        { cle: "distinct", libelle: "Deux situations différentes, deux calculs", ton: "neutre" }
+      ],
+      complements: [
+        "Quel est l'intervalle exact d'application, pour un célibataire et pour un couple ? Les bornes de 330 000 € et 660 000 € sont-elles confirmées ?",
+        "La décote se retranche-t-elle de la contribution brute, ou de la cible de 20 % avant imputation de l'impôt déjà payé ? Les deux versions ne l'appliquent pas au même endroit, ce qui change le résultat même à formule identique.",
+        "Quelle source et quel millésime citer ?"
+      ]
+    },
+    {
+      groupe: "arbitrage",
+      ref: "3.1",
+      titre: "L'âge et le nombre de donataires refusent le zéro",
+      simulateur: "Démembrement",
+      constat: "Contrairement aux autres champs, ces deux-là remplacent toujours un 0 par leur valeur par défaut : 68 ans et 1 donataire.",
+      raison: "Ce comportement a été conservé volontairement : un âge de 0 an ne correspond à aucune tranche du barème de l'usufruit, et un nombre de donataires nul empêcherait tout partage.",
+      change: "Rien n'a été changé, faute de savoir ce qui doit s'afficher à la place.",
+      question: "Ces champs devraient-ils afficher un message d'erreur plutôt qu'appliquer une valeur par défaut silencieuse ? Quelles bornes accepter — âge minimum et maximum, nombre maximum de donataires ?",
+      libre: true
+    },
+    {
+      groupe: "arbitrage",
+      ref: "3.2",
+      titre: "Un âge aberrant est accepté sans avertissement",
+      simulateur: "Démembrement",
+      constat: "Une valeur manifestement impossible est acceptée et produit un résultat d'apparence normale.",
+      raison: "Un âge négatif ou de 200 ans est rattaché à la tranche extrême du barème, sans que rien ne signale l'anomalie. Le résultat affiché paraît crédible alors qu'il ne repose sur aucune situation réelle.",
+      change: "Rien n'a été changé.",
+      tableau: {
+        legende: "Valeurs constatées",
+        colonnes: ["Âge saisi", "Taux de nue-propriété retenu"],
+        lignes: [
+          { cells: ["−5 ans", "10 %"], ton: "avant" },
+          { cells: ["0 an", "60 % — la valeur par défaut de 68 ans s'applique"] },
+          { cells: ["68 ans", "60 %"] },
+          { cells: ["200 ans", "90 %"], ton: "avant" }
+        ]
+      },
+      question: "Que doit voir l'utilisateur lorsqu'il saisit un âge hors bornes ?",
+      libre: true
+    },
+    {
+      groupe: "arbitrage",
+      ref: "3.3",
+      titre: "Les barèmes ne portent ni source ni date",
+      simulateur: "Les six simulateurs",
+      constat: "Tous les barèmes, seuils, abattements et taux sont inscrits directement dans les fichiers, sans mention de leur source ni de leur date d'application.",
+      raison: "Il est donc impossible, aujourd'hui, de vérifier un chiffre sans le rechercher soi-même. Cela empêche aussi de savoir quel millésime un résultat reflète.",
+      change: "Rien n'a été changé. C'est l'objet d'un chantier séparé, qui supposera pour chaque valeur une source officielle et un millésime.",
+      question: "Souhaitez-vous être associé au relevé des sources dès maintenant, ou lorsque le chantier de référentiels démarrera ?",
+      libre: true
+    },
+    {
+      groupe: "information",
+      ref: "4.1",
+      titre: "Un nom de variable contenant des caractères invisibles à l'œil",
+      simulateur: "IFI",
+      constat: "Le code contenait un nom de variable mêlant alphabet latin et alphabet cyrillique, deux jeux de caractères dont certaines lettres sont visuellement identiques. Un contournement avait été ajouté pour compenser.",
+      raison: "Le tout a été remis au propre. Un contrôle automatique interdit désormais ce type de nom dans les six simulateurs.",
+      change: "Les montants affichés sont rigoureusement identiques avant et après.",
+      sansDecision: true
+    },
+    {
+      groupe: "information",
+      ref: "4.2",
+      titre: "Suppression d'un calcul inutilisé",
+      simulateur: "IRPP",
+      constat: "Un bloc de calcul du plafond des dons n'était jamais utilisé et employait un plafond de 1 000 € inscrit en dur, sans tenir compte de l'option à 2 000 €.",
+      raison: "Son résultat n'étant lu nulle part, sa suppression ne change aucun montant.",
+      change: "Aucun montant affiché ne change.",
+      sansDecision: true
+    }
+  ];
+
+  var GROUPES = [
+    {
+      cle: "confirmer",
+      etiquette: "À confirmer",
+      ton: "action",
+      titre: "Corrections appliquées qui modifient un résultat",
+      chapeau: "Ces quatre points modifient des montants affichés. Un comportement a été jugé fautif et corrigé ; il vous revient de dire si c'en était bien un."
+    },
+    {
+      cle: "bloquant",
+      etiquette: "Décision attendue",
+      ton: "stop",
+      titre: "Correction non appliquée",
+      chapeau: "Le défaut est constaté mais rien n'a été corrigé : la correction suppose un choix fiscal. C'est le seul point qui empêche aujourd'hui de clore ce chantier."
+    },
+    {
+      cle: "arbitrage",
+      etiquette: "Arbitrage",
+      ton: "warn",
+      titre: "Points relevés, non corrigés",
+      chapeau: "Des incohérences constatées, qu'aucune correction n'a touchées faute de savoir quel comportement retenir."
+    },
+    {
+      cle: "information",
+      etiquette: "Pour information",
+      ton: "calme",
+      titre: "Corrections sans effet sur les résultats",
+      chapeau: "Mentionnées par transparence. Aucun montant affiché ne change : rien à valider de votre part."
+    }
+  ];
+
+  var OPTIONS_DEFAUT = [
+    { cle: "confirme", libelle: "C'était bien une erreur", ton: "ok" },
+    { cle: "pas-erreur", libelle: "Ce n'était pas une erreur", ton: "stop" },
+    { cle: "revoir", libelle: "Erreur, mais correction à revoir", ton: "neutre" }
+  ];
+
+  var etat = lireEtat();
+  var artifact = null;
+  var enAttente = false;
+
+  function lireEtat() {
+    try {
+      var brut = document.getElementById("etat").textContent;
+      var lu = JSON.parse(brut);
+      return { reponses: lu.reponses || {}, maj: lu.maj || null };
+    } catch (e) {
+      return { reponses: {}, maj: null };
+    }
+  }
+
+  function ech(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function pointsDecidables() {
+    return POINTS.filter(function (p) { return !p.sansDecision; });
+  }
+
+  function estRepondu(p) {
+    var r = etat.reponses[p.ref];
+    if (!r) return false;
+    if (p.libre) return !!(r.note && r.note.trim());
+    return !!r.choix;
+  }
+
+  function nbRepondus() {
+    return pointsDecidables().filter(estRepondu).length;
+  }
+
+  function tableauHtml(t, chiffres) {
+    if (!t) return "";
+    var h = '<div class="bloc">';
+    if (t.legende) h += '<div class="intitule">' + ech(t.legende) + "</div>";
+    h += '<div class="tableau-enveloppe"><table><thead><tr>';
+    t.colonnes.forEach(function (c, i) {
+      h += "<th" + (chiffres && i > 0 ? ' class="chiffre"' : "") + ">" + ech(c) + "</th>";
+    });
+    h += "</tr></thead><tbody>";
+    t.lignes.forEach(function (l) {
+      h += "<tr" + (l.marque ? ' class="marque-ligne"' : "") + ">";
+      l.cells.forEach(function (c, i) {
+        var cls = [];
+        if (chiffres && i > 0) cls.push("chiffre");
+        if (l.ton && i > 0) cls.push(l.ton);
+        h += "<td" + (cls.length ? ' class="' + cls.join(" ") + '"' : "") + ">" + ech(c) + "</td>";
+      });
+      h += "</tr>";
+    });
+    h += "</tbody></table></div></div>";
+    return h;
+  }
+
+  function ficheHtml(p) {
+    var r = etat.reponses[p.ref] || {};
+    var h = '<article class="fiche" id="p-' + p.ref + '"' + (p.groupe === "bloquant" ? ' data-bloquant="oui"' : "") + ">";
+
+    h += '<div class="fiche-tete"><div class="fiche-ref">' + ech(p.ref) + "</div>";
+    h += "<h3>" + ech(p.titre) + '<span class="fiche-sim">' + ech(p.simulateur) + "</span></h3></div>";
+
+    h += '<div class="fiche-corps">';
+    h += '<div class="bloc"><div class="intitule">Ce que voyait l\'utilisateur</div><p>' + ech(p.constat) + "</p></div>";
+    h += '<div class="bloc"><div class="intitule">Pourquoi cela paraît anormal</div><p class="doux">' + ech(p.raison) + "</p></div>";
+    if (p.comparaison) h += tableauHtml(p.comparaison, false);
+    if (p.tableau) h += tableauHtml(p.tableau, true);
+    if (p.encart) h += '<div class="encart">' + p.encart + "</div>";
+    h += '<div class="bloc"><div class="intitule">Ce qui a été changé</div><p class="doux">' + ech(p.change) + "</p></div>";
+    h += "</div>";
+
+    if (!p.sansDecision) {
+      h += '<div class="reponse">';
+      h += '<div class="bloc"><div class="intitule">Votre décision</div><p style="margin-bottom:4px">' + ech(p.question) + "</p></div>";
+
+      if (!p.libre) {
+        var opts = p.options || OPTIONS_DEFAUT;
+        h += '<div class="choix" role="group">';
+        opts.forEach(function (o) {
+          var actif = r.choix === o.cle;
+          h += '<button type="button" data-ref="' + p.ref + '" data-choix="' + o.cle + '"' +
+            ' data-ton="' + (o.ton || "neutre") + '" aria-pressed="' + (actif ? "true" : "false") + '">' +
+            '<span class="puce"></span>' + ech(o.libelle) + "</button>";
+        });
+        h += "</div>";
+      }
+
+      if (p.complements && p.complements.length) {
+        h += '<div class="sous-q"><div class="intitule">Questions complémentaires</div>';
+        p.complements.forEach(function (c) { h += "<p>" + ech(c) + "</p>"; });
+        h += "</div>";
+      }
+
+      h += '<textarea data-ref="' + p.ref + '" placeholder="' +
+        (p.libre ? "Votre réponse" : "Précision, source, millésime, ou motif du refus") +
+        '">' + ech(r.note || "") + "</textarea>";
+      h += "</div>";
+    }
+
+    h += "</article>";
+    return h;
+  }
+
+  function rendre() {
+    var h = "";
+
+    h += '<header class="bandeau"><div class="bandeau-corps">';
+    h += '<div class="marque">Arbitrages fiscaux <span>· simulateurs Arthur Beldi</span></div>';
+    h += '<div class="jauge"><div class="jauge-piste"><div class="jauge-part" id="jauge"></div></div>';
+    h += '<div class="jauge-txt" id="jauge-txt"></div></div>';
+    h += "</div></header>";
+
+    h += '<div class="page">';
+
+    h += '<div class="chapeau">';
+    h += '<div class="surtitre">Dossier de validation</div>';
+    h += "<h1>Ce que nous avons pris pour une erreur</h1>";
+    h += "<p>Chaque point relevé dans les simulateurs est présenté de la même façon : ce que voyait l'utilisateur, pourquoi le comportement a paru fautif, et l'écart en euros que cela représente.</p>";
+    h += "<p>Un développeur peut constater qu'un simulateur se comporte de façon incohérente. Il ne peut pas décider seul si le comportement d'origine était une erreur ou une règle voulue. Trois réponses sont donc possibles à chaque fois : c'était bien une erreur, ce n'en était pas une, ou c'en était une mais la correction proposée ne convient pas.</p>";
+    h += "<p class=\"doux\">Vos réponses sont enregistrées sur cette page. Une réponse d'une ligne suffit.</p>";
+    h += "</div>";
+
+    h += '<nav class="sommaire" aria-label="Sommaire">';
+    h += '<div class="sommaire-titre">Points relevés</div>';
+    POINTS.forEach(function (p) {
+      var etatPastille = p.sansDecision ? "info" : (estRepondu(p) ? "repondu" : "attente");
+      h += '<button class="som-lien" type="button" data-vers="' + p.ref + '">';
+      h += '<span class="pastille" data-etat="' + etatPastille + '"></span>';
+      h += '<span class="som-ref">' + ech(p.ref) + "</span>";
+      h += "<span>" + ech(p.simulateur) + "</span></button>";
+    });
+    h += "</nav>";
+
+    h += '<main class="flux">';
+    GROUPES.forEach(function (g) {
+      var liste = POINTS.filter(function (p) { return p.groupe === g.cle; });
+      if (!liste.length) return;
+      h += '<section class="groupe">';
+      h += '<div class="groupe-tete"><span class="etiquette" data-ton="' + g.ton + '">' + ech(g.etiquette) + "</span>";
+      h += "<h2>" + ech(g.titre) + "</h2><p>" + ech(g.chapeau) + "</p></div>";
+      liste.forEach(function (p) { h += ficheHtml(p); });
+      h += "</section>";
+    });
+
+    h += '<footer class="pied">';
+    h += "<div>Ces vérifications garantissent que les simulateurs continuent de faire ce qu'ils faisaient. Elles ne garantissent pas que ce qu'ils font est juridiquement exact.</div>";
+    h += "<div>Toutes les valeurs de référence utilisées par les tests portent aujourd'hui la mention « non validé ». C'est votre validation, point par point, qui leur donnera la valeur d'une garantie fiscale et non seulement technique.</div>";
+    h += '<div class="actions-pied">';
+    h += '<button class="btn" type="button" id="copier">Copier la synthèse</button>';
+    h += '<button class="btn" type="button" id="telecharger" hidden>Télécharger la synthèse</button>';
+    h += "</div>";
+    h += '<div class="mot" id="mot-pied"></div>';
+    h += "</footer>";
+
+    h += "</main></div>";
+
+    h += '<div class="barre" id="barre" hidden>';
+    h += '<span class="barre-txt" id="barre-txt"></span>';
+    h += '<button class="btn btn-fort" type="button" id="enregistrer">Enregistrer</button>';
+    h += "</div>";
+
+    document.getElementById("app").innerHTML = h;
+    majJauge();
+    brancher();
+  }
+
+  function majJauge() {
+    var total = pointsDecidables().length;
+    var faits = nbRepondus();
+    var j = document.getElementById("jauge");
+    if (j) j.style.width = (total ? (faits / total) * 100 : 0) + "%";
+    var t = document.getElementById("jauge-txt");
+    if (t) t.textContent = faits + " / " + total + " arbitré" + (faits > 1 ? "s" : "");
+    if (t && total === 0) t.textContent = "aucun arbitrage attendu";
+  }
+
+  function majPastilles() {
+    POINTS.forEach(function (p) {
+      if (p.sansDecision) return;
+      var b = document.querySelector('[data-vers="' + p.ref + '"] .pastille');
+      if (b) b.setAttribute("data-etat", estRepondu(p) ? "repondu" : "attente");
+    });
+  }
+
+  function marquerModifie() {
+    enAttente = true;
+    var barre = document.getElementById("barre");
+    var txt = document.getElementById("barre-txt");
+    if (!barre) return;
+    if (!artifact) {
+      txt.textContent = "Réponses non enregistrables depuis cette vue";
+      document.getElementById("enregistrer").disabled = true;
+    } else {
+      txt.textContent = "Modifications non enregistrées";
+      document.getElementById("enregistrer").disabled = false;
+    }
+    barre.hidden = false;
+  }
+
+  function brancher() {
+    document.querySelectorAll(".som-lien").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var cible = document.getElementById("p-" + b.dataset.vers);
+        if (cible) cible.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    document.querySelectorAll(".choix button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var ref = b.dataset.ref;
+        var r = etat.reponses[ref] || {};
+        r.choix = r.choix === b.dataset.choix ? null : b.dataset.choix;
+        etat.reponses[ref] = r;
+        document.querySelectorAll('.choix button[data-ref="' + ref + '"]').forEach(function (autre) {
+          autre.setAttribute("aria-pressed", autre.dataset.choix === r.choix ? "true" : "false");
+        });
+        majJauge();
+        majPastilles();
+        marquerModifie();
+      });
+    });
+
+    document.querySelectorAll("textarea[data-ref]").forEach(function (t) {
+      t.addEventListener("input", function () {
+        var r = etat.reponses[t.dataset.ref] || {};
+        r.note = t.value;
+        etat.reponses[t.dataset.ref] = r;
+        majJauge();
+        majPastilles();
+        marquerModifie();
+      });
+    });
+
+    var enr = document.getElementById("enregistrer");
+    if (enr) enr.addEventListener("click", enregistrer);
+
+    var cop = document.getElementById("copier");
+    if (cop) cop.addEventListener("click", function () {
+      var texte = synthese();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texte).then(function () {
+          dire("Synthèse copiée dans le presse-papiers.", "ok");
+        }, function () {
+          dire("La copie a échoué. Utilisez le téléchargement.", "stop");
+        });
+      } else {
+        dire("La copie n'est pas disponible dans ce navigateur.", "stop");
+      }
+    });
+
+    var tel = document.getElementById("telecharger");
+    if (tel) tel.addEventListener("click", function () {
+      claude.use("downloads").then(function (d) {
+        if (!d) { dire("Téléchargement indisponible.", "stop"); return; }
+        return d.save({ filename: "arbitrages-fiscaux.md", data: synthese() }).then(function () {
+          dire("Synthèse téléchargée.", "ok");
+        }, function () {
+          dire("Téléchargement annulé.", null);
+        });
+      });
+    });
+  }
+
+  function dire(message, ton) {
+    var m = document.getElementById("mot-pied");
+    if (!m) return;
+    m.textContent = message;
+    if (ton) m.setAttribute("data-ton", ton); else m.removeAttribute("data-ton");
+  }
+
+  function libelleChoix(p, cle) {
+    var opts = p.options || OPTIONS_DEFAUT;
+    for (var i = 0; i < opts.length; i++) if (opts[i].cle === cle) return opts[i].libelle;
+    return "—";
+  }
+
+  function synthese() {
+    var l = ["# Arbitrages du référent fiscal", ""];
+    if (etat.maj) l.push("Dernier enregistrement : " + etat.maj, "");
+    GROUPES.forEach(function (g) {
+      var liste = POINTS.filter(function (p) { return p.groupe === g.cle && !p.sansDecision; });
+      if (!liste.length) return;
+      l.push("## " + g.titre, "");
+      liste.forEach(function (p) {
+        var r = etat.reponses[p.ref] || {};
+        l.push("### " + p.ref + " — " + p.titre + " (" + p.simulateur + ")");
+        if (!p.libre) l.push("Décision : " + (r.choix ? libelleChoix(p, r.choix) : "en attente"));
+        if (r.note && r.note.trim()) l.push("", r.note.trim());
+        else if (p.libre) l.push("Réponse : en attente");
+        l.push("");
+      });
+    });
+    return l.join("\n");
+  }
+
+  function documentPublie() {
+    var css = document.getElementById("css").textContent;
+    var js = document.getElementById("app-js").textContent;
+    etat.maj = new Date().toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" });
+    var json = JSON.stringify({ reponses: etat.reponses, maj: etat.maj });
+    return [
+      "<!doctype html>",
+      '<html lang="fr"><head><meta charset="utf-8">',
+      '<meta name="viewport" content="width=device-width, initial-scale=1">',
+      "<title>Arbitrages fiscaux</title>",
+      '<link rel="preconnect" href="https://fonts.googleapis.com">',
+      '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">',
+      "<style id=\"css\">" + css + "</style>",
+      "</head><body>",
+      '<div id="app"></div>',
+      '<script id="etat" type="application/json">' + json + "<\/script>",
+      '<script id="app-js">' + js + "<\/script>",
+      "</body></html>"
+    ].join("\n");
+  }
+
+  function enregistrer() {
+    if (!artifact) { dire("Cette vue ne permet pas d'enregistrer.", "stop"); return; }
+    var bouton = document.getElementById("enregistrer");
+    bouton.disabled = true;
+    document.getElementById("barre-txt").textContent = "Enregistrement…";
+    artifact.publish(documentPublie()).then(function () {
+      enAttente = false;
+      document.getElementById("barre").hidden = true;
+    }, function (err) {
+      var code = err && err.code;
+      if (code === "conflict") {
+        document.getElementById("barre-txt").textContent = "Quelqu'un a enregistré avant vous, la page se recharge";
+      } else if (code === "not_granted" || code === "not_writer") {
+        document.getElementById("barre-txt").textContent = "Vous consultez cette page en lecture seule";
+      } else {
+        document.getElementById("barre-txt").textContent = "Enregistrement impossible, réessayez";
+        bouton.disabled = false;
+      }
+    });
+  }
+
+  rendre();
+
+  window.addEventListener("beforeunload", function (e) {
+    if (enAttente && artifact) { e.preventDefault(); e.returnValue = ""; }
+  });
+
+  if (window.claude && window.claude.use) {
+    claude.use("artifact").then(function (a) {
+      artifact = a;
+      if (!a) return;
+      var tel = document.getElementById("telecharger");
+      if (tel) claude.use("downloads").then(function (d) { if (d && tel) tel.hidden = false; });
+    });
+  }
+})();
+</script>

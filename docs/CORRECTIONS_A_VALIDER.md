@@ -6,12 +6,18 @@ jugé fautif mais **laissé en l'état** faute de certitude.
 
 Aucune connaissance technique n'est nécessaire pour le lire.
 
-Dernière mise à jour : 26 août 2026 — préversion `0.4.0-beta.10`.
+Dernière mise à jour : 26 août 2026 — préversion `0.4.0-beta.11`.
 
 **Version interactive :** <https://claude.ai/code/artifact/ed86515a-2108-4df9-b7fc-acc15b0682d3>
 Cette page reprend le contenu ci-dessous et permet de répondre point par point.
 Les réponses y sont enregistrées et peuvent être exportées. Le présent fichier
 reste la version de référence, versionnée avec le code.
+
+Son source est `docs/arbitrages.html`. Pour la faire évoluer, modifier ce fichier
+puis le republier à la **même adresse** : republier depuis un autre chemin
+créerait une seconde page et perdrait les arbitrages déjà saisis. Les points
+affichés sont décrits dans le tableau `POINTS` en tête du script ; ajouter ou
+retirer un point ne demande rien d'autre que de modifier ce tableau.
 
 ## Pourquoi votre validation est demandée
 
