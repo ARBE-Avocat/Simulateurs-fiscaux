@@ -27,11 +27,15 @@ Simulateur_PV_Immobilière Juillet 2026.html
 Simulation IFI - Avril 2026.html
 Simulation Succession.html
 Simulation démembrement immo - Juin 2026.html
+data/                                             # Données fiscales (voir data/README.md)
+scripts/                                          # Outillage : import, validation, génération
 tests/                                            # Tests automatisés (voir tests/README.md)
 docs/                                             # Documentation de projet
 ```
 
-Chaque simulateur est indépendant (pas de dépendance partagée entre les fichiers) : il peut être modifié, renommé ou distribué séparément. Seul le bouton « Accueil » de chaque page pointe vers `index.html`, situé dans le même dossier.
+Chaque simulateur est aujourd'hui indépendant : il peut être ouvert, modifié ou déplacé seul, et son bouton « Accueil » pointe vers `index.html`, situé dans le même dossier.
+
+Cette autonomie **n'est plus une propriété garantie**. L'architecture cible, décrite dans `docs/ARCHITECTURE_CIBLE.md`, prévoit des ressources partagées — données fiscales, feuille de style commune — référencées par chemin relatif. Le mode de consultation supporté sera alors un serveur HTTP, et le dossier devra rester complet.
 
 ## Utilisation
 
@@ -65,6 +69,21 @@ valides, et que le moteur de l'impôt sur le revenu produit les montants attendu
 
 `tests/README.md` explique comment lancer, lire et écrire un test, ainsi que la
 règle appliquée aux valeurs fiscales attendues.
+
+## Données fiscales
+
+Les barèmes, taux, seuils et abattements sont progressivement sortis des
+fichiers HTML vers le dossier `data/`, où chaque valeur porte sa source, sa date
+d'effet et son statut de validation.
+
+```bash
+npm run donnees:valider     # vérifie la cohérence des référentiels
+npm run donnees:generer     # reconstruit le fichier lu par les simulateurs
+npm run donnees:importer -- <fichier.csv>   # normalise un CSV officiel
+```
+
+`data/README.md` décrit la procédure complète de mise à jour d'une valeur
+fiscale et le format des CSV acceptés.
 
 ## Avertissement
 

@@ -1,0 +1,2 @@
+id;libelle;type;unite;millesime;dateEffet;dateFin;statutValidation;valeur;borneInf;borneInfIncluse;borneSup;borneSupIncluse;taux;utilisePar;varianteCle;arbitrageDocument;arbitragePoint;arbitrageQuestion;sourceReference;sourceUrl;sourceDateConsultation;validationPar;validationDate;notes
+ps.taux.plus-values;Taux des prélèvements sociaux — écrit en pourcentage;taux;decimal;2025;;;non-valide;17,2;;;;;;irpp;;;;;;;;;;Erreur volontaire : un taux se stocke en décimal, 0,172. Écrit 17,2, il vaut cent fois trop.

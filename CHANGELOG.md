@@ -6,6 +6,18 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.2] - 2026-08-26
+
+### Ajouté
+
+- Chaîne reproductible de mise à jour des données fiscales. Trois commandes sans installation : `npm run donnees:valider` vérifie la cohérence des référentiels, `npm run donnees:importer` normalise un CSV officiel vers le format commun, `npm run donnees:generer` reconstruit le fichier que liront les simulateurs. Une mise à jour annuelle devient la modification d'une ligne de données relue en pull request, au lieu d'une réécriture de blocs HTML.
+- L'import est déterministe : le même CSV produit toujours le même fichier, même si ses lignes ont été réordonnées. Une donnée invalide fait échouer la commande **sans rien écrire**, de sorte qu'un référentiel n'est jamais laissé dans un état intermédiaire.
+- Un CSV d'exemple complet et un CSV volontairement fautif, tous deux vérifiés par les tests. `data/README.md` décrit la procédure de mise à jour d'une valeur fiscale et le format accepté.
+
+### Modifié
+
+- `README.md` signale que l'autonomie des fichiers HTML n'est plus une propriété garantie du produit : l'architecture cible prévoit des ressources partagées et un mode de consultation par serveur HTTP.
+
 ## [0.5.0-beta.1] - 2026-08-26
 
 ### Ajouté

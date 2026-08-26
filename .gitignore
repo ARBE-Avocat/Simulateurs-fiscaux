@@ -3,3 +3,6 @@
 
 # Dependances de developpement installees localement
 /node_modules/
+
+# Sortie de build, reconstruite a la publication
+/site/

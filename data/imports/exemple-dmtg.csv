@@ -1,0 +1,14 @@
+id;libelle;type;unite;millesime;dateEffet;dateFin;statutValidation;valeur;borneInf;borneInfIncluse;borneSup;borneSupIncluse;taux;utilisePar;varianteCle;arbitrageDocument;arbitragePoint;arbitrageQuestion;sourceReference;sourceUrl;sourceDateConsultation;validationPar;validationDate;notes
+dmtg.abattement.ligne-directe;Abattement en ligne directe;montant;EUR;2025;2011-08-01;;non-valide;100000;;;;;;succession,demembrement;;;;;CGI art. 779, I;https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000041471074;2026-08-26;;;"Référence citée par le simulateur de démembrement ; rattachement à confirmer par le référent fiscal."
+dmtg.abattement.frere-soeur;Abattement entre frères et sœurs;montant;EUR;2025;;;non-valide;15932;;;;;;succession,demembrement;;;;;;;;;;Aucune source ne figure dans le code : la colonne reste vide, elle deviendra « inconnue ».
+dmtg.abattement.neveu-niece;Abattement entre neveux et nièces;montant;EUR;2025;;;non-valide;7967;;;;;;succession,demembrement;;;;;;;;;;
+dmtg.abattement.defaut;Abattement par défaut;montant;EUR;2025;;;non-valide;1594;;;;;;succession,demembrement;;;;;;;;;;
+dmtg.bareme.ligne-directe;Barème en ligne directe;bareme;decimal;2025;;;non-valide;;0;oui;8072;oui;0,05;succession,demembrement;;;;;CGI art. 777;;2026-08-26;;;
+dmtg.bareme.ligne-directe;Barème en ligne directe;bareme;decimal;2025;;;non-valide;;8072;non;12109;oui;0,10;succession,demembrement;;;;;CGI art. 777;;2026-08-26;;;
+dmtg.bareme.ligne-directe;Barème en ligne directe;bareme;decimal;2025;;;non-valide;;12109;non;15932;oui;0,15;succession,demembrement;;;;;CGI art. 777;;2026-08-26;;;
+dmtg.bareme.ligne-directe;Barème en ligne directe;bareme;decimal;2025;;;non-valide;;15932;non;552324;oui;0,20;succession,demembrement;;;;;CGI art. 777;;2026-08-26;;;
+dmtg.bareme.ligne-directe;Barème en ligne directe;bareme;decimal;2025;;;non-valide;;552324;non;902838;oui;0,30;succession,demembrement;;;;;CGI art. 777;;2026-08-26;;;
+dmtg.bareme.ligne-directe;Barème en ligne directe;bareme;decimal;2025;;;non-valide;;902838;non;1805677;oui;0,40;succession,demembrement;;;;;CGI art. 777;;2026-08-26;;;
+dmtg.bareme.ligne-directe;Barème en ligne directe;bareme;decimal;2025;;;non-valide;;1805677;non;;;0,45;succession,demembrement;;;;;CGI art. 777;;2026-08-26;;;
+ps.taux.plus-values;Taux global des prélèvements sociaux sur les plus-values;taux;decimal;2025;;;conteste;0,172;;;;;;irpp,pv-immobiliere;17-2;docs/CORRECTIONS_A_VALIDER.md;2.2;Quel taux s'applique, à quels revenus, et à compter de quelle date ?;;;;;;Écart mesuré : 14 000 € par million de plus-value. Aucune des deux valeurs n’est retenue par l’import.
+ps.taux.plus-values;Taux global des prélèvements sociaux sur les plus-values;taux;decimal;2025;;;conteste;0,186;;;;;;ir-cehr-cdhr;18-6;docs/CORRECTIONS_A_VALIDER.md;2.2;Quel taux s'applique, à quels revenus, et à compter de quelle date ?;;;;;;

@@ -31,9 +31,11 @@ tests/
 
 ## Comment un simulateur est testé sans navigateur
 
-Les simulateurs sont des fichiers HTML autonomes : le JavaScript de calcul est
-embarqué dans une balise `<script>`, mêlé au câblage de l'interface. Tant que
-l'architecture cible n'est pas décidée (issue #20), ce code n'est pas déplacé.
+Les simulateurs sont encore des fichiers HTML complets : le JavaScript de calcul
+est embarqué dans une balise `<script>`, mêlé au câblage de l'interface.
+L'architecture cible est désormais arrêtée — voir `docs/ARCHITECTURE_CIBLE.md` —
+mais son étape de déplacement des fichiers appartient au jalon `0.6`. Jusque-là,
+ce code reste où il est.
 
 `tests/helpers/simulateurs.js` lit donc le fichier HTML, en extrait le script et
 l'exécute dans Node avec un faux DOM minimal
@@ -79,6 +81,23 @@ Deux limites à connaître :
 - les montants affichés utilisent une espace fine insécable comme séparateur de
   milliers. Comparer un texte affiché passe donc par `assertTexteAffiche`, qui
   ignore le type d'espace.
+
+## Tests des données fiscales
+
+Deux fichiers ne chargent aucun simulateur : ils testent la chaîne de données du
+jalon `0.5`.
+
+- `unit/schema-referentiel.test.js` vérifie le schéma des référentiels à partir
+  des exemples versionnés de `data/schema/exemples/`. Chaque fichier du
+  sous-dossier `invalides/` doit être refusé ; l'un d'eux qui redeviendrait
+  acceptable fait échouer les tests ;
+- `unit/importeur-referentiels.test.js` vérifie l'import d'un CSV, son
+  déterminisme et le refus d'écrire quoi que ce soit lorsqu'une donnée est
+  invalide.
+
+Ajouter un cas de refus au schéma se fait en ajoutant **un fichier** dans
+`data/schema/exemples/invalides/` : le test le prend en compte automatiquement.
+Son nom doit annoncer la raison du refus.
 
 ## Écrire un nouveau test
 
