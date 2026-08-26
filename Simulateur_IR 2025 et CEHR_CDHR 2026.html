@@ -34,6 +34,25 @@
 
   /* ---------- Header ---------- */
   header{ margin-bottom: 36px; }
+  .header-top{ display:flex; align-items:center; justify-content:space-between; gap: 16px; }
+  .home-btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--wine);
+    border-radius: 20px;
+    color: var(--wine);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
+  }
+  .home-btn:hover{ background: var(--wine); color: #fff; }
   .eyebrow{
     font-family:'IBM Plex Mono', monospace;
     font-size: 12px;
@@ -290,7 +309,10 @@
 <div class="wrap">
 
   <header>
-    <div class="eyebrow">Simulateur fiscal — usage interne</div>
+    <div class="header-top">
+      <div class="eyebrow">Simulateur fiscal — usage interne</div>
+      <a href="index.html" class="home-btn">Accueil</a>
+    </div>
     <h1>IR · CEHR · CDHR sur cession de titres</h1>
     <p class="subhead">Renseignez la situation du foyer et les données de la cession ci-dessous. Les trois hypothèses (flat tax, barème, barème + quotient) et l'impact d'un apport-cession 150-0 B ter se recalculent automatiquement.</p>
   </header>
