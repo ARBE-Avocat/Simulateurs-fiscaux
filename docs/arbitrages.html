@@ -217,6 +217,49 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .pastille[data-etat="repondu"] { background: var(--ok); }
 .som-ref { font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); flex: 0 0 auto; }
 
+/* ---------- Marche à suivre ---------- */
+
+.mode-emploi {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 22px 17px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mode-emploi ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+}
+
+.mode-emploi li {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-size: 14.5px;
+  flex: 1 1 240px;
+}
+
+.me-num {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 4px;
+  padding: 1px 6px;
+  flex: 0 0 auto;
+}
+
+.me-note { margin: 0; font-size: 13.5px; color: var(--ink-soft); }
+
 /* ---------- Sections ---------- */
 
 .flux { display: flex; flex-direction: column; gap: 40px; min-width: 0; }
@@ -927,6 +970,32 @@ textarea::placeholder { color: var(--ink-faint); }
     return h;
   }
 
+  /**
+   * Marche à suivre, en trois étapes réelles : répondre, conserver, prévenir.
+   * Le texte s'adapte au droit d'écriture du lecteur, car un invité ne peut pas
+   * enregistrer ses réponses dans la page.
+   */
+  function modeEmploiHtml() {
+    var peutEnregistrer = capacite !== "non";
+    var etapes = [
+      "<strong>Répondez</strong> à chaque point : un choix, et une précision si elle s'impose. Une ligne suffit.",
+      peutEnregistrer
+        ? "<strong>Enregistrez</strong> avec le bouton qui apparaît en bas de l'écran."
+        : "<strong>Copiez vos réponses</strong> avec le bouton qui apparaît en bas de l'écran.",
+      peutEnregistrer
+        ? "<strong>Prévenez Clément</strong> une fois terminé : vos réponses restent sur cette page."
+        : "<strong>Envoyez-les à Clément</strong> : elles ne sont pas conservées sur cette page."
+    ];
+    var h = '<aside class="mode-emploi"><ol>';
+    etapes.forEach(function (t, i) {
+      h += '<li><span class="me-num">' + (i + 1) + "</span><span>" + t + "</span></li>";
+    });
+    h += "</ol>";
+    h += '<p class="me-note">Rien n\'est obligatoire d\'un seul tenant : un point tranché se replie et affiche votre décision, et vous pouvez y revenir à tout moment. Les deux points bordés de rouge sont ceux qui bloquent la suite du chantier.</p>';
+    h += "</aside>";
+    return h;
+  }
+
   function ficheHtml(p) {
     if (estReduite(p)) return ficheReduiteHtml(p);
     var r = etat.reponses[p.ref] || {};
@@ -999,6 +1068,7 @@ textarea::placeholder { color: var(--ink-faint); }
     h += "</nav>";
 
     h += '<main class="flux">';
+    h += '<div id="mode-emploi">' + modeEmploiHtml() + "</div>";
     GROUPES.forEach(function (g) {
       var liste = POINTS.filter(function (p) { return p.groupe === g.cle; });
       if (!liste.length) return;
@@ -1253,6 +1323,8 @@ textarea::placeholder { color: var(--ink-faint); }
 
   if (!window.claude || !window.claude.use) {
     capacite = "non";
+    var me0 = document.getElementById("mode-emploi");
+    if (me0) me0.innerHTML = modeEmploiHtml();
     rafraichirBarre();
   }
 
@@ -1260,6 +1332,8 @@ textarea::placeholder { color: var(--ink-faint); }
     claude.use("artifact").then(function (a) {
       artifact = a;
       capacite = a ? "oui" : "non";
+      var me = document.getElementById("mode-emploi");
+      if (me) me.innerHTML = modeEmploiHtml();
       rafraichirBarre();
     });
   }
