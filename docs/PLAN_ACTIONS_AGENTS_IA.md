@@ -113,9 +113,9 @@ Phase 0 Gouvernance ✓ ─> #10 Socle de tests ✓
 
 Jalon 0.5 : #11 -> #7           bornes, unités et arrondis
 
-#9 Cas fiscaux validés ───────────────┐
-#11 Conventions ──────────────────────┼─> #12 Schéma des référentiels
-#20 Architecture cible ───────────────┘       │
+#20 Architecture cible ───────────────────> #12 Schéma des référentiels
+#9 et #11 alimentent les statuts,             │
+sans bloquer l'extraction                     │
                                                ├─> #18 Import et validation
                                                ├─> #14 Référentiel IR
                                                ├─> #15 Référentiel IFI
@@ -250,9 +250,31 @@ Sous-issue de l’epic [#2](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/i
 
 - [#12 — Définir le schéma et l’inventaire des référentiels](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/12)
 
-Dépendances : #9, #11 et #20.
+Dépendance stricte : #20, pour savoir où vivent les données.
+
+#9 et #11 ne bloquent plus cette étape, à une condition : **le schéma doit savoir porter une valeur non validée.** Décision du 26 août 2026.
 
 L’agent doit commencer par les exemples et le schéma, sans extraire immédiatement toutes les constantes.
+
+### Principe des valeurs non validées
+
+Attendre les arbitrages du référent juridique pour extraire les référentiels reviendrait à immobiliser tout le chantier données. Ce n'est pas nécessaire, et c'est même contraire à l'objet de l'externalisation.
+
+Toute valeur fiscale extraite porte donc, en plus de sa valeur :
+
+- sa `source` et sa `dateEffet` lorsqu'elles sont connues, sinon la mention explicite qu'elles ne le sont pas ;
+- un `statutValidation` : `non-valide`, `valide` ou `conteste` ;
+- la `dateValidation` et l'identité du valideur, le cas échéant.
+
+Conséquences pratiques :
+
+- l'extraction conserve les valeurs actuellement embarquées, sans les corriger ni les arbitrer ; c'est une refactorisation, elle ne change aucun résultat ;
+- un arbitrage ultérieur du référent juridique devient **la modification d'une donnée et d'un statut**, non une réécriture de code. C'est exactement le bénéfice recherché ;
+- lorsque deux simulateurs portent des valeurs différentes pour une même règle, le schéma doit pouvoir représenter le désaccord avec le statut `conteste` plutôt que d'en choisir une. Un agent ne tranche jamais une divergence par extraction.
+
+Deux divergences de ce type sont déjà connues et devront être représentées ainsi : la décote CDHR (#4) et le taux des prélèvements sociaux, 17,2 % contre 18,6 %.
+
+Le travail d'extraction est par ailleurs le meilleur moyen d'en découvrir d'autres : passer chaque valeur en revue oblige à la regarder. Toute nouvelle divergence rejoint `docs/CORRECTIONS_A_VALIDER.md` et la page d'arbitrage, sans interrompre le chantier.
 
 ### Étape 2.3 — Construire l’import et la validation
 
