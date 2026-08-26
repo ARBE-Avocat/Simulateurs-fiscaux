@@ -72,12 +72,18 @@ simulateur.dom.declencher('DOMContentLoaded');
 Ce faux DOM ne remplace pas une vérification visuelle dans un vrai navigateur :
 il sert à tester les calculs, pas l'apparence.
 
-Deux limites à connaître :
+Le faux DOM applique **l'état initial du formulaire** : les attributs `value`,
+`checked` et `selected` écrits dans le HTML. Un champ que le scénario ne
+renseigne pas vaut donc ce que la page affiche, et non zéro.
 
-- les attributs `value` et `selected` écrits dans le HTML ne sont pas appliqués.
-  Un test doit renseigner explicitement chaque champ et chaque liste déroulante
-  dont il dépend, plutôt que de compter sur la valeur affichée par défaut dans
-  la page ;
+Ce n'était pas le cas avant le 26 août 2026, et l'écart n'était pas anodin : le
+plafond de l'abattement de 10 % sur les salaires valait zéro dans les tests, si
+bien que l'abattement ne s'appliquait jamais. Des montants relevés dans ces
+conditions ne correspondaient à aucun écran — c'est arrivé à la fiche 1.4 de
+`docs/CORRECTIONS_A_VALIDER.md`, dont les chiffres ont dû être rectifiés.
+
+Une limite subsiste :
+
 - les montants affichés utilisent une espace fine insécable comme séparateur de
   milliers. Comparer un texte affiché passe donc par `assertTexteAffiche`, qui
   ignore le type d'espace.

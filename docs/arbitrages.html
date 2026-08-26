@@ -650,17 +650,17 @@ textarea::placeholder { color: var(--ink-faint); }
       titre: "La réduction pour dons ne suivait pas les changements de revenu",
       simulateur: "IRPP",
       constat: "La réduction pour dons est plafonnée à 20 % du revenu net imposable. Le simulateur mettait bien ce plafond à jour quand le revenu changeait, mais la réduction elle-même restait figée sur le revenu saisi au moment où les dons avaient été renseignés.",
-      raison: "Deux montants affichés côte à côte devenaient incohérents : un plafond de 12 000 € et une réduction de 13 200 €, supérieure au plafond. Le résultat dépendait de l'ordre de remplissage du formulaire, ce qui n'a aucune justification fiscale.",
+      raison: "Deux montants affichés côte à côte devenaient incohérents : un plafond de 10 800 € et une réduction de 13 200 €, supérieure au plafond. Le résultat dépendait de l'ordre de remplissage du formulaire, ce qui n'a aucune justification fiscale.",
       change: "La réduction est recalculée avec le revenu courant à chaque modification, quelle qu'elle soit.",
       tableau: {
-        legende: "Revenu ramené de 200 000 € à 60 000 €, avec 20 000 € de dons ouvrant droit à la réduction de 66 %",
+        legende: "Salaire ramené de 200 000 € à 60 000 €, avec 20 000 € de dons ouvrant droit à la réduction de 66 %. Le revenu net imposable retenu est le salaire diminué de l'abattement de 10 %, soit 54 000 €.",
         colonnes: ["", "Plafond affiché", "Réduction retenue", "Impôt net"],
         lignes: [
-          { cells: ["Avant", "12 000 €", "13 200 €", "0,00 €"], ton: "avant" },
-          { cells: ["Après", "12 000 €", "7 920 €", "3 183,58 €"], ton: "apres" }
+          { cells: ["Avant", "10 800 €", "13 200 €", "0,00 €"], ton: "avant" },
+          { cells: ["Après", "10 800 €", "7 128 €", "2 175,58 €"], ton: "apres" }
         ]
       },
-      encart: "L'écart est de <strong>3 183,58 € d'impôt</strong>, dans le sens favorable au contribuable : le simulateur sous-estimait l'impôt dû.",
+      encart: "L'écart est de <strong>2 175,58 € d'impôt</strong>, dans le sens favorable au contribuable : le simulateur sous-estimait l'impôt dû.<br><br><strong>Correction d'une version antérieure de cette fiche.</strong> Elle annonçait un plafond de 12 000 €, une réduction de 7 920 € et un écart de 3 183,58 €. Ces montants étaient faux dans leur calcul, non dans leur principe : ils venaient d'un banc d'essai qui n'appliquait pas les valeurs pré-remplies de la page, où l'abattement de 10 % sur les salaires ne s'appliquait donc jamais. Le défaut décrit et la correction apportée sont inchangés. Les autres fiches ont été revérifiées : aucune n'est concernée.",
       question: "Confirmez-vous que la réduction doit toujours se calculer avec le revenu courant, indépendamment de l'ordre de saisie ?"
     },
     {

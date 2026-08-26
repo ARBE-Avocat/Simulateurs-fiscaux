@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-beta.7`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-beta.8`.
 
 ## Objectifs de l’orchestration
 
@@ -348,7 +348,12 @@ Méthode suivie par #16, à reprendre pour les extractions suivantes :
 4. rejouer le filet et comparer au centime ;
 5. vérifier que les tests ont des dents, en modifiant une valeur dans `data/` : ils doivent échouer.
 
-Une limite apprise en #14, à connaître avant #15 et #17 : **le faux DOM des tests n'applique pas les attributs `value` du HTML.** Donner à un champ de formulaire une valeur par défaut issue du référentiel change donc ce que voient les tests, alors que rien ne change dans le navigateur — les fixtures existantes se mettent à échouer pour une bonne raison qui ressemble à une régression. Les valeurs pré-remplies des champs modifiables restent donc écrites dans le HTML, et un contrôle automatique vérifie qu'elles ne divergent pas des données. Les rendre réellement pilotées par `data/` suppose d'abord que le harnais applique ces attributs, ce qui est un travail à part.
+Cette limite est levée depuis `v0.5.0-beta.8` : **le faux DOM applique désormais les attributs `value`, `checked` et `selected` du HTML.** Les tests décrivent donc le produit tel qu'il s'affiche, et les paramètres modifiables des formulaires sont écrits au chargement depuis les données.
+
+Deux enseignements à retenir pour la suite :
+
+- un banc d'essai qui ne reproduit pas l'état initial de la page produit des montants qui ne correspondent à aucun écran. C'est arrivé : les chiffres de la fiche 1.4 de `docs/CORRECTIONS_A_VALIDER.md`, communiqués au référent, ont dû être rectifiés ;
+- une valeur qui n'est pas un champ de formulaire échappe au même piège. La situation du foyer du simulateur IR vit dans une variable de son script : tous les contrôles tournaient en imposition commune sans que rien ne le signale. Avant d'écrire un filet, vérifier ce qui pilote réellement le calcul.
 
 Le relevé de #16 ne doit jamais être régénéré après une modification : ce serait enregistrer la régression au lieu de la détecter.
 

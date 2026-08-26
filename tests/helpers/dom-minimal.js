@@ -81,11 +81,19 @@ function creerElement(tagName = 'div') {
  * Construit un objet global minimal (`document`, `window`, ...) utilisable
  * comme contexte d'exécution du script d'un simulateur.
  */
-function creerFauxDom() {
+function creerFauxDom(etatInitial = {}) {
   // Les éléments sont mémorisés par identifiant : deux appels successifs à
   // getElementById('salaire1') doivent renvoyer le même objet, sinon une
   // valeur écrite par un test serait perdue.
   const parId = new Map();
+
+  // `etatInitial` porte ce que le HTML affiche avant toute saisie : attributs
+  // `value`, cases `checked`, option `selected`. Sans lui, un champ pré-rempli
+  // vaudrait zéro dans les tests alors qu'il vaut sa valeur à l'écran, et les
+  // tests décriraient un produit qui n'existe pas.
+  function etatDe(id) {
+    return Object.prototype.hasOwnProperty.call(etatInitial, id) ? etatInitial[id] : null;
+  }
 
   // Les écouteurs d'événements sont mémorisés plutôt qu'ignorés : les tests
   // peuvent ainsi rejouer l'initialisation d'une page avec `declencher`.
@@ -101,6 +109,11 @@ function creerFauxDom() {
       if (!parId.has(id)) {
         const element = creerElement();
         element.id = id;
+        const initial = etatDe(id);
+        if (initial) {
+          if (initial.value !== undefined) element.value = initial.value;
+          if (initial.checked !== undefined) element.checked = initial.checked;
+        }
         parId.set(id, element);
       }
       return parId.get(id);

@@ -6,6 +6,21 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.8] - 2026-08-26
+
+### Corrigé
+
+- **Les chiffres de la fiche 1.4 du dossier de validation étaient faux.** Elle annonçait un plafond de dons de 12 000 €, une réduction de 7 920 € et un écart d'impôt de 3 183,58 €. Les montants réels sont 10 800 €, 7 128 € et 2 175,58 €. Le défaut décrit et la correction apportée sont inchangés : seuls les chiffres l'étaient, parce qu'ils venaient d'un banc d'essai où l'abattement de 10 % sur les salaires ne s'appliquait jamais. Les autres fiches ont été revérifiées, aucune n'est concernée.
+
+### Modifié
+
+- Les paramètres fiscaux modifiables des formulaires — barème et abattements de l'IRPP, barème du démembrement, taux de prélèvements sociaux du simulateur IR — ne sont plus inscrits dans les pages : ils y sont écrits au chargement depuis les données. **Une mise à jour annuelle ne touche donc plus aucun fichier HTML**, ce qui était l'objet du chantier. Les champs restent modifiables à l'écran.
+- Aucun montant affiché ne change : les résultats ont été rejoués sur le code d'avant l'extraction, 188 comparaisons sans un seul écart.
+
+### Ajouté
+
+- Dix scénarios de contrôle pour un contribuable célibataire dans le simulateur « IR, CEHR et CDHR ». Ils manquaient : la situation du foyer n'étant pas un champ de formulaire, tous les contrôles existants tournaient en imposition commune, et les seuils propres au célibataire — CEHR à 250 000 €, bande de décote de la CDHR — n'étaient jamais exercés.
+
 ## [0.5.0-beta.7] - 2026-08-26
 
 ### Modifié

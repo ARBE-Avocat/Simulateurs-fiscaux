@@ -172,20 +172,32 @@ diminue correctement, mais la réduction affichée reste celle calculée avec
 l'ancien revenu — et l'impôt final en tient compte.
 
 **Pourquoi cela paraît anormal.** Deux montants affichés côte à côte devenaient
-incohérents : un plafond de 12 000 € et une réduction de 13 200 €, supérieure au
+incohérents : un plafond de 10 800 € et une réduction de 13 200 €, supérieure au
 plafond. Le résultat dépendait de l'ordre dans lequel l'utilisateur avait rempli
 le formulaire, ce qui n'a aucune justification fiscale.
 
-**Ce que cela change en euros.** Revenu ramené de 200 000 € à 60 000 €, avec
-20 000 € de dons à des organismes ouvrant droit à la réduction de 66 % :
+**Ce que cela change en euros.** Salaire ramené de 200 000 € à 60 000 €, avec
+20 000 € de dons à des organismes ouvrant droit à la réduction de 66 %. Le
+revenu net imposable retenu est le salaire diminué de l'abattement de 10 %, soit
+54 000 € : le plafond des dons vaut donc 20 % de 54 000 €.
 
 | | Plafond affiché | Réduction retenue | Impôt net |
 |---|---|---|---|
-| Avant | 12 000 € | 13 200 € | 0,00 € |
-| Après | 12 000 € | 7 920 € | 3 183,58 € |
+| Avant | 10 800 € | 13 200 € | 0,00 € |
+| Après | 10 800 € | 7 128 € | 2 175,58 € |
 
-L'écart est de **3 183,58 € d'impôt**, dans le sens favorable au contribuable :
+L'écart est de **2 175,58 € d'impôt**, dans le sens favorable au contribuable :
 le simulateur sous-estimait l'impôt dû.
+
+> **Correction d'une version antérieure de cette fiche.** Elle annonçait un
+> plafond de 12 000 €, une réduction de 7 920 € et un écart de 3 183,58 €. Ces
+> montants étaient faux, non pas dans leur principe mais dans leur calcul : ils
+> provenaient d'un banc d'essai qui n'appliquait pas les valeurs pré-remplies de
+> la page, et où l'abattement de 10 % sur les salaires ne s'appliquait donc
+> jamais. Le défaut décrit et la correction apportée sont inchangés ; seuls les
+> chiffres le sont. Le banc d'essai a été corrigé le 26 août 2026, et les
+> montants ci-dessus ont été relevés sur le simulateur lui-même, avant et après
+> correction. Les autres fiches ont été revérifiées : aucune n'est concernée.
 
 **Ce qui est attendu de vous.** Confirmez le principe retenu : la réduction pour
 dons se calcule toujours avec le revenu net imposable courant, et le résultat ne

@@ -1,6 +1,6 @@
 {
-  "description": "Instantané des résultats des simulateurs « IR, CEHR et CDHR » et IRPP, relevé AVANT l'extraction des référentiels IR, CEHR, CDHR, PFU et prélèvements sociaux (issue #14).",
-  "provenance": "Produit par exécution réelle des simulateurs sur la branche clv/y-0.5-donnees, commit 8c8fcb4, avant toute modification des fichiers HTML.",
+  "description": "Instantané des résultats des simulateurs « IR, CEHR et CDHR » et IRPP. Les scénarios d'origine ont été relevés AVANT l'extraction des référentiels (issue #14). Les scénarios « célibataire » ont été ajoutés le 26 août 2026 et relevés eux aussi sur le code d'avant l'extraction : le simulateur IR conserve la situation du foyer dans une variable de son script, que le harnais ne renseignait pas, si bien que tous les scénarios d'origine tournaient en imposition commune.",
+  "provenance": "Produit par exécution réelle des simulateurs sur la branche clv/y-0.5-donnees, commit 8c8fcb4, avant toute modification des fichiers HTML. Le scénario « pensions et abattement foyer » a été relevé de nouveau le 26 août 2026, toujours sur le code d'avant l'extraction, après que le harnais a été corrigé pour appliquer les valeurs pré-remplies du HTML : le taux de retenue sur pensions valait alors zéro dans les tests alors qu'il vaut 9,1 % à l'écran.",
   "statutValidation": "NON VALIDÉ — ces valeurs figent le comportement existant afin de prouver qu'une refactorisation ne déplace aucun montant. Elles ne certifient aucun barème, et reproduisent notamment la décote CDHR défectueuse de l'issue #4.",
   "tolerance": 0.01,
   "irCehrCdhr": [
@@ -50,7 +50,8 @@
           "irNet": 1408,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "célibataire, salaire 120000 €",
@@ -98,7 +99,8 @@
           "irNet": 18607.98,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "célibataire, salaire 300000 €",
@@ -146,7 +148,8 @@
           "irNet": 84633.48999999999,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "célibataire, salaire 600000 €",
@@ -194,7 +197,8 @@
           "irNet": 216497.93,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "célibataire, salaire 1200000 €",
@@ -242,7 +246,8 @@
           "irNet": 486497.93,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "plus-value de 100000 €",
@@ -290,7 +295,8 @@
           "irNet": 48607.979999999996,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "plus-value de 500000 €",
@@ -338,7 +344,8 @@
           "irNet": 196700.22,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "plus-value de 1000000 €",
@@ -386,7 +393,8 @@
           "irNet": 401700.22,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "plus-value de 3000000 €",
@@ -434,7 +442,8 @@
           "irNet": 1300766.78,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "couple avec deux enfants et plus-value",
@@ -482,7 +491,8 @@
           "irNet": 151129.49,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "frais de garde et crédit d’impôt",
@@ -530,7 +540,8 @@
           "irNet": 11493.98,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "lissage de la CEHR éligible",
@@ -578,7 +589,8 @@
           "irNet": 216497.93,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "taux de prélèvements sociaux ramené à 17,2 %",
@@ -626,7 +638,8 @@
           "irNet": 401700.22,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "seuil CEHR célibataire — salaire 250000 €",
@@ -674,7 +687,8 @@
           "irNet": 64133.48999999999,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "seuil supérieur CEHR — salaire 500000 €",
@@ -722,7 +736,8 @@
           "irNet": 171497.93,
           "cdhrRetenue": 0
         }
-      }
+      },
+      "situation": "couple"
     },
     {
       "nom": "seuil CDHR haut — salaire 330000 €",
@@ -768,6 +783,487 @@
         },
         "hyp3": {
           "irNet": 96933.48999999999,
+          "cdhrRetenue": 0
+        }
+      },
+      "situation": "couple"
+    },
+    {
+      "nom": "célibataire, salaire 200000 €",
+      "situation": "celibataire",
+      "champs": {
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 200000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 185445,
+        "credit": 0,
+        "majoration": 0,
+        "eligibleLissage": false,
+        "totals": [
+          59974.08999999999,
+          59974.08999999999,
+          59974.08999999999
+        ],
+        "rates": [
+          32.34063468953058,
+          32.34063468953058,
+          32.34063468953058
+        ],
+        "hyp1": {
+          "irNet": 59974.08999999999,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 59974.08999999999,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 59974.08999999999,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, salaire 260000 €",
+      "situation": "celibataire",
+      "champs": {
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 260000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 245445,
+        "credit": 0,
+        "majoration": 0,
+        "eligibleLissage": false,
+        "totals": [
+          86974.09,
+          86974.09,
+          86974.09
+        ],
+        "rates": [
+          35.435266556662384,
+          35.435266556662384,
+          35.435266556662384
+        ],
+        "hyp1": {
+          "irNet": 86974.09,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 86974.09,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 86974.09,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, salaire 300000 €",
+      "situation": "celibataire",
+      "champs": {
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 300000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 1063.35,
+        "cehrNonLissee": 1063.35,
+        "rfrPlein": 285445,
+        "credit": 0,
+        "majoration": 0,
+        "eligibleLissage": false,
+        "totals": [
+          106037.44,
+          106037.44,
+          106037.44
+        ],
+        "rates": [
+          37.1481160994237,
+          37.1481160994237,
+          37.1481160994237
+        ],
+        "hyp1": {
+          "irNet": 104974.09,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 104974.09,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 104974.09,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, salaire 340000 €",
+      "situation": "celibataire",
+      "champs": {
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 340000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 2263.35,
+        "cehrNonLissee": 2263.35,
+        "rfrPlein": 325445,
+        "credit": 0,
+        "majoration": 0,
+        "eligibleLissage": false,
+        "totals": [
+          125237.44,
+          125237.44,
+          125237.44
+        ],
+        "rates": [
+          38.48190631289465,
+          38.48190631289465,
+          38.48190631289465
+        ],
+        "hyp1": {
+          "irNet": 122974.09,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 122974.09,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 122974.09,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, salaire 600000 €",
+      "situation": "celibataire",
+      "champs": {
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 600000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 10917.8,
+        "cehrNonLissee": 10917.8,
+        "rfrPlein": 585445,
+        "credit": 0,
+        "majoration": 0,
+        "eligibleLissage": false,
+        "totals": [
+          250891.88999999998,
+          250891.88999999998,
+          250891.88999999998
+        ],
+        "rates": [
+          42.85490353491788,
+          42.85490353491788,
+          42.85490353491788
+        ],
+        "hyp1": {
+          "irNet": 239974.09,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 239974.09,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 239974.09,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, plus-value de 1 000 000 €",
+      "situation": "celibataire",
+      "champs": {
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 120000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 1000000,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 186000.00000000003,
+        "cehrLissee": 31820,
+        "cehrNonLissee": 31820,
+        "rfrPlein": 1108000,
+        "credit": 0,
+        "majoration": 0,
+        "eligibleLissage": false,
+        "totals": [
+          375138.80866425997,
+          692943.8400000001,
+          684073.8
+        ],
+        "rates": [
+          33.85729320074549,
+          62.54005776173286,
+          61.73951263537907
+        ],
+        "hyp1": {
+          "irNet": 156080.52,
+          "cdhrRetenue": 1238.2886642599333
+        },
+        "hyp2": {
+          "irNet": 475123.84,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 466253.80000000005,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire avec deux enfants et frais de garde",
+      "situation": "celibataire",
+      "champs": {
+        "enfants": 2,
+        "enfantsGarde": 2,
+        "salaire1": 90000,
+        "salaire2": 0,
+        "fraisGarde": 8000,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 81000,
+        "credit": 3500,
+        "majoration": 3000,
+        "eligibleLissage": false,
+        "totals": [
+          13200,
+          13200,
+          13200
+        ],
+        "rates": [
+          16.296296296296298,
+          16.296296296296298,
+          16.296296296296298
+        ],
+        "hyp1": {
+          "irNet": 10289.989999999998,
+          "cdhrRetenue": 2910.010000000002
+        },
+        "hyp2": {
+          "irNet": 10289.989999999998,
+          "cdhrRetenue": 2910.010000000002
+        },
+        "hyp3": {
+          "irNet": 10289.989999999998,
+          "cdhrRetenue": 2910.010000000002
+        }
+      }
+    },
+    {
+      "nom": "célibataire, bande de décote CDHR — 260 000 €",
+      "situation": "celibataire",
+      "champs": {
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 0,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 260000,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 48360.00000000001,
+        "cehrLissee": 300,
+        "cehrNonLissee": 300,
+        "rfrPlein": 260000,
+        "credit": 0,
+        "majoration": 0,
+        "eligibleLissage": false,
+        "totals": [
+          86545,
+          142183.84,
+          99075.96
+        ],
+        "rates": [
+          33.28653846153846,
+          54.686092307692306,
+          38.106138461538464
+        ],
+        "hyp1": {
+          "irNet": 33280,
+          "cdhrRetenue": 4605
+        },
+        "hyp2": {
+          "irNet": 93523.84,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 50415.96,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, borne haute de la bande de décote — 330 000 €",
+      "situation": "celibataire",
+      "champs": {
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 0,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 330000,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 61380.00000000001,
+        "cehrLissee": 2400,
+        "cehrNonLissee": 2400,
+        "rfrPlein": 330000,
+        "credit": 0,
+        "majoration": 0,
+        "eligibleLissage": false,
+        "totals": [
+          111360,
+          188803.84,
+          135195.96
+        ],
+        "rates": [
+          33.74545454545454,
+          57.21328484848485,
+          40.968472727272726
+        ],
+        "hyp1": {
+          "irNet": 42240,
+          "cdhrRetenue": 5340
+        },
+        "hyp2": {
+          "irNet": 125023.84,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 71415.95999999999,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, lissage de la CEHR éligible",
+      "situation": "celibataire",
+      "champs": {
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 400000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 80000,
+        "rfrN2": 100000,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 4063.35,
+        "rfrPlein": 385445,
+        "credit": 0,
+        "majoration": 0,
+        "eligibleLissage": true,
+        "totals": [
+          149974.09,
+          149974.09,
+          149974.09
+        ],
+        "rates": [
+          38.90933596232926,
+          38.90933596232926,
+          38.90933596232926
+        ],
+        "hyp1": {
+          "irNet": 149974.09,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 149974.09,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 149974.09,
           "cdhrRetenue": 0
         }
       }
@@ -1100,14 +1596,14 @@
         "s_red_dons": "0,00 €",
         "s_impot_net": "574,80 €",
         "s_ir_pfu": "0,00 €",
-        "s_ps_pen": "0,00 €",
+        "s_ps_pen": "3 640,00 €",
         "s_ps_fon": "0,00 €",
         "s_ps_pfu": "0,00 €",
         "s_ps_pv": "0,00 €",
         "s_cehr": "0,00 €",
         "s_cdhr": "0,00 €",
-        "s_final": "574,80 €",
-        "res_final": "574,80 €",
+        "s_final": "4 214,80 €",
+        "res_final": "4 214,80 €",
         "s_csg_ded": "− 0,00 €",
         "s_ps_etr": "0,00 €"
       }

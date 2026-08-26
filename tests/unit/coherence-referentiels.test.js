@@ -32,19 +32,38 @@ function recopier(valeur) {
   return JSON.parse(JSON.stringify(valeur));
 }
 
-/** Lit l'attribut `value` d'un champ du HTML, tel que le navigateur l'affiche. */
-function valeurPrerempli(html, id) {
-  const motif = new RegExp(`<input[^>]*\\bid="${id}"[^>]*>`, 'i');
-  const balise = motif.exec(html);
-  assert.ok(balise, `champ ${id} introuvable dans le HTML`);
-  const value = /\bvalue="([^"]*)"/i.exec(balise[0]);
-  assert.ok(value, `le champ ${id} n'a pas d'attribut value`);
-  return Number(value[1]);
+/**
+ * Valeur affichée par un champ une fois la page chargée.
+ *
+ * Les paramètres fiscaux modifiables ne portent plus d'attribut `value` dans le
+ * HTML : le script les écrit au chargement depuis le référentiel. C'est donc
+ * après chargement qu'on les relève, et non dans la source de la page.
+ */
+function valeurAffichee(simulateur, id) {
+  const champ = simulateur.dom.document.getElementById(id);
+  assert.ok(champ, `champ introuvable : ${id}`);
+  assert.notEqual(champ.value, '', `le champ ${id} n'a pas été rempli au chargement`);
+  return Number(champ.value);
 }
 
-test('Démembrement — les abattements pré-remplis dans le HTML suivent le référentiel', () => {
+/** Vérifie qu'aucun champ ne porte plus de valeur fiscale écrite dans le HTML. */
+function assertAucuneValeurEnDur(cle, ids) {
+  const html = lireHtml(cle);
+  for (const id of ids) {
+    const balise = new RegExp(`<input[^>]*\\bid="${id}"[^>]*>`, 'i').exec(html);
+    assert.ok(balise, `champ ${id} introuvable dans le HTML`);
+    assert.equal(
+      /\bvalue\s*=/i.test(balise[0]),
+      false,
+      `${id} porte encore une valeur écrite dans le HTML : une mise à jour des `
+        + 'données obligerait à modifier la page',
+    );
+  }
+}
+
+test('Démembrement — le formulaire affiche les abattements du référentiel', () => {
   const dmtg = lecteurDmtg();
-  const html = lireHtml('demembrement');
+  const simulateur = chargerSimulateur('demembrement');
 
   const attendus = {
     p_aba_directe: dmtg.valeur('dmtg.abattement.enfant'),
@@ -54,27 +73,28 @@ test('Démembrement — les abattements pré-remplis dans le HTML suivent le ré
   };
 
   for (const [id, attendu] of Object.entries(attendus)) {
-    assert.equal(
-      valeurPrerempli(html, id),
-      attendu,
-      `${id} affiché dans le formulaire ne correspond plus à data/referentiels/dmtg.json`,
-    );
+    assert.equal(valeurAffichee(simulateur, id), attendu, `${id} affiché dans le formulaire`);
   }
+  assertAucuneValeurEnDur('demembrement', Object.keys(attendus));
 });
 
-test('Démembrement — le barème pré-rempli dans le HTML suit le référentiel', () => {
+test('Démembrement — le formulaire affiche le barème du référentiel', () => {
   const dmtg = lecteurDmtg();
-  const html = lireHtml('demembrement');
+  const simulateur = chargerSimulateur('demembrement');
   const tranches = dmtg.bareme('dmtg.bareme.ligne-directe');
+  const champs = [];
 
   tranches.forEach((tranche, index) => {
     const idx = index + 1;
-    assert.equal(valeurPrerempli(html, `p_t${idx}_low`), tranche.min, `p_t${idx}_low`);
-    assert.equal(valeurPrerempli(html, `p_t${idx}_taux`), tranche.taux * 100, `p_t${idx}_taux`);
+    assert.equal(valeurAffichee(simulateur, `p_t${idx}_low`), tranche.min, `p_t${idx}_low`);
+    assert.equal(valeurAffichee(simulateur, `p_t${idx}_taux`), tranche.taux * 100, `p_t${idx}_taux`);
+    champs.push(`p_t${idx}_low`, `p_t${idx}_taux`);
     if (tranche.max !== Infinity) {
-      assert.equal(valeurPrerempli(html, `p_t${idx}_high`), tranche.max, `p_t${idx}_high`);
+      assert.equal(valeurAffichee(simulateur, `p_t${idx}_high`), tranche.max, `p_t${idx}_high`);
+      champs.push(`p_t${idx}_high`);
     }
   });
+  assertAucuneValeurEnDur('demembrement', champs);
 });
 
 test('Démembrement — « rétablir les valeurs par défaut » rétablit le référentiel', () => {
@@ -160,31 +180,33 @@ test('Référentiels — un domaine non chargé produit un message qui dit quoi 
 
 // ── Impôt sur le revenu (#14) ───────────────────────────────────────────────
 
-test('IRPP — le barème pré-rempli dans le formulaire suit le référentiel', () => {
+test('IRPP — le formulaire affiche le barème du référentiel', () => {
   const ir = lecteur('ir');
-  const html = lireHtml('irpp');
+  const simulateur = chargerSimulateur('irpp');
   const tranches = ir.bareme('ir.bareme.progressif');
+  const champs = ['t1_de'];
 
-  assert.equal(valeurPrerempli(html, 't1_de'), tranches[0].min, 'début de la première tranche');
+  assert.equal(valeurAffichee(simulateur, 't1_de'), tranches[0].min, 'début de la première tranche');
   tranches.slice(0, -1).forEach((tranche, index) => {
     assert.equal(
-      valeurPrerempli(html, `t${index + 1}_a`),
-      tranche.max,
+      valeurAffichee(simulateur, `t${index + 1}_a`), tranche.max,
       `borne haute de la tranche ${index + 1}`,
     );
+    champs.push(`t${index + 1}_a`);
   });
   tranches.slice(1).forEach((tranche, index) => {
     assert.equal(
-      valeurPrerempli(html, `t${index + 2}_tx`),
-      tranche.taux * 100,
+      valeurAffichee(simulateur, `t${index + 2}_tx`), tranche.taux * 100,
       `taux de la tranche ${index + 2}`,
     );
+    champs.push(`t${index + 2}_tx`);
   });
+  assertAucuneValeurEnDur('irpp', champs);
 });
 
-test('IRPP — les paramètres pré-remplis du formulaire suivent le référentiel', () => {
+test('IRPP — le formulaire affiche les paramètres du référentiel', () => {
   const ir = lecteur('ir');
-  const html = lireHtml('irpp');
+  const simulateur = chargerSimulateur('irpp');
 
   const attendus = {
     aba_sal: 'ir.abattement.salaires.plafond',
@@ -198,25 +220,23 @@ test('IRPP — les paramètres pré-remplis du formulaire suivent le référenti
   };
 
   for (const [champ, id] of Object.entries(attendus)) {
-    assert.equal(
-      valeurPrerempli(html, champ),
-      ir.valeur(id),
-      `${champ} affiché dans le formulaire ne correspond plus à data/referentiels/ir.json`,
-    );
+    assert.equal(valeurAffichee(simulateur, champ), ir.valeur(id), `${champ} affiché`);
   }
+  assertAucuneValeurEnDur('irpp', Object.keys(attendus));
 });
 
-test('IR, CEHR et CDHR — le taux de prélèvements sociaux pré-rempli est bien la variante employée', () => {
-  // Le champ est modifiable et sa valeur pré-remplie reste écrite dans le HTML.
-  // Ce contrôle garantit qu'elle reste celle que le simulateur déclare employer,
-  // et rend visible le jour où le référent fiscal tranchera la fiche 2.2.
+test('IR, CEHR et CDHR — le taux de prélèvements sociaux affiché est la variante employée', () => {
+  // Le champ reste modifiable, mais ce qu'il affiche vient du référentiel. Le
+  // jour où le référent fiscal tranchera la fiche 2.2, la page suivra sans être
+  // modifiée.
   const ps = lecteur('prelevements-sociaux');
-  const html = lireHtml('ir-cehr-cdhr');
+  const simulateur = chargerSimulateur('ir-cehr-cdhr');
 
   assert.equal(
-    valeurPrerempli(html, 'tauxPS'),
+    valeurAffichee(simulateur, 'tauxPS'),
     ps.variante('ps.taux.global', '18-6') * 100,
   );
+  assertAucuneValeurEnDur('ir-cehr-cdhr', ['tauxPS']);
 });
 
 test('Prélèvements sociaux — les deux simulateurs désignent des variantes différentes', () => {

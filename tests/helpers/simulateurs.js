@@ -32,6 +32,51 @@ const SIMULATEURS = [
   { cle: 'demembrement', fichier: 'Simulation démembrement immo - Juin 2026.html' },
 ];
 
+/**
+ * Relève l'état initial des champs d'une page : ce que le HTML affiche avant
+ * toute saisie.
+ *
+ * Le faux DOM crée sinon des champs vides, alors qu'un formulaire pré-rempli
+ * porte des valeurs par défaut — bornes de barème, plafonds d'abattement, cases
+ * cochées. Les tests décriraient alors un produit qui n'existe pas : un
+ * simulateur dont tous les paramètres valent zéro.
+ *
+ * Trois formes sont relevées : l'attribut `value` d'un champ, l'attribut
+ * `checked` d'une case, et l'option `selected` d'une liste déroulante.
+ */
+function relevesInitiaux(html) {
+  const etat = {};
+
+  const champs = /<(input|textarea)\b([^>]*)>/gi;
+  let correspondance;
+  while ((correspondance = champs.exec(html)) !== null) {
+    const attributs = correspondance[2];
+    const id = /\bid\s*=\s*["']([^"']+)["']/i.exec(attributs);
+    if (!id) continue;
+    const entree = {};
+    const value = /\bvalue\s*=\s*["']([^"']*)["']/i.exec(attributs);
+    if (value) entree.value = value[1];
+    if (/\btype\s*=\s*["']checkbox["']/i.test(attributs)
+      || /\btype\s*=\s*["']radio["']/i.test(attributs)) {
+      entree.checked = /\bchecked\b/i.test(attributs);
+    }
+    etat[id[1]] = { ...(etat[id[1]] || {}), ...entree };
+  }
+
+  const listes = /<select\b([^>]*)>([\s\S]*?)<\/select>/gi;
+  while ((correspondance = listes.exec(html)) !== null) {
+    const id = /\bid\s*=\s*["']([^"']+)["']/i.exec(correspondance[1]);
+    if (!id) continue;
+    const options = [...correspondance[2].matchAll(/<option\b([^>]*)>/gi)];
+    const choisie = options.find((o) => /\bselected\b/i.test(o[1])) || options[0];
+    if (!choisie) continue;
+    const valeur = /\bvalue\s*=\s*["']([^"']*)["']/i.exec(choisie[1]);
+    if (valeur) etat[id[1]] = { ...(etat[id[1]] || {}), value: valeur[1] };
+  }
+
+  return etat;
+}
+
 /** Chemin absolu d'un fichier du dépôt. */
 function chemin(...segments) {
   return path.join(RACINE, ...segments);
@@ -110,7 +155,7 @@ function chargerSimulateur(cle) {
     throw new Error(`Aucun script embarqué trouvé dans ${simulateur(cle).fichier}`);
   }
 
-  const dom = creerFauxDom();
+  const dom = creerFauxDom(relevesInitiaux(html));
   const contexte = vm.createContext(dom.global);
 
   // Les ressources externes sont exécutées avant les scripts embarqués, comme
@@ -158,6 +203,7 @@ module.exports = {
   extraireScripts,
   extraireScriptsExternes,
   lireHtml,
+  relevesInitiaux,
   simulateur,
   verifierSyntaxe,
 };

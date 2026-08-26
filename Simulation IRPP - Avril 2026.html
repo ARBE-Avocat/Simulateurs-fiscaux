@@ -1406,11 +1406,11 @@ footer strong { color: var(--gold); font-weight: 400; }
       <table class="data-table">
         <thead><tr><th>Tranche — de</th><th>Tranche — à</th><th>Taux</th></tr></thead>
         <tbody>
-          <tr><td><input type="number" id="t1_de" value="0" oninput="calc()"></td><td><input type="number" id="t1_a" value="11600" oninput="calc()"></td><td>0 %</td></tr>
-          <tr><td id="t2_de" style="color:var(--muted)">—</td><td><input type="number" id="t2_a" value="29579" oninput="calc()"></td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t2_tx" value="11" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
-          <tr><td id="t3_de" style="color:var(--muted)">—</td><td><input type="number" id="t3_a" value="84577" oninput="calc()"></td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t3_tx" value="30" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
-          <tr><td id="t4_de" style="color:var(--muted)">—</td><td><input type="number" id="t4_a" value="181917" oninput="calc()"></td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t4_tx" value="41" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
-          <tr><td id="t5_de" style="color:var(--muted)">—</td><td style="color:var(--muted)">∞</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t5_tx" value="45" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
+          <tr><td><input type="number" id="t1_de" oninput="calc()"></td><td><input type="number" id="t1_a" oninput="calc()"></td><td>0 %</td></tr>
+          <tr><td id="t2_de" style="color:var(--muted)">—</td><td><input type="number" id="t2_a" oninput="calc()"></td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t2_tx" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
+          <tr><td id="t3_de" style="color:var(--muted)">—</td><td><input type="number" id="t3_a" oninput="calc()"></td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t3_tx" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
+          <tr><td id="t4_de" style="color:var(--muted)">—</td><td><input type="number" id="t4_a" oninput="calc()"></td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t4_tx" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
+          <tr><td id="t5_de" style="color:var(--muted)">—</td><td style="color:var(--muted)">∞</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t5_tx" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -1419,14 +1419,14 @@ footer strong { color: var(--gold); font-weight: 400; }
       <table class="data-table">
         <thead><tr><th>Paramètre</th><th>Valeur</th></tr></thead>
         <tbody>
-          <tr><td>Salaires — abattement max par déclarant (10%)</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="aba_sal" value="14555" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
-          <tr><td>Pensions — abattement max foyer (10%)</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="aba_pen" value="4439" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
-          <tr><td>Décote célibataire — seuil IR</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cel_seuil" value="1965" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
-          <tr><td>Décote célibataire — montant fixe</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cel_mt" value="889" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
-          <tr><td>Décote couple — seuil IR</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cou_seuil" value="3249" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
-          <tr><td>Décote couple — montant fixe</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cou_mt" value="1470" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
-          <tr><td>CDHR — abattement imposition commune</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="cdhr_aba_ic" value="12500" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
-          <tr><td>CDHR — abattement par personne à charge</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="cdhr_aba_pac" value="1500" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Salaires — abattement max par déclarant (10%)</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="aba_sal" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Pensions — abattement max foyer (10%)</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="aba_pen" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Décote célibataire — seuil IR</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cel_seuil" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Décote célibataire — montant fixe</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cel_mt" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Décote couple — seuil IR</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cou_seuil" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Décote couple — montant fixe</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cou_mt" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>CDHR — abattement imposition commune</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="cdhr_aba_ic" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>CDHR — abattement par personne à charge</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="cdhr_aba_pac" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
           <tr><td>CSG déductible (taux)</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="csg_ded" value="6.8" oninput="calc()" step="0.1" style="max-width:55px"><span class="unit">%</span></div></td></tr>
         </tbody>
       </table>
@@ -2397,7 +2397,35 @@ function calcCSGHelper() {
   if(e) e.textContent = fmt(result, 2);
 }
 
+/**
+ * Écrit dans le formulaire les paramètres du référentiel.
+ *
+ * Ces champs restent modifiables : l'utilisateur peut tester une hypothèse. Ce
+ * qu'ils affichent au chargement n'est en revanche plus inscrit dans le HTML,
+ * mais lu dans data/referentiels/ir.json. Une mise à jour annuelle se fait donc
+ * dans les données, sans toucher à cette page.
+ */
+function appliquerReferentielAuFormulaire() {
+  const ecrire = (id, valeur) => { const e = $(id); if (e) e.value = valeur; };
+
+  ecrire('t1_de', BAREME_IR[0].min);
+  BAREME_IR.slice(0, -1).forEach((tranche, i) => ecrire(`t${i + 1}_a`, tranche.max));
+  BAREME_IR.slice(1).forEach((tranche, i) => ecrire(`t${i + 2}_tx`, tranche.taux * 100));
+
+  ecrire('aba_sal', ABATTEMENT.salairesPlafond);
+  ecrire('aba_pen', ABATTEMENT.pensionsPlafond);
+
+  ecrire('dec_cel_seuil', DECOTE.celibataire.seuil);
+  ecrire('dec_cel_mt', DECOTE.celibataire.montant);
+  ecrire('dec_cou_seuil', DECOTE.couple.seuil);
+  ecrire('dec_cou_mt', DECOTE.couple.montant);
+
+  ecrire('cdhr_aba_ic', CDHR.abattementImpositionCommune);
+  ecrire('cdhr_aba_pac', CDHR.abattementParPersonneACharge);
+}
+
 // Init
+appliquerReferentielAuFormulaire();
 document.querySelectorAll('.d2-col, .d2-hidden').forEach(el => { el.style.display = 'none'; });
 calcIFI();
 calcMajoration();

@@ -61,6 +61,11 @@ test('IR, CEHR et CDHR — aucun montant ne bouge', async (t) => {
       let capture = null;
       simulateur.contexte.render = (r) => { capture = r; };
 
+      // La situation du foyer n'est pas un champ de formulaire : le simulateur
+      // la garde dans une variable de son script, qu'un bouton met à jour.
+      // Sans cette ligne, tout scénario tournerait en imposition commune.
+      simulateur.evaluer(`situation = ${JSON.stringify(cas.situation)}`);
+
       for (const [id, valeur] of Object.entries(cas.champs)) {
         simulateur.dom.document.getElementById(id).value = String(valeur);
       }

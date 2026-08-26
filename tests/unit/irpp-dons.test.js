@@ -21,8 +21,10 @@ const fixture = JSON.parse(
 /**
  * Prépare un simulateur IRPP.
  *
- * Le barème est renseigné explicitement : le faux DOM n'applique pas les
- * attributs `value` du HTML, et sans barème toutes les tranches vaudraient 0 %.
+ * Le barème est renseigné explicitement pour que le scénario reste lisible sans
+ * ouvrir la page. Depuis que le harnais applique les valeurs pré-remplies du
+ * HTML, ce n'est plus indispensable : un champ non renseigné vaut ce que la
+ * page affiche.
  */
 function preparerIrpp(champs = {}, coches = []) {
   const simulateur = chargerSimulateur('irpp');
@@ -122,10 +124,12 @@ test("IRPP — changer le revenu actualise immédiatement la réduction pour don
   simulateur.dom.document.getElementById('sal_brut_d1').value = '60000';
   simulateur.evaluer('calc')();
 
-  assertTexteAffiche(lire(simulateur, 'dons_plafond_20p'), '12 000,00 €', 'plafond actualisé');
-  assertTexteAffiche(lire(simulateur, 'dons_red_totale'), '7 920,00 €', 'réduction actualisée');
-  assertTexteAffiche(lire(simulateur, 'dons_excedent'), '8 000,00 €', 'excédent actualisé');
-  assertTexteAffiche(lire(simulateur, 's_impot_net'), '3 183,58 €', 'impôt net actualisé');
+  // Le revenu net imposable retenu est le salaire diminué de l'abattement de
+  // 10 %, soit 54 000 € : le plafond des dons vaut donc 20 % de 54 000 €.
+  assertTexteAffiche(lire(simulateur, 'dons_plafond_20p'), '10 800,00 €', 'plafond actualisé');
+  assertTexteAffiche(lire(simulateur, 'dons_red_totale'), '7 128,00 €', 'réduction actualisée');
+  assertTexteAffiche(lire(simulateur, 'dons_excedent'), '9 200,00 €', 'excédent actualisé');
+  assertTexteAffiche(lire(simulateur, 's_impot_net'), '2 175,58 €', 'impôt net actualisé');
 });
 
 test("IRPP — le résultat ne dépend pas de l'ordre de saisie", () => {
