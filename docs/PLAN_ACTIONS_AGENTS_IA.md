@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.2`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.3`.
 
 ## Objectifs de l’orchestration
 
@@ -17,11 +17,19 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 
 - La phase 0 de gouvernance est terminée sur `clv/preprod`.
 - La préversion de `clv/preprod` reste `0.3.0-beta.4` ; la version stable visée est `0.3.0`.
-- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.2`.
+- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.3`.
 - L'étape 1.1 (#10, socle de tests) est réalisée sur cette branche et attend relecture ; elle n'est pas intégrée à `clv/preprod`.
 - Les autres issues citées dans ce plan sont encore ouvertes au 26 août 2026.
 - L'issue #29 reste ouverte : seule sa première partie documentaire et de gouvernance est amorcée.
 - Prochaines étapes du jalon : #9 en fil rouge, puis les deux voies de correctifs #4/#5 et #6/#8.
+- Nouvelle issue #31 — unification de l'identité visuelle et des composants d'interface, ouverte à la demande du référent métier. Elle dépend de #20 et n'appartient pas au jalon `0.4`.
+
+## Décisions d'architecture déjà arbitrées
+
+Ces décisions sont prises et ne sont plus à rouvrir dans les tâches courantes. Elles doivent être formalisées dans le document de décision attendu par #20.
+
+- **Les fichiers HTML n'ont pas vocation à être utilisés seuls ni à rester autonomes.** Arbitrage de CLV du 26 août 2026. Il répond au point « Décider si les HTML autonomes restent un livrable requis » de #20. Conséquences : des ressources partagées (feuille de style, scripts, données) peuvent être référencées par chemin relatif ; le dossier doit rester complet ; la distribution d'un fichier HTML isolé n'est plus un cas d'usage à préserver.
+- Tant que #20 n'est pas clos, `AGENTS.md` §7 continue d'interdire de désassembler les HTML de sa propre initiative dans une tâche sans rapport. La décision ci-dessus autorise la cible, pas une migration opportuniste.
 
 ## Maintenance obligatoire du plan
 
@@ -117,6 +125,9 @@ Référentiels stabilisés ─> epic #21
   ├─> #26 Succession
   └─> #27 Démembrement
 
+#20 Architecture cible ─> #31 Unification de l'interface
+                              (par simulateur, après ou avec #21)
+
 En parallèle contrôlé : #28 CI
 En finition : #29 Qualité desktop, documentation et gouvernance
 ```
@@ -188,7 +199,13 @@ Branche CLV du jalon : `clv/y-0.5-donnees`, créée depuis la branche `Y = 0.4` 
 
 Cette décision précède la création de `src/`, `data/`, `scripts/` et des fichiers générés. L’agent doit proposer une solution simple en JavaScript, sans imposer un framework applicatif.
 
-Le choix « HTML autonomes ou site composé de plusieurs assets » doit être tranché ici.
+Le choix « HTML autonomes ou site composé de plusieurs assets » est déjà arbitré : voir la section « Décisions d'architecture déjà arbitrées ». Les fichiers HTML ne sont pas destinés à un usage isolé, et #20 doit acter ce point plutôt que le rouvrir.
+
+Contraintes d'entrée à intégrer explicitement au document de décision :
+
+- l'externalisation des données (#2 et suivantes) suppose des ressources partagées ;
+- l'unification de l'interface (#31) suppose une feuille de style commune à un seul endroit ;
+- l'emplacement de cette feuille commune et des données doit être fixé ici, avant toute migration visuelle.
 
 ### Étape 2.2 — Définir le contrat des données
 
@@ -282,6 +299,14 @@ Ils peuvent être parallélisés seulement si le module de change de #13 est con
 
 Le simulateur IRPP passe en dernier car il combine IR, dons, plus-values et IFI. Il doit réutiliser les interfaces et moteurs stabilisés par les vagues précédentes plutôt que créer une nouvelle variante.
 
+### Étape 3.3 bis — Unification visuelle, en pull requests distinctes
+
+- [#31 — Unifier l’identité visuelle et les composants d’interface](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/31)
+
+Une fois un simulateur découplé, son habillage peut être aligné sur la charte commune. Ce travail suit immédiatement le découplage, mais **jamais dans la même pull request** : `AGENTS.md` interdit de mélanger refactorisation et changement visuel, sinon plus personne ne sait ce qui a modifié un résultat.
+
+Ne pas commencer avant que #20 ait fixé l’emplacement de la feuille de style commune, ni avant que le simulateur de référence et le niveau d’unification aient été choisis par le référent métier.
+
 ### Étape 3.4 — Clore l’epic de refactorisation
 
 Clore #21 uniquement lorsque :
@@ -319,7 +344,7 @@ Ordre interne recommandé :
 2. Gouvernance GitHub : protection de `main`, templates, branches courtes, squash merge et releases.
 3. Sécurité du rendu : suppression des injections de données utilisateur dans `innerHTML`, dépendances contrôlées et absence de mot de passe client.
 4. Accessibilité desktop : labels, clavier, focus des modales, annonces des résultats et contrastes.
-5. Nettoyage final : styles et événements inline, exemples explicites, composants partagés et calculs inutiles.
+5. Nettoyage final : styles et événements inline, exemples explicites, composants partagés et calculs inutiles. Ce que #31 n'a pas absorbé est traité ici ; le reliquat visuel de #31 est clos dans ce jalon.
 
 Le socle documentaire commun a déjà été livré en phase 0. Les documents dépendant de l'architecture finale, notamment `CODEMAP.md`, seront complétés après #20. Le reste demeure une phase de finition.
 
@@ -336,6 +361,7 @@ Ne pas exécuter en parallèle deux tâches appartenant à la même ligne :
 | Succession | #8, #16, #26 |
 | Démembrement | #8, #16, #27 |
 | Outils partagés | #10, #11, #12, #18, #20, #28 |
+| Interface et styles | #31 et toute issue modifiant le même simulateur (#22 à #27, #29) |
 
 Deux issues de zones différentes peuvent avancer en parallèle si leurs dépendances sont fusionnées et si leurs agents ne changent pas les mêmes modules communs.
 
@@ -386,8 +412,8 @@ Chaque nouvelle version mineure `Y` reste soumise à une validation explicite de
 | Gouvernance initiale | `clv/preprod` | Phase 0, consignes, plan, changelog et préprod | `v0.3.0` — actuellement en beta |
 | Fiabilité | `clv/y-0.4-fiabilite` | #4 à #11, tests de base et validation métier suffisante | `v0.4.0` indicatif |
 | Données | `clv/y-0.5-donnees` | #2 terminé, #20 et CI données/build | `v0.5.0` indicatif |
-| Architecture | `clv/y-0.6-architecture` | #21 terminé et six moteurs découplés | `v0.6.0` indicatif |
-| Qualité | `clv/y-0.7-qualite` | #28 et #29 terminés | `v0.7.0` indicatif |
+| Architecture | `clv/y-0.6-architecture` | #21 terminé, six moteurs découplés et #31 engagé | `v0.6.0` indicatif |
+| Qualité | `clv/y-0.7-qualite` | #28, #29 et #31 terminés | `v0.7.0` indicatif |
 
 Chaque `beta.N` ou correctif stable `Z` possède son tag annoté immuable. Il n'existe toutefois qu'une seule GitHub Release par série `X.Y`.
 
