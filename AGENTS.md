@@ -1,0 +1,198 @@
+# Consignes communes pour les agents IA
+
+Ce fichier est la source de vérité commune pour Codex, Claude Code et tout autre agent travaillant sur ce dépôt. Le lire intégralement avant toute analyse, modification, revue ou création d'issue.
+
+## 1. Contexte et responsabilités
+
+Le dépôt contient des simulateurs fiscaux et patrimoniaux français à usage informatif. Il est codéveloppé par deux profils complémentaires :
+
+- le propriétaire du dépôt est avocat, référent juridique et métier, et seul responsable de la fusion finale dans `main` ;
+- le mainteneur technique est plus expérimenté en développement et responsable de la qualité et de l'évolutivité du dépôt, mais il ne valide pas seul une interprétation juridique.
+
+Un choix technique ne vaut jamais validation juridique. Une intention métier ne dispense jamais des contrôles techniques.
+
+État actuel : fichiers HTML statiques autonomes avec CSS, JavaScript et données principalement embarqués, sans installation ni serveur applicatif. Cette architecture évoluera progressivement ; ne pas la remplacer implicitement dans une autre tâche. Le site vise prioritairement l'ordinateur : le responsive mobile est hors périmètre sauf issue explicite.
+
+## 2. Instructions et documents de référence
+
+Appliquer dans cet ordre : demande explicite du responsable de la tâche, issue et décisions validées, présent fichier, documentation liée, puis conventions du code et des tests.
+
+Une instruction locale non versionnée peut compléter ce socle, mais jamais autoriser l'invention d'une règle fiscale, affaiblir la sécurité ou contourner la validation du propriétaire.
+
+- `README.md` : utilisation et simulateurs disponibles.
+- `docs/PLAN_ACTIONS_AGENTS_IA.md` : ordre des chantiers et dépendances.
+- `AGENTS.md` : règles communes canoniques.
+- `CLAUDE.md` : import de ces règles par Claude Code ; ne pas y recopier ce contenu.
+
+Si un document annoncé n'existe pas encore, ne pas inventer son contenu.
+
+## 3. Avant toute modification
+
+1. Lire l'issue, ses critères, dépendances et éventuelles issues parentes.
+2. Lire les instructions et la documentation applicables.
+3. Vérifier la branche, l'état Git et les changements locaux à préserver.
+4. Identifier les décisions juridiques encore nécessaires.
+5. Identifier les commandes de vérification réellement disponibles.
+6. Limiter le travail au plus petit périmètre cohérent.
+
+Ne pas commencer une issue bloquée par une dépendance non intégrée, sauf demande explicite de préparation sans fusion.
+
+## 4. Règles fiscales et validation métier
+
+Ne jamais inventer, compléter de mémoire ou déduire silencieusement :
+
+- taux, seuil, abattement, plafond ou barème ;
+- date d'effet, millésime ou condition d'éligibilité ;
+- exception, unité, méthode d'arrondi ou interprétation juridique.
+
+Toute règle ou donnée fiscale ajoutée ou modifiée doit préciser selon le cas : source officielle, période d'application, date de consultation ou révision, exemples de test et validation du propriétaire si une interprétation est nécessaire.
+
+Si deux valeurs ou sources divergent, ne pas arbitrer seul. Isoler le point, montrer les conséquences des options et demander une décision au propriétaire.
+
+Une refactorisation conserve les résultats existants. Une modification volontaire du résultat est une évolution métier distincte, sourcée et testée.
+
+## 5. Création des issues
+
+Une issue doit être comprise par le propriétaire, un développeur et un agent IA. Commencer par le problème concret et le résultat attendu, pas par une technologie.
+
+Structure recommandée :
+
+1. contexte et problème ;
+2. résultat attendu et bénéfice ;
+3. `Questions métier / avis de l'avocat` ;
+4. approche technique recommandée et vulgarisée ;
+5. périmètre inclus et exclusions ;
+6. critères d'acceptation et vérifications ;
+7. dépendances, risques et sources.
+
+La section métier doit être proche du début. Poser des questions précises, fournir options, exemples et sources, et expliquer ce que la réponse débloque. Appliquer le label de validation métier prévu s'il existe. Si aucun avis n'est attendu, écrire explicitement `Aucune validation métier requise`.
+
+Pour une question technique, partir du problème observable, expliquer simplement pourquoi l'action est utile, présenter le bénéfice et le risque raisonnable du statu quo, puis donner une recommandation claire avec ses compromis. Ne pas laisser au propriétaire une liste d'options techniques sans conclusion.
+
+## 6. Accompagnement des contributeurs
+
+Le code doit rester compréhensible par un développeur débutant sans réduire les standards de qualité.
+
+Face à un usage fragile de Git, du code ou d'un outil IA :
+
+- reconnaître le besoin légitime ;
+- expliquer le risque par une conséquence concrète ;
+- proposer immédiatement une alternative sûre et simple ;
+- valoriser les gains : moins d'erreurs, moins de répétition, revue et évolutions facilitées ;
+- fournir au besoin un modèle, une commande, un exemple ou une checklist réutilisable ;
+- automatiser les garde-fous simples et répétitifs ;
+- rester respectueux et ne jamais infantiliser.
+
+Préférer l'orientation à l'interdiction sèche. Si une action menace `main`, l'historique, les données, la sécurité ou la fiabilité fiscale, la bloquer fermement tout en expliquant le risque et le chemin sûr.
+
+## 7. Code et architecture
+
+- Préserver l'intention métier avant de réorganiser l'implémentation.
+- Préférer fonctions courtes, noms explicites et flux lisibles aux abstractions prématurées.
+- Ne pas ajouter de framework ou dépendance de production sans issue et justification.
+- Préserver les HTML autonomes tant que l'architecture cible n'est pas validée.
+- Ne pas mélanger correction métier, refactorisation générale et évolution visuelle.
+- Éviter les reformattages, renommages ou nettoyages massifs hors périmètre.
+- Ne jamais injecter de donnée utilisateur non échappée dans `innerHTML`.
+- Préserver les liens relatifs vers `index.html` et vérifier tout renommage depuis l'accueil.
+- Ne pas éditer manuellement un fichier déclaré comme généré : modifier sa source et relancer la génération documentée.
+- Extraire progressivement les calculs en fonctions pures et testables lorsque l'issue l'autorise.
+- Rendre les unités explicites lorsque leur confusion est possible.
+
+Une mise à jour annuelle doit à terme modifier une donnée fiscale dans une source unique, validée et traçable, et non réécrire plusieurs blocs HTML.
+
+## 8. Tests et vérifications
+
+Une correction commence, dès que le socle le permet, par un test reproduisant le défaut. Une refactorisation doit prouver la conservation du comportement.
+
+Le dépôt initial ne garantit encore aucune commande automatisée de test ou build. Ne jamais prétendre avoir exécuté un contrôle inexistant. Utiliser les commandes documentées dès leur introduction.
+
+Contrôle manuel minimal actuel :
+
+```bash
+python3 -m http.server 8000
+```
+
+Sur ordinateur, vérifier `http://localhost:8000/index.html`, les liens, les parcours concernés, la console et les cas limites pertinents. Vérifier aussi l'ouverture directe des HTML si leur autonomie est concernée.
+
+Chaque compte rendu indique les commandes et contrôles réellement exécutés, leurs résultats et les zones non vérifiées.
+
+## 9. Git et pull requests
+
+- Ne jamais développer directement dans `main` ; seul le propriétaire y fusionne les PR.
+- Un agent ne fusionne jamais sa propre PR.
+- Une issue correspond normalement à une branche courte et une PR cohérente.
+- Les branches du mainteneur CLV utilisent `clv/<nom-branche>`.
+- `clv/preprod` est la branche permanente d'intégration de CLV. Aucun développement majeur directement dessus ; seulement de petits commits d'entretien explicitement demandés, par exemple un bump correctif `z`.
+- Les autres contributeurs utilisent la base indiquée par le responsable ou, à défaut, `main` à jour.
+- Ne pas forcer un push, réécrire l'historique partagé ou supprimer une branche distante. Les tags et releases suivent exclusivement les règles de versionnement ci-dessous.
+- Préserver tous les changements locaux hors périmètre.
+
+Utiliser `Closes #N` si la PR termine l'issue et `Part of #N` pour une étape partielle ou une sous-issue d'epic.
+
+Les commits sont petits et cohérents. Une PR fournit : résumé non technique, issue et périmètre, comportement avant/après, choix techniques vulgarisés, validations métier attendues, sources et millésimes, tests exécutés, limites et risques, et capture si l'interface change visiblement.
+
+Scinder une PR trop large. Ne pas réunir sans nécessité données, moteur, interface et refactorisation générale.
+
+## 10. Documentation
+
+Mettre la documentation à jour dans la même PR qu'un changement de comportement, de workflow ou d'architecture.
+
+- `README.md` reste centré sur l'utilisation.
+- Le futur `CODEMAP.md` localisera données, moteurs, interfaces et scripts.
+- `CHANGELOG.md` décrit les changements visibles par version et la prochaine version en préparation.
+- `VERSION` contient la version exacte portée par la branche, sans préfixe `v`.
+- Le futur `CONTRIBUTING.md` détaillera le workflow humain.
+- Les règles durables des agents restent dans `AGENTS.md`.
+
+## 11. Versionnement, préversions et releases
+
+Le projet utilise des versions `X.Y.Z` avec les règles d'autorisation suivantes :
+
+- `X`, version majeure : rupture importante de compatibilité ou de fonctionnement. Ne jamais l'incrémenter ni l'anticiper sans demande explicite de l'utilisateur.
+- `Y`, version mineure : nouvelle fonctionnalité, refactorisation significative ou évolution compatible. Après validation explicite de l'utilisateur, réaliser le travail sur une branche dédiée ; le bump, le tag et la release restent soumis à cette validation.
+- `Z`, correctif : correction compatible, petit entretien, documentation ou maintenance de données sans nouveau parcours. L'agent peut décider et effectuer ce bump en autonomie dans le cadre d'une tâche autorisée, avec les contrôles et validations métier requis.
+
+Un changement de taux reste soumis à la validation juridique même s'il n'incrémente que `Z`. L'autonomie de versionnement ne donne aucune autonomie d'interprétation fiscale. Chaque bump met à jour `VERSION` et `CHANGELOG.md` dans le même commit ; les tags ajoutent le préfixe `v` à la valeur de `VERSION`.
+
+### Versions stables
+
+- Chaque version stable `X.Y.Z` reçoit exactement un tag annoté et immuable `vX.Y.Z`, créé sur le commit effectivement intégré dans `main`.
+- Ne jamais réutiliser, déplacer ou écraser un tag stable publié.
+- Une seule GitHub Release est conservée par série mineure `X.Y`.
+- Cette release est créée lors de `X.Y.0`. À chaque nouveau correctif `X.Y.Z`, créer le nouveau tag stable, mettre `CHANGELOG.md` à jour, puis rattacher la même release au dernier tag et compléter ses notes.
+- Le titre de la release identifie la série, par exemple `v0.3 — Référentiels fiscaux`, et son contenu indique clairement le dernier correctif disponible.
+- Ne pas créer une nouvelle GitHub Release pour chaque `Z`.
+- Avant tout tag : contrôles pertinents, validation des référentiels, changelog à jour et présence du commit dans `main`.
+
+L'agent peut préparer et committer un bump `Z` sans nouvelle autorisation. Il ne doit jamais contourner la règle selon laquelle seul le propriétaire fusionne dans `main`. Le tag stable et la mise à jour distante de la release interviennent seulement après cette fusion.
+
+### Préversions de CLV
+
+- `clv/preprod` reflète toujours une préversion, jamais une version stable.
+- Utiliser le format `X.Y.Z-beta.N`, par exemple `0.3.0-beta.1`.
+- `X.Y.Z` est exactement la version stable visée ultérieurement dans `main` ; la promotion retire seulement le suffixe `-beta.N`.
+- Incrémenter `N` pour chaque état cohérent de préprod identifié comme nouvelle préversion. Ne jamais réutiliser un numéro de beta déjà publié.
+- Les éventuels tags `vX.Y.Z-beta.N` sont des tags de préversion et ne remplacent pas le tag stable `vX.Y.Z`.
+- Ne jamais créer ou mettre à jour la release stable de la série depuis `clv/preprod`.
+
+Si le propriétaire fusionne entre-temps une autre PR propre dans `main`, synchroniser d'abord `main` et les tags, identifier la dernière version stable réellement publiée, puis recalculer la cible de préversion. Continuer la numérotation disponible sans écraser un tag et reporter proprement les entrées `Non publié` du changelog.
+
+## 12. Revue et définition de terminé
+
+En revue, rechercher en priorité : règle non sourcée, mauvais millésime, confusion vide/zéro, bornes ou arrondis incohérents, dépendance au DOM ou à une globale, lien cassé, injection HTML, absence de test ou validation métier et changements hors périmètre.
+
+Classer les retours en `Bloquant` ou `Amélioration facultative`. Pour chaque blocage, expliquer le risque et proposer une correction.
+
+Une tâche est terminée seulement si :
+
+- périmètre et critères d'acceptation respectés ;
+- dépendances disponibles ;
+- règles fiscales sourcées et validations humaines obtenues ;
+- tests et contrôles réussis, ou limites documentées ;
+- diff sans changement accidentel ;
+- documentation utile mise à jour ;
+- branche, commits et PR conformes ;
+- explication suffisante pour que le propriétaire décide de la fusion.
+
+Sinon, indiquer clairement ce qui reste à faire. Le code écrit ne suffit pas à déclarer une tâche terminée.
