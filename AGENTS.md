@@ -159,7 +159,9 @@ Le projet utilise des versions `X.Y.Z` avec les règles d'autorisation suivantes
 
 ### Changements sans incidence visible
 
-Certains changements ne touchent ni le produit, ni ce que le dépôt garantit, ni un document destiné à une personne. Ils ne reçoivent **ni bump `Z`, ni bump `beta.N`, ni tag, ni entrée de changelog** : ils sont simplement committés et poussés, et se retrouvent inclus dans la préversion ou le correctif suivant.
+Faire évoluer la méthode de conception d'un projet n'est pas faire évoluer le projet. Modifier la façon dont on travaille, dont on décide ou dont on prépare une décision ne change rien pour qui utilise les simulateurs, et n'a donc pas à laisser de trace versionnée.
+
+Ces changements ne reçoivent **ni bump `Z`, ni bump `beta.N`, ni tag, ni entrée de changelog**. Ils sont simplement committés et poussés, et se retrouvent inclus dans la préversion ou le correctif suivant. L'historique Git suffit à les retracer.
 
 La version suit le **produit** et ce que le dépôt **garantit**. Elle ne suit ni les outils de travail, ni la documentation de pilotage, ni les supports préparant une décision.
 
