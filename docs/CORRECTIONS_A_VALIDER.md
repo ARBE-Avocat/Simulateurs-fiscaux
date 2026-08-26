@@ -6,12 +6,17 @@ jugé fautif mais **laissé en l'état** faute de certitude.
 
 Aucune connaissance technique n'est nécessaire pour le lire.
 
-Dernière mise à jour : 26 août 2026 — préversion `0.4.0-beta.12`.
+Dernière mise à jour : 26 août 2026 — préversion `0.4.0-beta.13`.
 
 **Version interactive :** <https://claude.ai/code/artifact/ed86515a-2108-4df9-b7fc-acc15b0682d3>
 Cette page reprend le contenu ci-dessous et permet de répondre point par point.
 Les réponses y sont enregistrées et peuvent être exportées. Le présent fichier
 reste la version de référence, versionnée avec le code.
+
+Cette page est **partagée nominativement** et n'est pas publiée sur le site : elle
+est un outil de travail, pas un livrable. Attention toutefois : le dépôt étant
+public, le présent document et les issues associées sont, eux, librement
+consultables.
 
 Son source est `docs/arbitrages.html`. Pour la faire évoluer, modifier ce fichier
 puis le republier à la **même adresse** : republier depuis un autre chemin
