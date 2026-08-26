@@ -11,7 +11,7 @@ Le dépôt contient des simulateurs fiscaux et patrimoniaux français à usage i
 
 Un choix technique ne vaut jamais validation juridique. Une intention métier ne dispense jamais des contrôles techniques.
 
-État actuel : fichiers HTML statiques autonomes avec CSS, JavaScript et données principalement embarqués, sans installation ni serveur applicatif. Cette architecture évoluera progressivement ; ne pas la remplacer implicitement dans une autre tâche. Le site vise prioritairement l'ordinateur : le responsive mobile est hors périmètre sauf issue explicite.
+État actuel : fichiers HTML statiques à la racine, dont plusieurs chargent désormais des scripts et référentiels partagés, sans installation ni serveur applicatif. Le livrable est le dossier complet servi en HTTP ; l'ouverture directe par `file://` et la distribution d'un HTML isolé ne sont plus des contraintes. La migration vers `docs/ARCHITECTURE_CIBLE.md` reste progressive et ne doit pas être anticipée dans une tâche sans rapport. Le site vise prioritairement l'ordinateur : le responsive mobile est hors périmètre sauf issue explicite.
 
 ## 2. Instructions et documents de référence
 
@@ -94,7 +94,7 @@ Préférer l'orientation à l'interdiction sèche. Si une action menace `main`, 
 - Préserver l'intention métier avant de réorganiser l'implémentation.
 - Préférer fonctions courtes, noms explicites et flux lisibles aux abstractions prématurées.
 - Ne pas ajouter de framework ou dépendance de production sans issue et justification.
-- Préserver les HTML autonomes tant que l'architecture cible n'est pas validée.
+- Appliquer progressivement les étapes M1 à M6 de `docs/ARCHITECTURE_CIBLE.md` ; ne pas déplacer ni désassembler un HTML en dehors de l'issue de migration qui le porte.
 - Ne pas mélanger correction métier, refactorisation générale et évolution visuelle.
 - Éviter les reformattages, renommages ou nettoyages massifs hors périmètre.
 - Ne jamais injecter de donnée utilisateur non échappée dans `innerHTML`.
@@ -117,7 +117,7 @@ Contrôle manuel minimal actuel :
 python3 -m http.server 8000
 ```
 
-Sur ordinateur, vérifier `http://localhost:8000/index.html`, les liens, les parcours concernés, la console et les cas limites pertinents. Vérifier aussi l'ouverture directe des HTML si leur autonomie est concernée.
+Sur ordinateur, vérifier `http://localhost:8000/index.html`, les liens, les parcours concernés, la console et les cas limites pertinents. L'ouverture directe des HTML par `file://` n'est pas un mode supporté et n'a à être vérifiée que si une issue la vise explicitement.
 
 Chaque compte rendu indique les commandes et contrôles réellement exécutés, leurs résultats et les zones non vérifiées.
 
