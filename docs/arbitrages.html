@@ -697,9 +697,56 @@ textarea::placeholder { color: var(--ink-faint); }
     { cle: "revoir", libelle: "Erreur, mais correction à revoir", ton: "neutre" }
   ];
 
+  var CLE_BROUILLON = "arbitrages-fiscaux-brouillon";
+
   var etat = lireEtat();
   var artifact = null;
+  var capacite = "attente";
   var enAttente = false;
+
+  /**
+   * Brouillon local, propre au navigateur du lecteur.
+   * Un lecteur invité ne peut pas republier la page : sans ce filet, ses
+   * réponses seraient perdues au moindre rechargement.
+   */
+  function ecrireBrouillon() {
+    try {
+      localStorage.setItem(CLE_BROUILLON, JSON.stringify(etat.reponses));
+    } catch (e) { /* stockage indisponible : on continue sans filet */ }
+  }
+
+  function effacerBrouillon() {
+    try { localStorage.removeItem(CLE_BROUILLON); } catch (e) { /* sans effet */ }
+  }
+
+  function appliquerBrouillon() {
+    var brut;
+    try { brut = localStorage.getItem(CLE_BROUILLON); } catch (e) { return false; }
+    if (!brut) return false;
+    var local;
+    try { local = JSON.parse(brut); } catch (e) { return false; }
+    var change = false;
+    Object.keys(local || {}).forEach(function (ref) {
+      var a = JSON.stringify(etat.reponses[ref] || null);
+      var b = JSON.stringify(local[ref]);
+      if (a !== b) { etat.reponses[ref] = local[ref]; change = true; }
+    });
+    return change;
+  }
+
+  function copierReponses() {
+    var texte = synthese();
+    var txt = document.getElementById("barre-txt");
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      txt.textContent = "Copie indisponible dans ce navigateur";
+      return;
+    }
+    navigator.clipboard.writeText(texte).then(function () {
+      txt.textContent = "Réponses copiées, collez-les dans votre message";
+    }, function () {
+      txt.textContent = "La copie a échoué";
+    });
+  }
 
   function lireEtat() {
     try {
@@ -839,7 +886,6 @@ textarea::placeholder { color: var(--ink-faint); }
     h += "<div>Toutes les valeurs de référence utilisées par les tests portent aujourd'hui la mention « non validé ». C'est votre validation, point par point, qui leur donnera la valeur d'une garantie fiscale et non seulement technique.</div>";
     h += '<div class="actions-pied">';
     h += '<button class="btn" type="button" id="copier">Copier la synthèse</button>';
-    h += '<button class="btn" type="button" id="telecharger" hidden>Télécharger la synthèse</button>';
     h += "</div>";
     h += '<div class="mot" id="mot-pied"></div>';
     h += "</footer>";
@@ -876,15 +922,31 @@ textarea::placeholder { color: var(--ink-faint); }
 
   function marquerModifie() {
     enAttente = true;
+    ecrireBrouillon();
+    rafraichirBarre();
+  }
+
+  /**
+   * La barre s'adapte au droit d'écriture réel du lecteur.
+   * Un lecteur invité ne peut pas republier la page : on lui propose alors de
+   * copier ses réponses plutôt que de lui présenter un bouton inopérant.
+   */
+  function rafraichirBarre() {
     var barre = document.getElementById("barre");
+    if (!barre || !enAttente) return;
     var txt = document.getElementById("barre-txt");
-    if (!barre) return;
-    if (!artifact) {
-      txt.textContent = "Réponses non enregistrables depuis cette vue";
-      document.getElementById("enregistrer").disabled = true;
-    } else {
+    var bouton = document.getElementById("enregistrer");
+    bouton.disabled = false;
+    if (capacite === "oui") {
       txt.textContent = "Modifications non enregistrées";
-      document.getElementById("enregistrer").disabled = false;
+      bouton.textContent = "Enregistrer";
+    } else if (capacite === "non") {
+      txt.textContent = "Vos réponses restent sur cet appareil";
+      bouton.textContent = "Copier mes réponses";
+    } else {
+      txt.textContent = "Vérification en cours";
+      bouton.textContent = "Enregistrer";
+      bouton.disabled = true;
     }
     barre.hidden = false;
   }
@@ -924,7 +986,9 @@ textarea::placeholder { color: var(--ink-faint); }
     });
 
     var enr = document.getElementById("enregistrer");
-    if (enr) enr.addEventListener("click", enregistrer);
+    if (enr) enr.addEventListener("click", function () {
+      if (capacite === "oui") enregistrer(); else copierReponses();
+    });
 
     var cop = document.getElementById("copier");
     if (cop) cop.addEventListener("click", function () {
@@ -940,17 +1004,6 @@ textarea::placeholder { color: var(--ink-faint); }
       }
     });
 
-    var tel = document.getElementById("telecharger");
-    if (tel) tel.addEventListener("click", function () {
-      claude.use("downloads").then(function (d) {
-        if (!d) { dire("Téléchargement indisponible.", "stop"); return; }
-        return d.save({ filename: "arbitrages-fiscaux.md", data: synthese() }).then(function () {
-          dire("Synthèse téléchargée.", "ok");
-        }, function () {
-          dire("Téléchargement annulé.", null);
-        });
-      });
-    });
   }
 
   function dire(message, ton) {
@@ -1014,6 +1067,7 @@ textarea::placeholder { color: var(--ink-faint); }
     document.getElementById("barre-txt").textContent = "Enregistrement…";
     artifact.publish(documentPublie()).then(function () {
       enAttente = false;
+      effacerBrouillon();
       document.getElementById("barre").hidden = true;
     }, function (err) {
       var code = err && err.code;
@@ -1028,18 +1082,29 @@ textarea::placeholder { color: var(--ink-faint); }
     });
   }
 
+  var brouillonRestaure = appliquerBrouillon();
+
   rendre();
 
+  if (brouillonRestaure) {
+    enAttente = true;
+    rafraichirBarre();
+  }
+
   window.addEventListener("beforeunload", function (e) {
-    if (enAttente && artifact) { e.preventDefault(); e.returnValue = ""; }
+    if (enAttente && capacite === "oui") { e.preventDefault(); e.returnValue = ""; }
   });
+
+  if (!window.claude || !window.claude.use) {
+    capacite = "non";
+    rafraichirBarre();
+  }
 
   if (window.claude && window.claude.use) {
     claude.use("artifact").then(function (a) {
       artifact = a;
-      if (!a) return;
-      var tel = document.getElementById("telecharger");
-      if (tel) claude.use("downloads").then(function (d) { if (d && tel) tel.hidden = false; });
+      capacite = a ? "oui" : "non";
+      rafraichirBarre();
     });
   }
 })();
