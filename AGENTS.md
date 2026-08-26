@@ -151,7 +151,7 @@ Le projet utilise des versions `X.Y.Z` avec les règles d'autorisation suivantes
 
 - `X`, version majeure : rupture importante de compatibilité ou de fonctionnement. Ne jamais l'incrémenter ni l'anticiper sans demande explicite de l'utilisateur.
 - `Y`, version mineure : nouvelle fonctionnalité, refactorisation significative ou évolution compatible. Après validation explicite de l'utilisateur, réaliser le travail sur une branche dédiée ; le bump, le tag et la release restent soumis à cette validation.
-- `Z`, correctif : correction compatible, petit entretien, documentation ou maintenance de données sans nouveau parcours. L'agent peut décider et effectuer ce bump en autonomie dans le cadre d'une tâche autorisée, avec les contrôles et validations métier requis.
+- `Z`, correctif stable : correction compatible, petit entretien, documentation ou maintenance de données sans nouveau parcours. Hors préversion, l'agent peut décider et effectuer ce bump en autonomie dans le cadre d'une tâche autorisée, avec les contrôles et validations métier requis.
 
 Un changement de taux reste soumis à la validation juridique même s'il n'incrémente que `Z`. L'autonomie de versionnement ne donne aucune autonomie d'interprétation fiscale. Chaque bump met à jour `VERSION` et `CHANGELOG.md` dans le même commit ; les tags ajoutent le préfixe `v` à la valeur de `VERSION`.
 
@@ -172,8 +172,10 @@ L'agent peut préparer et committer un bump `Z` sans nouvelle autorisation. Il n
 - `clv/preprod` reflète toujours une préversion, jamais une version stable.
 - Utiliser le format `X.Y.Z-beta.N`, par exemple `0.3.0-beta.1`.
 - `X.Y.Z` est exactement la version stable visée ultérieurement dans `main` ; la promotion retire seulement le suffixe `-beta.N`.
-- Incrémenter `N` pour chaque état cohérent de préprod identifié comme nouvelle préversion. Ne jamais réutiliser un numéro de beta déjà publié.
+- Tant que la version est en beta, un correctif incrémente `N` et conserve `X.Y.Z`, sauf demande explicite de l'utilisateur visant une autre version stable.
+- Incrémenter aussi `N` pour chaque autre état cohérent de préprod identifié comme nouvelle préversion. Ne jamais réutiliser un numéro de beta déjà publié.
 - Les éventuels tags `vX.Y.Z-beta.N` sont des tags de préversion et ne remplacent pas le tag stable `vX.Y.Z`.
+- Chaque beta publiée reçoit son propre tag annoté et sa propre GitHub Pre-release ; elle ne compte pas comme la release stable unique de la série `X.Y`.
 - Ne jamais créer ou mettre à jour la release stable de la série depuis `clv/preprod`.
 
 Si le propriétaire fusionne entre-temps une autre PR propre dans `main`, synchroniser d'abord `main` et les tags, identifier la dernière version stable réellement publiée, puis recalculer la cible de préversion. Continuer la numérotation disponible sans écraser un tag et reporter proprement les entrées `Non publié` du changelog.
