@@ -70,6 +70,16 @@ simulateur.dom.declencher('DOMContentLoaded');
 Ce faux DOM ne remplace pas une vérification visuelle dans un vrai navigateur :
 il sert à tester les calculs, pas l'apparence.
 
+Deux limites à connaître :
+
+- les attributs `value` et `selected` écrits dans le HTML ne sont pas appliqués.
+  Un test doit renseigner explicitement chaque champ et chaque liste déroulante
+  dont il dépend, plutôt que de compter sur la valeur affichée par défaut dans
+  la page ;
+- les montants affichés utilisent une espace fine insécable comme séparateur de
+  milliers. Comparer un texte affiché passe donc par `assertTexteAffiche`, qui
+  ignore le type d'espace.
+
 ## Écrire un nouveau test
 
 1. Choisir le dossier : `unit` pour une fonction de calcul, `integration` pour

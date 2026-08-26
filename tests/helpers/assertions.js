@@ -28,4 +28,26 @@ function assertProche(obtenu, attendu, tolerance, message) {
   );
 }
 
-module.exports = { assertProche };
+/**
+ * Remplace toutes les espaces insécables ou fines par une espace ordinaire.
+ *
+ * Les montants sont formatés en français : `toLocaleString('fr-FR')` sépare les
+ * milliers par une espace fine insécable (U+202F), invisible à la lecture d'un
+ * test. Comparer ces caractères à l'identique rendrait les attentes illisibles
+ * et casserait les tests au moindre changement de version de Node.
+ *
+ * @param {string} texte
+ * @returns {string}
+ */
+function normaliserEspaces(texte) {
+  return String(texte).replace(/[\u00A0\u202F\u2009]/g, ' ').trim();
+}
+
+/**
+ * Compare deux textes affichés en ignorant le type d'espace utilisé.
+ */
+function assertTexteAffiche(obtenu, attendu, message) {
+  assert.equal(normaliserEspaces(obtenu), normaliserEspaces(attendu), message);
+}
+
+module.exports = { assertProche, assertTexteAffiche, normaliserEspaces };

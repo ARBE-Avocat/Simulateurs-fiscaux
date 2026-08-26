@@ -711,7 +711,7 @@ function saveCurrentScenario() {
    'dutreilValeur','ruralValeur75','ruralValeur50','exoMonuments','exoAutres','av2Primes'].forEach(id => {
     s[id] = pf(id);
   });
-  s.dutreilTaux = parseFloat(val('dutreilTaux')) || 0.75;
+  s.dutreilTaux = nombreSaisi(val('dutreilTaux'), 0.75);
   s.heritiers = heritiers.map(h => ({...h}));
   s.av1List   = av1List.map(a => ({...a}));
   renderScenButtons();
@@ -727,8 +727,8 @@ function loadScenario(idx) {
    'dutreilValeur','ruralValeur75','ruralValeur50','exoMonuments','exoAutres','av2Primes'].forEach(id => {
     document.getElementById(id).value = s[id] || '';
   });
-  document.getElementById('passifFuneraires').value = s.passifFuneraires || 1500;
-  document.getElementById('dutreilTaux').value = s.dutreilTaux || 0.75;
+  document.getElementById('passifFuneraires').value = s.passifFuneraires ?? 1500;
+  document.getElementById('dutreilTaux').value = s.dutreilTaux ?? 0.75;
   heritiers = (s.heritiers || []).map(h => ({...h}));
   av1List   = (s.av1List || []).map(a => ({...a}));
   heritId   = heritiers.reduce((m,h) => Math.max(m, h.id), 0);
@@ -801,9 +801,9 @@ function renderHeritiers() {
       <td><select onchange="setHV(${h.id},'lien',this.value);compute()">
         ${Object.entries(LIENS).map(([k,v])=>`<option value="${k}" ${h.lien===k?'selected':''}>${v.label}</option>`).join('')}
       </select></td>
-      <td><input type="number" value="${h.part}" min="0" max="100" step="0.01" style="width:65px" oninput="setHV(${h.id},'part',parseFloat(this.value)||0);compute()"> %</td>
+      <td><input type="number" value="${h.part}" min="0" max="100" step="0.01" style="width:65px" oninput="setHV(${h.id},'part',nombreSaisi(this.value, 0));compute()"> %</td>
       <td class="val-cell">${fmtE(mont)}</td>
-      <td><input type="number" value="${h.donations}" placeholder="0" min="0" style="width:110px" oninput="setHV(${h.id},'donations',parseFloat(this.value)||0);compute()"></td>
+      <td><input type="number" value="${h.donations}" placeholder="0" min="0" style="width:110px" oninput="setHV(${h.id},'donations',nombreSaisi(this.value, 0));compute()"></td>
       <td class="val-cell">${info.abat===Infinity?'Exonéré':fmtE(abat)}</td>
       <td class="val-cell">${info.abat===Infinity?'0 €':fmtE(base)}</td>
       <td class="val-cell" style="font-weight:bold;color:${drts>0?'var(--danger)':'var(--success)'}">${fmtE(drts)}</td>
@@ -841,7 +841,7 @@ function renderAV1() {
     const tr=document.createElement('tr');
     tr.innerHTML=`
       <td><input type="text" value="${esc(a.nom)}" placeholder="Bénéficiaire" oninput="setA1V(${a.id},'nom',this.value)"></td>
-      <td><input type="number" value="${a.capital}" placeholder="0" min="0" oninput="setA1V(${a.id},'capital',parseFloat(this.value)||0);renderAV1();compute()"></td>
+      <td><input type="number" value="${a.capital}" placeholder="0" min="0" oninput="setA1V(${a.id},'capital',nombreSaisi(this.value, 0));renderAV1();compute()"></td>
       <td class="val-cell">${fmtE(Math.min(a.capital,AV1_ABAT))}</td>
       <td class="val-cell">${fmtE(base)}</td>
       <td class="val-cell" style="font-weight:bold;color:${prel>0?'var(--danger)':'var(--success)'}">${fmtE(prel)}</td>
@@ -853,6 +853,33 @@ function renderAV1() {
   document.getElementById('av1TotalPrel').textContent=fmtE(tP);
 }
 
+// ============================================================
+// LECTURE DES SAISIES
+// ============================================================
+/**
+ * Lit une valeur saisie en distinguant trois situations : le champ vide, la
+ * saisie inexploitable, et le nombre réellement saisi.
+ *
+ * Zéro est un nombre saisi comme un autre : il ne doit jamais être remplacé
+ * par la valeur par défaut. L'écriture `parseFloat(saisie) || 100` transformait
+ * un 0 volontaire en 100 sans que rien ne le signale (issue #8).
+ *
+ * Ce helper est pour l'instant recopié dans chaque simulateur ; il sera
+ * mutualisé lorsque l'architecture cible sera en place (issue #20).
+ *
+ * @param {*} valeurBrute contenu du champ, tel que lu dans le formulaire
+ * @param {number} valeurParDefaut valeur retenue si le champ est vide ou illisible
+ * @returns {number}
+ */
+function nombreSaisi(valeurBrute, valeurParDefaut = 0) {
+  if (valeurBrute === null || valeurBrute === undefined) return valeurParDefaut;
+  const texte = String(valeurBrute).trim();
+  if (texte === '') return valeurParDefaut;
+  const nombre = parseFloat(texte);
+  if (!isFinite(nombre)) return valeurParDefaut;
+  return nombre;
+}
+
 // ══════════════════════════════════════════════════════
 // CALCULS
 // ══════════════════════════════════════════════════════
@@ -860,10 +887,10 @@ function calcActifBrut() {
   return pf('actifImmo')+pf('actifTitres')+pf('actifLiquidites')+pf('actifAV')+pf('actifParts')+pf('actifMeubles')+pf('actifAutres');
 }
 function calcPassif() {
-  return pf('passifEmprunt')+pf('passifFisc')+pf('passifAutres')+(pf('passifFuneraires')||1500);
+  return pf('passifEmprunt')+pf('passifFisc')+pf('passifAutres')+nombreSaisi(val('passifFuneraires'), 1500);
 }
 function calcExo() {
-  const dutreil=(pf('dutreilValeur'))*(parseFloat(val('dutreilTaux'))||0.75);
+  const dutreil=(pf('dutreilValeur'))*nombreSaisi(val('dutreilTaux'), 0.75);
   const r75=pf('ruralValeur75')*0.75, r50=pf('ruralValeur50')*0.50;
   const mon=pf('exoMonuments'), aut=pf('exoAutres');
   return {dutreil,r75,r50,mon,aut,total:dutreil+r75+r50+mon+aut};
@@ -1048,9 +1075,9 @@ function openCompare() {
   // Recompute each scenario
   const results = scenarios.map(s => {
     const brut = s.actifImmo+s.actifTitres+s.actifLiquidites+s.actifAV+s.actifParts+s.actifMeubles+s.actifAutres;
-    const passif = s.passifEmprunt+s.passifFisc+s.passifAutres+(s.passifFuneraires||1500);
+    const passif = s.passifEmprunt+s.passifFisc+s.passifAutres+(s.passifFuneraires ?? 1500);
     const actifNet = Math.max(0, brut-passif);
-    const dutreil=(s.dutreilValeur||0)*(s.dutreilTaux||0.75);
+    const dutreil=(s.dutreilValeur ?? 0)*(s.dutreilTaux ?? 0.75);
     const r75=(s.ruralValeur75||0)*0.75, r50=(s.ruralValeur50||0)*0.50;
     const exoTotal=dutreil+r75+r50+(s.exoMonuments||0)+(s.exoAutres||0);
     const ant=Math.max(0,actifNet-exoTotal);
@@ -1222,7 +1249,7 @@ function closeDoc() { document.getElementById('docModal').classList.remove('open
 // ══════════════════════════════════════════════════════
 // HELPERS
 // ══════════════════════════════════════════════════════
-function pf(id){ return parseFloat(document.getElementById(id)?.value)||0; }
+function pf(id){ return nombreSaisi(document.getElementById(id)?.value, 0); }
 function val(id){ return document.getElementById(id)?.value||''; }
 function fmtN(n,d=0){ if(!isFinite(n)) return '—'; return n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}); }
 function fmtE(n){ if(!isFinite(n)) return '—'; return fmtN(n,0)+' €'; }

@@ -1,0 +1,80 @@
+{
+  "description": "Scénarios de non-régression des simulateurs Succession et Démembrement.",
+  "provenance": "Résultats produits par les fichiers HTML avant la correction de l'issue #8, avec des saisies ne comportant aucune valeur zéro (donc non affectées par le défaut corrigé).",
+  "statutValidation": "NON VALIDÉ - ces valeurs figent le comportement existant pour prouver qu'une correction ne déplace aucun montant. Elles ne certifient ni les barèmes, ni les abattements, ni le barème de l'usufruit, qui relèvent de #9.",
+  "note": "Le faux DOM des tests n'applique pas les attributs `selected` du HTML : chaque liste déroulante est donc renseignée explicitement dans le scénario.",
+  "unite": "euros",
+  "tolerance": 0.01,
+  "succession": [
+    {
+      "nom": "actif immobilier et titres, passif et exonération Dutreil",
+      "champs": {
+        "actifImmo": 800000,
+        "actifTitres": 200000,
+        "passifEmprunt": 50000,
+        "passifFuneraires": 3000,
+        "dutreilValeur": 100000,
+        "dutreilTaux": 0.75
+      },
+      "attendu": {
+        "actifBrut": 1000000,
+        "passif": 53000,
+        "exoTotal": 75000,
+        "actifNetTaxable": 872000
+      }
+    }
+  ],
+  "demembrement": [
+    {
+      "nom": "donation en nue-propriété, ligne directe, deux donataires",
+      "champs": {
+        "valeurPP": 600000,
+        "age": 68,
+        "nbDonataires": 2,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "affichage": {
+        "valeurNPDisplay": "360 000 €",
+        "abattementDisplay": "100 000 €",
+        "baseTaxableNette": "80 000 €",
+        "droitsTotaux": "28 388,7 €",
+        "tauxEffectif": "7,89 %"
+      }
+    },
+    {
+      "nom": "donation en pleine propriété, ligne directe, un donataire",
+      "champs": {
+        "valeurPP": 1200000,
+        "age": 55,
+        "nbDonataires": 1,
+        "natureOp": "pp",
+        "lienParente": "directe"
+      },
+      "affichage": {
+        "valeurNPDisplay": "1 200 000 €",
+        "abattementDisplay": "100 000 €",
+        "baseTaxableNette": "1 100 000 €",
+        "droitsTotaux": "292 678,15 €",
+        "tauxEffectif": "24,39 %"
+      }
+    },
+    {
+      "nom": "donation en nue-propriété, lien éloigné, un donataire",
+      "champs": {
+        "valeurPP": 500000,
+        "age": 72,
+        "nbDonataires": 1,
+        "natureOp": "np",
+        "lienParente": "autre"
+      },
+      "affichage": {
+        "valeurNPDisplay": "350 000 €",
+        "abattementDisplay": "1 594 €",
+        "baseTaxableNette": "348 406 €",
+        "droitsTotaux": "67 875,55 €",
+        "tauxEffectif": "19,39 %"
+      }
+    }
+  ]
+}

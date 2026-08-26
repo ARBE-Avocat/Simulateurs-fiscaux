@@ -745,22 +745,49 @@ function getAbattement(lien) {
 }
 
 // ============================================================
+// LECTURE DES SAISIES
+// ============================================================
+/**
+ * Lit une valeur saisie en distinguant trois situations : le champ vide, la
+ * saisie inexploitable, et le nombre réellement saisi.
+ *
+ * Zéro est un nombre saisi comme un autre : il ne doit jamais être remplacé
+ * par la valeur par défaut. L'écriture `parseFloat(saisie) || 100` transformait
+ * un 0 volontaire en 100 sans que rien ne le signale (issue #8).
+ *
+ * Ce helper est pour l'instant recopié dans chaque simulateur ; il sera
+ * mutualisé lorsque l'architecture cible sera en place (issue #20).
+ *
+ * @param {*} valeurBrute contenu du champ, tel que lu dans le formulaire
+ * @param {number} valeurParDefaut valeur retenue si le champ est vide ou illisible
+ * @returns {number}
+ */
+function nombreSaisi(valeurBrute, valeurParDefaut = 0) {
+  if (valeurBrute === null || valeurBrute === undefined) return valeurParDefaut;
+  const texte = String(valeurBrute).trim();
+  if (texte === '') return valeurParDefaut;
+  const nombre = parseFloat(texte);
+  if (!isFinite(nombre)) return valeurParDefaut;
+  return nombre;
+}
+
+// ============================================================
 // BARÈME PROGRESSIF — lecture des paramètres
 // ============================================================
 function getParams() {
   return {
-    aba_directe: parseFloat(document.getElementById('p_aba_directe').value) || 100000,
-    aba_frere:   parseFloat(document.getElementById('p_aba_frere').value)   || 15932,
-    aba_neveu:   parseFloat(document.getElementById('p_aba_neveu').value)   || 7967,
-    aba_autre:   parseFloat(document.getElementById('p_aba_autre').value)   || 1594,
+    aba_directe: nombreSaisi(document.getElementById('p_aba_directe').value, 100000),
+    aba_frere:   nombreSaisi(document.getElementById('p_aba_frere').value, 15932),
+    aba_neveu:   nombreSaisi(document.getElementById('p_aba_neveu').value, 7967),
+    aba_autre:   nombreSaisi(document.getElementById('p_aba_autre').value, 1594),
     tranches: [
-      { low: parseFloat(document.getElementById('p_t1_low').value)||0,       high: parseFloat(document.getElementById('p_t1_high').value)||8072,    taux: (parseFloat(document.getElementById('p_t1_taux').value)||5)/100 },
-      { low: parseFloat(document.getElementById('p_t2_low').value)||8072,    high: parseFloat(document.getElementById('p_t2_high').value)||12109,   taux: (parseFloat(document.getElementById('p_t2_taux').value)||10)/100 },
-      { low: parseFloat(document.getElementById('p_t3_low').value)||12109,   high: parseFloat(document.getElementById('p_t3_high').value)||15932,   taux: (parseFloat(document.getElementById('p_t3_taux').value)||15)/100 },
-      { low: parseFloat(document.getElementById('p_t4_low').value)||15932,   high: parseFloat(document.getElementById('p_t4_high').value)||552324,  taux: (parseFloat(document.getElementById('p_t4_taux').value)||20)/100 },
-      { low: parseFloat(document.getElementById('p_t5_low').value)||552324,  high: parseFloat(document.getElementById('p_t5_high').value)||902838,  taux: (parseFloat(document.getElementById('p_t5_taux').value)||30)/100 },
-      { low: parseFloat(document.getElementById('p_t6_low').value)||902838,  high: parseFloat(document.getElementById('p_t6_high').value)||1805677, taux: (parseFloat(document.getElementById('p_t6_taux').value)||40)/100 },
-      { low: parseFloat(document.getElementById('p_t7_low').value)||1805677, high: Infinity,                                                         taux: (parseFloat(document.getElementById('p_t7_taux').value)||45)/100 },
+      { low: nombreSaisi(document.getElementById('p_t1_low').value, 0),       high: nombreSaisi(document.getElementById('p_t1_high').value, 8072),    taux: (nombreSaisi(document.getElementById('p_t1_taux').value, 5))/100 },
+      { low: nombreSaisi(document.getElementById('p_t2_low').value, 8072),    high: nombreSaisi(document.getElementById('p_t2_high').value, 12109),   taux: (nombreSaisi(document.getElementById('p_t2_taux').value, 10))/100 },
+      { low: nombreSaisi(document.getElementById('p_t3_low').value, 12109),   high: nombreSaisi(document.getElementById('p_t3_high').value, 15932),   taux: (nombreSaisi(document.getElementById('p_t3_taux').value, 15))/100 },
+      { low: nombreSaisi(document.getElementById('p_t4_low').value, 15932),   high: nombreSaisi(document.getElementById('p_t4_high').value, 552324),  taux: (nombreSaisi(document.getElementById('p_t4_taux').value, 20))/100 },
+      { low: nombreSaisi(document.getElementById('p_t5_low').value, 552324),  high: nombreSaisi(document.getElementById('p_t5_high').value, 902838),  taux: (nombreSaisi(document.getElementById('p_t5_taux').value, 30))/100 },
+      { low: nombreSaisi(document.getElementById('p_t6_low').value, 902838),  high: nombreSaisi(document.getElementById('p_t6_high').value, 1805677), taux: (nombreSaisi(document.getElementById('p_t6_taux').value, 40))/100 },
+      { low: nombreSaisi(document.getElementById('p_t7_low').value, 1805677), high: Infinity,                                                         taux: (nombreSaisi(document.getElementById('p_t7_taux').value, 45))/100 },
     ]
   };
 }
@@ -842,9 +869,16 @@ function updateBaremeProgressif(base, tranches) {
 // CALCUL PRINCIPAL
 // ============================================================
 function recalculate() {
+  // Ces deux champs n'acceptent pas la valeur zéro : aucun âge de 0 an ne
+  // correspond à une tranche du barème de l'usufruit, et un nombre de
+  // donataires nul rendrait le partage impossible (division par zéro plus bas).
+  // Le comportement actuel est donc conservé tel quel : toute saisie vide,
+  // illisible ou nulle retombe sur la valeur par défaut. La validation
+  // explicite attendue — bornes acceptées et message d'erreur affiché — reste
+  // à définir avec l'issue #11, et n'est volontairement pas inventée ici.
   const age = parseInt(document.getElementById('age').value) || 68;
   const nb  = parseInt(document.getElementById('nbDonataires').value) || 1;
-  const vpp = parseFloat(document.getElementById('valeurPP').value) || 0;
+  const vpp = nombreSaisi(document.getElementById('valeurPP').value, 0);
   const lien = document.getElementById('lienParente').value;
   const nature = document.getElementById('natureOp').value;
   const params = getParams();

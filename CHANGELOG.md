@@ -6,6 +6,23 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.4.0-beta.5] - 2026-08-26
+
+### Corrigé
+
+- Une valeur zéro saisie volontairement n'est plus remplacée par une valeur par défaut (issue #8). Une quote-part IFI de 0 % reste 0 % au lieu de devenir 100 %, des frais funéraires à 0 € restent 0 € au lieu de repasser à 1 500 €, et les paramètres de barème du simulateur de démembrement acceptent enfin la valeur 0.
+- Les valeurs relues depuis un scénario de succession enregistré conservent également le zéro.
+
+### Ajouté
+
+- Helper `nombreSaisi`, qui distingue explicitement un champ vide, une saisie illisible et un zéro réellement saisi, dans les simulateurs IFI, Succession et Démembrement.
+- Scénarios de non-régression des simulateurs Succession et Démembrement.
+- Tests couvrant le champ vide, le zéro, la valeur négative, le texte invalide et la valeur positive.
+
+### Connu
+
+- L'âge et le nombre de donataires du simulateur de démembrement refusent toujours la valeur zéro et retombent silencieusement sur leur valeur par défaut. Ce comportement est conservé et documenté ; la validation explicite attendue reste à définir avec l'issue #11.
+
 ## [0.4.0-beta.4] - 2026-08-26
 
 ### Corrigé
@@ -91,7 +108,8 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 - Première version regroupant six simulateurs HTML autonomes : IR et CEHR/CDHR, plus-value immobilière, IFI, IRPP, succession et démembrement immobilier.
 
-[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.4...HEAD
+[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.5...HEAD
+[0.4.0-beta.5]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.4...v0.4.0-beta.5
 [0.4.0-beta.4]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.3...v0.4.0-beta.4
 [0.4.0-beta.3]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.2...v0.4.0-beta.3
 [0.4.0-beta.2]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.1...v0.4.0-beta.2
