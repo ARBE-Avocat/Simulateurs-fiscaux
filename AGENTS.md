@@ -161,10 +161,13 @@ Le projet utilise des versions `X.Y.Z` avec les règles d'autorisation suivantes
 
 Certains changements ne touchent ni le produit, ni ce que le dépôt garantit, ni un document destiné à une personne. Ils ne reçoivent **ni bump `Z`, ni bump `beta.N`, ni tag, ni entrée de changelog** : ils sont simplement committés et poussés, et se retrouvent inclus dans la préversion ou le correctif suivant.
 
-Relèvent de ce cas :
+La version suit le **produit** et ce que le dépôt **garantit**. Elle ne suit ni les outils de travail, ni la documentation de pilotage, ni les supports préparant une décision.
+
+Relèvent du cas sans bump :
 
 - les consignes destinées aux agents : `AGENTS.md`, `CLAUDE.md`, instructions locales ;
 - le pilotage interne : `docs/PLAN_ACTIONS_AGENTS_IA.md`, mise à jour d'état, d'ordre ou de jalon ;
+- les supports de travail servant à préparer une décision, y compris lorsqu'ils sont destinés au propriétaire ou au référent juridique : `docs/CORRECTIONS_A_VALIDER.md`, `docs/INVENTAIRE_CONVENTIONS.md`, `docs/arbitrages.html` et la page publiée correspondante ;
 - les corrections de forme sans changement de fond : orthographe, reformulation, mise en page ;
 - les commentaires de code et les renommages internes sans effet sur le comportement ;
 - les fichiers de travail non livrés.
@@ -174,10 +177,10 @@ Reçoivent au contraire un bump :
 - tout changement de comportement d'un simulateur, fût-il d'un centime ;
 - toute donnée fiscale : taux, seuil, abattement, barème ou millésime ;
 - l'outillage qui change ce que le dépôt garantit : tests, contrôles automatiques, build, intégration continue ;
-- `README.md` et tout document destiné au propriétaire ou au référent juridique, `docs/CORRECTIONS_A_VALIDER.md` inclus ;
+- `README.md` et la documentation d'usage du produit ;
 - toute modification d'un livrable publié.
 
-En cas de doute, la question est : « une personne autre que l'agent verrait-elle la différence ? ». Si oui, bump.
+En cas de doute, la question n'est pas « quelqu'un verra-t-il la différence ? » mais : « **le produit du dépôt, ou ce qu'il garantit, a-t-il changé ?** ». Un support de travail peut évoluer dix fois dans la journée sans qu'aucune version ne bouge.
 
 Un commit sans bump reste un commit normal : message clair, périmètre limité, poussé sur la branche du jalon. Cette règle ne vaut que pour les changements à venir ; un tag déjà publié n'est jamais renuméroté ni supprimé.
 
