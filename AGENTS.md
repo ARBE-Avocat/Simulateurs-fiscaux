@@ -121,18 +121,19 @@ Chaque compte rendu indique les commandes et contrôles réellement exécutés, 
 
 - Ne jamais développer directement dans `main` ; seul le propriétaire y fusionne les PR.
 - Un agent ne fusionne jamais sa propre PR.
-- Une issue correspond normalement à une branche courte et une PR cohérente.
-- Les branches du mainteneur CLV utilisent `clv/<nom-branche>`.
-- `clv/preprod` est la branche permanente d'intégration de CLV. Aucun développement majeur directement dessus ; seulement de petits commits d'entretien explicitement demandés, par exemple un bump correctif `z`.
+- Pour les contributeurs autres que CLV, une issue correspond normalement à une branche courte et une PR cohérente.
+- Pour CLV, une branche regroupe toutes les issues d'une version mineure `Y` du plan. Ces branches utilisent `clv/y-X.Y-<slug>` et sont empilées dans l'ordre des jalons.
+- `clv/preprod` est la branche permanente des travaux déjà validés de CLV. Aucun développement majeur directement dessus ; seulement de petits commits d'entretien explicitement demandés.
+- Sans les validations métier requises, ne jamais fusionner une branche `Y` dans `clv/preprod`. Créer la branche `Y` suivante depuis la précédente afin de conserver la pile.
 - Les autres contributeurs utilisent la base indiquée par le responsable ou, à défaut, `main` à jour.
 - Ne pas forcer un push, réécrire l'historique partagé ou supprimer une branche distante. Les tags et releases suivent exclusivement les règles de versionnement ci-dessous.
 - Préserver tous les changements locaux hors périmètre.
 
-Utiliser `Closes #N` si la PR termine l'issue et `Part of #N` pour une étape partielle ou une sous-issue d'epic.
+Utiliser `Closes #N` si la PR termine réellement l'issue et `Part of #N` pour une étape partielle, une sous-issue d'epic ou un travail encore empilé hors de `main`.
 
 Les commits sont petits et cohérents. Une PR fournit : résumé non technique, issue et périmètre, comportement avant/après, choix techniques vulgarisés, validations métier attendues, sources et millésimes, tests exécutés, limites et risques, et capture si l'interface change visiblement.
 
-Scinder une PR trop large. Ne pas réunir sans nécessité données, moteur, interface et refactorisation générale.
+Scinder une PR trop large. L'exception CLV « une branche par `Y` » conserve un commit ou groupe de commits cohérent par issue et une checklist de validation, afin que le regroupement reste relisible.
 
 ## 10. Documentation
 
@@ -169,7 +170,8 @@ L'agent peut préparer et committer un bump `Z` sans nouvelle autorisation. Il n
 
 ### Préversions de CLV
 
-- `clv/preprod` reflète toujours une préversion, jamais une version stable.
+- `clv/preprod` reflète la dernière préversion validée, jamais une version stable.
+- Chaque branche `Y` empilée porte la préversion de sa propre cible, même avant son intégration dans `clv/preprod`.
 - Utiliser le format `X.Y.Z-beta.N`, par exemple `0.3.0-beta.1`.
 - `X.Y.Z` est exactement la version stable visée ultérieurement dans `main` ; la promotion retire seulement le suffixe `-beta.N`.
 - Tant que la version est en beta, un correctif incrémente `N` et conserve `X.Y.Z`, sauf demande explicite de l'utilisateur visant une autre version stable.

@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.3.0-beta.3`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.3.0-beta.4`.
 
 ## Objectifs de l’orchestration
 
@@ -16,10 +16,10 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.3.0-bet
 ## État actuel
 
 - La phase 0 de gouvernance est terminée sur `clv/preprod`.
-- La préversion courante est `0.3.0-beta.3` ; la version stable visée est `0.3.0`.
+- La préversion courante de `clv/preprod` est `0.3.0-beta.4` ; la version stable visée est `0.3.0`.
 - Toutes les issues citées dans ce plan sont encore ouvertes au 26 août 2026.
 - L'issue #29 reste ouverte : seule sa première partie documentaire et de gouvernance est amorcée.
-- La prochaine issue fonctionnelle à traiter reste #10, socle des tests automatisés.
+- Le prochain groupe de travail est `Y = 0.4`, branche `clv/y-0.4-fiabilite`, en commençant par #10.
 
 ## Maintenance obligatoire du plan
 
@@ -29,7 +29,7 @@ Après chaque tâche, l'agent vérifie explicitement si le plan doit évoluer. T
 
 ## Règles de fonctionnement pour les agents
 
-1. Une branche et une pull request par issue ou sous-issue.
+1. Pour CLV, une branche par version mineure `Y` regroupe les issues du jalon. Pour les autres contributeurs, une branche et une pull request par issue ou sous-issue restent la règle normale.
 2. Un agent ne fusionne jamais sa propre pull request. L’orchestrateur relit ; seul le propriétaire du dépôt fusionne dans `main`.
 3. Une correction de calcul commence par un test reproduisant le défaut.
 4. Une valeur fiscale ne peut être ajoutée ou modifiée sans source, millésime et validation métier.
@@ -38,21 +38,42 @@ Après chaque tâche, l'agent vérifie explicitement si le plan doit évoluer. T
 7. Les fichiers générés ne sont jamais modifiés manuellement.
 8. Toute PR doit indiquer les commandes exécutées et les résultats obtenus.
 9. Utiliser `Closes #N` pour une issue terminée et `Part of #N` pour une contribution partielle à un epic.
-10. Pour CLV, les agents repartent de `clv/preprod` et travaillent sur une branche `clv/<nom-branche>`. Les autres contributeurs repartent de la branche de base indiquée ou, à défaut, de `main`.
+10. Les branches `Y` de CLV sont empilées : la première part de `clv/preprod`, la suivante de la branche `Y` précédente. Elles ne sont pas fusionnées dans `clv/preprod` avant les validations requises.
 
 Conventions de branches recommandées :
 
 ```text
-clv/issue-4-decote-cdhr
-clv/issue-10-socle-tests
-clv/issue-14-referentiel-ir
-clv/issue-23-cession-titres
-clv/issue-29-gouvernance
+clv/y-0.4-fiabilite
+clv/y-0.5-donnees
+clv/y-0.6-architecture
+clv/y-0.7-qualite
 ```
+
+## Workflow CLV — branches `Y` empilées
+
+CLV avançant avant de disposer de tous les arbitrages métier, `clv/preprod` reste sur le dernier état validé. Les développements sont regroupés par jalon mineur et empilés :
+
+```text
+clv/preprod (0.3.0-beta.N validée)
+└─ clv/y-0.4-fiabilite
+   └─ clv/y-0.5-donnees
+      └─ clv/y-0.6-architecture
+         └─ clv/y-0.7-qualite
+```
+
+Règles de la pile :
+
+- une seule branche CLV par `Y`, même si elle traite plusieurs issues ;
+- un ou plusieurs commits cohérents par issue, avec références et tests ;
+- une draft PR peut cibler la branche `Y` précédente pour isoler le diff du jalon ;
+- les questions métier non résolues restent visibles et interdisent la promotion, sans empêcher les travaux techniques indépendants ;
+- toute correction d'une branche parente est propagée dans les descendantes avant de poursuivre ;
+- les branches sont validées et intégrées dans leur ordre ; aucune branche descendante ne contourne une branche parente non validée ;
+- seul CLV autorise une intégration dans `clv/preprod`, et seul le propriétaire fusionne ensuite dans `main`.
 
 ## Phase 0 — Installer la gouvernance initiale — terminée
 
-Livré dans les préversions `0.3.0-beta.1` à `0.3.0-beta.3` :
+Livré dans les préversions `0.3.0-beta.1` à `0.3.0-beta.4` :
 
 - `AGENTS.md`, source commune des consignes pour les agents IA ;
 - `CLAUDE.md`, qui importe les consignes communes pour Claude Code ;
@@ -62,6 +83,7 @@ Livré dans les préversions `0.3.0-beta.1` à `0.3.0-beta.3` :
 - règles `X.Y.Z`, préversions `X.Y.Z-beta.N`, tags et releases ;
 - présent plan d'action et obligation de le maintenir à jour ;
 - consignes personnelles de CLV dans un fichier local ignoré par Git.
+- workflow de branches `Y` empilées dans l'attente des validations métier.
 
 Cette phase ne clôt pas l'issue #29. `CODEMAP.md`, `CONTRIBUTING.md`, les templates GitHub, la protection de `main`, la sécurité du rendu et l'accessibilité desktop restent à traiter.
 
@@ -98,6 +120,8 @@ En finition : #29 Qualité desktop, documentation et gouvernance
 ```
 
 ## Phase 1 — Sécuriser les calculs
+
+Branche CLV du jalon : `clv/y-0.4-fiabilite`. Toutes les issues de cette phase sont traitées séquentiellement ou par commits distincts sur cette branche, sans promotion dans `clv/preprod` avant validation.
 
 ### Étape 1.1 — Installer le socle de tests
 
@@ -146,6 +170,8 @@ Avant de poursuivre :
 - aucune divergence 17,2 % / 18,6 % n’est résolue par simple supposition de l’agent.
 
 ## Phase 2 — Définir l’architecture et externaliser les données
+
+Branche CLV du jalon : `clv/y-0.5-donnees`, créée depuis la branche `Y = 0.4` validée techniquement mais pas nécessairement encore intégrée.
 
 ### Étape 2.1 — Décider de l’architecture cible
 
@@ -216,6 +242,8 @@ L’epic #2 n’est pas une branche de développement autonome. Il est clos uniq
 
 ## Phase 3 — Découpler les moteurs et les interfaces
 
+Branche CLV du jalon : `clv/y-0.6-architecture`, créée depuis `clv/y-0.5-donnees`.
+
 Epic parent :
 
 - [#21 — Découpler les moteurs de calcul de l’interface](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/21)
@@ -270,6 +298,8 @@ Ne pas conserver une branche #28 ouverte pendant tout le projet. Pour CLV, chaqu
 
 ## Phase 4 — Qualité desktop, documentation et gouvernance
 
+Branche CLV du jalon : `clv/y-0.7-qualite`, créée depuis `clv/y-0.6-architecture`.
+
 - [#29 — Chantier P2 commun](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/29)
 
 Le mobile et le responsive restent hors périmètre.
@@ -318,7 +348,7 @@ Une issue est terminée lorsque :
 - aucune modification non liée n’est incluse ;
 - la PR explique le comportement avant et après ;
 - la validation humaine requise est obtenue ;
-- la branche de travail est supprimée après fusion ; la branche permanente `clv/preprod` est conservée.
+- une branche `Y` empilée est conservée tant que ses descendantes en dépendent ; elle n'est supprimée qu'après validation et intégration de toute la chaîne concernée ; `clv/preprod` reste permanente.
 
 ## Modèle de consigne à donner à un agent
 
@@ -326,8 +356,8 @@ Une issue est terminée lorsque :
 Tu travailles uniquement sur l’issue #N du dépôt ARBE-Avocat/Simulateurs-fiscaux.
 
 1. Lis entièrement l’issue, ses dépendances et ses issues parentes.
-2. Vérifie que les dépendances sont intégrées dans la base applicable : `clv/preprod` pour CLV, branche indiquée ou `main` pour les autres contributeurs.
-3. Vérifie le workflow applicable. Pour CLV, crée `clv/issue-N-<slug>` depuis `clv/preprod` à jour ; sinon utilise la base indiquée ou `main`.
+2. Identifie le jalon mineur `Y` de l'issue et vérifie que ses dépendances existent dans la branche parente de la pile.
+3. Pour CLV, travaille dans l'unique branche `clv/y-X.Y-<slug>` du jalon ; ne crée pas de branche par issue. Pour un autre contributeur, utilise la base indiquée ou `main`.
 4. Commence par reproduire le comportement actuel avec un test.
 5. Implémente uniquement le périmètre de l’issue.
 6. N’invente ni taux, ni seuil, ni règle fiscale. Signale tout point non sourcé.
@@ -335,20 +365,20 @@ Tu travailles uniquement sur l’issue #N du dépôt ARBE-Avocat/Simulateurs-fis
 8. Relis le diff pour retirer toute modification sans rapport.
 9. Prépare une PR avec : résumé, avant/après, tests, sources et risques.
 10. Utilise « Closes #N » si l’issue est entièrement terminée, sinon « Part of #N ».
-11. Ne fusionne pas la PR et n’enchaîne pas sur une autre issue sans instruction.
+11. Ne fusionne pas la branche `Y` dans `clv/preprod`. Signale les validations manquantes et n'enchaîne sur une autre issue que si elle appartient au jalon autorisé.
 ```
 
 ## Jalons de release suggérés
 
 Chaque nouvelle version mineure `Y` reste soumise à une validation explicite de l'utilisateur. Les jalons après `0.3.0` sont donc indicatifs.
 
-| Jalon | Contenu minimal | Version indicative |
-|---|---|---|
-| Gouvernance initiale | Phase 0, consignes, plan, changelog et préprod | `v0.3.0` — actuellement en beta |
-| Fiabilité | #4 à #11, tests de base et validation métier suffisante | `v0.4.0` indicatif |
-| Données | #2 terminé, #20 et CI données/build | `v0.5.0` indicatif |
-| Architecture | #21 terminé et six moteurs découplés | `v0.6.0` indicatif |
-| Qualité | #28 et #29 terminés | `v0.7.0` indicatif |
+| Jalon | Branche CLV | Contenu minimal | Version indicative |
+|---|---|---|---|
+| Gouvernance initiale | `clv/preprod` | Phase 0, consignes, plan, changelog et préprod | `v0.3.0` — actuellement en beta |
+| Fiabilité | `clv/y-0.4-fiabilite` | #4 à #11, tests de base et validation métier suffisante | `v0.4.0` indicatif |
+| Données | `clv/y-0.5-donnees` | #2 terminé, #20 et CI données/build | `v0.5.0` indicatif |
+| Architecture | `clv/y-0.6-architecture` | #21 terminé et six moteurs découplés | `v0.6.0` indicatif |
+| Qualité | `clv/y-0.7-qualite` | #28 et #29 terminés | `v0.7.0` indicatif |
 
 Pour CLV, `clv/preprod` utilise `X.Y.Z-beta.N`. Un correctif en beta incrémente `N`, sauf demande contraire. Chaque beta publiée possède son tag annoté et sa GitHub Pre-release.
 

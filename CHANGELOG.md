@@ -6,6 +6,14 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque v
 
 ## [Non publié]
 
+## [0.3.0-beta.4] - 2026-08-26
+
+### Modifié
+
+- Adoption pour CLV d'une branche empilée par version mineure `Y`, regroupant les issues du jalon.
+- Conservation des branches hors de `clv/preprod` jusqu'à obtention des validations métier nécessaires.
+- Mise à jour du plan, du modèle de consigne et des jalons avec les branches `clv/y-X.Y-<slug>`.
+
 ## [0.3.0-beta.3] - 2026-08-26
 
 ### Modifié
@@ -47,7 +55,8 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque v
 
 - Première version regroupant six simulateurs HTML autonomes : IR et CEHR/CDHR, plus-value immobilière, IFI, IRPP, succession et démembrement immobilier.
 
-[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.3...HEAD
+[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.4...HEAD
+[0.3.0-beta.4]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.3...v0.3.0-beta.4
 [0.3.0-beta.3]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.2...v0.3.0-beta.3
 [0.3.0-beta.2]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.1...v0.3.0-beta.2
 [0.3.0-beta.1]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.2.0...v0.3.0-beta.1
