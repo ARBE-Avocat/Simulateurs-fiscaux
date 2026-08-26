@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.8`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.9`.
 
 ## Objectifs de l’orchestration
 
@@ -17,7 +17,7 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 
 - La phase 0 de gouvernance est terminée sur `clv/preprod`.
 - La préversion de `clv/preprod` reste `0.3.0-beta.4` ; la version stable visée est `0.3.0`.
-- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.8`.
+- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.9`.
 - L'étape 1.1 (#10, socle de tests) est réalisée sur cette branche et attend relecture ; elle n'est pas intégrée à `clv/preprod`.
 - Les autres issues citées dans ce plan sont encore ouvertes au 26 août 2026.
 - L'issue #29 reste ouverte : seule sa première partie documentaire et de gouvernance est amorcée.
@@ -25,7 +25,9 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 - #8 est corrigée pour sa partie technique : un zéro saisi n'est plus remplacé par une valeur par défaut dans les simulateurs IFI, Succession et Démembrement. La validation explicite des champs obligatoires reste ouverte et bascule vers #11.
 - #5 est corrigée : la réduction pour dons de l'IRPP est recalculée dès que le revenu change, et le calcul est isolé du formulaire.
 - #4 est bloquée sur une validation métier : la formule et l'intervalle de la décote CDHR doivent être confirmés par le référent fiscal avant toute correction.
-- Prochaines étapes du jalon : lever le blocage de #4, puis #11 et #7, avec #9 en fil rouge côté métier.
+- #11 et #7 ont été déplacées vers le jalon `0.5` : le jalon `0.4` n'attend plus qu'un seul arbitrage, celui de #4.
+- Le jalon `0.4` est donc complet à l'exception de #4. Une fois la décote tranchée, il peut être promu.
+- Documents à soumettre au référent juridique : `docs/CORRECTIONS_A_VALIDER.md` pour les arbitrages, `docs/INVENTAIRE_CONVENTIONS.md` pour préparer #11.
 - Nouvelle issue #31 — unification de l'identité visuelle et des composants d'interface, ouverte à la demande du référent métier. Elle dépend de #20 et n'appartient pas au jalon `0.4`.
 
 ## Décisions d'architecture déjà arbitrées
@@ -104,10 +106,11 @@ Cette phase ne clôt pas l'issue #29. `CODEMAP.md`, `CONTRIBUTING.md`, les templ
 ## Graphe de dépendances simplifié
 
 ```text
-Phase 0 Gouvernance ✓ ─> #10 Socle de tests ✓ (en relecture)
- ├─> #4 -> #5                  voie IRPP
- ├─> #6 -> #8                  voie IFI / valeurs par défaut
- └─> #11 -> #7                 bornes, unités et arrondis
+Phase 0 Gouvernance ✓ ─> #10 Socle de tests ✓
+ ├─> #5 ✓        puis #4 (bloquée : décote CDHR)
+ └─> #6 ✓ -> #8 ✓  voie IFI / valeurs par défaut
+
+Jalon 0.5 : #11 -> #7           bornes, unités et arrondis
 
 #9 Cas fiscaux validés ───────────────┐
 #11 Conventions ──────────────────────┼─> #12 Schéma des référentiels
@@ -179,14 +182,23 @@ Voie IFI et saisies, à exécuter séquentiellement :
 
 Les deux voies peuvent être confiées à deux agents différents en parallèle. Les issues d’une même voie ne doivent pas être parallélisées car elles touchent les mêmes fichiers.
 
-### Étape 1.4 — Fixer les conventions, puis les bornes
+### Étape 1.4 — Conventions et bornes — déplacée vers le jalon `0.5`
 
-1. [#11 — Définir validation, unités et arrondis](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/11) — doit reprendre le reliquat de #8 : quels champs sont obligatoires, quelles bornes sont acceptées et quel message d'erreur s'affiche
-2. [#7 — Uniformiser et corriger les bornes des barèmes](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/7)
+Les issues #11 et #7 ne font plus partie du jalon `0.4`. Décision du 26 août 2026, motivée par :
 
-L’issue #7 ne doit commencer qu’après la décision de #11 sur la représentation des tranches et les arrondis. Elle doit aussi intégrer les correctifs déjà fusionnés dans les fichiers IRPP et IFI.
+- #11 est déjà une dépendance de #12, le schéma des référentiels, qui appartient à la phase 2 ; sa place naturelle est avec le chantier données ;
+- #7 dépend de #11, les deux se traitent ensemble ;
+- leur maintien dans `0.4` obligeait à attendre trois arbitrages distincts avant de clore le jalon, alors qu'un seul, #4, porte un enjeu financier réel.
+
+L'écart mesuré sur #7 plafonne à 1,27 € d'impôt, contre près de 50 000 € pour #4. Le défaut de #7 reste réel — deux simulateurs ne donnent pas le même impôt pour le même revenu — mais relève de la cohérence, non de l'exactitude matérielle.
+
+Travail préparatoire déjà livré : `docs/INVENTAIRE_CONVENTIONS.md` recense les conventions réellement employées par les six simulateurs, chiffre les écarts et présente les options. Il ne tranche rien.
+
+Voir l'étape 2.0.
 
 ### Point de contrôle humain A
+
+`docs/INVENTAIRE_CONVENTIONS.md` prépare #11 : il constate les conventions employées, chiffre les écarts et présente les options, sans rien trancher.
 
 Le document `docs/CORRECTIONS_A_VALIDER.md` rassemble, en langage non technique, toutes les corrections ayant un effet fiscal et les questions correspondantes. Il est destiné à être soumis tel quel au référent juridique.
 
@@ -206,6 +218,15 @@ Avant de poursuivre :
 ## Phase 2 — Définir l’architecture et externaliser les données
 
 Branche CLV du jalon : `clv/y-0.5-donnees`, créée depuis la branche `Y = 0.4` validée techniquement mais pas nécessairement encore intégrée.
+
+### Étape 2.0 — Fixer les conventions, puis les bornes
+
+1. [#11 — Définir validation, unités et arrondis](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/11) — reprend aussi le reliquat de #8 : quels champs sont obligatoires, quelles bornes sont acceptées et quel message d'erreur s'affiche
+2. [#7 — Uniformiser et corriger les bornes des barèmes](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/7)
+
+Déplacées depuis le jalon `0.4`. #7 ne commence qu'après la décision de #11 sur la représentation des tranches et les arrondis, et doit intégrer les correctifs déjà livrés dans les fichiers IRPP et IFI.
+
+L'inventaire préparatoire `docs/INVENTAIRE_CONVENTIONS.md` est à lire avant d'ouvrir ces deux issues : il évite de refaire le relevé et transforme #11 en une série de choix à cocher.
 
 ### Étape 2.1 — Décider de l’architecture cible
 
@@ -424,8 +445,8 @@ Chaque nouvelle version mineure `Y` reste soumise à une validation explicite de
 | Jalon | Branche CLV | Contenu minimal | Version indicative |
 |---|---|---|---|
 | Gouvernance initiale | `clv/preprod` | Phase 0, consignes, plan, changelog et préprod | `v0.3.0` — actuellement en beta |
-| Fiabilité | `clv/y-0.4-fiabilite` | #4 à #11, tests de base et validation métier suffisante | `v0.4.0` indicatif |
-| Données | `clv/y-0.5-donnees` | #2 terminé, #20 et CI données/build | `v0.5.0` indicatif |
+| Fiabilité | `clv/y-0.4-fiabilite` | #10, #6, #8, #5 et #4, tests de base et validation métier suffisante | `v0.4.0` indicatif |
+| Données | `clv/y-0.5-donnees` | #11 et #7, #2 terminé, #20 et CI données/build | `v0.5.0` indicatif |
 | Architecture | `clv/y-0.6-architecture` | #21 terminé, six moteurs découplés et #31 engagé | `v0.6.0` indicatif |
 | Qualité | `clv/y-0.7-qualite` | #28, #29 et #31 terminés | `v0.7.0` indicatif |
 

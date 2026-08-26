@@ -6,6 +6,20 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.4.0-beta.9] - 2026-08-26
+
+### Ajouté
+
+- `docs/INVENTAIRE_CONVENTIONS.md` : constat chiffré des conventions d'unités, de taux, d'arrondis, de bornes et de lecture des saisies employées par les six simulateurs. Document préparatoire à l'issue #11, sans valeur normative.
+
+### Modifié
+
+- Les issues #11 et #7 quittent le jalon `0.4` pour le jalon `0.5`, où #11 rejoint sa dépendance #12. Le jalon `0.4` n'attend plus qu'un seul arbitrage, celui de la décote CDHR de l'issue #4.
+
+### Connu
+
+- Deux simulateurs ne produisent pas le même impôt pour un même revenu : les conventions de bornes de l'IRPP et de l'IFI perdent un euro d'assiette à chaque seuil, pour un écart cumulé atteignant 1,27 €. Documenté et chiffré, correction reportée sur #7.
+
 ## [0.4.0-beta.8] - 2026-08-26
 
 ### Ajouté
@@ -137,7 +151,8 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 - Première version regroupant six simulateurs HTML autonomes : IR et CEHR/CDHR, plus-value immobilière, IFI, IRPP, succession et démembrement immobilier.
 
-[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.8...HEAD
+[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.9...HEAD
+[0.4.0-beta.9]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.8...v0.4.0-beta.9
 [0.4.0-beta.8]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.7...v0.4.0-beta.8
 [0.4.0-beta.7]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.6...v0.4.0-beta.7
 [0.4.0-beta.6]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.5...v0.4.0-beta.6

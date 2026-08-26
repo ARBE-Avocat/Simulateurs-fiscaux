@@ -22,6 +22,7 @@ Une instruction locale non versionnée peut compléter ce socle, mais jamais aut
 - `README.md` : utilisation et simulateurs disponibles.
 - `docs/PLAN_ACTIONS_AGENTS_IA.md` : ordre des chantiers et dépendances.
 - `docs/CORRECTIONS_A_VALIDER.md` : corrections à effet fiscal en attente de validation du propriétaire. Toute correction modifiant un montant affiché y est ajoutée dans la même PR.
+- `docs/INVENTAIRE_CONVENTIONS.md` : constat des conventions d'unités, de taux, d'arrondis et de bornes réellement employées. Document préparatoire à #11, sans valeur normative.
 - `AGENTS.md` : règles communes canoniques.
 - `CLAUDE.md` : import de ces règles par Claude Code ; ne pas y recopier ce contenu.
 
