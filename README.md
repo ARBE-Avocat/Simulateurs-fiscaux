@@ -27,6 +27,8 @@ Simulateur_PV_Immobilière Juillet 2026.html
 Simulation IFI - Avril 2026.html
 Simulation Succession.html
 Simulation démembrement immo - Juin 2026.html
+tests/                                            # Tests automatisés (voir tests/README.md)
+docs/                                             # Documentation de projet
 ```
 
 Chaque simulateur est indépendant (pas de dépendance partagée entre les fichiers) : il peut être modifié, renommé ou distribué séparément. Seul le bouton « Accueil » de chaque page pointe vers `index.html`, situé dans le même dossier.
@@ -46,6 +48,23 @@ python3 -m http.server 8000
 ```
 
 puis ouvrez `http://localhost:8000/index.html`.
+
+## Tests automatisés
+
+Les simulateurs sont couverts par des tests exécutables en une commande, sans
+installation ni dépendance :
+
+```bash
+npm test
+```
+
+Ils utilisent le lanceur intégré à Node.js (version 22 ou plus récente), ne font
+aucun appel réseau et n'ouvrent aucun navigateur. Ils vérifient aujourd'hui que
+chaque simulateur se charge sans erreur, que les liens de l'accueil restent
+valides, et que le moteur de l'impôt sur le revenu produit les montants attendus.
+
+`tests/README.md` explique comment lancer, lire et écrire un test, ainsi que la
+règle appliquée aux valeurs fiscales attendues.
 
 ## Avertissement
 

@@ -1,2 +1,5 @@
 # Consignes personnelles des agents IA (non partagees)
 /AGENTS.override.md
+
+# Dependances de developpement installees localement
+/node_modules/

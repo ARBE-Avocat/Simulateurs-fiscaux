@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.3.0-beta.4`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.1`.
 
 ## Objectifs de l’orchestration
 
@@ -16,10 +16,12 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.3.0-bet
 ## État actuel
 
 - La phase 0 de gouvernance est terminée sur `clv/preprod`.
-- La préversion courante de `clv/preprod` est `0.3.0-beta.4` ; la version stable visée est `0.3.0`.
-- Toutes les issues citées dans ce plan sont encore ouvertes au 26 août 2026.
+- La préversion de `clv/preprod` reste `0.3.0-beta.4` ; la version stable visée est `0.3.0`.
+- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.1`.
+- L'étape 1.1 (#10, socle de tests) est réalisée sur cette branche et attend relecture ; elle n'est pas intégrée à `clv/preprod`.
+- Les autres issues citées dans ce plan sont encore ouvertes au 26 août 2026.
 - L'issue #29 reste ouverte : seule sa première partie documentaire et de gouvernance est amorcée.
-- Le prochain groupe de travail est `Y = 0.4`, branche `clv/y-0.4-fiabilite`, en commençant par #10.
+- Prochaines étapes du jalon : #9 en fil rouge, puis les deux voies de correctifs #4/#5 et #6/#8.
 
 ## Maintenance obligatoire du plan
 
@@ -90,7 +92,7 @@ Cette phase ne clôt pas l'issue #29. `CODEMAP.md`, `CONTRIBUTING.md`, les templ
 ## Graphe de dépendances simplifié
 
 ```text
-Phase 0 Gouvernance ✓ ─> #10 Socle de tests
+Phase 0 Gouvernance ✓ ─> #10 Socle de tests ✓ (en relecture)
  ├─> #4 -> #5                  voie IRPP
  ├─> #6 -> #8                  voie IFI / valeurs par défaut
  └─> #11 -> #7                 bornes, unités et arrondis
@@ -123,15 +125,22 @@ En finition : #29 Qualité desktop, documentation et gouvernance
 
 Branche CLV du jalon : `clv/y-0.4-fiabilite`. Toutes les issues de cette phase sont traitées séquentiellement ou par commits distincts sur cette branche, sans promotion dans `clv/preprod` avant validation.
 
-### Étape 1.1 — Installer le socle de tests
-
-Traiter en premier :
+### Étape 1.1 — Installer le socle de tests — réalisée, en attente de relecture
 
 - [#10 — Mettre en place le socle de tests automatisés](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/10)
 
-Cette issue précède les correctifs : chaque bug doit pouvoir être reproduit puis verrouillé par un test. Le premier socle peut être minimal, sans attendre l’architecture finale.
+Cette issue précède les correctifs : chaque bug doit pouvoir être reproduit puis verrouillé par un test. Le premier socle est volontairement minimal et n’anticipe pas l’architecture finale décidée en #20.
 
-Livrable attendu : une commande locale unique, des fixtures et au moins un test sans DOM.
+Livré sur `clv/y-0.4-fiabilite` :
+
+- commande unique `npm test`, sans dépendance, avec le lanceur intégré à Node.js ;
+- chargeur de simulateur et faux DOM minimal pour exécuter les calculs hors navigateur, sans modifier les HTML autonomes ;
+- dossiers `tests/unit`, `tests/integration`, `tests/fixtures` et `tests/helpers` ;
+- tests de fumée des six simulateurs et contrôle des liens relatifs de l’accueil ;
+- premiers tests du moteur IR et fixture associée, marquée non validée tant que #9 n’a pas tranché ;
+- documentation dans `tests/README.md` et `README.md`.
+
+Les correctifs #4 à #8 doivent désormais commencer par un test reproduisant le défaut, écrit avec ce socle.
 
 ### Étape 1.2 — Lancer la validation métier en fil rouge
 

@@ -6,6 +6,16 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque v
 
 ## [Non publié]
 
+## [0.4.0-beta.1] - 2026-08-26
+
+### Ajouté
+
+- Socle de tests automatisés exécutable avec `npm test`, sans dépendance ni installation, à partir du lanceur intégré à Node.js (issue #10).
+- Chargeur de simulateur et faux DOM minimal permettant de tester les fonctions de calcul hors navigateur, sans modifier les fichiers HTML autonomes.
+- Tests de fumée pour les six simulateurs et vérification des liens relatifs de la page d'accueil.
+- Premiers tests du moteur de l'impôt sur le revenu (barème, quotient familial, CEHR) et fixture correspondante.
+- Documentation des tests dans `tests/README.md` et dans le `README.md`.
+
 ## [0.3.0-beta.4] - 2026-08-26
 
 ### Modifié

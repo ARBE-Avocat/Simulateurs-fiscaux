@@ -1,0 +1,19 @@
+{
+  "description": "Barème progressif de l'impôt sur le revenu utilisé par le simulateur IR / CEHR / CDHR.",
+  "provenance": "Valeurs de tranches actuellement embarquées dans 'Simulateur_IR 2025 et CEHR_CDHR 2026.html' (constante BAREME).",
+  "statutValidation": "NON VALIDÉ - en attente des cas de référence approuvés par le référent métier (issue #9).",
+  "usage": "Les montants attendus sont recalculés à la main tranche par tranche à partir des mêmes bornes et taux. Ils verrouillent le comportement actuel du moteur ; ils ne certifient pas l'exactitude juridique du barème.",
+  "unite": "euros",
+  "tolerance": 0.01,
+  "cas": [
+    { "nom": "revenu nul", "revenuParPart": 0, "impotAttendu": 0 },
+    { "nom": "revenu négatif ramené à zéro", "revenuParPart": -5000, "impotAttendu": 0 },
+    { "nom": "borne haute de la tranche à 0 %", "revenuParPart": 11600, "impotAttendu": 0 },
+    { "nom": "premier euro imposé à 11 %", "revenuParPart": 11601, "impotAttendu": 0.11 },
+    { "nom": "borne haute de la tranche à 11 %", "revenuParPart": 29579, "impotAttendu": 1977.69 },
+    { "nom": "borne haute de la tranche à 30 %", "revenuParPart": 84577, "impotAttendu": 18477.09 },
+    { "nom": "borne haute de la tranche à 41 %", "revenuParPart": 181917, "impotAttendu": 58386.49 },
+    { "nom": "revenu dans la tranche à 45 %", "revenuParPart": 200000, "impotAttendu": 66523.84 },
+    { "nom": "revenu élevé dans la tranche à 45 %", "revenuParPart": 1000000, "impotAttendu": 426523.84 }
+  ]
+}
