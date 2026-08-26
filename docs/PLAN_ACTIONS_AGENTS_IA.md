@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.7`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.8`.
 
 ## Objectifs de l’orchestration
 
@@ -17,7 +17,7 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 
 - La phase 0 de gouvernance est terminée sur `clv/preprod`.
 - La préversion de `clv/preprod` reste `0.3.0-beta.4` ; la version stable visée est `0.3.0`.
-- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.7`.
+- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.8`.
 - L'étape 1.1 (#10, socle de tests) est réalisée sur cette branche et attend relecture ; elle n'est pas intégrée à `clv/preprod`.
 - Les autres issues citées dans ce plan sont encore ouvertes au 26 août 2026.
 - L'issue #29 reste ouverte : seule sa première partie documentaire et de gouvernance est amorcée.
@@ -187,6 +187,8 @@ Les deux voies peuvent être confiées à deux agents différents en parallèle.
 L’issue #7 ne doit commencer qu’après la décision de #11 sur la représentation des tranches et les arrondis. Elle doit aussi intégrer les correctifs déjà fusionnés dans les fichiers IRPP et IFI.
 
 ### Point de contrôle humain A
+
+Le document `docs/CORRECTIONS_A_VALIDER.md` rassemble, en langage non technique, toutes les corrections ayant un effet fiscal et les questions correspondantes. Il est destiné à être soumis tel quel au référent juridique.
 
 Décisions métier attendues, par ordre d'urgence :
 
