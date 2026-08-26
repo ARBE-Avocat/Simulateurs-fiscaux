@@ -6,6 +6,19 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.4.0-beta.6] - 2026-08-26
+
+### Corrigé
+
+- Simulateur IRPP : la réduction pour dons est recalculée dès que le revenu change (issue #5). Elle restait auparavant figée sur le revenu d'une saisie précédente tant qu'un champ de dons n'était pas modifié, ce qui pouvait afficher une réduction très supérieure à celle réellement applicable, et donc un impôt final trop faible.
+- Suppression d'un calcul mort qui appliquait un plafond de 1 000 € codé en dur, sans tenir compte de l'option à 2 000 €.
+
+### Ajouté
+
+- Fonction de calcul des dons isolée du formulaire et de l'affichage, testable sans navigateur.
+- Tests couvrant un don sous le plafond, au plafond et au-dessus, les deux valeurs du plafond à 75 %, et l'indépendance du résultat vis-à-vis de l'ordre de saisie.
+- Scénarios de non-régression des réductions pour dons du simulateur IRPP.
+
 ## [0.4.0-beta.5] - 2026-08-26
 
 ### Corrigé
@@ -108,7 +121,8 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 - Première version regroupant six simulateurs HTML autonomes : IR et CEHR/CDHR, plus-value immobilière, IFI, IRPP, succession et démembrement immobilier.
 
-[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.5...HEAD
+[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.6...HEAD
+[0.4.0-beta.6]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.5...v0.4.0-beta.6
 [0.4.0-beta.5]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.4...v0.4.0-beta.5
 [0.4.0-beta.4]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.3...v0.4.0-beta.4
 [0.4.0-beta.3]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.2...v0.4.0-beta.3

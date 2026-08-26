@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.5`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.6`.
 
 ## Objectifs de l’orchestration
 
@@ -17,13 +17,15 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 
 - La phase 0 de gouvernance est terminée sur `clv/preprod`.
 - La préversion de `clv/preprod` reste `0.3.0-beta.4` ; la version stable visée est `0.3.0`.
-- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.5`.
+- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.6`.
 - L'étape 1.1 (#10, socle de tests) est réalisée sur cette branche et attend relecture ; elle n'est pas intégrée à `clv/preprod`.
 - Les autres issues citées dans ce plan sont encore ouvertes au 26 août 2026.
 - L'issue #29 reste ouverte : seule sa première partie documentaire et de gouvernance est amorcée.
 - #6 est corrigée sur la branche du jalon et attend relecture : le simulateur IFI ne dépend plus d'une variable globale et un contrôle automatique interdit désormais les noms mélangeant plusieurs alphabets.
 - #8 est corrigée pour sa partie technique : un zéro saisi n'est plus remplacé par une valeur par défaut dans les simulateurs IFI, Succession et Démembrement. La validation explicite des champs obligatoires reste ouverte et bascule vers #11.
-- Prochaines étapes du jalon : la voie IRPP #4 puis #5, ensuite #11 puis #7, et #9 en fil rouge côté métier.
+- #5 est corrigée : la réduction pour dons de l'IRPP est recalculée dès que le revenu change, et le calcul est isolé du formulaire.
+- #4 est bloquée sur une validation métier : la formule et l'intervalle de la décote CDHR doivent être confirmés par le référent fiscal avant toute correction.
+- Prochaines étapes du jalon : lever le blocage de #4, puis #11 et #7, avec #9 en fil rouge côté métier.
 - Nouvelle issue #31 — unification de l'identité visuelle et des composants d'interface, ouverte à la demande du référent métier. Elle dépend de #20 et n'appartient pas au jalon `0.4`.
 
 ## Décisions d'architecture déjà arbitrées
@@ -166,7 +168,9 @@ Un agent peut inventorier les cas, préparer les fixtures et retrouver les sourc
 Voie IRPP, à exécuter séquentiellement :
 
 1. [#4 — Corriger la décote CDHR](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/4)
-2. [#5 — Recalculer les dons lorsque le RNI change](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/5)
+2. [#5 — Recalculer les dons lorsque le RNI change](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/5) — corrigée, en attente de relecture
+
+L'ordre a été inversé : #5 est purement technique et a été traitée d'abord, tandis que #4 attend une décision métier. Les deux touchent le même fichier et restent séquentielles.
 
 Voie IFI et saisies, à exécuter séquentiellement :
 

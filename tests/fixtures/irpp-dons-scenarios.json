@@ -1,0 +1,56 @@
+{
+  "description": "Scénarios de non-régression des réductions pour dons du simulateur IRPP.",
+  "provenance": "Résultats produits par 'Simulation IRPP - Avril 2026.html' avant la correction de l'issue #5, hors scénario défectueux.",
+  "statutValidation": "NON VALIDÉ - ces valeurs figent le comportement existant. Elles ne certifient ni les taux de réduction, ni le plafond de 20 % du revenu, ni les montants du plafond à 75 %, qui relèvent de #9.",
+  "note": "Le faux DOM n'applique pas les attributs `value` du HTML : le barème est donc renseigné explicitement, avec les valeurs inscrites dans la page.",
+  "bareme": {
+    "t1_de": 0,
+    "t1_a": 11600,
+    "t2_a": 29579,
+    "t2_tx": 11,
+    "t3_a": 84577,
+    "t3_tx": 30,
+    "t4_a": 181917,
+    "t4_tx": 41,
+    "t5_tx": 45
+  },
+  "cas": [
+    {
+      "nom": "sans dons",
+      "champs": { "nb_parts": 1, "sal_brut_d1": 80000 },
+      "attendu": { "dons_red_totale": "0,00 €", "s_impot_net": "17 103,58 €" }
+    },
+    {
+      "nom": "dons à 66 % sous le plafond de 20 % du revenu",
+      "champs": { "nb_parts": 1, "sal_brut_d1": 200000, "don66_fondations": 5000 },
+      "attendu": { "dons_red_totale": "3 300,00 €", "s_impot_net": "63 222,57 €" }
+    },
+    {
+      "nom": "dons à 75 % sous le plafond de 1 000 €",
+      "champs": { "nb_parts": 1, "sal_brut_d1": 80000, "don75_croixrouge": 800 },
+      "attendu": { "dons_red_totale": "600,00 €", "s_impot_net": "16 503,58 €" }
+    },
+    {
+      "nom": "dons à 75 % au-dessus du plafond de 1 000 €",
+      "champs": { "nb_parts": 1, "sal_brut_d1": 80000, "don75_croixrouge": 3000 },
+      "attendu": { "dons_red_totale": "2 070,00 €", "s_impot_net": "15 033,58 €" }
+    },
+    {
+      "nom": "dons à 75 % avec l'option de plafond à 2 000 €",
+      "champs": { "nb_parts": 1, "sal_brut_d1": 80000, "don75_croixrouge": 3000 },
+      "coches": ["don75_lf2026"],
+      "attendu": { "dons_red_totale": "2 160,00 €", "s_impot_net": "14 943,58 €" }
+    },
+    {
+      "nom": "couple à deux parts avec dons des deux catégories",
+      "champs": {
+        "nb_parts": 2,
+        "sal_brut_d1": 150000,
+        "sal_brut_d2": 50000,
+        "don66_fondations": 10000,
+        "don75_croixrouge": 1500
+      },
+      "attendu": { "dons_red_totale": "7 680,00 €", "s_impot_net": "23 527,16 €" }
+    }
+  ]
+}

@@ -1593,47 +1593,85 @@ function calcCDHR(rfrr, ir_cehr, couple, pac) {
 }
 
 // ── DONS ──
-let _dons_red_totale = 0;
-let _rni_for_dons = 0;
+// ── DONS ──
+// Le calcul des dons dépend du revenu net imposable, qui n'est connu qu'à la
+// fin du calcul principal. Il était auparavant mémorisé dans deux variables
+// partagées, `_dons_red_totale` et `_rni_for_dons` : la réduction affichée
+// restait alors celle d'une saisie précédente tant qu'un champ de dons n'était
+// pas modifié (issue #5).
+//
+// Le calcul reçoit désormais toutes ses entrées explicitement et ne conserve
+// aucun état entre deux appels.
 
-function calcDons() {
-  // Plafond 75% : 1000 € (avant 14/10/2025) ou 2000 € (LF 2026 art. 28)
-  const lf2026 = cb('don75_lf2026');
-  const plaf75 = lf2026 ? 2000 : 1000;
-  const plaf75_fmt = lf2026 ? '2 000 €' : '1 000 €';
+/** Rassemble les montants saisis dans l'onglet Dons. */
+function lireEntreesDons(rni) {
+  return {
+    // Plafond 75% : 1000 € (avant 14/10/2025) ou 2000 € (LF 2026 art. 28)
+    plafond75: cb('don75_lf2026') ? 2000 : 1000,
+    dons75: v('don75_restoscœur') + v('don75_secourspop') + v('don75_croixrouge') + v('don75_autres'),
+    dons66Directs: v('don66_fondations') + v('don66_partis') + v('don66_cultuels') + v('don66_nature') + v('don66_autres'),
+    rni,
+  };
+}
+
+/**
+ * Calcule les réductions pour dons. Fonction pure : mêmes entrées, même
+ * résultat, sans lecture du formulaire ni écriture dans la page.
+ */
+function calculerDons({ dons75, dons66Directs, rni, plafond75 }) {
+  const d75_plaf = Math.min(dons75, plafond75);
+  const d75_excess = Math.max(0, dons75 - plafond75);
+  const red75 = d75_plaf * 0.75;
+
+  const d66_total = dons66Directs + d75_excess;
+  const rniConnu = rni > 0;
+  const plaf66 = rniConnu ? rni * 0.20 : Infinity;
+  const d66_pris = rniConnu ? Math.min(d66_total, plaf66) : d66_total;
+  const d66_excedent = Math.max(0, d66_total - d66_pris);
+  const red66 = d66_pris * 0.66;
+
+  const red_totale = red75 + red66;
+  const total_verses = dons75 + dons66Directs;
+
+  return {
+    plafond75, rniConnu,
+    d75: dons75, d75_plaf, d75_excess, red75,
+    d66_total, plaf66, d66_pris, d66_excedent, red66,
+    red_totale, total_verses,
+    taux_moyen: total_verses > 0 ? (red_totale / total_verses) * 100 : 0,
+  };
+}
+
+/** Affiche un résultat de dons dans la page. */
+function afficherDons(r) {
+  const plaf75_fmt = r.plafond75 === 2000 ? '2 000 €' : '1 000 €';
   ['don75_plafond_display','don75_plafond_lbl','ds_75_plaf_lbl'].forEach(id => {
     const e = $(id); if(e) e.textContent = plaf75_fmt;
   });
 
-  // 75%
-  const d75 = v('don75_restoscœur') + v('don75_secourspop') + v('don75_croixrouge') + v('don75_autres');
-  const d75_plaf = Math.min(d75, plaf75);
-  const d75_excess = Math.max(0, d75 - plaf75);
-  const red75 = d75_plaf * 0.75;
+  const d75 = r.d75;
+  const d75_plaf = r.d75_plaf;
+  const d75_excess = r.d75_excess;
+  const red75 = r.red75;
+  const d66_total = r.d66_total;
+  const plaf66 = r.plaf66;
+  const d66_pris = r.d66_pris;
+  const d66_excedent = r.d66_excedent;
+  const red66 = r.red66;
+  const red_totale = r.red_totale;
+  const total_verses = r.total_verses;
 
   set('don75_total', fmt(d75, 2));
   set('don75_red_plaf', fmt(red75, 2));
   set('don75_excess', fmt(d75_excess, 2));
 
-  // 66%
-  const d66_direct = v('don66_fondations') + v('don66_partis') + v('don66_cultuels') + v('don66_nature') + v('don66_autres');
-  const d66_total  = d66_direct + d75_excess;
-  const plaf66 = _rni_for_dons > 0 ? _rni_for_dons * 0.20 : Infinity;
-  const d66_pris = _rni_for_dons > 0 ? Math.min(d66_total, plaf66) : d66_total;
-  const d66_excedent = Math.max(0, d66_total - d66_pris);
-  const red66 = d66_pris * 0.66;
-
   set('don66_total', fmt(d66_total, 2));
   set('don66_reduction', fmt(red66, 2));
-
-  const red_totale = red75 + red66;
-  const total_verses = d75 + d66_direct;
-  _dons_red_totale = red_totale;
 
   // Résultats barre
   set('dons_total_verses', fmt(total_verses, 2));
   set('dons_red_totale', fmt(red_totale, 2));
-  set('dons_plafond_20p', _rni_for_dons > 0 ? fmt(plaf66, 2) : '— (calculé auto)');
+  set('dons_plafond_20p', r.rniConnu ? fmt(plaf66, 2) : '— (calculé auto)');
   set('dons_excedent', fmt(d66_excedent, 2));
   const taux_moy = total_verses > 0 ? red_totale / total_verses * 100 : 0;
   set('dons_taux_moyen', total_verses > 0 ? taux_moy.toFixed(1) + ' %' : '—');
@@ -1643,7 +1681,7 @@ function calcDons() {
   set('ds_75_red', fmt(red75, 2));
   set('ds_75_exc', fmt(d75_excess, 2));
   set('ds_66_tot', fmt(d66_total, 2));
-  set('ds_66_plaf', _rni_for_dons > 0 ? fmt(plaf66, 2) : '(20% RNI, calculé auto)');
+  set('ds_66_plaf', r.rniConnu ? fmt(plaf66, 2) : '(20% RNI, calculé auto)');
   set('ds_66_pris', fmt(d66_pris, 2));
   set('ds_66_red', fmt(red66, 2));
   set('ds_total_red', fmt(red_totale, 2));
@@ -1651,7 +1689,7 @@ function calcDons() {
   // Warning plafond
   const warn = $('dons_plafond_warning');
   if (warn) {
-    if (_rni_for_dons > 0 && d66_excedent > 0) {
+    if (r.rniConnu && d66_excedent > 0) {
       warn.style.display = 'block';
       set('dons_plafond_mt', fmt(plaf66, 0));
       set('dons_excedent_mt', fmt(d66_excedent, 0));
@@ -1663,7 +1701,15 @@ function calcDons() {
   // Update display dans l'onglet IR
   set('red_dons_display', fmt(red_totale, 2));
   set('st_dons', fmt(red_totale, 2));
+}
 
+/**
+ * Point d'entrée des champs de l'onglet Dons.
+ *
+ * Le revenu net imposable n'étant connu qu'à la fin du calcul principal, c'est
+ * `calc()` qui calcule et affiche les dons, avec le revenu à jour.
+ */
+function calcDons() {
   calc();
 }
 
@@ -1881,19 +1927,13 @@ function calc() {
   const retenues = v('ras') + v('acomptes') + v('avances');
   const ps_payes = v('ps_payes');
 
-  // Réduction dons (depuis onglet dons)
-  const red_dons_val = _dons_red_totale;
+  // Réduction dons : recalculée ici avec le revenu net imposable à jour, puis
+  // réaffichée. Elle ne provient plus d'un montant mémorisé lors d'une saisie
+  // précédente, qui restait périmé quand seul le revenu changeait (issue #5).
+  const dons = calculerDons(lireEntreesDons(total_bar));
+  afficherDons(dons);
+  const red_dons_val = dons.red_totale;
   set('sum_red', 'PAS + déductions : ' + fmt(pas + red_tot_hors_dons + red_dons_val + credits,2));
-
-  // RNI pour plafond dons
-  _rni_for_dons = total_bar;
-  // Recalcul silencieux des dons si RNI a changé
-  const d66_total_cur = v('don66_fondations') + v('don66_partis') + v('don66_cultuels') + v('don66_nature') + v('don66_autres')
-                      + Math.max(0, (v('don75_restoscœur') + v('don75_secourspop') + v('don75_croixrouge') + v('don75_autres')) - 1000);
-  const plaf66_cur = total_bar * 0.20;
-  if ($('dons_plafond_20p')) {
-    $('dons_plafond_20p').textContent = total_bar > 0 ? fmt(plaf66_cur, 0) : '— (calculé auto)';
-  }
 
   const imp_net = Math.max(0, imp_foy - decote - red_tot_hors_dons - red_dons_val - pas);
 
