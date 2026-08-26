@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculateur IR · CEHR · CDHR — Arthur Beldi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest:    #06402B;
+  --forest2:   #085236;
+  --forest3:   #0a6640;
+  --forest4:   #0d7a4c;
+  --gold:      #c4993a;
+  --gold2:     #dab55a;
+  --gold-light:#f5e4b0;
+  --cream:     #e8ebe8;
+  --white:     #ffffff;
+  --border:    #d4ddd6;
+  --border2:   #b8c8bc;
+  --text:      #1a1f1a;
+  --muted:     #5a7060;
+  --green-ok:  #0a6640;
+  --red:       #b03020;
+  --blue-soft: #edf3ee;
+  --serif:     'Cormorant Garamond', Georgia, serif;
+  --sans:      'Inter', sans-serif;
+  --aba-bg:    rgba(10,102,64,0.10);
+  --no-aba-bg: rgba(176,48,32,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--cream); color: var(--text); font-family: var(--sans); font-size: 13px; min-height: 100vh; }
+
+/* HEADER */
+header { background: var(--forest); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 68px; border-bottom: 2px solid var(--gold); }
+.logo-zone { display: flex; align-items: center; gap: 14px; }
+.logo-mark { width: 38px; height: 38px; border: 1.5px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 20px; color: var(--gold); font-weight: 600; }
+.logo-text { font-family: var(--serif); font-size: 22px; color: var(--white); font-weight: 400; letter-spacing: 0.04em; }
+.logo-text em { color: var(--gold); font-style: normal; }
+.header-right { text-align: right; }
+.header-right .tagline { font-family: var(--serif); font-size: 13px; color: var(--gold-light); font-style: italic; }
+.header-right .year { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 3px; letter-spacing: 0.12em; text-transform: uppercase; }
+
+/* TABS */
+.tab-bar { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 48px; display: flex; }
+.tab { padding: 14px 28px; cursor: pointer; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; transition: all .2s; }
+.tab:hover { color: var(--forest); }
+.tab.active { color: var(--forest); border-bottom-color: var(--gold); }
+
+/* PANELS */
+.panel { display: none; padding: 36px 48px 60px; max-width: 1200px; }
+.panel.active { display: block; }
+
+/* SECTION TITLES */
+.s-title { font-family: var(--serif); font-size: 20px; font-weight: 500; color: var(--forest); display: flex; align-items: center; gap: 12px; margin-bottom: 18px; margin-top: 36px; }
+.s-title:first-child { margin-top: 0; }
+.s-title::after { content:''; flex:1; height:1px; background: linear-gradient(to right, var(--border), transparent); }
+
+.section-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; vertical-align: middle; margin-left: 6px; }
+.badge-aba     { background: var(--aba-bg);    color: var(--forest3); border: 1px solid rgba(10,102,64,0.2); }
+.badge-no-aba  { background: var(--no-aba-bg); color: var(--red);     border: 1px solid rgba(176,48,32,0.18); }
+.badge-pfu     { background: rgba(196,153,58,0.12); color: #8a6010; border: 1px solid rgba(196,153,58,0.25); }
+.badge-dons    { background: rgba(55,138,221,0.10); color: #185fa5; border: 1px solid rgba(55,138,221,0.25); }
+
+/* FOYER FISCAL */
+.foyer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+.foyer-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.foyer-card-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 18px; background: var(--forest); color: var(--white); }
+.foyer-card-header.d2-header { background: var(--forest2); }
+.foyer-card-title { font-family: var(--serif); font-size: 16px; font-weight: 500; }
+.foyer-card-badge { font-size: 10px; color: rgba(255,255,255,0.55); letter-spacing: 0.1em; text-transform: uppercase; }
+.foyer-card-body { padding: 16px 18px; }
+.foyer-row-inner { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end; }
+
+/* D2 toggle */
+.d2-toggle-bar { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 10px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.d2-toggle-bar label { font-size: 12px; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.d2-toggle-bar input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--forest); }
+.d2-hidden { display: none; }
+
+/* Foyer bottom row */
+.foyer-bottom { display: flex; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; align-items: flex-end; }
+
+.input-group { display: flex; flex-direction: column; gap: 5px; }
+.input-group label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 500; }
+.input-row { display: flex; align-items: center; gap: 6px; }
+.unit { font-size: 12px; color: var(--muted); }
+input[type=number], input[type=text], input[type=date] {
+  background: var(--white); border: 1px solid var(--border2); color: var(--text);
+  font-family: var(--sans); font-size: 13px; padding: 7px 10px; border-radius: 3px;
+  outline: none; transition: border-color .2s; width: 100%;
+}
+input:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(196,153,58,0.12); }
+input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--forest); cursor: pointer; }
+
+/* PSx badge */
+.psx-cell { text-align: center !important; }
+.psx-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); display: block; margin-bottom: 3px; }
+
+/* ACCORDION */
+.accordion { border: 1px solid var(--border); border-radius: 4px; margin-bottom: 10px; overflow: hidden; background: var(--white); }
+.accordion-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; cursor: pointer; background: var(--white); transition: background .15s; user-select: none; }
+.accordion-header:hover { background: #f0f5f1; }
+.accordion-header.open { background: var(--forest); }
+.acc-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.acc-title { font-family: var(--serif); font-size: 16px; font-weight: 500; color: var(--forest); }
+.accordion-header.open .acc-title { color: var(--white); }
+.acc-right { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+.acc-summary { font-size: 11px; color: var(--muted); }
+.accordion-header.open .acc-summary { color: rgba(255,255,255,0.55); }
+.acc-arrow { font-size: 9px; color: var(--gold); transition: transform .25s; flex-shrink: 0; }
+.accordion-header.open .acc-arrow { transform: rotate(180deg); }
+.accordion-body { display: none; padding: 20px; border-top: 1px solid var(--border); background: #f9fbf9; }
+.accordion-body.open { display: block; }
+
+.aba-strip { display: flex; align-items: center; gap: 10px; padding: 8px 14px; margin-bottom: 14px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.aba-strip.with-aba  { background: rgba(10,102,64,0.07); border: 1px solid rgba(10,102,64,0.15); color: var(--forest3); }
+.aba-strip.no-aba   { background: rgba(176,48,32,0.06); border: 1px solid rgba(176,48,32,0.14); color: var(--red); }
+.aba-strip.info-blue { background: rgba(55,138,221,0.06); border: 1px solid rgba(55,138,221,0.18); color: #185fa5; }
+
+/* INNER TABLE */
+.inner-table { width: 100%; border-collapse: collapse; }
+.inner-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; padding: 6px 10px; text-align: right; border-bottom: 1px solid var(--border); }
+.inner-table th:first-child { text-align: left; }
+.inner-table th.aba-col { color: var(--forest3); background: rgba(10,102,64,0.04); }
+.inner-table td { padding: 9px 10px; border-bottom: 1px solid #edf2ee; vertical-align: middle; text-align: right; }
+.inner-table td:first-child { text-align: left; }
+.inner-table td input[type=number] { text-align: right; max-width: 130px; }
+.inner-table tr:last-child td { border-bottom: none; }
+.inner-table tr.total-inner td { background: #eef3ef; font-weight: 600; }
+.calc-val { color: var(--green-ok); font-weight: 500; white-space: nowrap; }
+.calc-neg { color: var(--red) !important; }
+
+/* D1/D2 column header */
+.th-d1 { background: rgba(6,64,43,0.06) !important; color: var(--forest) !important; }
+.th-d2 { background: rgba(6,64,43,0.10) !important; color: var(--forest2) !important; }
+
+.aba-rate-badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; background: var(--aba-bg); color: var(--forest3); border: 1px solid rgba(10,102,64,0.18); }
+.no-aba-badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; background: var(--no-aba-bg); color: var(--red); border: 1px solid rgba(176,48,32,0.18); }
+
+/* Pen note */
+.pen-note { font-size: 11px; color: var(--forest3); background: rgba(10,102,64,0.06); border: 1px solid rgba(10,102,64,0.15); border-radius: 4px; padding: 7px 12px; margin-bottom: 12px; }
+.pen-note strong { color: var(--forest); }
+
+/* RESULT CARDS */
+.results-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
+.result-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; border-top: 3px solid var(--gold); }
+.rc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px; }
+.rc-value { font-family: var(--serif); font-size: 26px; font-weight: 500; color: var(--forest); }
+.rc-value.neg { color: var(--red); }
+.rc-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* SYNTH TABLE */
+.synth-table { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.synth-table td { padding: 10px 18px; border-bottom: 1px solid #edf2ee; }
+.synth-table td:last-child { text-align: right; font-weight: 500; white-space: nowrap; }
+.synth-table tr.st-sec td { background: var(--forest); color: rgba(255,255,255,0.75); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; padding: 7px 18px; }
+.synth-table tr.st-total td { background: var(--forest2); color: var(--gold2); font-family: var(--serif); font-size: 20px; }
+.synth-table tr:last-child td { border-bottom: none; }
+.s-green { color: var(--green-ok) !important; }
+.s-red   { color: var(--red) !important; }
+
+/* BUTTONS */
+.btn { padding: 9px 20px; border-radius: 3px; border: none; cursor: pointer; font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; transition: all .2s; }
+.btn-forest { background: var(--forest); color: var(--white); }
+.btn-forest:hover { background: var(--forest3); }
+.btn-ghost { background: transparent; color: var(--red); border: 1px solid rgba(176,48,32,0.25); padding: 3px 9px; font-size: 11px; text-transform: none; letter-spacing: 0; border-radius: 2px; }
+.btn-ghost:hover { background: rgba(176,48,32,0.07); }
+.flex-end { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+
+/* INFO NOTE */
+.info-note { background: var(--blue-soft); border-left: 3px solid var(--gold); padding: 10px 16px; font-size: 12px; color: var(--muted); margin-bottom: 18px; line-height: 1.7; border-radius: 0 3px 3px 0; }
+.info-note strong { color: var(--forest); }
+
+/* DONNÉES */
+.donnees-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.data-table { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
+.data-table th { background: var(--forest); color: rgba(255,255,255,0.7); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; padding: 8px 14px; text-align: left; font-weight: 500; }
+.data-table td { padding: 8px 14px; border-bottom: 1px solid #edf2ee; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table td:last-child { text-align: right; }
+.data-table input { max-width: 100px; }
+
+/* LOCK */
+.lock-bar { display: flex; align-items: center; justify-content: space-between; background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 10px 18px; margin-bottom: 24px; }
+.lock-bar .lock-info { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.lock-bar .lock-status { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.lock-bar .lock-status.locked   { color: var(--red); }
+.lock-bar .lock-status.unlocked { color: var(--green-ok); }
+.btn-lock { padding: 7px 16px; border-radius: 3px; border: none; cursor: pointer; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; transition: all .2s; }
+.btn-lock.lock-on  { background: rgba(176,48,32,0.1); color: var(--red); border: 1px solid rgba(176,48,32,0.3); }
+.btn-lock.lock-on:hover  { background: rgba(176,48,32,0.18); }
+.btn-lock.lock-off { background: rgba(10,102,64,0.1); color: var(--green-ok); border: 1px solid rgba(10,102,64,0.3); }
+.btn-lock.lock-off:hover { background: rgba(10,102,64,0.18); }
+#panel-donnees.locked input { pointer-events: none; opacity: 0.5; background: #f0f4f0; }
+#panel-donnees.locked input:focus { box-shadow: none; border-color: var(--border2); }
+
+/* PV CARDS */
+.pv-cards { display: flex; flex-direction: column; gap: 16px; }
+.pv-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.pv-card-header { background: var(--forest); color: var(--white); padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; font-family: var(--serif); font-size: 15px; }
+.pv-card-header .pv-card-num { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase; }
+.pv-card-header .pv-card-pvmv { font-size: 14px; font-weight: 500; }
+.pv-card-header .pv-card-pvmv.pos { color: var(--gold2); }
+.pv-card-header .pv-card-pvmv.neg { color: #ff9980; }
+.pv-card-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; }
+.pv-section { padding: 14px 16px; border-right: 1px solid var(--border); }
+.pv-section:last-child { border-right: none; }
+.pv-section-title { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 600; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.pv-field { display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px; }
+.pv-field:last-child { margin-bottom: 0; }
+.pv-field label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+.pv-field input { font-size: 13px; }
+.pv-field .calc-val { font-size: 13px; font-weight: 500; color: var(--green-ok); padding: 7px 0; }
+.pv-field .calc-val.neg { color: var(--red); }
+.pv-field-row { display: flex; align-items: center; gap: 8px; }
+.pv-field-row input { flex: 1; }
+.pv-card-footer { background: #f4f8f5; border-top: 1px solid var(--border); padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.pv-card-footer .pv-result-group { display: flex; gap: 24px; }
+.pv-card-footer .pv-result-item { display: flex; flex-direction: column; gap: 2px; }
+.pv-card-footer .pv-result-item .lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.pv-card-footer .pv-result-item .val { font-family: var(--serif); font-size: 16px; font-weight: 500; color: var(--forest); }
+.pv-card-footer .pv-result-item .val.neg { color: var(--red); }
+.pv-totals-bar { background: var(--forest); border-radius: 4px; padding: 14px 20px; display: flex; gap: 36px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+.pv-totals-bar .pt-item { display: flex; flex-direction: column; gap: 3px; }
+.pv-totals-bar .pt-item .lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); }
+.pv-totals-bar .pt-item .val { font-family: var(--serif); font-size: 18px; color: var(--white); }
+.pv-totals-bar .pt-item .val.gold { color: var(--gold2); }
+.pv-totals-bar .pt-item .val.neg  { color: #ff9980; }
+
+/* PV MV Reportable */
+.pv-mv-report-bar { background: rgba(176,48,32,0.06); border: 1px solid rgba(176,48,32,0.18); border-radius: 4px; padding: 10px 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.pv-mv-report-bar label { font-size: 11px; color: var(--red); font-weight: 500; }
+
+/* DONS */
+.dons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+.don-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.don-card-header { padding: 10px 16px; background: var(--forest); color: var(--white); display: flex; align-items: center; justify-content: space-between; }
+.don-card-title { font-family: var(--serif); font-size: 15px; font-weight: 500; }
+.don-card-rate { font-size: 12px; color: var(--gold2); font-weight: 600; }
+.don-card-body { padding: 14px 16px; }
+.don-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #edf2ee; gap: 12px; }
+.don-row:last-child { border-bottom: none; }
+.don-row-label { font-size: 12px; color: var(--text); flex: 1; }
+.don-row-input { display: flex; align-items: center; gap: 6px; }
+.don-row-input input { max-width: 120px; text-align: right; }
+.dons-result-bar { background: var(--forest); border-radius: 4px; padding: 14px 20px; display: flex; gap: 32px; align-items: center; flex-wrap: wrap; margin-bottom: 24px; }
+.dons-result-bar .dr-item { display: flex; flex-direction: column; gap: 3px; }
+.dons-result-bar .dr-item .lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); }
+.dons-result-bar .dr-item .val { font-family: var(--serif); font-size: 18px; color: var(--white); }
+.dons-result-bar .dr-item .val.gold { color: var(--gold2); }
+.plafond-bar { background: rgba(196,153,58,0.08); border: 1px solid rgba(196,153,58,0.25); border-radius: 4px; padding: 8px 14px; font-size: 11px; color: #8a6010; margin-top: 10px; }
+
+/* FOOTER */
+footer { background: var(--forest); color: rgba(255,255,255,0.35); text-align: center; padding: 16px; font-size: 11px; margin-top: 40px; border-top: 1px solid var(--forest2); }
+footer strong { color: var(--gold); font-weight: 400; }
+
+/* Tooltip helper */
+.help-tip { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: rgba(6,64,43,0.12); color: var(--forest3); font-size: 10px; font-weight: 600; cursor: help; margin-left: 4px; vertical-align: middle; }
+
+/* Abattement recapitulatif */
+.pen-recap { background: rgba(10,102,64,0.06); border: 1px solid rgba(10,102,64,0.15); border-radius: 4px; padding: 8px 14px; font-size: 12px; color: var(--forest); margin-top: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pen-recap strong { color: var(--forest); }
+.pen-recap span { color: var(--muted); }
+
+/* Sticky results */
+.sticky-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--forest);
+  padding: 8px 48px;
+  display: flex; align-items: center; gap: 28px;
+  border-bottom: 1px solid var(--forest2);
+  flex-wrap: wrap;
+}
+.sticky-item { display: flex; flex-direction: column; gap: 2px; }
+.sticky-item .slbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.45); }
+.sticky-item .sval { font-family: var(--serif); font-size: 16px; color: var(--white); }
+.sticky-item .sval.gold { color: var(--gold2); }
+.sticky-sep { width: 1px; height: 28px; background: rgba(255,255,255,0.12); }
+
+/* Numéros de cases imprimé fiscal */
+.case-num {
+  display: inline-block; font-family: var(--sans); font-size: 9px; font-weight: 600;
+  letter-spacing: 0.04em; color: #7a4500; background: rgba(196,153,58,0.14);
+  border: 1px solid rgba(196,153,58,0.35); border-radius: 3px; padding: 1px 5px;
+  margin-left: 5px; vertical-align: middle; white-space: nowrap;
+}
+.case-num-2042c { color: #185fa5; background: rgba(55,138,221,0.10); border-color: rgba(55,138,221,0.30); }
+
+/* CSG déductible bloc */
+.csg-block { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 14px 20px; margin-bottom: 10px; }
+.csg-block .csg-title { font-family: var(--serif); font-size: 15px; font-weight: 500; color: var(--forest); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.csg-block .csg-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.csg-block .csg-field { display: flex; flex-direction: column; gap: 4px; }
+.csg-block .csg-field label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); font-weight: 500; }
+
+/* Pension taux retenue */
+.pen-taux-retenue { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; background: rgba(196,153,58,0.10); border: 1px solid rgba(196,153,58,0.3); border-radius: 3px; }
+.pen-taux-retenue label { font-size: 10px; color: #8a6010; font-weight: 500; white-space: nowrap; }
+.pen-taux-retenue input { max-width: 55px !important; font-size: 12px !important; padding: 3px 6px !important; text-align: right; background: rgba(255,255,255,0.8) !important; }
+
+/* Foyer — situations particulières */
+.foyer-situations { background: var(--white); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 24px; overflow: hidden; }
+.foyer-sit-header { background: rgba(196,153,58,0.10); border-bottom: 1px solid rgba(196,153,58,0.2); padding: 10px 18px; display: flex; align-items: center; gap: 8px; }
+.foyer-sit-header span { font-family: var(--serif); font-size: 15px; font-weight: 500; color: var(--forest); }
+.foyer-sit-body { padding: 14px 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.foyer-sit-col { display: flex; flex-direction: column; gap: 10px; }
+.foyer-sit-col-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); font-weight: 600; padding-bottom: 6px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+.sit-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid #edf2ee; }
+.sit-row:last-child { border-bottom: none; }
+.sit-row-label { font-size: 12px; color: var(--text); flex: 1; line-height: 1.4; }
+.sit-row-label small { font-size: 10px; color: var(--muted); display: block; margin-top: 1px; }
+.sit-row-ctrl { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.sit-row-ctrl input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--forest); }
+.sit-row-ctrl input[type=number] { max-width: 70px; text-align: right; padding: 4px 8px; font-size: 12px; }
+.majoration-bar { background: rgba(10,102,64,0.06); border: 1px solid rgba(10,102,64,0.18); border-radius: 4px; padding: 10px 16px; margin-top: 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+.majoration-bar .mj-item { display: flex; flex-direction: column; gap: 2px; }
+.majoration-bar .mj-item .lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.majoration-bar .mj-item .val { font-family: var(--serif); font-size: 15px; color: var(--forest); font-weight: 500; }
+.badge-invalide { display: inline-block; padding: 1px 6px; border-radius: 10px; font-size: 10px; font-weight: 600; background: rgba(176,48,32,0.08); color: var(--red); border: 1px solid rgba(176,48,32,0.2); margin-left: 4px; }
+
+/* LF 2026 dons toggle */
+.don-lf-toggle { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(55,138,221,0.06); border: 1px solid rgba(55,138,221,0.2); border-radius: 4px; margin-bottom: 12px; }
+.don-lf-toggle label { font-size: 12px; color: #185fa5; cursor: pointer; display: flex; align-items: center; gap: 8px; flex: 1; }
+.don-lf-toggle input[type=checkbox] { width: 16px; height: 16px; accent-color: #185fa5; }
+.badge-lf2026 { display: inline-block; padding: 1px 6px; border-radius: 10px; font-size: 10px; font-weight: 700; background: rgba(55,138,221,0.12); color: #185fa5; border: 1px solid rgba(55,138,221,0.3); letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-zone">
+    <div class="logo-mark">AB</div>
+    <div class="logo-text">Arthur <em>Beldi</em></div>
+  </div>
+  <div class="header-right">
+    <div class="tagline">Calculateur fiscal — IR · CEHR · CDHR</div>
+    <div class="year">Barème 2026 — Revenus 2025</div>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('ir')">IR – CEHR</div>
+  <div class="tab" onclick="switchTab('pv')">Plus-values</div>
+  <div class="tab" onclick="switchTab('dons')">Dons &amp; réductions</div>
+  <div class="tab" onclick="switchTab('ifi')">IFI</div>
+  <div class="tab" onclick="switchTab('donnees')">Données</div>
+</div>
+
+<!-- Barre sticky -->
+<div class="sticky-bar" id="sticky-bar">
+  <div class="sticky-item"><div class="slbl">RFR</div><div class="sval" id="st_rfr">—</div></div>
+  <div class="sticky-sep"></div>
+  <div class="sticky-item"><div class="slbl">IR net barème</div><div class="sval" id="st_ir">—</div></div>
+  <div class="sticky-sep"></div>
+  <div class="sticky-item"><div class="slbl">PFU (IR)</div><div class="sval" id="st_pfu">—</div></div>
+  <div class="sticky-sep"></div>
+  <div class="sticky-item"><div class="slbl">CEHR</div><div class="sval" id="st_cehr">—</div></div>
+  <div class="sticky-sep"></div>
+  <div class="sticky-item"><div class="slbl">CDHR</div><div class="sval" id="st_cdhr">—</div></div>
+  <div class="sticky-sep"></div>
+  <div class="sticky-item"><div class="slbl">PS total</div><div class="sval" id="st_ps">—</div></div>
+  <div class="sticky-sep"></div>
+  <div class="sticky-item"><div class="slbl">Dons (réduction)</div><div class="sval" id="st_dons">—</div></div>
+  <div class="sticky-sep"></div>
+  <div class="sticky-item"><div class="slbl">Total à payer</div><div class="sval gold" id="st_total">—</div></div>
+</div>
+
+<!-- ════════ IR – CEHR ════════ -->
+<div class="panel active" id="panel-ir">
+
+  <div class="s-title">Foyer fiscal</div>
+  <div class="d2-toggle-bar">
+    <label>
+      <input type="checkbox" id="has_d2" onchange="toggleD2()">
+      <strong>Déclarant 2</strong> — Cochez si vous êtes en <strong>imposition commune</strong> (mariage, PACS)
+    </label>
+    <span class="help-tip" title="L'imposition commune concerne les couples mariés et pacsés. Elle implique 2 parts minimum et un abattement pensions calculé conjointement.">?</span>
+  </div>
+
+  <div class="foyer-grid">
+    <div class="foyer-card">
+      <div class="foyer-card-header">
+        <span class="foyer-card-title">Déclarant 1</span>
+        <span class="foyer-card-badge">Obligatoire</span>
+      </div>
+      <div class="foyer-card-body">
+        <div class="foyer-row-inner">
+          <div class="input-group" style="width:160px">
+            <label>Nom / Prénom</label>
+            <input type="text" id="nom_d1" placeholder="Nom du client" oninput="updateNames()">
+          </div>
+          <div class="input-group" style="width:100px">
+            <label>Année de naissance</label>
+            <input type="number" id="naiss_d1" placeholder="1970" min="1900" max="2007" oninput="calc()">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foyer-card d2-hidden" id="d2-card">
+      <div class="foyer-card-header d2-header">
+        <span class="foyer-card-title">Déclarant 2</span>
+        <span class="foyer-card-badge">Conjoint / Partenaire</span>
+      </div>
+      <div class="foyer-card-body">
+        <div class="foyer-row-inner">
+          <div class="input-group" style="width:160px">
+            <label>Nom / Prénom</label>
+            <input type="text" id="nom_d2" placeholder="Conjoint / Partenaire" oninput="updateNames()">
+          </div>
+          <div class="input-group" style="width:100px">
+            <label>Année de naissance</label>
+            <input type="number" id="naiss_d2" placeholder="1972" min="1900" max="2007" oninput="calc()">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foyer-bottom">
+    <div class="input-group" style="width:130px">
+      <label>Nombre de parts <span class="help-tip" title="1 part = célibataire. 2 parts = couple. +0,5 par enfant (1er et 2e). +1 à partir du 3e. Demi-parts supplémentaires pour invalidité, parent isolé, etc.">?</span></label>
+      <input type="number" id="nb_parts" value="1" min="1" max="10" step="0.5" oninput="calc()">
+    </div>
+    <div class="input-group" style="width:175px">
+      <label>RFR N-1 <span class="help-tip" title="Revenu Fiscal de Référence de l'année précédente. Utilisé pour le lissage de la CEHR.">?</span></label>
+      <div class="input-row"><input type="number" id="rfr_n1" value="0" oninput="calc()"><span class="unit">€</span></div>
+    </div>
+    <div class="input-group" style="width:175px">
+      <label>RFR N-2</label>
+      <div class="input-row"><input type="number" id="rfr_n2" value="0" oninput="calc()"><span class="unit">€</span></div>
+    </div>
+  </div>
+
+  <!-- ── SITUATIONS PARTICULIÈRES (majorations plafond crédit emploi à domicile) ── -->
+  <div class="foyer-situations">
+    <div class="foyer-sit-header">
+      <span>⚙️</span>
+      <span>Situations particulières — majorations du plafond crédit emploi à domicile</span>
+      <span class="help-tip" title="Le plafond de base de 12 000 € du crédit d'impôt emploi à domicile est majoré selon certaines situations, sans pouvoir dépasser 15 000 € (ou 20 000 € pour invalidité). Art. 199 sexdecies CGI.">?</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--muted)">Plafond actif : <strong class="calc-val" id="plaf_emploi_dom">12 000 €</strong></span>
+    </div>
+    <div class="foyer-sit-body">
+      <div class="foyer-sit-col">
+        <div class="foyer-sit-col-title">Déclarant 1 — situations</div>
+        <div class="sit-row">
+          <span class="sit-row-label">
+            Carte invalidité ≥ 80% ou pension invalidité 3e cat.
+            <small>Case <strong>7DG</strong> — majoration plafond +6 000 €</small>
+          </span>
+          <div class="sit-row-ctrl">
+            <input type="checkbox" id="inv_d1" onchange="calcMajoration()">
+            <label for="inv_d1" style="font-size:11px;cursor:pointer">D1</label>
+          </div>
+        </div>
+        <div class="sit-row">
+          <span class="sit-row-label">
+            Carte CMI mention «invalidité»
+            <small>Case <strong>7DG</strong> — même effet que carte invalidité</small>
+          </span>
+          <div class="sit-row-ctrl">
+            <input type="checkbox" id="cmi_d1" onchange="calcMajoration()">
+            <label for="cmi_d1" style="font-size:11px;cursor:pointer">D1</label>
+          </div>
+        </div>
+      </div>
+      <div class="foyer-sit-col">
+        <div class="foyer-sit-col-title d2-col" id="sit_d2_title">Déclarant 2 — situations</div>
+        <div class="sit-row d2-col">
+          <span class="sit-row-label">
+            Carte invalidité ≥ 80% ou pension invalidité 3e cat.
+            <small>Case <strong>7DG</strong></small>
+          </span>
+          <div class="sit-row-ctrl">
+            <input type="checkbox" id="inv_d2" onchange="calcMajoration()">
+            <label for="inv_d2" style="font-size:11px;cursor:pointer">D2</label>
+          </div>
+        </div>
+        <div class="sit-row d2-col">
+          <span class="sit-row-label">
+            Carte CMI mention «invalidité»
+            <small>Case <strong>7DG</strong></small>
+          </span>
+          <div class="sit-row-ctrl">
+            <input type="checkbox" id="cmi_d2" onchange="calcMajoration()">
+            <label for="cmi_d2" style="font-size:11px;cursor:pointer">D2</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 2e rangée : charges communes aux deux cols -->
+    <div style="padding: 0 18px 14px; display:grid; grid-template-columns:1fr 1fr; gap:16px; border-top:1px solid var(--border); padding-top:12px; margin-top:0;">
+      <div class="foyer-sit-col">
+        <div class="foyer-sit-col-title">Personnes à charge &amp; ascendants</div>
+        <div class="sit-row">
+          <span class="sit-row-label">
+            Enfants à charge du foyer
+            <small>+1 500 € de plafond par enfant</small>
+          </span>
+          <div class="sit-row-ctrl">
+            <input type="number" id="enfants_charge" value="0" min="0" max="20" oninput="calcMajoration()">
+            <span style="font-size:11px;color:var(--muted)">enfant(s)</span>
+          </div>
+        </div>
+        <div class="sit-row">
+          <span class="sit-row-label">
+            Ascendants bénéficiaires de l'APA
+            <small>+1 500 € de plafond par ascendant (sous conditions)</small>
+          </span>
+          <div class="sit-row-ctrl">
+            <input type="number" id="ascendants_apa" value="0" min="0" max="10" oninput="calcMajoration()">
+            <span style="font-size:11px;color:var(--muted)">pers.</span>
+          </div>
+        </div>
+      </div>
+      <div class="foyer-sit-col">
+        <div class="foyer-sit-col-title">Âge des déclarants (auto depuis naissance)</div>
+        <div class="sit-row">
+          <span class="sit-row-label">
+            Déclarant 1 — plus de 65 ans ?
+            <small id="age_d1_info" style="color:var(--muted)">Année de naissance non renseignée</small>
+          </span>
+          <div class="sit-row-ctrl">
+            <span id="age_d1_badge" style="font-size:11px;color:var(--muted)">—</span>
+          </div>
+        </div>
+        <div class="sit-row d2-col">
+          <span class="sit-row-label">
+            Déclarant 2 — plus de 65 ans ?
+            <small id="age_d2_info" style="color:var(--muted)">Année de naissance non renseignée</small>
+          </span>
+          <div class="sit-row-ctrl">
+            <span id="age_d2_badge" style="font-size:11px;color:var(--muted)">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Barre de synthèse majorations -->
+    <div class="majoration-bar" id="majoration-bar" style="margin:0 18px 14px;">
+      <div class="mj-item"><div class="lbl">Plafond de base</div><div class="val">12 000 €</div></div>
+      <div class="mj-item"><div class="lbl">Majoration invalidité</div><div class="val" id="mj_invalide">0 €</div></div>
+      <div class="mj-item"><div class="lbl">Majoration personnes à charge</div><div class="val" id="mj_pac">0 €</div></div>
+      <div class="mj-item"><div class="lbl">Majoration âge + 65 ans</div><div class="val" id="mj_age">0 €</div></div>
+      <div class="mj-item"><div class="lbl">Majoration ascendants APA</div><div class="val" id="mj_apa">0 €</div></div>
+      <div class="mj-item" style="border-left:2px solid rgba(10,102,64,0.3);padding-left:16px">
+        <div class="lbl">Plafond total applicable</div>
+        <div class="val" id="mj_plafond_total" style="font-size:18px;color:var(--forest)">12 000 €</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-title">Revenus</div>
+
+  <!-- PFU -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="acc-left">
+        <span class="acc-title">Dividendes, intérêts &amp; revenus PFU <span style="font-size:13px;font-weight:400;font-style:italic;color:var(--muted)">(PV et BSPCE)</span></span>
+        <span class="section-badge badge-pfu">Flat Tax 30% — pas d'abattement</span>
+      </div>
+      <div class="acc-right">
+        <span class="acc-summary" id="sum_pfu">IR+PS : 0 €</span>
+        <span class="acc-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body">
+      <div class="aba-strip no-aba">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="currentColor"/><path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Imposition forfaitaire à 30% (12,8% IR + 17,2% PS). <strong style="color:var(--red)">Aucun abattement forfaitaire</strong> sur ces revenus en régime PFU.
+      </div>
+      <table class="inner-table">
+        <thead><tr>
+          <th>Type de revenu</th><th>Montant brut</th><th>Moins-value</th>
+          <th>IR (12,8%)</th>
+          <th class="psx-cell"><span class="psx-label">PSx</span></th>
+          <th>PS (17,2%)</th>
+          <th>Imposition totale</th><th>Gain net</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Dividendes <span class="no-aba-badge">0% ab.</span></td>
+            <td><input type="number" id="div_brut" value="0" oninput="calc()" placeholder="0"></td>
+            <td><input type="number" id="div_mv" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="div_ir">—</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_div" checked onchange="calc()"></td>
+            <td class="calc-val" id="div_ps">—</td>
+            <td class="calc-val" id="div_tot">—</td>
+            <td class="calc-val" id="div_net">—</td>
+          </tr>
+          <tr>
+            <td>Intérêts <span class="no-aba-badge">0% ab.</span></td>
+            <td><input type="number" id="int_brut" value="0" oninput="calc()" placeholder="0"></td>
+            <td><input type="number" id="int_mv" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="int_ir">—</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_int" checked onchange="calc()"></td>
+            <td class="calc-val" id="int_ps">—</td>
+            <td class="calc-val" id="int_tot">—</td>
+            <td class="calc-val" id="int_net">—</td>
+          </tr>
+          <tr>
+            <td>Autres revenus PFU <span class="no-aba-badge">0% ab.</span></td>
+            <td><input type="number" id="autre_brut" value="0" oninput="calc()" placeholder="0"></td>
+            <td><input type="number" id="autre_mv" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="autre_ir">—</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_autre" checked onchange="calc()"></td>
+            <td class="calc-val" id="autre_ps">—</td>
+            <td class="calc-val" id="autre_tot">—</td>
+            <td class="calc-val" id="autre_net">—</td>
+          </tr>
+          <tr class="total-inner">
+            <td>Total PFU</td>
+            <td class="calc-val" id="pfu_brut">0 €</td><td></td>
+            <td class="calc-val" id="pfu_ir">0 €</td><td></td>
+            <td class="calc-val" id="pfu_ps">0 €</td>
+            <td class="calc-val" id="pfu_tot">0 €</td>
+            <td class="calc-val" id="pfu_net">0 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SALAIRES -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="acc-left">
+        <span class="acc-title">Salaires &amp; revenus d'activité</span>
+        <span class="section-badge badge-aba">Abattement 10% / max <span id="aba_sal_lbl2">14 555 €</span> par déclarant</span>
+      </div>
+      <div class="acc-right">
+        <span class="acc-summary" id="sum_sal">Imposable : 0 €</span>
+        <span class="acc-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body">
+      <div class="aba-strip with-aba">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Abattement forfaitaire de <strong>10%</strong> calculé <strong>individuellement pour chaque déclarant</strong>, plafonné à <span id="aba_sal_lbl3">14 555 €</span> par déclarant.
+      </div>
+      <table class="inner-table">
+        <thead><tr>
+          <th style="text-align:left">Type</th>
+          <th class="th-d1">Déclarant 1</th>
+          <th class="th-d1">Abattement D1</th>
+          <th class="th-d1">Imposable D1</th>
+          <th class="th-d2 d2-col" id="th_sal_d2_1">Déclarant 2</th>
+          <th class="th-d2 d2-col" id="th_sal_d2_2">Abattement D2</th>
+          <th class="th-d2 d2-col" id="th_sal_d2_3">Imposable D2</th>
+          <th>Total imposable</th>
+          <th class="psx-cell"><span class="psx-label">PSx</span></th>
+          <th>PS</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Salaires <span class="case-num">1AJ</span> <span class="d2-col case-num">1BJ</span> <span class="aba-rate-badge">10% · plaf. <span id="aba_sal_lbl">14 555 €</span></span></td>
+            <td><input type="number" id="sal_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="sal_aba_d1">—</td>
+            <td class="calc-val" id="sal_imp_d1">—</td>
+            <td class="d2-col"><input type="number" id="sal_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col calc-val" id="sal_aba_d2">—</td>
+            <td class="d2-col calc-val" id="sal_imp_d2">—</td>
+            <td class="calc-val" id="sal_imp_tot">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_sal" onchange="calc()"></td>
+            <td class="calc-val" id="sal_ps">—</td>
+          </tr>
+          <tr>
+            <td>BSPCE <span class="case-num case-num-2042c">1AJ</span> <span class="d2-col case-num case-num-2042c">1BJ</span> <span class="aba-rate-badge">71%</span></td>
+            <td><input type="number" id="bspce_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="bspce_aba_d1">—</td>
+            <td class="calc-val" id="bspce_imp_d1">—</td>
+            <td class="d2-col"><input type="number" id="bspce_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col calc-val" id="bspce_aba_d2">—</td>
+            <td class="d2-col calc-val" id="bspce_imp_d2">—</td>
+            <td class="calc-val" id="bspce_imp_tot">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_bspce" checked onchange="calc()"></td>
+            <td class="calc-val" id="bspce_ps">—</td>
+          </tr>
+          <tr class="total-inner">
+            <td colspan="3">Total salaires &amp; activité imposable D1</td>
+            <td class="calc-val" id="sal_tot_d1">0 €</td>
+            <td class="d2-col" colspan="2" style="color:var(--muted);font-size:12px;text-align:right;padding-right:10px">D2</td>
+            <td class="d2-col calc-val" id="sal_tot_d2">0 €</td>
+            <td class="calc-val" id="sal_grand_tot">0 €</td>
+            <td></td>
+            <td class="calc-val" id="sal_ps_tot">0 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PENSIONS -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="acc-left">
+        <span class="acc-title">Pensions, retraites &amp; rentes</span>
+        <span class="section-badge badge-aba">Abattement 10% calculé au niveau du couple</span>
+      </div>
+      <div class="acc-right">
+        <span class="acc-summary" id="sum_pen">Imposable : 0 €</span>
+        <span class="acc-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body">
+      <div class="pen-note">
+        <strong>Règle spécifique pensions :</strong> l'abattement de 10% est calculé au niveau du <strong>foyer fiscal</strong>, plafonné à <span id="aba_pen_lbl_note">4 439 €</span> (foyer). Plancher : 442 € par foyer.<br>
+        <strong style="color:var(--red)">Pensions françaises :</strong> le taux de PS (retenue à la source) est saisissable ci-dessous — il varie selon votre situation (0%, 3,2%, 4,4% ou 9,2% selon le RFR).
+      </div>
+      <table class="inner-table">
+        <thead><tr>
+          <th style="text-align:left">Type</th>
+          <th class="th-d1">Déclarant 1 brut</th>
+          <th class="th-d2 d2-col">Déclarant 2 brut</th>
+          <th>Total brut foyer</th>
+          <th>Abattement foyer (10%)</th>
+          <th>Total imposable foyer</th>
+          <th class="psx-cell" style="min-width:120px"><span class="psx-label">PSx / Taux PS</span></th>
+          <th>PS</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Pensions françaises <span class="case-num">1AS</span> <span class="d2-col case-num">1BS</span> <span class="aba-rate-badge">10% foyer · plaf. <span id="aba_pen_lbl">4 439 €</span></span></td>
+            <td><input type="number" id="pen_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="pen_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="pen_total_brut">—</td>
+            <td class="calc-val" id="pen_aba_foyer">—</td>
+            <td class="calc-val" id="pen_imp_foyer">0 €</td>
+            <td class="psx-cell">
+              <div class="pen-taux-retenue">
+                <label>Taux&nbsp;PS&nbsp;:</label>
+                <input type="number" id="pen_taux_ps" value="9.1" min="0" max="15" step="0.1" oninput="calc()" title="Taux de retenue à la source sur pensions françaises : 0%, 3,2%, 4,4% ou 9,1% selon RFR. Saisir le taux exact.">
+                <span style="font-size:11px;color:#8a6010">%</span>
+              </div>
+            </td>
+            <td class="calc-val" id="pen_ps">—</td>
+          </tr>
+          <tr>
+            <td>Pensions étrangères <span class="case-num">1AL</span> <span class="d2-col case-num">1BL</span> <span class="aba-rate-badge">10% foyer · plaf. <span id="aba_pen_etr_lbl">4 439 €</span></span></td>
+            <td><input type="number" id="pen_etr_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="pen_etr_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="pen_etr_total_brut">—</td>
+            <td class="calc-val" id="pen_etr_aba_foyer">—</td>
+            <td class="calc-val" id="pen_etr_imp_foyer">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_pen_etr" checked onchange="calc()"></td>
+            <td class="calc-val" id="pen_etr_ps">—</td>
+          </tr>
+          <tr class="total-inner">
+            <td colspan="5">Total pensions imposables (foyer)</td>
+            <td class="calc-val" id="pen_grand_tot">0 €</td>
+            <td></td>
+            <td class="calc-val" id="pen_ps_tot">0 €</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pen-recap" id="pen-recap-bar">
+        <strong>Abattement pensions :</strong>
+        <span id="pen_recap_txt">Total brut : 0 € × 10% = 0 € → plafonné à 0 € → imposable : 0 €</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTRES AVEC ABATTEMENT -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="acc-left">
+        <span class="acc-title">Autres revenus au barème — avec abattement forfaitaire</span>
+        <span class="section-badge badge-aba">Abattement automatique</span>
+      </div>
+      <div class="acc-right">
+        <span class="acc-summary" id="sum_aba">Imposable : 0 €</span>
+        <span class="acc-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body">
+      <div class="aba-strip with-aba">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Abattement forfaitaire <strong>calculé et déduit automatiquement</strong> pour chaque type de revenu.
+      </div>
+      <table class="inner-table">
+        <thead><tr>
+          <th>Type de revenu</th>
+          <th class="aba-col">Abattement</th>
+          <th class="th-d1">D1 brut</th>
+          <th class="th-d2 d2-col">D2 brut</th>
+          <th>Total brut</th>
+          <th>Montant déduit</th>
+          <th>Imposable barème</th>
+          <th class="psx-cell"><span class="psx-label">PSx</span></th>
+          <th>PS</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Micro foncier <span class="case-num">4BE</span> <span class="aba-rate-badge">30%</span></td>
+            <td class="aba-col" style="color:var(--forest3);font-weight:500;font-size:11px">30%</td>
+            <td><input type="number" id="microfon_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="microfon_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="microfon_brut_tot">—</td>
+            <td class="calc-val" id="microfon_aba">—</td>
+            <td class="calc-val" id="microfon_imp">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_microfon" checked onchange="calc()"></td>
+            <td class="calc-val" id="microfon_ps">—</td>
+          </tr>
+          <tr>
+            <td>Location meublée / touristique <span class="case-num">5ND/5OD</span> <span class="aba-rate-badge">30%</span></td>
+            <td class="aba-col" style="color:var(--forest3);font-weight:500;font-size:11px">30%</td>
+            <td><input type="number" id="loc_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="loc_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="loc_brut_tot">—</td>
+            <td class="calc-val" id="loc_aba">—</td>
+            <td class="calc-val" id="loc_imp">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_loc" checked onchange="calc()"></td>
+            <td class="calc-val" id="loc_ps">—</td>
+          </tr>
+          <tr>
+            <td>Micro BNC <span class="case-num">5HQ/5IQ</span> <span class="aba-rate-badge">34%</span></td>
+            <td class="aba-col" style="color:var(--forest3);font-weight:500;font-size:11px">34%</td>
+            <td><input type="number" id="microbnc_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="microbnc_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="microbnc_brut_tot">—</td>
+            <td class="calc-val" id="microbnc_aba">—</td>
+            <td class="calc-val" id="microbnc_imp">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_microbnc" checked onchange="calc()"></td>
+            <td class="calc-val" id="microbnc_ps">—</td>
+          </tr>
+          <tr>
+            <td>Micro BIC — vente <span class="case-num">5KO/5LO</span> <span class="aba-rate-badge">71%</span></td>
+            <td class="aba-col" style="color:var(--forest3);font-weight:500;font-size:11px">71%</td>
+            <td><input type="number" id="microbic_vente_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="microbic_vente_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="microbic_vente_brut_tot">—</td>
+            <td class="calc-val" id="microbic_vente_aba">—</td>
+            <td class="calc-val" id="microbic_vente_imp">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_microbic_vente" checked onchange="calc()"></td>
+            <td class="calc-val" id="microbic_vente_ps">—</td>
+          </tr>
+          <tr>
+            <td>Micro BIC — services <span class="case-num">5KP/5LP</span> <span class="aba-rate-badge">50%</span></td>
+            <td class="aba-col" style="color:var(--forest3);font-weight:500;font-size:11px">50%</td>
+            <td><input type="number" id="microbic_serv_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="microbic_serv_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="microbic_serv_brut_tot">—</td>
+            <td class="calc-val" id="microbic_serv_aba">—</td>
+            <td class="calc-val" id="microbic_serv_imp">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_microbic_serv" checked onchange="calc()"></td>
+            <td class="calc-val" id="microbic_serv_ps">—</td>
+          </tr>
+          <tr class="total-inner">
+            <td colspan="5">Total autres revenus avec abattement</td>
+            <td></td>
+            <td class="calc-val" id="aba_imp_tot">0 €</td>
+            <td></td>
+            <td class="calc-val" id="aba_ps_tot">0 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SANS ABATTEMENT -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="acc-left">
+        <span class="acc-title">Revenus au barème — sans abattement forfaitaire</span>
+        <span class="section-badge badge-no-aba">Régime réel / charges déductibles</span>
+      </div>
+      <div class="acc-right">
+        <span class="acc-summary" id="sum_reel">Imposable : 0 €</span>
+        <span class="acc-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body">
+      <div class="aba-strip no-aba">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="currentColor"/><path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <strong style="color:var(--red)">Aucun abattement forfaitaire</strong> — montant imposable = revenu brut − charges réelles.
+      </div>
+      <table class="inner-table">
+        <thead><tr>
+          <th>Type</th>
+          <th class="th-d1">D1 brut</th>
+          <th class="th-d2 d2-col">D2 brut</th>
+          <th>Total brut</th>
+          <th>Charges réelles</th>
+          <th>Imposable barème</th>
+          <th class="psx-cell"><span class="psx-label">PSx</span></th>
+          <th>PS (17,2%)</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Foncier réel <span class="case-num">4BA</span> <span class="no-aba-badge">charges réelles</span></td>
+            <td><input type="number" id="fon_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="fon_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="fon_brut_tot">—</td>
+            <td><input type="number" id="fon_charges" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="fon_imp">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_fon" checked onchange="calc()"></td>
+            <td class="calc-val" id="fon_ps">—</td>
+          </tr>
+          <tr>
+            <td>BNC réel <span class="case-num">5QC/5RC</span> <span class="no-aba-badge">charges réelles</span></td>
+            <td><input type="number" id="bnc_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="bnc_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="bnc_brut_tot">—</td>
+            <td><input type="number" id="bnc_charges" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="bnc_imp">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_bnc" checked onchange="calc()"></td>
+            <td class="calc-val" id="bnc_ps">—</td>
+          </tr>
+          <tr>
+            <td>BIC réel <span class="case-num">5KC/5LC</span> <span class="no-aba-badge">charges réelles</span></td>
+            <td><input type="number" id="bic_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="bic_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="bic_brut_tot">—</td>
+            <td><input type="number" id="bic_charges" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="bic_imp">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_bic" checked onchange="calc()"></td>
+            <td class="calc-val" id="bic_ps">—</td>
+          </tr>
+          <tr>
+            <td>Autres revenus <span class="no-aba-badge">0% ab.</span></td>
+            <td><input type="number" id="autre_rev_brut_d1" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="d2-col"><input type="number" id="autre_rev_brut_d2" value="0" oninput="calc()" placeholder="0"></td>
+            <td class="calc-val" id="autre_rev_brut_tot">—</td>
+            <td style="color:var(--muted);font-size:12px;text-align:right">—</td>
+            <td class="calc-val" id="autre_rev_imp">0 €</td>
+            <td class="psx-cell"><input type="checkbox" id="psx_autre_rev" checked onchange="calc()"></td>
+            <td class="calc-val" id="autre_rev_ps">—</td>
+          </tr>
+          <tr class="total-inner">
+            <td colspan="4">Total revenus sans abattement</td>
+            <td></td>
+            <td class="calc-val" id="reel_imp_tot">0 €</td>
+            <td></td>
+            <td class="calc-val" id="reel_ps_tot">0 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CSG DÉDUCTIBLE -->
+  <div class="s-title">CSG déductible &amp; charges</div>
+  <div class="csg-block">
+    <div class="csg-title">
+      CSG déductible sur revenus du patrimoine 2025
+      <span class="case-num">6DE</span>
+      <span class="help-tip" title="Déduire du revenu global : la CSG à 6,8% prélevée sur les dividendes, intérêts, revenus fonciers et autres revenus du patrimoine perçus en 2025. Ce montant figure sur votre avis d'imposition ou relevé de prélèvements.">?</span>
+    </div>
+    <div class="aba-strip with-aba" style="margin-bottom:12px">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      La CSG à <strong>6,8%</strong> sur les revenus du patrimoine est partiellement déductible du revenu global, <strong>avant le barème progressif</strong>.
+    </div>
+    <div class="csg-row">
+      <div class="csg-field" style="flex:1;min-width:200px">
+        <label>Montant CSG déductible total (case 6DE)</label>
+        <div class="input-row">
+          <input type="number" id="csg_ded_montant" value="0" oninput="calc()" placeholder="0" style="max-width:180px">
+          <span class="unit">€</span>
+        </div>
+      </div>
+      <div class="csg-field" style="flex:1;min-width:200px">
+        <label>Aide au calcul — base revenus patrimoine 2025</label>
+        <div class="input-row">
+          <input type="number" id="csg_base_calc" value="0" oninput="calcCSGHelper()" placeholder="0 (optionnel)" style="max-width:180px">
+          <span class="unit">€</span>
+          <span style="font-size:11px;color:var(--muted);margin-left:4px">× 6,8% =</span>
+          <span class="calc-val" id="csg_calc_result" style="font-size:13px;margin-left:4px">0 €</span>
+        </div>
+      </div>
+      <div class="csg-field">
+        <label>Montant déduit du RBI</label>
+        <div class="calc-val" id="csg_ded_display" style="font-size:16px;padding:6px 0">0 €</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RÉDUCTIONS / AVANCES -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="acc-left"><span class="acc-title">Réductions, crédits d'impôt &amp; retenues</span></div>
+      <div class="acc-right">
+        <span class="acc-summary" id="sum_red">Total : 0 €</span>
+        <span class="acc-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body">
+      <div class="aba-strip info-blue" style="margin-bottom:14px">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="currentColor"/><path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Les dons et réductions détaillés sont saisissables dans l'onglet <strong>Dons &amp; réductions</strong>. Leur total est automatiquement repris ici en case 7UF.
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);margin-bottom:8px;font-weight:600">Réductions &amp; crédits (en diminution de l'IR)</div>
+          <table class="inner-table">
+            <thead><tr><th>Libellé</th><th>Montant</th></tr></thead>
+            <tbody>
+              <tr><td>Prélèvements à la source (PAS) <span class="case-num">8HV/8IV</span></td><td><input type="number" id="pas" value="0" oninput="calc()" placeholder="0"></td></tr>
+              <tr><td>Frais de scolarité <span class="case-num">7EA/7EC/7EF</span></td><td><input type="number" id="red_scola" value="0" oninput="calc()" placeholder="0"></td></tr>
+              <tr style="background:rgba(55,138,221,0.04)"><td>Dons (total auto depuis onglet Dons) <span class="case-num">7UF</span> <span class="case-num">7UD</span></td><td><span class="calc-val" id="red_dons_display" style="display:block;text-align:right;padding:7px 0">0 €</span></td></tr>
+              <tr><td>Autres pensions versées <span class="case-num">6GU</span></td><td><input type="number" id="red_pens" value="0" oninput="calc()" placeholder="0"></td></tr>
+              <tr><td>Crédits d'impôt (emploi à domicile, etc.) <span class="case-num">7DB</span></td><td><input type="number" id="credit" value="0" oninput="calc()" placeholder="0"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);margin-bottom:8px;font-weight:600">Versements déjà effectués</div>
+          <table class="inner-table">
+            <thead><tr><th>Libellé</th><th>Montant</th></tr></thead>
+            <tbody>
+              <tr><td>PS déjà payés (PFNL, acomptes PS) <span class="case-num">8HX</span></td><td><input type="number" id="ps_payes" value="0" oninput="calc()" placeholder="0"></td></tr>
+              <tr><td>RAS (retenues à la source hors PAS) <span class="case-num">8HV</span></td><td><input type="number" id="ras" value="0" oninput="calc()" placeholder="0"></td></tr>
+              <tr><td>Acomptes versés <span class="case-num">8HW</span></td><td><input type="number" id="acomptes" value="0" oninput="calc()" placeholder="0"></td></tr>
+              <tr><td>Avances pour emploi à domicile <span class="case-num">7SF</span></td><td><input type="number" id="avances" value="0" oninput="calc()" placeholder="0"></td></tr>
+              <tr style="background:rgba(196,153,58,0.06)">
+                <td>
+                  <strong>Avance 60% État versée en janvier</strong> <span class="case-num">8EA</span>
+                  <span class="help-tip" title="L'avance de 60% sur réductions/crédits d'impôt versée en janvier N (par ex. emploi à domicile, dons). Ce montant a déjà été perçu — il MAJORE le solde à payer lors de la régularisation.">?</span>
+                </td>
+                <td><input type="number" id="avance_60" value="0" oninput="calc()" placeholder="0"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CDHR -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="acc-left"><span class="acc-title">CDHR — Contribution différentielle sur les hauts revenus</span></div>
+      <div class="acc-right">
+        <span class="acc-summary" id="sum_cdhr">Art. 224 CGI · RFRR : 0 €</span>
+        <span class="acc-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body">
+      <div class="info-note">Le RFR retraité (RFRR) s'entend du RFR majoré de certains revenus exonérés. La décote s'applique si RFRR &lt; <strong>500 000 €</strong> (imposition commune) ou <strong>250 000 €</strong> (célibataire). Abattement imposition commune : <strong>12 500 €</strong>. Abattement par personne à charge : <strong>1 500 €</strong>.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+        <div>
+          <table class="inner-table">
+            <thead><tr><th>Paramètre</th><th>Valeur</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>RFR retraité (RFRR)</td>
+                <td><div class="input-row" style="justify-content:flex-end"><input type="number" id="rfr_ret" value="0" oninput="calc()" style="max-width:150px"><span class="unit">€</span></div></td>
+              </tr>
+              <tr>
+                <td>Personnes à charge (CDHR)</td>
+                <td><div class="input-row" style="justify-content:flex-end"><input type="number" id="cdhr_pac" value="0" min="0" oninput="calc()" style="max-width:70px"><span class="unit">pers.</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <table class="inner-table">
+            <thead><tr><th>Résultat CDHR</th><th>Sans décote</th><th>Avec décote</th></tr></thead>
+            <tbody>
+              <tr><td>CDHR calculée</td><td class="calc-val" id="cdhr_brut">0 €</td><td class="calc-val" id="cdhr_net">0 €</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RÉSULTATS -->
+  <div class="s-title">Résultats</div>
+  <div class="results-grid">
+    <div class="result-card">
+      <div class="rc-label">Revenu fiscal de référence</div>
+      <div class="rc-value" id="res_rfr">0 €</div>
+    </div>
+    <div class="result-card">
+      <div class="rc-label">Quotient familial</div>
+      <div class="rc-value" id="res_quotient">0 €</div>
+      <div class="rc-sub" id="res_parts_label">pour 1 part</div>
+    </div>
+    <div class="result-card">
+      <div class="rc-label">Montant total à payer</div>
+      <div class="rc-value" id="res_final">0 €</div>
+    </div>
+  </div>
+
+  <table class="synth-table">
+    <tbody>
+      <tr class="st-sec"><td colspan="2">Déductions avant barème</td></tr>
+      <tr><td>CSG déductible revenus patrimoine <span class="case-num">6DE</span></td><td id="s_csg_ded">0 €</td></tr>
+      <tr class="st-sec"><td colspan="2">Barème progressif</td></tr>
+      <tr><td>Impôt brut du foyer (avant décote)</td><td id="s_impot_foyer">0 €</td></tr>
+      <tr><td>Décote applicable</td><td id="s_decote">0 €</td></tr>
+      <tr><td>Réductions d'impôt (scolarité, pensions versées)</td><td id="s_red_tot">0 €</td></tr>
+      <tr><td>Réduction dons (onglet Dons) <span class="case-num">7UF/7UD</span></td><td id="s_red_dons">0 €</td></tr>
+      <tr><td>Prélèvements à la source (PAS)</td><td id="s_pas">0 €</td></tr>
+      <tr><td>Impôt résultant du barème (net)</td><td id="s_impot_net" class="s-green">0 €</td></tr>
+      <tr class="st-sec"><td colspan="2">Prélèvement Forfaitaire Unique (PFU)</td></tr>
+      <tr><td>IR au taux proportionnel (12,8%)</td><td id="s_ir_pfu">0 €</td></tr>
+      <tr class="st-sec"><td colspan="2">Prélèvements sociaux</td></tr>
+      <tr><td>PS sur pensions françaises (taux saisi)</td><td id="s_ps_pen">0 €</td></tr>
+      <tr><td>PS sur pensions étrangères (9,2%)</td><td id="s_ps_etr">0 €</td></tr>
+      <tr><td>PS sur revenus fonciers / locatifs / BNC / BIC (17,2%)</td><td id="s_ps_fon">0 €</td></tr>
+      <tr><td>PS sur revenus PFU (17,2%)</td><td id="s_ps_pfu">0 €</td></tr>
+      <tr><td>PS sur plus-values mobilières (17,2%)</td><td id="s_ps_pv">0 €</td></tr>
+      <tr class="st-sec"><td colspan="2">Contributions sur hauts revenus</td></tr>
+      <tr><td>CEHR — Art. 223 sexies CGI</td><td id="s_cehr">0 €</td></tr>
+      <tr><td>CDHR — Art. 224 CGI (avec décote)</td><td id="s_cdhr">0 €</td></tr>
+      <tr class="st-sec"><td colspan="2">Retenues, avances &amp; crédits</td></tr>
+      <tr><td>Crédits d'impôt</td><td id="s_credits">0 €</td></tr>
+      <tr><td>PS déjà payés</td><td id="s_ps_payes">0 €</td></tr>
+      <tr><td>RAS, acomptes, avances</td><td id="s_ret">0 €</td></tr>
+      <tr style="background:rgba(196,153,58,0.06)"><td>Avance 60% perçue (à régulariser) <span class="case-num">8EA</span></td><td id="s_avance60" style="color:#8a6010;font-weight:600">0 €</td></tr>
+      <tr class="st-total"><td>Montant total à payer</td><td id="s_final">0 €</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════ PV ════════ -->
+<div class="panel" id="panel-pv">
+  <div class="s-title">Plus-values &amp; moins-values de cession</div>
+  <div class="info-note">
+    <strong>Abattement normal :</strong> &gt;2 ans : 50% &nbsp;·&nbsp; &gt;8 ans : 65% &emsp;|&emsp;
+    <strong>Abattement renforcé (BSPCE, PME &lt;10 ans…) :</strong> ≥2 ans : 50% · ≥4 ans : 65% · ≥8 ans : 85%.<br>
+    PS sur PV mobilières : <strong>17,2%</strong> sur la PV brute (avant abattement pour durée). La case <strong>PSx</strong> permet d'exclure une ligne des PS (ex : convention fiscale).<br>
+    <strong>Moins-values antérieures reportables :</strong> saisissez ci-dessous le stock de MV en report pour imputation sur les PV de l'année.
+  </div>
+
+  <!-- MV reportables -->
+  <div class="pv-mv-report-bar">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="var(--red)" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span class="pv-mv-report-bar" style="background:none;border:none;padding:0;margin:0;font-size:12px;color:var(--red);font-weight:600">Moins-values antérieures en report :</span>
+    <div class="input-row" style="gap:6px">
+      <input type="number" id="mv_report" value="0" oninput="updatePVCalc()" placeholder="0" style="max-width:140px;border-color:rgba(176,48,32,0.4)">
+      <span class="unit" style="color:var(--red)">€</span>
+    </div>
+    <span style="font-size:11px;color:var(--muted);margin-left:8px">(s'imputent sur la PV nette totale avant IR)</span>
+    <span style="font-size:12px;color:var(--forest);font-weight:600;margin-left:auto">MV résiduelle après imputation : <span class="calc-val" id="mv_residuelle">0 €</span></span>
+  </div>
+
+  <div class="flex-end">
+    <button class="btn btn-forest" onclick="addPV()">+ Ajouter une cession</button>
+  </div>
+  <div class="pv-cards" id="pv-cards"></div>
+  <div class="pv-totals-bar" id="pv-totals-bar" style="display:none">
+    <div class="pt-item"><div class="lbl">PV / MV brute totale</div><div class="val" id="pv_tot_pvmv">—</div></div>
+    <div class="pt-item"><div class="lbl">MV en report imputée</div><div class="val" id="pv_tot_mv_report" style="color:#ff9980">—</div></div>
+    <div class="pt-item"><div class="lbl">PV nette d'abattement (→ IR)</div><div class="val gold" id="pv_tot_net">—</div></div>
+    <div class="pt-item"><div class="lbl">PS (17,2% sur PV brute)</div><div class="val" id="pv_tot_ps" style="color:rgba(255,255,255,0.6)">—</div></div>
+    <div class="pt-item"><div class="lbl">IR au barème (estimé)</div><div class="val gold" id="pv_tot_ir_estime">—</div></div>
+  </div>
+</div>
+
+<!-- ════════ DONS & RÉDUCTIONS ════════ -->
+<div class="panel" id="panel-dons">
+  <div class="s-title">Dons &amp; réductions d'impôt</div>
+  <div class="info-note">
+    <strong>Dons à 66% :</strong> associations loi 1901, fondations reconnues d'utilité publique (art. 200 CGI). Plafond global : <strong>20% du revenu net imposable</strong>. Excédent reportable 5 ans.<br>
+    <strong>Dons à 75% :</strong> organismes d'aide aux personnes en difficulté (art. 200 1° b). Plafond : <strong>1 000 €</strong> jusqu'au 13/10/2025 · <strong>2 000 €</strong> à compter du 14/10/2025 (Art. 28 LF 2026). Au-delà du plafond, l'excédent bascule à 66%.<br>
+    <strong>Dons à l'IFI :</strong> organismes éligibles art. 978 CGI — réduction IFI de <strong>75%</strong> des dons versés. Traités dans l'onglet IFI.
+  </div>
+
+  <div class="dons-grid">
+    <!-- Dons 75% -->
+    <div class="don-card">
+      <div class="don-card-header">
+        <span class="don-card-title">Dons à taux majoré — 75% <span class="case-num" style="background:rgba(255,255,255,0.15);color:var(--gold-light);border-color:rgba(255,255,255,0.3)">7UD</span></span>
+        <span class="don-card-rate">75%</span>
+      </div>
+      <div class="don-card-body">
+        <div class="don-lf-toggle">
+          <label for="don75_lf2026">
+            <input type="checkbox" id="don75_lf2026" onchange="calcDons()">
+            <span><strong class="badge-lf2026">Art. 28 LF 2026</strong> — Dons consentis à compter du <strong>14 octobre 2025</strong> aux organismes d'aide aux personnes en difficulté ou aux victimes de violence domestique → plafond porté à <strong>2 000 €</strong></span>
+          </label>
+        </div>
+        <div class="pen-note" style="margin-bottom:12px">
+          Plafond actif : <strong id="don75_plafond_display">1 000 €</strong>. Au-delà, l'excédent bascule automatiquement dans la tranche à 66%.
+        </div>
+        <div class="don-row">
+          <span class="don-row-label">Restos du Cœur <span class="case-num">7UD</span></span>
+          <div class="don-row-input"><input type="number" id="don75_restoscœur" value="0" oninput="calcDons()" placeholder="0"><span class="unit">€</span></div>
+        </div>
+        <div class="don-row">
+          <span class="don-row-label">Secours populaire <span class="case-num">7UD</span></span>
+          <div class="don-row-input"><input type="number" id="don75_secourspop" value="0" oninput="calcDons()" placeholder="0"><span class="unit">€</span></div>
+        </div>
+        <div class="don-row">
+          <span class="don-row-label">Croix-Rouge française <span class="case-num">7UD</span></span>
+          <div class="don-row-input"><input type="number" id="don75_croixrouge" value="0" oninput="calcDons()" placeholder="0"><span class="unit">€</span></div>
+        </div>
+        <div class="don-row">
+          <span class="don-row-label">Autres organismes aide aux personnes <span class="case-num">7UD</span></span>
+          <div class="don-row-input"><input type="number" id="don75_autres" value="0" oninput="calcDons()" placeholder="0"><span class="unit">€</span></div>
+        </div>
+        <div style="padding:10px 0 4px;border-top:1px solid var(--border);margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:var(--muted)">Total dons 75%</span>
+          <strong class="calc-val" id="don75_total">0 €</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:4px">
+          <span style="font-size:11px;color:var(--muted)">dont dans le plafond (<span id="don75_plafond_lbl">1 000 €</span>) × 75%</span>
+          <span class="calc-val" id="don75_red_plaf">0 €</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:4px">
+          <span style="font-size:11px;color:var(--muted)">excédent basculé en 66%</span>
+          <span class="calc-val" id="don75_excess">0 €</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dons 66% -->
+    <div class="don-card">
+      <div class="don-card-header">
+        <span class="don-card-title">Dons à taux normal — 66% <span class="case-num" style="background:rgba(255,255,255,0.15);color:var(--gold-light);border-color:rgba(255,255,255,0.3)">7UF</span></span>
+        <span class="don-card-rate">66%</span>
+      </div>
+      <div class="don-card-body">
+        <div class="pen-note" style="margin-bottom:12px">
+          Plafond global : <strong>20% du revenu net imposable</strong>. Excédent reportable sur 5 ans.
+        </div>
+        <div class="don-row">
+          <span class="don-row-label">Fondations et associations RUP <span class="case-num">7UF</span></span>
+          <div class="don-row-input"><input type="number" id="don66_fondations" value="0" oninput="calcDons()" placeholder="0"><span class="unit">€</span></div>
+        </div>
+        <div class="don-row">
+          <span class="don-row-label">Partis politiques <span class="case-num">7UH</span></span>
+          <div class="don-row-input"><input type="number" id="don66_partis" value="0" oninput="calcDons()" placeholder="0"><span class="unit">€</span></div>
+        </div>
+        <div class="don-row">
+          <span class="don-row-label">Organismes cultuels <span class="case-num">7UF</span></span>
+          <div class="don-row-input"><input type="number" id="don66_cultuels" value="0" oninput="calcDons()" placeholder="0"><span class="unit">€</span></div>
+        </div>
+        <div class="don-row">
+          <span class="don-row-label">Dons en nature (valorisation) <span class="case-num">7UF</span></span>
+          <div class="don-row-input"><input type="number" id="don66_nature" value="0" oninput="calcDons()" placeholder="0"><span class="unit">€</span></div>
+        </div>
+        <div class="don-row">
+          <span class="don-row-label">Autres dons 66% <span class="case-num">7UF</span></span>
+          <div class="don-row-input"><input type="number" id="don66_autres" value="0" oninput="calcDons()" placeholder="0"><span class="unit">€</span></div>
+        </div>
+        <div style="padding:10px 0 4px;border-top:1px solid var(--border);margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:var(--muted)">Total dons 66% (y.c. excédent 75%)</span>
+          <strong class="calc-val" id="don66_total">0 €</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:4px">
+          <span style="font-size:11px;color:var(--muted)">Réduction (× 66%)</span>
+          <span class="calc-val" id="don66_reduction">0 €</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barre résultats dons -->
+  <div class="dons-result-bar">
+    <div class="dr-item"><div class="lbl">Total dons versés</div><div class="val" id="dons_total_verses">0 €</div></div>
+    <div class="dr-item"><div class="lbl">Réduction IR totale</div><div class="val gold" id="dons_red_totale">0 €</div></div>
+    <div class="dr-item"><div class="lbl">Plafond 20% RNI</div><div class="val" id="dons_plafond_20p">—</div></div>
+    <div class="dr-item"><div class="lbl">Excédent reportable (5 ans)</div><div class="val" id="dons_excedent">0 €</div></div>
+    <div class="dr-item"><div class="lbl">Taux moyen de réduction</div><div class="val" id="dons_taux_moyen">—</div></div>
+  </div>
+
+  <div class="plafond-bar" id="dons_plafond_warning" style="display:none">
+    ⚠️ Le total des dons à 66% dépasse le plafond de 20% du revenu net imposable (<span id="dons_plafond_mt">—</span>). L'excédent de <span id="dons_excedent_mt">—</span> est reportable sur les 5 années suivantes.
+  </div>
+
+  <div class="s-title" style="font-size:16px">Détail de la réduction d'impôt</div>
+  <table class="synth-table">
+    <tbody>
+      <tr class="st-sec"><td colspan="2">Dons à 75% (art. 200 1°b)</td></tr>
+      <tr><td>Dons versés dans la limite du plafond (<span id="ds_75_plaf_lbl">1 000 €</span>)</td><td id="ds_75_plaf">0 €</td></tr>
+      <tr><td>Réduction 75%</td><td id="ds_75_red" class="s-green">0 €</td></tr>
+      <tr><td>Excédent basculé en 66%</td><td id="ds_75_exc">0 €</td></tr>
+      <tr class="st-sec"><td colspan="2">Dons à 66% (art. 200 CGI)</td></tr>
+      <tr><td>Total dons 66% (y.c. excédent 75%)</td><td id="ds_66_tot">0 €</td></tr>
+      <tr><td>Plafond applicable (20% RNI)</td><td id="ds_66_plaf">—</td></tr>
+      <tr><td>Dons effectivement pris en compte</td><td id="ds_66_pris">0 €</td></tr>
+      <tr><td>Réduction 66%</td><td id="ds_66_red" class="s-green">0 €</td></tr>
+      <tr class="st-total"><td>Réduction IR totale (déduite de l'IR)</td><td id="ds_total_red">0 €</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════ IFI ════════ -->
+<div class="panel" id="panel-ifi">
+  <div class="s-title">Impôt sur la Fortune Immobilière</div>
+  <div class="info-note">L'IFI est dû lorsque le patrimoine immobilier net taxable dépasse <strong>1 300 000 €</strong>. Décote si patrimoine brut entre 1 300 000 € et 1 400 000 € : <strong>17 500 − 1,25% × patrimoine net taxable</strong>.</div>
+
+  <div class="s-title" style="font-size:16px;margin-top:0">Biens immobiliers</div>
+  <div style="overflow-x:auto;margin-bottom:20px">
+    <table class="inner-table" id="ifi-biens-table">
+      <thead>
+        <tr>
+          <th style="text-align:left;min-width:160px">Localisation / Désignation</th>
+          <th style="min-width:60px">RP ?</th>
+          <th style="min-width:60px">Société / Loué / Indivis ?</th>
+          <th style="min-width:110px">Valeur vénale</th>
+          <th style="min-width:110px">Valeur IFI<br><span style="font-weight:400;font-size:9px">(après abat. RP 30%)</span></th>
+          <th style="min-width:110px">Dette</th>
+          <th style="min-width:110px">Valeur nette</th>
+          <th style="min-width:40px"></th>
+        </tr>
+      </thead>
+      <tbody id="ifi-biens-body"></tbody>
+      <tfoot>
+        <tr style="background:#eef3ef;font-weight:600">
+          <td colspan="3" style="text-align:left">Totaux</td>
+          <td class="calc-val" id="ifi_tot_venale">0 €</td>
+          <td class="calc-val" id="ifi_tot_ifi">0 €</td>
+          <td class="calc-val" id="ifi_tot_dette">0 €</td>
+          <td class="calc-val" id="ifi_tot_net">0 €</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class="flex-end" style="margin-top:-8px">
+    <button class="btn btn-forest" onclick="addBien()">+ Ajouter un bien</button>
+  </div>
+
+  <div class="s-title" style="font-size:16px">Déductions</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:20px">
+    <table class="inner-table">
+      <thead><tr><th style="text-align:left">Type de déduction</th><th>Montant</th></tr></thead>
+      <tbody>
+        <tr><td>Taxes dues au 1er janvier (TF, etc.)</td><td><input type="number" id="ifi_taxes" value="0" oninput="calcIFI()" placeholder="0"></td></tr>
+        <tr><td>Intérêts d'emprunt</td><td><input type="number" id="ifi_interets" value="0" oninput="calcIFI()" placeholder="0"></td></tr>
+        <tr><td>Dépenses sur / pour le(s) bien(s)</td><td><input type="number" id="ifi_depenses" value="0" oninput="calcIFI()" placeholder="0"></td></tr>
+        <tr><td>Dons IFI (Art. 978 CGI — réduction 75%)</td><td><input type="number" id="ifi_dons_verses" value="0" oninput="calcIFI()" placeholder="0"></td></tr>
+      </tbody>
+    </table>
+    <div>
+      <table class="inner-table">
+        <thead><tr><th style="text-align:left">Résumé déductions</th><th>Montant</th></tr></thead>
+        <tbody>
+          <tr><td>Total déductions (dettes + taxes + dépenses)</td><td class="calc-val" id="ifi_tot_deductions">0 €</td></tr>
+          <tr><td>Réduction dons IFI (75% des dons versés)</td><td class="calc-val" id="ifi_red_dons">0 €</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="s-title" style="font-size:16px">Calcul de l'IFI</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div>
+      <table class="synth-table">
+        <tbody>
+          <tr class="st-sec"><td colspan="2">Assiette</td></tr>
+          <tr><td>Patrimoine brut taxable</td><td id="ifi_s_brut">0 €</td></tr>
+          <tr><td>Total des déductions</td><td id="ifi_s_deductions">0 €</td></tr>
+          <tr><td>Patrimoine net taxable (avant IFI théorique)</td><td id="ifi_s_net_avant">0 €</td></tr>
+          <tr class="st-sec"><td colspan="2">Calcul barème</td></tr>
+          <tr><td>IFI théorique</td><td id="ifi_s_theorique">0 €</td></tr>
+          <tr><td>Patrimoine net taxable (après IFI théorique)</td><td id="ifi_s_net_apres">0 €</td></tr>
+          <tr><td>Décote applicable</td><td id="ifi_s_decote">—</td></tr>
+          <tr><td>Réduction dons IFI</td><td id="ifi_s_red_dons">0 €</td></tr>
+          <tr class="st-total"><td>IFI à payer</td><td id="ifi_s_final">0 €</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="result-card">
+          <div class="rc-label">Patrimoine net taxable</div>
+          <div class="rc-value" id="ifi_res_net">0 €</div>
+        </div>
+        <div class="result-card">
+          <div class="rc-label">IFI à payer</div>
+          <div class="rc-value" id="ifi_res_final">0 €</div>
+          <div class="rc-sub" id="ifi_res_sub">En-dessous du seuil de 1 300 000 €</div>
+        </div>
+      </div>
+      <div style="margin-top:18px">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);margin-bottom:8px;font-weight:600">Barème IFI (Art. 977 CGI)</div>
+        <table class="data-table">
+          <thead><tr><th>Tranche</th><th>Taux</th><th>Impôt par tranche</th></tr></thead>
+          <tbody>
+            <tr><td>0 → 800 000 €</td><td>0 %</td><td class="calc-val" id="ifi_t1">0 €</td></tr>
+            <tr><td>800 001 → 1 300 000 €</td><td>0,5 %</td><td class="calc-val" id="ifi_t2">0 €</td></tr>
+            <tr><td>1 300 001 → 2 570 000 €</td><td>0,7 %</td><td class="calc-val" id="ifi_t3">0 €</td></tr>
+            <tr><td>2 570 001 → 5 000 000 €</td><td>1 %</td><td class="calc-val" id="ifi_t4">0 €</td></tr>
+            <tr><td>5 000 001 → 10 000 000 €</td><td>1,25 %</td><td class="calc-val" id="ifi_t5">0 €</td></tr>
+            <tr><td>&gt; 10 000 000 €</td><td>1,5 %</td><td class="calc-val" id="ifi_t6">0 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ DONNÉES ════════ -->
+<div class="panel" id="panel-donnees">
+  <div class="lock-bar">
+    <div class="lock-info">
+      <span style="font-size:16px">🔐</span>
+      <span>Protection de la feuille Données — empêche toute modification accidentelle des paramètres</span>
+      <span class="lock-status unlocked" id="lock-status">✅ Modifiable</span>
+    </div>
+    <button class="btn-lock lock-on" id="lock-btn" onclick="toggleLock()">🔒 Verrouiller</button>
+  </div>
+
+  <div class="s-title">Barème progressif IR 2025</div>
+  <div class="donnees-grid">
+    <div>
+      <table class="data-table">
+        <thead><tr><th>Tranche — de</th><th>Tranche — à</th><th>Taux</th></tr></thead>
+        <tbody>
+          <tr><td><input type="number" id="t1_de" value="0" oninput="calc()"></td><td><input type="number" id="t1_a" value="11600" oninput="calc()"></td><td>0 %</td></tr>
+          <tr><td id="t2_de" style="color:var(--muted)">—</td><td><input type="number" id="t2_a" value="29579" oninput="calc()"></td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t2_tx" value="11" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
+          <tr><td id="t3_de" style="color:var(--muted)">—</td><td><input type="number" id="t3_a" value="84577" oninput="calc()"></td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t3_tx" value="30" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
+          <tr><td id="t4_de" style="color:var(--muted)">—</td><td><input type="number" id="t4_a" value="181917" oninput="calc()"></td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t4_tx" value="41" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
+          <tr><td id="t5_de" style="color:var(--muted)">—</td><td style="color:var(--muted)">∞</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="t5_tx" value="45" oninput="calc()" style="max-width:55px"><span class="unit">%</span></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="s-title" style="margin-top:0;font-size:16px">Abattements &amp; paramètres</div>
+      <table class="data-table">
+        <thead><tr><th>Paramètre</th><th>Valeur</th></tr></thead>
+        <tbody>
+          <tr><td>Salaires — abattement max par déclarant (10%)</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="aba_sal" value="14555" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Pensions — abattement max foyer (10%)</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="aba_pen" value="4439" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Décote célibataire — seuil IR</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cel_seuil" value="1965" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Décote célibataire — montant fixe</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cel_mt" value="889" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Décote couple — seuil IR</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cou_seuil" value="3249" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>Décote couple — montant fixe</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="dec_cou_mt" value="1470" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>CDHR — abattement imposition commune</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="cdhr_aba_ic" value="12500" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>CDHR — abattement par personne à charge</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="cdhr_aba_pac" value="1500" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
+          <tr><td>CSG déductible (taux)</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="csg_ded" value="6.8" oninput="calc()" step="0.1" style="max-width:55px"><span class="unit">%</span></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>Arthur Beldi</strong> — Avocat &nbsp;·&nbsp;
+  Outil indicatif à usage interne. Ne se substitue pas à un conseil juridique personnalisé. — Barème 2026 · Revenus 2025 · v4
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const v  = id => parseFloat($(id)?.value) || 0;
+const cb = id => $(id)?.checked ?? true;
+const fmt = (n, d=0) => n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}) + ' €';
+
+function set(id, val, cls='') {
+  const e = $(id); if (!e) return;
+  e.textContent = typeof val === 'string' ? val : val;
+  if (cls) { e.className = e.className.replace(/\bs-green\b|\bs-red\b|\bneg\b/g,''); e.classList.add(cls); }
+}
+
+// ── D2 Toggle ──
+function toggleD2() {
+  const has = cb('has_d2');
+  document.querySelectorAll('.d2-col, .d2-hidden').forEach(el => {
+    el.style.display = has ? '' : 'none';
+  });
+  if (has && v('nb_parts') < 2) { $('nb_parts').value = 2; }
+  else if (!has && v('nb_parts') === 2) { $('nb_parts').value = 1; }
+  calcMajoration();
+  calc();
+}
+
+function updateNames() {}
+
+// ── Majoration plafond emploi à domicile (art. 199 sexdecies CGI) ──
+let _plafond_emploi_dom = 12000;
+function calcMajoration() {
+  const ANNEE_REF = 2025; // revenus 2025
+  const has_d2 = cb('has_d2');
+
+  // Invalidité : si D1 ou D2 est invalide → plafond passe à 20 000 €
+  const inv_d1 = cb('inv_d1') || cb('cmi_d1');
+  const inv_d2 = has_d2 && (cb('inv_d2') || cb('cmi_d2'));
+  const any_invalide = inv_d1 || inv_d2;
+
+  // Âge > 65 ans : calculé depuis l'année de naissance
+  const naiss_d1 = parseInt($('naiss_d1')?.value) || 0;
+  const naiss_d2 = parseInt($('naiss_d2')?.value) || 0;
+  const age_d1 = naiss_d1 > 0 ? ANNEE_REF - naiss_d1 : 0;
+  const age_d2 = naiss_d2 > 0 ? ANNEE_REF - naiss_d2 : 0;
+  const d1_sup65 = age_d1 >= 65;
+  const d2_sup65 = has_d2 && age_d2 >= 65;
+
+  // Mise à jour des badges âge
+  const badge_d1 = $('age_d1_badge'), info_d1 = $('age_d1_info');
+  const badge_d2 = $('age_d2_badge'), info_d2 = $('age_d2_info');
+  if (naiss_d1 > 0) {
+    if (info_d1) info_d1.textContent = `${age_d1} ans en 2025`;
+    if (badge_d1) { badge_d1.textContent = d1_sup65 ? '✅ Oui' : '❌ Non'; badge_d1.style.color = d1_sup65 ? 'var(--green-ok)' : 'var(--muted)'; }
+  } else {
+    if (info_d1) info_d1.textContent = 'Année de naissance non renseignée';
+    if (badge_d1) { badge_d1.textContent = '—'; badge_d1.style.color = 'var(--muted)'; }
+  }
+  if (naiss_d2 > 0 && has_d2) {
+    if (info_d2) info_d2.textContent = `${age_d2} ans en 2025`;
+    if (badge_d2) { badge_d2.textContent = d2_sup65 ? '✅ Oui' : '❌ Non'; badge_d2.style.color = d2_sup65 ? 'var(--green-ok)' : 'var(--muted)'; }
+  } else {
+    if (info_d2) info_d2.textContent = has_d2 ? 'Année de naissance non renseignée' : '—';
+    if (badge_d2) { badge_d2.textContent = '—'; badge_d2.style.color = 'var(--muted)'; }
+  }
+
+  // Calcul de la majoration
+  // Règle : si invalidité → plafond base 20 000 €, sinon 12 000 €
+  const plafond_base = any_invalide ? 20000 : 12000;
+  const mj_invalide = any_invalide ? (20000 - 12000) : 0;
+
+  // +1 500 € par enfant à charge
+  const nb_enfants = Math.max(0, parseInt($('enfants_charge')?.value) || 0);
+  const mj_enfants = nb_enfants * 1500;
+
+  // +1 500 € par membre du foyer > 65 ans
+  const nb_sup65 = (d1_sup65 ? 1 : 0) + (d2_sup65 ? 1 : 0);
+  const mj_age = nb_sup65 * 1500;
+
+  // +1 500 € par ascendant APA
+  const nb_apa = Math.max(0, parseInt($('ascendants_apa')?.value) || 0);
+  const mj_apa = nb_apa * 1500;
+
+  // Total majoré, plafonné à 15 000 € (ou 20 000 € si invalidité)
+  const plafond_max = any_invalide ? 20000 : 15000;
+  const plafond_total = Math.min(plafond_max, plafond_base + mj_enfants + mj_age + mj_apa);
+  _plafond_emploi_dom = plafond_total;
+
+  // Mise à jour affichage
+  set('mj_invalide', any_invalide ? '+' + fmt(mj_invalide) : '0 €');
+  set('mj_pac', mj_enfants > 0 ? '+' + fmt(mj_enfants) : '0 €');
+  set('mj_age', mj_age > 0 ? '+' + fmt(mj_age) : '0 €');
+  set('mj_apa', mj_apa > 0 ? '+' + fmt(mj_apa) : '0 €');
+  set('mj_plafond_total', fmt(plafond_total));
+  const pe = $('plaf_emploi_dom'); if (pe) pe.textContent = fmt(plafond_total);
+
+  // Indicateur visuel si majoration active
+  const bar = $('majoration-bar');
+  if (bar) {
+    if (plafond_total > 12000) {
+      bar.style.background = 'rgba(10,102,64,0.06)';
+      bar.style.borderColor = 'rgba(10,102,64,0.25)';
+    } else {
+      bar.style.background = 'rgba(10,102,64,0.03)';
+      bar.style.borderColor = 'rgba(10,102,64,0.12)';
+    }
+  }
+  calc();
+}
+
+// ── Accordion ──
+function toggleAcc(hdr) {
+  const body = hdr.nextElementSibling;
+  const open = body.classList.contains('open');
+  hdr.classList.toggle('open', !open);
+  body.classList.toggle('open', !open);
+}
+
+// ── Barème IR ──
+function getBareme() {
+  return [
+    {de:v('t1_de'), a:v('t1_a'),  tx:0},
+    {de:v('t1_a')+1, a:v('t2_a'), tx:v('t2_tx')/100},
+    {de:v('t2_a')+1, a:v('t3_a'), tx:v('t3_tx')/100},
+    {de:v('t3_a')+1, a:v('t4_a'), tx:v('t4_tx')/100},
+    {de:v('t4_a')+1, a:Infinity,  tx:v('t5_tx')/100},
+  ];
+}
+function impot(rev) {
+  return getBareme().reduce((s,t) => s + Math.max(0, Math.min(rev, t.a) - t.de) * t.tx, 0);
+}
+
+// ── CEHR ──
+function calcCEHR(rfr, couple) {
+  if (couple) {
+    return Math.max(0, Math.min(rfr, 1000000) - 500000) * 0.03
+         + Math.max(0, rfr - 1000000) * 0.04;
+  } else {
+    return Math.max(0, Math.min(rfr, 500000) - 250000) * 0.03
+         + Math.max(0, Math.min(rfr, 1000000) - 500000) * 0.04
+         + Math.max(0, rfr - 1000000) * 0.04;
+  }
+}
+
+// ── CDHR ──
+function calcCDHR(rfrr, ir_cehr, couple, pac) {
+  const seuil   = couple ? 500000 : 250000;
+  const aba_ic  = couple ? v('cdhr_aba_ic') : 0;
+  const aba_pac = pac * v('cdhr_aba_pac');
+  const aba_tot = aba_ic + aba_pac;
+  const cdhr_brut = Math.max(0, rfrr * 0.20 - ir_cehr - aba_tot);
+  const decote_mt = rfrr < seuil ? Math.max(0, (rfrr - seuil) * 0.825) : 0;
+  const cdhr_net  = Math.max(0, cdhr_brut - decote_mt);
+  return { brut: cdhr_brut, net: cdhr_net };
+}
+
+// ── DONS ──
+let _dons_red_totale = 0;
+let _rni_for_dons = 0;
+
+function calcDons() {
+  // Plafond 75% : 1000 € (avant 14/10/2025) ou 2000 € (LF 2026 art. 28)
+  const lf2026 = cb('don75_lf2026');
+  const plaf75 = lf2026 ? 2000 : 1000;
+  const plaf75_fmt = lf2026 ? '2 000 €' : '1 000 €';
+  ['don75_plafond_display','don75_plafond_lbl','ds_75_plaf_lbl'].forEach(id => {
+    const e = $(id); if(e) e.textContent = plaf75_fmt;
+  });
+
+  // 75%
+  const d75 = v('don75_restoscœur') + v('don75_secourspop') + v('don75_croixrouge') + v('don75_autres');
+  const d75_plaf = Math.min(d75, plaf75);
+  const d75_excess = Math.max(0, d75 - plaf75);
+  const red75 = d75_plaf * 0.75;
+
+  set('don75_total', fmt(d75, 2));
+  set('don75_red_plaf', fmt(red75, 2));
+  set('don75_excess', fmt(d75_excess, 2));
+
+  // 66%
+  const d66_direct = v('don66_fondations') + v('don66_partis') + v('don66_cultuels') + v('don66_nature') + v('don66_autres');
+  const d66_total  = d66_direct + d75_excess;
+  const plaf66 = _rni_for_dons > 0 ? _rni_for_dons * 0.20 : Infinity;
+  const d66_pris = _rni_for_dons > 0 ? Math.min(d66_total, plaf66) : d66_total;
+  const d66_excedent = Math.max(0, d66_total - d66_pris);
+  const red66 = d66_pris * 0.66;
+
+  set('don66_total', fmt(d66_total, 2));
+  set('don66_reduction', fmt(red66, 2));
+
+  const red_totale = red75 + red66;
+  const total_verses = d75 + d66_direct;
+  _dons_red_totale = red_totale;
+
+  // Résultats barre
+  set('dons_total_verses', fmt(total_verses, 2));
+  set('dons_red_totale', fmt(red_totale, 2));
+  set('dons_plafond_20p', _rni_for_dons > 0 ? fmt(plaf66, 2) : '— (calculé auto)');
+  set('dons_excedent', fmt(d66_excedent, 2));
+  const taux_moy = total_verses > 0 ? red_totale / total_verses * 100 : 0;
+  set('dons_taux_moyen', total_verses > 0 ? taux_moy.toFixed(1) + ' %' : '—');
+
+  // Synth table
+  set('ds_75_plaf', fmt(d75_plaf, 2));
+  set('ds_75_red', fmt(red75, 2));
+  set('ds_75_exc', fmt(d75_excess, 2));
+  set('ds_66_tot', fmt(d66_total, 2));
+  set('ds_66_plaf', _rni_for_dons > 0 ? fmt(plaf66, 2) : '(20% RNI, calculé auto)');
+  set('ds_66_pris', fmt(d66_pris, 2));
+  set('ds_66_red', fmt(red66, 2));
+  set('ds_total_red', fmt(red_totale, 2));
+
+  // Warning plafond
+  const warn = $('dons_plafond_warning');
+  if (warn) {
+    if (_rni_for_dons > 0 && d66_excedent > 0) {
+      warn.style.display = 'block';
+      set('dons_plafond_mt', fmt(plaf66, 0));
+      set('dons_excedent_mt', fmt(d66_excedent, 0));
+    } else {
+      warn.style.display = 'none';
+    }
+  }
+
+  // Update display dans l'onglet IR
+  set('red_dons_display', fmt(red_totale, 2));
+  set('st_dons', fmt(red_totale, 2));
+
+  calc();
+}
+
+// ── CALCUL PRINCIPAL ──
+function calc() {
+  // Rafraîchir les majorations (âge auto-détecté)
+  calcMajoration._running = calcMajoration._running || false;
+  if (!calcMajoration._running) {
+    calcMajoration._running = true;
+    calcMajoration();
+    calcMajoration._running = false;
+  }
+
+  const has_d2 = cb('has_d2');
+  const aba_sal_val = v('aba_sal');
+  const aba_pen_val = v('aba_pen');
+
+  ['aba_sal_lbl','aba_sal_lbl2','aba_sal_lbl3'].forEach(id => {
+    const e=$(id); if(e) e.textContent = fmt(aba_sal_val);
+  });
+  ['aba_pen_lbl','aba_pen_etr_lbl','aba_pen_lbl_note'].forEach(id => {
+    const e=$(id); if(e) e.textContent = fmt(aba_pen_val);
+  });
+  [['t2_de','t1_a'],['t3_de','t2_a'],['t4_de','t3_a'],['t5_de','t4_a']].forEach(([id,src])=>{
+    const e=$(id); if(e) e.textContent = fmt(v(src)+1);
+  });
+
+  // ── PFU ──
+  const pfuDefs = [
+    ['div',   'div_brut',   'div_mv',   'psx_div'],
+    ['int',   'int_brut',   'int_mv',   'psx_int'],
+    ['autre', 'autre_brut', 'autre_mv', 'psx_autre'],
+  ];
+  let pfu_b=0, pfu_ir_t=0, pfu_ps_t=0;
+  pfuDefs.forEach(([p,bI,mI,psI]) => {
+    const base = Math.max(0, v(bI) - v(mI));
+    const ir   = base * 0.128;
+    const ps   = cb(psI) ? base * 0.172 : 0;
+    set(`${p}_ir`,  fmt(ir,2));
+    set(`${p}_ps`,  fmt(ps,2));
+    set(`${p}_tot`, fmt(ir+ps,2));
+    set(`${p}_net`, fmt(base-ir-ps,2));
+    pfu_b += v(bI); pfu_ir_t += ir; pfu_ps_t += ps;
+  });
+  const pfu_tot = pfu_ir_t + pfu_ps_t;
+  set('pfu_brut', fmt(pfu_b,2)); set('pfu_ir', fmt(pfu_ir_t,2));
+  set('pfu_ps',   fmt(pfu_ps_t,2)); set('pfu_tot', fmt(pfu_tot,2));
+  set('pfu_net',  fmt(pfu_b - pfu_tot,2));
+  set('sum_pfu',  'Flat Tax 30% — IR+PS : ' + fmt(pfu_tot,2));
+
+  // ── Salaires ──
+  const sal_b_d1 = v('sal_brut_d1'), sal_b_d2 = has_d2 ? v('sal_brut_d2') : 0;
+  const sal_aba_d1 = Math.min(sal_b_d1 * 0.10, aba_sal_val);
+  const sal_aba_d2 = Math.min(sal_b_d2 * 0.10, aba_sal_val);
+  const sal_imp_d1 = Math.max(0, sal_b_d1 - sal_aba_d1);
+  const sal_imp_d2 = Math.max(0, sal_b_d2 - sal_aba_d2);
+  const sal_imp_tot_val = sal_imp_d1 + sal_imp_d2;
+  const sal_ps = cb('psx_sal') ? sal_imp_tot_val * 0.172 : 0;
+  set('sal_aba_d1', fmt(sal_aba_d1,2)); set('sal_imp_d1', fmt(sal_imp_d1,2));
+  set('sal_aba_d2', fmt(sal_aba_d2,2)); set('sal_imp_d2', fmt(sal_imp_d2,2));
+  set('sal_imp_tot', fmt(sal_imp_tot_val,2));
+  set('sal_ps', fmt(sal_ps,2));
+
+  // BSPCE
+  const bspce_b_d1 = v('bspce_brut_d1'), bspce_b_d2 = has_d2 ? v('bspce_brut_d2') : 0;
+  const bspce_aba_d1 = bspce_b_d1 * 0.71, bspce_aba_d2 = bspce_b_d2 * 0.71;
+  const bspce_imp_d1 = Math.max(0, bspce_b_d1 - bspce_aba_d1);
+  const bspce_imp_d2 = Math.max(0, bspce_b_d2 - bspce_aba_d2);
+  const bspce_imp_tot_val = bspce_imp_d1 + bspce_imp_d2;
+  const bspce_ps = cb('psx_bspce') ? bspce_imp_tot_val * 0.172 : 0;
+  set('bspce_aba_d1', fmt(bspce_aba_d1,2)); set('bspce_imp_d1', fmt(bspce_imp_d1,2));
+  set('bspce_aba_d2', fmt(bspce_aba_d2,2)); set('bspce_imp_d2', fmt(bspce_imp_d2,2));
+  set('bspce_imp_tot', fmt(bspce_imp_tot_val,2));
+  set('bspce_ps', fmt(bspce_ps,2));
+
+  const sal_tot_d1_val = sal_imp_d1 + bspce_imp_d1;
+  const sal_tot_d2_val = sal_imp_d2 + bspce_imp_d2;
+  const sal_grand_tot_val = sal_tot_d1_val + sal_tot_d2_val;
+  const sal_ps_tot_val = sal_ps + bspce_ps;
+  set('sal_tot_d1', fmt(sal_tot_d1_val,2));
+  set('sal_tot_d2', fmt(sal_tot_d2_val,2));
+  set('sal_grand_tot', fmt(sal_grand_tot_val,2));
+  set('sal_ps_tot', fmt(sal_ps_tot_val,2));
+  set('sum_sal', 'Imposable : ' + fmt(sal_grand_tot_val,2));
+
+  // ── PENSIONS françaises — taux saisi ──
+  const pen_d1 = v('pen_brut_d1'), pen_d2 = has_d2 ? v('pen_brut_d2') : 0;
+  const pen_brut_foyer = pen_d1 + pen_d2;
+  const pen_aba_calc   = pen_brut_foyer * 0.10;
+  const pen_aba_foyer  = Math.min(Math.max(pen_aba_calc, pen_brut_foyer > 0 ? 442 : 0), aba_pen_val);
+  const pen_imp_foyer_val = Math.max(0, pen_brut_foyer - pen_aba_foyer);
+  const pen_taux_ps_val = v('pen_taux_ps') / 100;
+  const pen_ps_val     = pen_brut_foyer * pen_taux_ps_val;
+  set('pen_total_brut',   fmt(pen_brut_foyer,2));
+  set('pen_aba_foyer',    fmt(pen_aba_foyer,2));
+  set('pen_imp_foyer',    fmt(pen_imp_foyer_val,2));
+  set('pen_ps',           fmt(pen_ps_val,2));
+
+  // Pensions étrangères
+  const pe_d1 = v('pen_etr_brut_d1'), pe_d2 = has_d2 ? v('pen_etr_brut_d2') : 0;
+  const pe_brut_foyer = pe_d1 + pe_d2;
+  const pe_aba_calc   = pe_brut_foyer * 0.10;
+  const pe_aba_foyer  = Math.min(Math.max(pe_aba_calc, pe_brut_foyer > 0 ? 442 : 0), aba_pen_val);
+  const pe_imp_foyer_val = Math.max(0, pe_brut_foyer - pe_aba_foyer);
+  const pe_ps_val     = cb('psx_pen_etr') ? pe_brut_foyer * 0.092 : 0;
+  set('pen_etr_total_brut',   fmt(pe_brut_foyer,2));
+  set('pen_etr_aba_foyer',    fmt(pe_aba_foyer,2));
+  set('pen_etr_imp_foyer',    fmt(pe_imp_foyer_val,2));
+  set('pen_etr_ps',           fmt(pe_ps_val,2));
+
+  const pen_grand_tot_val = pen_imp_foyer_val + pe_imp_foyer_val;
+  const pen_ps_tot_val    = pen_ps_val + pe_ps_val;
+  set('pen_grand_tot', fmt(pen_grand_tot_val,2));
+  set('pen_ps_tot',    fmt(pen_ps_tot_val,2));
+  set('sum_pen',       'Imposable : ' + fmt(pen_grand_tot_val,2));
+
+  const pr = $('pen_recap_txt');
+  if (pr) {
+    pr.textContent = `Total brut : ${fmt(pen_brut_foyer,0)} × 10% = ${fmt(pen_aba_calc,0)} → plafonné à ${fmt(pen_aba_foyer,0)} → imposable : ${fmt(pen_imp_foyer_val,0)} | PS ${(pen_taux_ps_val*100).toFixed(1)}% = ${fmt(pen_ps_val,0)}`;
+  }
+
+  // ── Autres revenus avec abattement ──
+  const abaRevs = [
+    ['microfon',       0.30, 'psx_microfon',       0.172],
+    ['loc',            0.30, 'psx_loc',             0.172],
+    ['microbnc',       0.34, 'psx_microbnc',        0.172],
+    ['microbic_vente', 0.71, 'psx_microbic_vente',  0.172],
+    ['microbic_serv',  0.50, 'psx_microbic_serv',   0.172],
+  ];
+  let aba_imp_tot_val = 0, aba_ps_tot_val = 0;
+  abaRevs.forEach(([p, tx_aba, psId, tx_ps]) => {
+    const b_d1 = v(`${p}_brut_d1`);
+    const b_d2 = has_d2 ? v(`${p}_brut_d2`) : 0;
+    const b    = b_d1 + b_d2;
+    set(`${p}_brut_tot`, fmt(b, 2));
+    const aba = b * tx_aba;
+    const imp = Math.max(0, b - aba);
+    const ps  = cb(psId) ? imp * tx_ps : 0;
+    set(`${p}_aba`, fmt(aba,2));
+    set(`${p}_imp`, fmt(imp,2));
+    set(`${p}_ps`,  fmt(ps,2));
+    aba_imp_tot_val += imp;
+    aba_ps_tot_val  += ps;
+  });
+  set('aba_imp_tot', fmt(aba_imp_tot_val,2));
+  set('aba_ps_tot',  fmt(aba_ps_tot_val,2));
+  set('sum_aba', 'Imposable : ' + fmt(aba_imp_tot_val,2));
+
+  // ── Revenus sans abattement ──
+  const fon_b = v('fon_brut_d1') + (has_d2 ? v('fon_brut_d2') : 0);
+  set('fon_brut_tot', fmt(fon_b, 2));
+  const fon_imp = Math.max(0, fon_b - v('fon_charges'));
+  const fon_ps  = cb('psx_fon') ? fon_imp * 0.172 : 0;
+  set('fon_imp', fmt(fon_imp,2)); set('fon_ps', fmt(fon_ps,2));
+
+  const bnc_b = v('bnc_brut_d1') + (has_d2 ? v('bnc_brut_d2') : 0);
+  set('bnc_brut_tot', fmt(bnc_b, 2));
+  const bnc_imp = Math.max(0, bnc_b - v('bnc_charges'));
+  const bnc_ps  = cb('psx_bnc') ? bnc_imp * 0.172 : 0;
+  set('bnc_imp', fmt(bnc_imp,2)); set('bnc_ps', fmt(bnc_ps,2));
+
+  const bic_b = v('bic_brut_d1') + (has_d2 ? v('bic_brut_d2') : 0);
+  set('bic_brut_tot', fmt(bic_b, 2));
+  const bic_imp = Math.max(0, bic_b - v('bic_charges'));
+  const bic_ps  = cb('psx_bic') ? bic_imp * 0.172 : 0;
+  set('bic_imp', fmt(bic_imp,2)); set('bic_ps', fmt(bic_ps,2));
+
+  const ar_b = v('autre_rev_brut_d1') + (has_d2 ? v('autre_rev_brut_d2') : 0);
+  set('autre_rev_brut_tot', fmt(ar_b, 2));
+  const ar_imp = Math.max(0, ar_b);
+  const ar_ps  = cb('psx_autre_rev') ? ar_imp * 0.172 : 0;
+  set('autre_rev_imp', fmt(ar_imp,2)); set('autre_rev_ps', fmt(ar_ps,2));
+
+  const reel_imp_tot_val = fon_imp + bnc_imp + bic_imp + ar_imp;
+  const reel_ps_tot_val  = fon_ps + bnc_ps + bic_ps + ar_ps;
+  set('reel_imp_tot', fmt(reel_imp_tot_val,2));
+  set('reel_ps_tot',  fmt(reel_ps_tot_val,2));
+  set('sum_reel', 'Imposable : ' + fmt(reel_imp_tot_val,2));
+
+  // ── PV ──
+  const pv_net = getPVNet();
+  const pv_ps  = getPVPS();
+
+  // ── CSG déductible ──
+  const csg_ded_montant_val = v('csg_ded_montant');
+  set('csg_ded_display', fmt(csg_ded_montant_val, 2));
+  set('s_csg_ded', '− ' + fmt(csg_ded_montant_val, 2));
+
+  // ── Barème total ──
+  const total_bar_brut = sal_grand_tot_val + pen_grand_tot_val + aba_imp_tot_val + reel_imp_tot_val + pv_net;
+  const total_bar = Math.max(0, total_bar_brut - csg_ded_montant_val);
+  const rfr = total_bar_brut + pfu_b;
+
+  const nb = Math.max(1, v('nb_parts'));
+  const couple = nb >= 2;
+  const quotient = total_bar / nb;
+  set('res_rfr',      fmt(rfr,2));
+  set('res_quotient', fmt(quotient,2));
+  set('res_parts_label', 'pour ' + nb + ' part' + (nb>1?'s':''));
+
+  const imp_pp  = impot(quotient);
+  const imp_foy = imp_pp * nb;
+
+  // Décote
+  const dec_cel_seuil = v('dec_cel_seuil'), dec_cel_mt = v('dec_cel_mt');
+  const dec_cou_seuil = v('dec_cou_seuil'), dec_cou_mt = v('dec_cou_mt');
+  let decote = 0;
+  if (couple) decote = imp_foy > dec_cou_seuil ? 0 : Math.max(0, dec_cou_mt - imp_foy * 0.4525);
+  else        decote = imp_foy > dec_cel_seuil ? 0 : Math.max(0, dec_cel_mt - imp_foy * 0.4525);
+
+  // Réductions (hors dons)
+  const pas      = v('pas');
+  const red_tot_hors_dons = v('red_scola') + v('red_pens');
+  const credits  = v('credit');
+  const retenues = v('ras') + v('acomptes') + v('avances');
+  const ps_payes = v('ps_payes');
+
+  // Réduction dons (depuis onglet dons)
+  const red_dons_val = _dons_red_totale;
+  set('sum_red', 'PAS + déductions : ' + fmt(pas + red_tot_hors_dons + red_dons_val + credits,2));
+
+  // RNI pour plafond dons
+  _rni_for_dons = total_bar;
+  // Recalcul silencieux des dons si RNI a changé
+  const d66_total_cur = v('don66_fondations') + v('don66_partis') + v('don66_cultuels') + v('don66_nature') + v('don66_autres')
+                      + Math.max(0, (v('don75_restoscœur') + v('don75_secourspop') + v('don75_croixrouge') + v('don75_autres')) - 1000);
+  const plaf66_cur = total_bar * 0.20;
+  if ($('dons_plafond_20p')) {
+    $('dons_plafond_20p').textContent = total_bar > 0 ? fmt(plaf66_cur, 0) : '— (calculé auto)';
+  }
+
+  const imp_net = Math.max(0, imp_foy - decote - red_tot_hors_dons - red_dons_val - pas);
+
+  set('s_impot_foyer', fmt(imp_foy,2));
+  set('s_decote',      fmt(decote,2));
+  set('s_red_tot',     fmt(red_tot_hors_dons,2));
+  set('s_red_dons',    fmt(red_dons_val,2));
+  set('s_pas',         fmt(pas,2));
+  set('s_impot_net',   fmt(imp_net,2), 's-green');
+  set('s_ir_pfu',      fmt(pfu_ir_t,2));
+
+  // ── PS ──
+  const ps_fon_reel = fon_ps + bnc_ps + bic_ps + ar_ps + aba_ps_tot_val + sal_ps_tot_val;
+  set('s_ps_pen',  fmt(pen_ps_val,2));
+  set('s_ps_etr',  fmt(pe_ps_val,2));
+  set('s_ps_fon',  fmt(ps_fon_reel,2));
+  set('s_ps_pfu',  fmt(pfu_ps_t,2));
+  set('s_ps_pv',   fmt(pv_ps,2));
+
+  // ── CEHR ──
+  const cehr = calcCEHR(rfr, couple);
+  set('s_cehr', fmt(cehr,2));
+
+  // ── CDHR ──
+  const rfrr = v('rfr_ret');
+  const pac  = Math.max(0, Math.round(v('cdhr_pac')));
+  set('sum_cdhr', 'Art. 224 CGI · RFRR : ' + fmt(rfrr,2));
+  const ir_cehr_ref = imp_net + pfu_ir_t + cehr;
+  const cdhr = calcCDHR(rfrr, ir_cehr_ref, couple, pac);
+  set('cdhr_brut', fmt(cdhr.brut,2));
+  set('cdhr_net',  fmt(cdhr.net,2));
+  set('s_cdhr',    fmt(cdhr.net,2));
+
+  set('s_credits',  fmt(credits,2));
+  set('s_ps_payes', fmt(ps_payes,2));
+  set('s_ret',      fmt(retenues,2));
+
+  const ps_total = pen_ps_val + pe_ps_val + ps_fon_reel + pfu_ps_t + pv_ps;
+  const avance_60_val = v('avance_60');
+  set('s_avance60', fmt(avance_60_val, 2));
+
+  const final_val = imp_net + pfu_ir_t + cehr + cdhr.net + ps_total - credits - retenues - ps_payes + avance_60_val;
+  set('res_final', fmt(final_val,2), final_val < 0 ? 'neg' : '');
+  set('s_final',   fmt(final_val,2));
+  const sf = $('s_final');
+  if(sf) { if(final_val < 0) sf.classList.add('s-red'); else sf.classList.remove('s-red'); }
+
+  // ── Sticky bar ──
+  set('st_rfr',   fmt(rfr,2));
+  set('st_ir',    fmt(imp_net,2));
+  set('st_pfu',   fmt(pfu_ir_t,2));
+  set('st_cehr',  fmt(cehr,2));
+  set('st_cdhr',  fmt(cdhr.net,2));
+  set('st_ps',    fmt(ps_total,2));
+  set('st_dons',  fmt(red_dons_val,2));
+  set('st_total', fmt(final_val,2));
+
+  updatePVTotals();
+}
+
+// ════════ PV ════════
+let pvRows = [], pvId = 0;
+
+function addPV() {
+  pvRows.push({ id: pvId++, devise:'EUR', label:'', da:'', pu_a:0, qte:0, fr_a:0, fx_a:1, dc:'', pu_c:0, fr_c:0, fx_c:1, renf:false, psx:true });
+  renderPV();
+}
+
+function renderPV() {
+  const container = $('pv-cards');
+  container.innerHTML = '';
+  pvRows.forEach((r, idx) => {
+    const card = document.createElement('div');
+    card.className = 'pv-card';
+    card.innerHTML = `
+      <div class="pv-card-header">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="pv-card-num">CESSION #${idx+1}</span>
+          <input type="text" value="${r.label||''}" placeholder="Libellé (ex : Apple Inc.)"
+            oninput="pr(${r.id},'label',this.value)"
+            style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;font-family:var(--serif);font-size:15px;padding:3px 10px;border-radius:3px;width:260px">
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <span class="pv-card-pvmv" id="hpvmv_${r.id}">—</span>
+          <button class="btn-ghost" onclick="rmPV(${r.id})" style="color:rgba(255,255,255,0.5);border-color:rgba(255,255,255,0.2);padding:3px 10px">✕ Supprimer</button>
+        </div>
+      </div>
+      <div class="pv-card-body">
+        <div class="pv-section">
+          <div class="pv-section-title" style="color:#0a5c38">Acquisition</div>
+          <div class="pv-field"><label>Devise</label><input type="text" value="${r.devise}" oninput="pr(${r.id},'devise',this.value)" style="max-width:80px"></div>
+          <div class="pv-field"><label>Date d'acquisition</label><input type="date" value="${r.da}" oninput="pr(${r.id},'da',this.value)"></div>
+          <div class="pv-field"><label>Prix unitaire d'achat</label><div class="pv-field-row"><input type="number" value="${r.pu_a||''}" placeholder="0" oninput="pr(${r.id},'pu_a',+this.value)"><span class="unit">${r.devise}</span></div></div>
+          <div class="pv-field"><label>Quantité</label><input type="number" value="${r.qte||''}" placeholder="0" oninput="pr(${r.id},'qte',+this.value)"></div>
+          <div class="pv-field"><label>Frais d'acquisition</label><div class="pv-field-row"><input type="number" value="${r.fr_a||''}" placeholder="0" oninput="pr(${r.id},'fr_a',+this.value)"><span class="unit">${r.devise}</span></div></div>
+          <div class="pv-field"><label>Taux de change (FX → €)</label><input type="number" value="${r.fx_a||1}" step="0.0001" oninput="pr(${r.id},'fx_a',+this.value)"></div>
+          <div class="pv-field"><label>Prix de revient net (€)</label><div class="calc-val" id="pn_a_${r.id}">—</div></div>
+        </div>
+        <div class="pv-section">
+          <div class="pv-section-title" style="color:#1a3a5c">Cession</div>
+          <div class="pv-field"><label>Date de cession</label><input type="date" value="${r.dc}" oninput="pr(${r.id},'dc',this.value)"></div>
+          <div class="pv-field"><label>Prix unitaire de cession</label><div class="pv-field-row"><input type="number" value="${r.pu_c||''}" placeholder="0" oninput="pr(${r.id},'pu_c',+this.value)"><span class="unit">${r.devise}</span></div></div>
+          <div class="pv-field"><label>Quantité (= acquisition)</label><div class="calc-val" style="color:var(--muted);font-size:12px;padding:7px 0">${r.qte||'—'}</div></div>
+          <div class="pv-field"><label>Frais de cession</label><div class="pv-field-row"><input type="number" value="${r.fr_c||''}" placeholder="0" oninput="pr(${r.id},'fr_c',+this.value)"><span class="unit">${r.devise}</span></div></div>
+          <div class="pv-field"><label>Taux de change (FX → €)</label><input type="number" value="${r.fx_c||1}" step="0.0001" oninput="pr(${r.id},'fx_c',+this.value)"></div>
+          <div class="pv-field"><label>Produit de cession net (€)</label><div class="calc-val" id="pn_c_${r.id}">—</div></div>
+        </div>
+        <div class="pv-section">
+          <div class="pv-section-title" style="color:#7a4500">PV / MV &amp; fiscalité</div>
+          <div class="pv-field"><label>PV / MV brute</label><div class="calc-val" id="hpvmv2_${r.id}" style="font-size:15px">—</div></div>
+          <div class="pv-field"><label>Durée de détention</label><div class="calc-val" id="dur_${r.id}" style="color:var(--muted)">—</div></div>
+          <div class="pv-field">
+            <label>Abattement renforcé ?</label>
+            <div style="display:flex;align-items:center;gap:8px;padding:4px 0">
+              <input type="checkbox" ${r.renf?'checked':''} id="renf_${r.id}" onchange="pr(${r.id},'renf',this.checked)">
+              <label for="renf_${r.id}" style="font-size:12px;color:var(--text);text-transform:none;letter-spacing:0;cursor:pointer">Oui (BSPCE, PME &lt;10 ans…)</label>
+            </div>
+          </div>
+          <div class="pv-field"><label>Taux d'abattement (durée)</label><div class="calc-val" id="txab_${r.id}" style="color:var(--muted)">—</div></div>
+          <div class="pv-field"><label>Abattement durée (déduit de l'IR)</label><div class="calc-val" id="mtab_${r.id}" style="color:var(--muted)">—</div></div>
+          <div class="pv-field" style="border-top:1px solid var(--border);padding-top:10px;margin-top:4px"><label style="font-weight:600;color:var(--forest)">PV nette → IR barème</label><div class="calc-val" id="pvn_${r.id}" style="font-size:16px">—</div></div>
+          <div class="pv-field">
+            <label>PS (17,2% sur PV brute) — PSx</label>
+            <div style="display:flex;align-items:center;gap:8px;padding:4px 0">
+              <input type="checkbox" ${r.psx?'checked':''} id="psx_pv_${r.id}" onchange="pr(${r.id},'psx',this.checked)">
+              <label for="psx_pv_${r.id}" style="font-size:12px;color:var(--text);text-transform:none;letter-spacing:0;cursor:pointer">Soumis aux PS — décocher si convention fiscale</label>
+            </div>
+          </div>
+          <div class="pv-field"><label>PS dû (17,2%)</label><div class="calc-val" id="pvps_${r.id}" style="color:var(--muted)">—</div></div>
+        </div>
+      </div>`;
+    container.appendChild(card);
+  });
+  $('pv-totals-bar').style.display = pvRows.length ? 'flex' : 'none';
+  updatePVCalc();
+}
+
+function pr(id, k, val) {
+  const r = pvRows.find(x=>x.id===id); if (!r) return;
+  r[k] = val;
+  if (k==='qte' || k==='devise') renderPV();
+  else updatePVCalc();
+}
+function rmPV(id) { pvRows = pvRows.filter(r=>r.id!==id); renderPV(); calc(); }
+
+function dy(d1, d2) {
+  if(!d1||!d2) return null;
+  const a=new Date(d1), b=new Date(d2);
+  if(isNaN(a)||isNaN(b)) return null;
+  let y = b.getFullYear()-a.getFullYear();
+  if(b.getMonth()<a.getMonth() || (b.getMonth()===a.getMonth()&&b.getDate()<a.getDate())) y--;
+  return Math.max(0,y);
+}
+function abTx(y, r) {
+  if(y===null) return 0;
+  return r ? (y>=8?.85 : y>=4?.65 : y>=2?.5 : 0) : (y>8?.65 : y>2?.5 : 0);
+}
+function pvCalc(r) {
+  const ba=r.pu_a*r.qte, na=(ba+r.fr_a)/(r.fx_a||1);
+  const bc=r.pu_c*r.qte, nc=(bc-r.fr_c)/(r.fx_c||1);
+  const pvmv=nc-na, y=dy(r.da,r.dc), tx=abTx(y,r.renf);
+  const mt=pvmv>0?pvmv*tx:0, net=pvmv-mt;
+  // PS calculé sur la PV brute (avant abattement durée) conformément aux règles fiscales
+  const ps=r.psx ? Math.max(0,pvmv)*0.172 : 0;
+  return {ba,na,bc,nc,pvmv,y,tx,mt,net,ps};
+}
+function updatePVCalc() {
+  pvRows.forEach(r => {
+    const c=pvCalc(r), id=r.id;
+    const n=(i,val,neg=false)=>{const e=$(i);if(!e)return;e.textContent=fmt(val,2);e.className='calc-val'+(neg&&val<0?' neg':'');};
+    n(`pn_a_${id}`,c.na); n(`pn_c_${id}`,c.nc);
+    const eh=$(`hpvmv_${id}`);
+    if(eh){eh.textContent=fmt(c.pvmv,2); eh.className='pv-card-pvmv '+(c.pvmv>=0?'pos':'neg');}
+    const eh2=$(`hpvmv2_${id}`);
+    if(eh2){eh2.textContent=fmt(c.pvmv,2); eh2.className='calc-val'+(c.pvmv<0?' neg':'');}
+    const ed=$(`dur_${id}`); if(ed){ed.className='calc-val';ed.textContent=c.y!==null?c.y+' an'+(c.y>1?'s':''):'—';}
+    const et=$(`txab_${id}`); if(et){et.className='calc-val';et.textContent=(c.tx*100).toFixed(0)+'%';}
+    n(`mtab_${id}`,c.mt); n(`pvn_${id}`,c.net,true); n(`pvps_${id}`,c.ps);
+  });
+  updatePVTotals();
+  calc();
+}
+function getPVNet() {
+  // PV nette totale après imputation MV reportables
+  const tot_net = pvRows.reduce((s,r)=>s+pvCalc(r).net, 0);
+  const mv_rep = v('mv_report');
+  return Math.max(0, tot_net - mv_rep);
+}
+function getPVPS()    { return pvRows.reduce((s,r)=>s+pvCalc(r).ps,  0); }
+function updatePVTotals() {
+  const tp=pvRows.reduce((s,r)=>s+pvCalc(r).pvmv,0);
+  const tn_raw=pvRows.reduce((s,r)=>s+pvCalc(r).net, 0);
+  const mv_rep = v('mv_report');
+  const tn = Math.max(0, tn_raw - mv_rep);
+  const mv_res = Math.max(0, mv_rep - tn_raw);
+  const tps=pvRows.reduce((s,r)=>s+pvCalc(r).ps,  0);
+
+  const e1=$('pv_tot_pvmv'), e2=$('pv_tot_net'), e3=$('pv_tot_ps'), e4=$('mv_residuelle'), e5=$('pv_tot_mv_report');
+  if(e1){e1.textContent=fmt(tp,2); e1.className='val'+(tp<0?' neg':'');}
+  if(e2){e2.textContent=fmt(tn,2); e2.className='val gold'+(tn<0?' neg':'');}
+  if(e3) e3.textContent=fmt(tps,2);
+  if(e4){e4.textContent=fmt(mv_res,2); e4.className='calc-val'+(mv_res>0?' calc-neg':'');}
+  if(e5) e5.textContent = mv_rep > 0 ? fmt(Math.min(mv_rep, Math.max(0,tn_raw)),2) : '0 €';
+
+  // IR estimé sur PV nette
+  const ir_est = impot(tn / Math.max(1, v('nb_parts'))) * Math.max(1, v('nb_parts'));
+  const e6=$('pv_tot_ir_estime');
+  if(e6) e6.textContent = fmt(ir_est, 2);
+}
+
+// ── Lock ──
+let donneesLocked = false;
+function toggleLock() {
+  if (!donneesLocked) {
+    const pwd = prompt('Définissez un mot de passe pour verrouiller les Données :');
+    if (!pwd) return;
+    sessionStorage.setItem('donnees_pwd', pwd);
+    donneesLocked = true;
+  } else {
+    const pwd = prompt('Mot de passe pour déverrouiller :');
+    if (pwd !== sessionStorage.getItem('donnees_pwd')) { alert('Mot de passe incorrect.'); return; }
+    donneesLocked = false;
+  }
+  applyLock();
+}
+function applyLock() {
+  const panel = $('panel-donnees'), btn = $('lock-btn'), status = $('lock-status');
+  if (donneesLocked) {
+    panel.classList.add('locked');
+    if(btn)   { btn.textContent='🔓 Déverrouiller'; btn.className='btn-lock lock-off'; }
+    if(status){ status.textContent='🔒 Verrouillé'; status.className='lock-status locked'; }
+  } else {
+    panel.classList.remove('locked');
+    if(btn)   { btn.textContent='🔒 Verrouiller'; btn.className='btn-lock lock-on'; }
+    if(status){ status.textContent='✅ Modifiable'; status.className='lock-status unlocked'; }
+  }
+}
+
+// ── Tabs ──
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  const tab = document.querySelector(`.tab[onclick="switchTab('${t}')"]`);
+  if(tab) tab.classList.add('active');
+  const panel = $(`panel-${t}`);
+  if(panel) panel.classList.add('active');
+}
+
+// ── IFI ──
+let ifiBiens = [], ifiId = 0;
+function addBien() {
+  ifiBiens.push({ id: ifiId++, label: '', rp: false, societe: false, valeur: 0, dette: 0 });
+  renderBiens();
+}
+function renderBiens() {
+  const tbody = $('ifi-biens-body');
+  tbody.innerHTML = '';
+  ifiBiens.forEach((b) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" value="${b.label}" placeholder="Ex : 10 rue de Paris" oninput="pb(${b.id},'label',this.value)" style="min-width:150px"></td>
+      <td class="psx-cell">
+        <input type="checkbox" ${b.rp?'checked':''} id="ifi_rp_${b.id}" onchange="pb(${b.id},'rp',this.checked)">
+        <label for="ifi_rp_${b.id}" style="font-size:10px;cursor:pointer"> RP</label>
+      </td>
+      <td class="psx-cell">
+        <input type="checkbox" ${b.societe?'checked':''} id="ifi_soc_${b.id}" onchange="pb(${b.id},'societe',this.checked)">
+        <label for="ifi_soc_${b.id}" style="font-size:10px;cursor:pointer"> Oui</label>
+      </td>
+      <td><input type="number" value="${b.valeur||''}" placeholder="0" oninput="pb(${b.id},'valeur',+this.value)" style="max-width:130px;text-align:right"></td>
+      <td class="calc-val" id="ifi_val_${b.id}">—</td>
+      <td><input type="number" value="${b.dette||''}" placeholder="0" oninput="pb(${b.id},'dette',+this.value)" style="max-width:130px;text-align:right"></td>
+      <td class="calc-val" id="ifi_net_${b.id}">—</td>
+      <td><button class="btn-ghost" onclick="rmBien(${b.id})" style="padding:2px 8px;font-size:11px">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  calcIFI();
+}
+function pb(id, k, val) {
+  const b = ifiBiens.find(x => x.id === id); if (!b) return;
+  b[k] = val;
+  calcIFI();
+  if (k === 'rp' || k === 'societe') renderBiens();
+}
+function rmBien(id) { ifiBiens = ifiBiens.filter(b => b.id !== id); renderBiens(); }
+
+function calcIFI() {
+  const SEUIL_IFI = 1300000, SEUIL_DECOTE_MAX = 1400000;
+  let tot_venale=0, tot_ifi_val=0, tot_dette=0;
+  ifiBiens.forEach(b => {
+    const val_ifi = b.rp ? b.valeur * 0.70 : b.valeur;
+    const val_nette = Math.max(0, val_ifi - b.dette);
+    const e_val=$(`ifi_val_${b.id}`), e_net=$(`ifi_net_${b.id}`);
+    if(e_val) e_val.textContent = fmt(val_ifi,2);
+    if(e_net) e_net.textContent = fmt(val_nette,2);
+    tot_venale += b.valeur; tot_ifi_val += val_ifi; tot_dette += b.dette;
+  });
+  const tot_net_biens = Math.max(0, tot_ifi_val - tot_dette);
+  set('ifi_tot_venale', fmt(tot_venale,2)); set('ifi_tot_ifi', fmt(tot_ifi_val,2));
+  set('ifi_tot_dette',  fmt(tot_dette,2));  set('ifi_tot_net',  fmt(tot_net_biens,2));
+
+  const taxes=v('ifi_taxes'), interets=v('ifi_interets'), depenses=v('ifi_depenses');
+  const dons_vers=v('ifi_dons_verses'), red_dons=dons_vers*0.75;
+  const tot_ded=taxes+interets+depenses;
+  set('ifi_tot_deductions', fmt(tot_ded,2)); set('ifi_red_dons', fmt(red_dons,2));
+
+  const pat_brut = tot_ifi_val;
+  const pat_net_avant = Math.max(0, pat_brut - tot_dette - tot_ded);
+  set('ifi_s_brut',      fmt(pat_brut,2));
+  set('ifi_s_deductions',fmt(tot_dette+tot_ded,2));
+  set('ifi_s_net_avant', fmt(pat_net_avant,2));
+  set('ifi_res_net',     fmt(pat_net_avant,2));
+
+  const bareme=[
+    {de:0,a:800000,tx:0},{de:800001,a:1300000,tx:0.005},{de:1300001,a:2570000,tx:0.007},
+    {de:2570001,a:5000000,tx:0.010},{de:5000001,a:10000000,tx:0.0125},{de:10000001,a:Infinity,tx:0.015},
+  ];
+  const ids=['ifi_t1','ifi_t2','ifi_t3','ifi_t4','ifi_t5','ifi_t6'];
+  let ifi_theorique=0;
+  bareme.forEach((t,i)=>{
+    const montant=Math.max(0,Math.min(pat_net_avant,t.a)-t.de)*t.tx;
+    ifi_theorique+=montant; set(ids[i],fmt(montant,2));
+  });
+  const pat_net_apres=Math.max(0,pat_net_avant-ifi_theorique);
+  set('ifi_s_theorique', fmt(ifi_theorique,2)); set('ifi_s_net_apres',fmt(pat_net_apres,2));
+
+  let decote=0;
+  if(pat_brut>=SEUIL_IFI && pat_brut<SEUIL_DECOTE_MAX){
+    decote=Math.max(0,17500-0.0125*pat_net_avant);
+    set('ifi_s_decote',fmt(decote,2));
+  } else { set('ifi_s_decote', pat_brut<SEUIL_IFI?'—':'0 €'); }
+
+  const ifi_final=Math.max(0,ifi_theorique-decote-red_dons);
+  const ifi_du=pat_net_avant>=SEUIL_IFI?ifi_final:0;
+  set('ifi_s_red_dons',fmt(red_dons,2)); set('ifi_s_final',fmt(ifi_du,2)); set('ifi_res_final',fmt(ifi_du,2));
+
+  const sub=$('ifi_res_sub');
+  if(sub){
+    if(pat_net_avant<SEUIL_IFI){sub.textContent='En-dessous du seuil de 1 300 000 €';sub.style.color='var(--muted)';}
+    else{sub.textContent='Patrimoine net : '+fmt(pat_net_avant,2);sub.style.color='var(--forest)';}
+  }
+}
+
+function calcCSGHelper() {
+  const base = parseFloat(document.getElementById('csg_base_calc')?.value) || 0;
+  const result = base * 0.068;
+  const e = document.getElementById('csg_calc_result');
+  if(e) e.textContent = fmt(result, 2);
+}
+
+// Init
+document.querySelectorAll('.d2-col, .d2-hidden').forEach(el => { el.style.display = 'none'; });
+calcIFI();
+calcMajoration();
+calcDons();
+calc();
+</script>
+</body>
+</html>

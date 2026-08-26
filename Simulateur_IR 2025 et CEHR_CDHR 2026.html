@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur IR · CEHR · CDHR — Cession de titres</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #EDF1EF;
+    --card: #FFFFFF;
+    --hairline: #D7DDD4;
+    --ink: #1C2B39;
+    --ink-soft: #56655F;
+    --wine: #7A2036;
+    --wine-soft: #F4E7E9;
+    --brass: #A9822F;
+    --brass-soft: #F4EFDF;
+    --good: #3F6B4F;
+    --good-soft: #E7EFE7;
+    --radius: 10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    padding: 40px 24px 80px;
+  }
+  .wrap{ max-width: 1180px; margin: 0 auto; }
+
+  /* ---------- Header ---------- */
+  header{ margin-bottom: 36px; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--wine);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(28px, 4vw, 42px);
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  .subhead{
+    color: var(--ink-soft);
+    font-size: 15px;
+    max-width: 640px;
+  }
+
+  /* ---------- Cards ---------- */
+  .card{
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .card h2{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 19px;
+    margin: 0 0 4px;
+  }
+  .card .desc{
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    margin: 0 0 22px;
+  }
+
+  /* ---------- Form ---------- */
+  .form-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px 24px;
+  }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field.span2{ grid-column: span 2; }
+  .field.span4{ grid-column: span 4; }
+  label{
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .hint{ font-size: 11.5px; color: var(--ink-soft); font-weight: 400; }
+  input[type=number], select{
+    font-family: 'IBM Plex Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 14px;
+    padding: 9px 10px;
+    border: 1px solid var(--hairline);
+    border-radius: 7px;
+    background: #FCFCFB;
+    color: var(--ink);
+    width: 100%;
+  }
+  input[type=number]:focus, select:focus{
+    outline: 2px solid var(--wine);
+    outline-offset: 1px;
+    border-color: var(--wine);
+  }
+  .seg{
+    display:flex;
+    border: 1px solid var(--hairline);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  .seg button{
+    flex:1;
+    padding: 9px 10px;
+    border: none;
+    background: #FCFCFB;
+    font-family: 'Inter';
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-right: 1px solid var(--hairline);
+  }
+  .seg button:last-child{ border-right:none; }
+  .seg button.active{ background: var(--wine); color: #fff; }
+
+  .slider-row{ display:flex; align-items:center; gap:14px; }
+  input[type=range]{ flex:1; accent-color: var(--wine); }
+  .slider-val{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size: 14px;
+    min-width: 46px;
+    text-align:right;
+  }
+
+  /* ---------- Gauges (signature element) ---------- */
+  .gauges{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 8px;
+  }
+  .gauge-card{
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 18px 20px 16px;
+    background: #FCFCFB;
+    position: relative;
+  }
+  .gauge-card.best{
+    border-color: var(--brass);
+    background: var(--brass-soft);
+  }
+  .gauge-badge{
+    position:absolute; top:14px; right:16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brass);
+    font-weight: 700;
+  }
+  .gauge-title{
+    font-family:'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .gauge-sub{ font-size: 11.5px; color: var(--ink-soft); margin-bottom: 16px; }
+  .gauge-total{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--wine);
+    letter-spacing: -0.01em;
+  }
+  .gauge-total small{ font-size: 13px; font-weight: 500; color: var(--ink-soft); }
+  .gauge-bar-track{
+    height: 8px;
+    background: #E4E9E2;
+    border-radius: 4px;
+    margin: 14px 0 6px;
+    position: relative;
+    overflow: visible;
+  }
+  .gauge-bar-fill{
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--wine), #9C3A52);
+  }
+  .gauge-floor-mark{
+    position:absolute;
+    top:-3px;
+    width: 2px;
+    height: 14px;
+    background: var(--ink);
+    opacity: 0.35;
+  }
+  .gauge-floor-label{
+    font-size: 10px;
+    color: var(--ink-soft);
+    display:flex; justify-content: space-between;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .gauge-stack{
+    display:flex;
+    height: 22px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 14px;
+  }
+  .gauge-stack div{ height: 100%; }
+  .legend{
+    display:flex; flex-wrap:wrap; gap: 10px 16px; margin-top: 10px; font-size: 11px; color: var(--ink-soft);
+  }
+  .legend span{ display:inline-flex; align-items:center; gap:5px; }
+  .legend i{ width:9px; height:9px; border-radius:2px; display:inline-block; }
+
+  /* ---------- Table ---------- */
+  table{ width:100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td{
+    text-align: right;
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--hairline);
+    font-family: 'IBM Plex Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child{
+    text-align: left;
+    font-family: 'Inter';
+    font-weight: 500;
+    color: var(--ink);
+    white-space: normal;
+  }
+  thead th{
+    font-family:'Inter'; font-weight:700; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    border-bottom: 2px solid var(--ink);
+  }
+  tr.total td{ font-weight: 700; border-top: 2px solid var(--ink); border-bottom: none; font-size: 14.5px; }
+  tr.total td:first-child{ font-family:'Fraunces', serif; font-size: 15px; }
+  tr.section td{ padding-top: 18px; font-weight:700; color: var(--wine); border-bottom: 1px solid var(--hairline); font-family:'Inter'; font-size:12px; text-transform:uppercase; letter-spacing:.04em;}
+  tr.sub td{ color: var(--ink-soft); font-size: 12.5px; }
+  tr.sub td:first-child{ padding-left: 18px; }
+  tr.rate td{ font-style: italic; color: var(--ink-soft); }
+
+  details{
+    margin-top: 18px;
+    border-top: 1px dashed var(--hairline);
+    padding-top: 12px;
+  }
+  summary{
+    cursor:pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--wine);
+  }
+  .note{
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--wine-soft);
+    border-radius: 7px;
+    border-left: 3px solid var(--wine);
+  }
+  footer{
+    text-align:center;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 36px;
+  }
+
+  @media (max-width: 860px){
+    .form-grid{ grid-template-columns: repeat(2, 1fr); }
+    .field.span2, .field.span4{ grid-column: span 2; }
+    .gauges{ grid-template-columns: 1fr; }
+    table{ font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Simulateur fiscal — usage interne</div>
+    <h1>IR · CEHR · CDHR sur cession de titres</h1>
+    <p class="subhead">Renseignez la situation du foyer et les données de la cession ci-dessous. Les trois hypothèses (flat tax, barème, barème + quotient) et l'impact d'un apport-cession 150-0 B ter se recalculent automatiquement.</p>
+  </header>
+
+  <!-- ============ INPUT FORM ============ -->
+  <section class="card">
+    <h2>1. Foyer fiscal &amp; revenus</h2>
+    <p class="desc">Montants nets imposables, avant abattement pour frais professionnels.</p>
+    <div class="form-grid">
+
+      <div class="field span2">
+        <label>Situation familiale</label>
+        <div class="seg" id="seg-situation">
+          <button data-val="couple" class="active">Couple (imposition commune)</button>
+          <button data-val="seul">Célibataire / veuf / divorcé</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="enfants">Enfants à charge</label>
+        <input type="number" id="enfants" value="2" min="0" step="1">
+      </div>
+
+      <div class="field">
+        <label for="enfantsGarde">Dont &lt; 6 ans (frais de garde)</label>
+        <input type="number" id="enfantsGarde" value="2" min="0" step="1">
+      </div>
+
+      <div class="field">
+        <label for="salaire1">Salaire net imposable — vous</label>
+        <input type="number" id="salaire1" value="128000" step="100">
+      </div>
+
+      <div class="field" id="field-salaire2">
+        <label for="salaire2">Salaire net imposable — conjoint</label>
+        <input type="number" id="salaire2" value="89323" step="100">
+      </div>
+
+      <div class="field">
+        <label for="fraisGarde">Frais de garde annuels (€)</label>
+        <input type="number" id="fraisGarde" value="8500" step="100">
+      </div>
+
+      <div class="field">
+        <label for="rfrN1">RFR N-1 (€)</label>
+        <input type="number" id="rfrN1" value="236756" step="100">
+        <span class="hint">Pour le test de lissage CEHR</span>
+      </div>
+
+      <div class="field">
+        <label for="rfrN2">RFR N-2 (€)</label>
+        <input type="number" id="rfrN2" value="225982" step="100">
+      </div>
+
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2. Cession de titres</h2>
+    <p class="desc">Part cédée immédiatement, part éventuellement apportée à une holding sous 150-0 B ter (report d'imposition).</p>
+    <div class="form-grid">
+
+      <div class="field">
+        <label for="pvBrute">Plus-value brute totale (€)</label>
+        <input type="number" id="pvBrute" value="1999449" step="1000">
+      </div>
+
+      <div class="field">
+        <label for="abattement">Abattement durée de détention (%)</label>
+        <input type="number" id="abattement" value="85" min="0" max="100" step="1">
+      </div>
+
+      <div class="field span2">
+        <label>Part cédée immédiatement — reste en apport-cession 150-0 B ter</label>
+        <div class="slider-row">
+          <input type="range" id="partCedee" min="0" max="100" value="100" step="1">
+          <span class="slider-val" id="partCedeeVal">100 %</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="tauxPS">Taux des prélèvements sociaux (%)</label>
+        <input type="number" id="tauxPS" value="18.6" step="0.1">
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ RESULTS: GAUGES ============ -->
+  <section class="card">
+    <h2>3. Synthèse comparative</h2>
+    <p class="desc">Taux effectif global (IR + CEHR + CDHR + PS) rapporté au RFR de l'année — la ligne pointillée marque le plancher de 20 % visé par la CDHR.</p>
+    <div class="gauges" id="gauges"></div>
+    <div class="legend">
+      <span><i style="background:#1C2B39"></i>IR net</span>
+      <span><i style="background:#7A2036"></i>CEHR</span>
+      <span><i style="background:#A9822F"></i>CDHR</span>
+      <span><i style="background:#B9C4B6"></i>Prélèvements sociaux</span>
+    </div>
+  </section>
+
+  <!-- ============ RESULTS: TABLE ============ -->
+  <section class="card">
+    <h2>4. Détail du calcul</h2>
+    <p class="desc">Hyp. 1 — flat tax (PFU 12,8 %) · Hyp. 2 — barème progressif · Hyp. 3 — barème + quotient de l'article 163-0-A CGI.</p>
+    <table id="resultTable"></table>
+
+    <details>
+      <summary>Détail CEHR &amp; CDHR (lissage, régime des revenus exceptionnels, décote)</summary>
+      <table id="detailTable" style="margin-top:14px;"></table>
+    </details>
+
+    <div class="note">
+      Simulateur indicatif fondé sur le barème IR 2025 (LFI 2026, +0,9 %), la CEHR (art. 223 sexies CGI) et la CDHR (art. 224 CGI, BOI-IR-CDHR). Plusieurs points restent d'interprétation à cette date (traitement brut/net de la PV dans le ratio CEHR de la CDHR, nombre d'années de lissage CEHR). À faire valider par un professionnel avant toute décision.
+    </div>
+  </section>
+
+  <footer>Simulateur généré à partir de la documentation BOFiP en vigueur — juillet 2026.</footer>
+
+</div>
+
+<script>
+/* ============================================================
+   RÉFÉRENTIEL FISCAL 2025 (LFI 2026)
+   ============================================================ */
+const BAREME = [
+  { upto: 11600,      rate: 0.00 },
+  { upto: 29579,      rate: 0.11 },
+  { upto: 84577,      rate: 0.30 },
+  { upto: 181917,     rate: 0.41 },
+  { upto: Infinity,   rate: 0.45 },
+];
+const PLAFOND_DEMI_PART = 1807;
+const PFU_RATE = 0.128;
+
+function bareme(x){
+  if (x <= 0) return 0;
+  let tax = 0, prevCap = 0;
+  for (const b of BAREME){
+    if (x > b.upto){
+      tax += (b.upto - prevCap) * b.rate;
+      prevCap = b.upto;
+    } else {
+      tax += (x - prevCap) * b.rate;
+      break;
+    }
+  }
+  return tax;
+}
+
+function irAvecQuotientFamilial(revenu, parts, partsRef){
+  if (revenu <= 0) return 0;
+  const taxN = bareme(revenu / parts) * parts;
+  const taxRef = bareme(revenu / partsRef) * partsRef;
+  const avantage = taxRef - taxN;
+  const demiPartsSup = (parts - partsRef) * 2;
+  const plafond = Math.max(0, demiPartsSup) * PLAFOND_DEMI_PART;
+  if (avantage > plafond) return taxRef - plafond;
+  return taxN;
+}
+
+function cehrBareme(rfr, seuils){
+  if (rfr <= seuils[0]) return 0;
+  const t1 = Math.min(rfr, seuils[1]) - seuils[0];
+  const t2 = Math.max(0, rfr - seuils[1]);
+  return t1 * 0.03 + t2 * 0.04;
+}
+
+function fmt(n){
+  return Math.round(n).toLocaleString('fr-FR') + ' €';
+}
+function fmtPct(n){
+  return n.toFixed(2).replace('.', ',') + ' %';
+}
+
+/* ============================================================
+   ÉTAT DE L'INTERFACE
+   ============================================================ */
+let situation = 'couple';
+
+document.querySelectorAll('#seg-situation button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#seg-situation button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    situation = btn.dataset.val;
+    document.getElementById('field-salaire2').style.display = (situation==='couple') ? 'flex' : 'none';
+    compute();
+  });
+});
+
+document.getElementById('partCedee').addEventListener('input', (e)=>{
+  document.getElementById('partCedeeVal').textContent = e.target.value + ' %';
+  compute();
+});
+
+['enfants','enfantsGarde','salaire1','salaire2','fraisGarde','rfrN1','rfrN2',
+ 'pvBrute','abattement','tauxPS'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', compute);
+});
+
+/* ============================================================
+   MOTEUR DE CALCUL
+   ============================================================ */
+function computeHypothese(mode, ctx){
+  // mode: 'pfu' | 'bareme' | 'quotient'
+  const { salairesNets, pvNetteCedee, pvBruteCedee, parts, partsRef,
+          rfrPlein, cehrNonLissee, cehrLissee, credit, majoration,
+          seuilsCDHR, decoteSeuils, rfrRetraiteExc } = ctx;
+
+  let irNet;
+  if (mode === 'pfu'){
+    const irSalaires = irAvecQuotientFamilial(salairesNets, parts, partsRef);
+    const pfu = pvBruteCedee * PFU_RATE;
+    irNet = irSalaires + pfu - credit;
+  } else if (mode === 'bareme'){
+    irNet = irAvecQuotientFamilial(salairesNets + pvNetteCedee, parts, partsRef) - credit;
+  } else {
+    const irOrdinaire = irAvecQuotientFamilial(salairesNets, parts, partsRef);
+    const irOrdPlusQuart = irAvecQuotientFamilial(salairesNets + pvNetteCedee/4, parts, partsRef);
+    const cotisationSuppl = (irOrdPlusQuart - irOrdinaire) * 4;
+    irNet = irOrdinaire + cotisationSuppl - credit;
+  }
+
+  // ---- CDHR sans régime exceptionnel ----
+  const targetSans = rfrPlein * 0.20;
+  const totalRetenuSans = irNet + cehrNonLissee + majoration;
+  const cdhrSans = Math.max(0, targetSans - totalRetenuSans);
+
+  // ---- CDHR avec régime exceptionnel ----
+  const targetBrutExc = rfrRetraiteExc * 0.20;
+  let decoteExc = 0;
+  if (rfrRetraiteExc > decoteSeuils[0] && rfrRetraiteExc <= decoteSeuils[1]){
+    decoteExc = Math.max(0, targetBrutExc - 0.825 * (rfrRetraiteExc - decoteSeuils[0]));
+  }
+  const targetExc = targetBrutExc - decoteExc;
+
+  let irRetenuExc, cehrRetenuExc;
+  const cehr1 = cehrNonLissee;
+  const ratioExcCEHR = ctx.rfrPlein > 0 ? pvBruteCedee / rfrPlein : 0;
+  const cehrExc = (cehr1 * ratioExcCEHR) / 4;
+  const cehrOrd = cehr1 * (1 - ratioExcCEHR);
+  cehrRetenuExc = cehrOrd + cehrExc;
+
+  if (mode === 'pfu'){
+    const irOrdExc = irAvecQuotientFamilial(salairesNets, parts, partsRef);
+    const pfuExc = (pvBruteCedee * PFU_RATE) / 4;
+    irRetenuExc = irOrdExc + pfuExc - credit;
+  } else {
+    const rngi = salairesNets + pvNetteCedee;
+    const ds = irAvecQuotientFamilial(rngi, parts, partsRef);
+    const ratioOrd = rngi > 0 ? salairesNets / rngi : 0;
+    const ratioExc = rngi > 0 ? pvNetteCedee / rngi : 0;
+    const irOrdDS = ds * ratioOrd;
+    const irExcDS = (ds * ratioExc) / 4;
+    irRetenuExc = irOrdDS + irExcDS - credit;
+  }
+
+  const totalRetenuExc = irRetenuExc + cehrRetenuExc + majoration;
+  const cdhrAvec = Math.max(0, targetExc - totalRetenuExc);
+
+  const cdhrRetenue = Math.min(cdhrSans, cdhrAvec);
+
+  return {
+    irNet, cdhrSans, cdhrAvec, cdhrRetenue,
+    irRetenuExc, cehrRetenuExc, decoteExc, targetExc, rfrRetraiteExc
+  };
+}
+
+function compute(){
+  const enfants = parseFloat(document.getElementById('enfants').value) || 0;
+  const enfantsGarde = parseFloat(document.getElementById('enfantsGarde').value) || 0;
+  const salaire1 = parseFloat(document.getElementById('salaire1').value) || 0;
+  const salaire2 = situation==='couple' ? (parseFloat(document.getElementById('salaire2').value) || 0) : 0;
+  const fraisGarde = parseFloat(document.getElementById('fraisGarde').value) || 0;
+  const rfrN1 = parseFloat(document.getElementById('rfrN1').value) || 0;
+  const rfrN2 = parseFloat(document.getElementById('rfrN2').value) || 0;
+  const pvBruteTotale = parseFloat(document.getElementById('pvBrute').value) || 0;
+  const abattementPct = (parseFloat(document.getElementById('abattement').value) || 0) / 100;
+  const partCedeePct = (parseFloat(document.getElementById('partCedee').value) || 0) / 100;
+  const tauxPS = (parseFloat(document.getElementById('tauxPS').value) || 0) / 100;
+
+  // ---- Parts fiscales ----
+  const base = situation === 'couple' ? 2 : 1;
+  const parts = base + Math.min(enfants,2)*0.5 + Math.max(0, enfants-2)*1;
+  const partsRef = base;
+
+  // ---- Salaires nets de 10% (plafond 14 555 €/pers.) ----
+  const abattt10 = (s) => Math.max(s * 0.9, s - 14555);
+  const salairesNets = abattt10(salaire1) + (situation==='couple' ? abattt10(salaire2) : 0);
+
+  // ---- PV ----
+  const pvBruteCedee = pvBruteTotale * partCedeePct;
+  const pvNetteCedee = pvBruteCedee * (1 - abattementPct);
+
+  // ---- RFR plein ----
+  const rfrPlein = salairesNets + pvBruteCedee;
+
+  // ---- Crédit d'impôt garde d'enfants ----
+  const plafondGarde = 3500 * Math.min(enfantsGarde, enfants);
+  const baseGarde = Math.min(fraisGarde, plafondGarde);
+  const credit = baseGarde * 0.5;
+
+  // ---- Seuils CEHR / CDHR ----
+  const seuilsCEHR = situation==='couple' ? [500000, 1000000] : [250000, 500000];
+  const decoteSeuils = situation==='couple' ? [500000, 660000] : [250000, 330000];
+  const majoration = (situation==='couple' ? 12500 : 0) + 1500 * enfants;
+
+  // ---- CEHR non lissée ----
+  const cehrNonLissee = cehrBareme(rfrPlein, seuilsCEHR);
+
+  // ---- CEHR lissée (art. 223 sexies, II) ----
+  const moyenneN1N2 = (rfrN1 + rfrN2) / 2;
+  const eligibleLissage = rfrN1 <= seuilsCEHR[0] && rfrN2 <= seuilsCEHR[0] && rfrPlein >= 1.5 * moyenneN1N2 && moyenneN1N2 > 0;
+  let cehrLissee = cehrNonLissee;
+  if (eligibleLissage){
+    const excedent = rfrPlein - moyenneN1N2;
+    const montantReconstitue = moyenneN1N2 + excedent/2;
+    cehrLissee = cehrBareme(montantReconstitue, seuilsCEHR) * 2;
+  }
+
+  // ---- RFR retraité (régime exceptionnel) ----
+  const rfrRetraiteExc = salairesNets + pvBruteCedee / 4;
+
+  const ctx = {
+    salairesNets, pvNetteCedee, pvBruteCedee, parts, partsRef,
+    rfrPlein, cehrNonLissee, cehrLissee, credit, majoration,
+    seuilsCDHR: seuilsCEHR, decoteSeuils, rfrRetraiteExc
+  };
+
+  const hyp1 = computeHypothese('pfu', ctx);
+  const hyp2 = computeHypothese('bareme', ctx);
+  const hyp3 = computeHypothese('quotient', ctx);
+
+  const ps = pvBruteCedee * tauxPS;
+
+  const totals = [hyp1, hyp2, hyp3].map(h => h.irNet + cehrLissee + h.cdhrRetenue + ps);
+  const rates = totals.map(t => rfrPlein > 0 ? (t / rfrPlein) * 100 : 0);
+
+  render({ hyp1, hyp2, hyp3, ps, cehrLissee, cehrNonLissee, totals, rates, rfrPlein, eligibleLissage, credit, majoration });
+}
+
+/* ============================================================
+   RENDU
+   ============================================================ */
+function render(R){
+  const labels = ['Hyp. 1 — Flat tax', 'Hyp. 2 — Barème', 'Hyp. 3 — Barème + quotient'];
+  const hyps = [R.hyp1, R.hyp2, R.hyp3];
+  const bestIdx = R.totals.indexOf(Math.min(...R.totals));
+
+  // ----- Gauges -----
+  const gaugesEl = document.getElementById('gauges');
+  gaugesEl.innerHTML = hyps.map((h, i) => {
+    const rate = R.rates[i];
+    const scaleMax = 40;
+    const fillPct = Math.min(100, (rate/scaleMax)*100);
+    const floorPct = (20/scaleMax)*100;
+    const total = R.totals[i];
+    const stackTotal = h.irNet + R.cehrLissee + h.cdhrRetenue + R.ps;
+    const seg = (v) => stackTotal>0 ? (v/stackTotal*100) : 0;
+    return `
+      <div class="gauge-card ${i===bestIdx ? 'best' : ''}">
+        ${i===bestIdx ? '<div class="gauge-badge">Plus favorable</div>' : ''}
+        <div class="gauge-title">${labels[i]}</div>
+        <div class="gauge-sub">Taux effectif global sur RFR</div>
+        <div class="gauge-total">${fmt(total)}</div>
+        <div class="gauge-bar-track">
+          <div class="gauge-bar-fill" style="width:${fillPct}%"></div>
+          <div class="gauge-floor-mark" style="left:${floorPct}%"></div>
+        </div>
+        <div class="gauge-floor-label"><span>${fmtPct(rate)}</span><span>plancher 20 %</span></div>
+        <div class="gauge-stack">
+          <div style="width:${seg(h.irNet)}%; background:#1C2B39;"></div>
+          <div style="width:${seg(R.cehrLissee)}%; background:#7A2036;"></div>
+          <div style="width:${seg(h.cdhrRetenue)}%; background:#A9822F;"></div>
+          <div style="width:${seg(R.ps)}%; background:#B9C4B6;"></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // ----- Main table -----
+  const t = document.getElementById('resultTable');
+  t.innerHTML = `
+    <thead><tr><th>Élément</th><th>Hyp. 1 — Flat tax</th><th>Hyp. 2 — Barème</th><th>Hyp. 3 — Barème + quotient</th></tr></thead>
+    <tbody>
+      <tr><td>IR net (après crédit garde d'enfants)</td>${hyps.map(h=>`<td>${fmt(h.irNet)}</td>`).join('')}</tr>
+      <tr><td>CEHR (après lissage, due)</td>${hyps.map(()=>`<td>${fmt(R.cehrLissee)}</td>`).join('')}</tr>
+      <tr><td>CDHR retenue (min. sans/avec régime except.)</td>${hyps.map(h=>`<td>${fmt(h.cdhrRetenue)}</td>`).join('')}</tr>
+      <tr><td>Prélèvements sociaux</td>${hyps.map(()=>`<td>${fmt(R.ps)}</td>`).join('')}</tr>
+      <tr class="total"><td>Total général</td>${R.totals.map(x=>`<td>${fmt(x)}</td>`).join('')}</tr>
+      <tr class="rate"><td>Taux effectif global / RFR</td>${R.rates.map(x=>`<td>${fmtPct(x)}</td>`).join('')}</tr>
+    </tbody>`;
+
+  // ----- Detail table -----
+  const d = document.getElementById('detailTable');
+  d.innerHTML = `
+    <thead><tr><th>Élément</th><th>Hyp. 1</th><th>Hyp. 2</th><th>Hyp. 3</th></tr></thead>
+    <tbody>
+      <tr class="section"><td colspan="4">CEHR</td></tr>
+      <tr class="sub"><td>CEHR non lissée</td>${hyps.map(()=>`<td>${fmt(R.cehrNonLissee)}</td>`).join('')}</tr>
+      <tr class="sub"><td>CEHR lissée (retenue)${R.eligibleLissage ? '' : ' — conditions non remplies'}</td>${hyps.map(()=>`<td>${fmt(R.cehrLissee)}</td>`).join('')}</tr>
+      <tr class="section"><td colspan="4">CDHR</td></tr>
+      <tr class="sub"><td>Sans régime des revenus exceptionnels</td>${hyps.map(h=>`<td>${fmt(h.cdhrSans)}</td>`).join('')}</tr>
+      <tr class="sub"><td>Avec régime des revenus exceptionnels (dont décote éventuelle)</td>${hyps.map(h=>`<td>${fmt(h.cdhrAvec)}</td>`).join('')}</tr>
+      <tr class="sub"><td>— IR retenu (régime exceptionnel)</td>${hyps.map(h=>`<td>${fmt(h.irRetenuExc)}</td>`).join('')}</tr>
+      <tr class="sub"><td>— CEHR retenue (régime exceptionnel)</td>${hyps.map(h=>`<td>${fmt(h.cehrRetenuExc)}</td>`).join('')}</tr>
+      <tr class="sub"><td>— Décote appliquée</td>${hyps.map(h=>`<td>${fmt(h.decoteExc)}</td>`).join('')}</tr>
+      <tr class="sub"><td><strong>CDHR retenue (minimum des deux)</strong></td>${hyps.map(h=>`<td><strong>${fmt(h.cdhrRetenue)}</strong></td>`).join('')}</tr>
+    </tbody>`;
+}
+
+compute();
+</script>
+</body>
+</html>

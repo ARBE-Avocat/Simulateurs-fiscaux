@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur Succession — Arthur Beldi</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js"></script>
+<style>
+/*──────────────────────────────────────────────────────────
+  THÈME : Bordeaux / Crème / Or — contraste avec le IFI vert
+──────────────────────────────────────────────────────────*/
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:       #2C1810;
+  --navy-light: #3D2218;
+  --gold:       #C4956A;
+  --gold-light: #E0B990;
+  --white:      #FFFFFF;
+  --off-white:  #FAF6F2;
+  --light-gray: #EDE3D8;
+  --mid-gray:   #A08070;
+  --text-dark:  #1A0F0A;
+  --text-medium:#5C3D2E;
+  --text-light: #8A6050;
+  --success:    #2D6A4F;
+  --danger:     #A03030;
+  --border:     #D4B8A0;
+  --shadow:     0 2px 16px rgba(44,24,16,0.12);
+  --radius:     6px;
+  --radius-lg:  10px;
+}
+body { font-family: 'Palatino Linotype','Georgia','Times New Roman',serif; background: var(--off-white); color: var(--text-dark); font-size: 15px; line-height: 1.65; }
+
+/* HEADER */
+header { background: var(--navy); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 160px; position: sticky; top: 0; z-index: 100; }
+header .logo-wrap { display: flex; align-items: center; gap: 16px; text-decoration: none; }
+header .logo-text { color: var(--white); font-family: 'Palatino Linotype', Georgia, serif; font-size: 18px; font-weight: normal; letter-spacing: 0.02em; line-height: 1.3; }
+header .logo-text span { display: block; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-light); font-family: 'Arial', sans-serif; }
+header nav { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+header nav a { color: rgba(255,255,255,0.72); text-decoration: none; font-family: Arial, sans-serif; font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; margin-left: 1.5rem; transition: color 0.15s; }
+header nav a:hover { color: var(--gold-light); }
+.doc-btn { background: var(--gold); color: var(--navy) !important; padding: 6px 14px; border-radius: 4px; font-weight: bold !important; margin-left: 1.5rem !important; transition: background 0.15s !important; }
+.doc-btn:hover { background: var(--gold-light) !important; color: var(--navy) !important; }
+
+/* SCENARIO BAR */
+.scenario-bar { background: var(--navy-light); border-bottom: 2px solid var(--gold); padding: 0.6rem 1.5rem; max-width: 100%; overflow-x: auto; }
+.scenario-bar-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 0.5rem; flex-wrap: nowrap; min-width: max-content; }
+.scenario-label { font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-light); margin-right: 0.5rem; flex-shrink: 0; }
+.scen-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-family: Arial, sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap; }
+.scen-btn.active  { background: var(--gold); color: var(--navy); box-shadow: 0 0 0 3px rgba(196,149,106,0.35); }
+.scen-btn.inactive{ background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); }
+.scen-btn.inactive:hover { background: rgba(255,255,255,0.15); }
+.scen-btn-new { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 6px; font-family: Arial, sans-serif; font-size: 12px; cursor: pointer; border: 1px dashed rgba(196,149,106,0.5); color: var(--gold-light); background: transparent; transition: all 0.15s; }
+.scen-btn-new:hover { border-color: var(--gold); color: var(--gold); }
+.compare-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-family: Arial, sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); transition: all 0.15s; margin-left: auto; }
+.compare-btn:hover { background: rgba(255,255,255,0.2); }
+.export-btns { display: flex; gap: 0.4rem; margin-left: 0.5rem; }
+.exp-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 12px; border-radius: 6px; font-family: Arial, sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; letter-spacing: 0.04em; }
+.exp-btn.pdf  { background: rgba(160,48,48,0.85); color: #fff; }
+.exp-btn.pdf:hover  { background: rgba(160,48,48,1); }
+.exp-btn.pptx { background: rgba(196,149,106,0.85); color: var(--navy); }
+.exp-btn.pptx:hover { background: var(--gold); }
+
+/* HERO */
+.hero { background: var(--navy-light); padding: 2.8rem 2rem 2.2rem; text-align: center; border-bottom: 3px solid var(--gold); }
+.hero h1 { color: var(--white); font-family: 'Palatino Linotype', Georgia, serif; font-size: 30px; font-weight: normal; letter-spacing: 0.01em; margin-bottom: 0.5rem; }
+.hero p  { color: rgba(255,255,255,0.62); font-family: Arial, sans-serif; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+.gold-rule { width: 55px; height: 2px; background: var(--gold); margin: 0.9rem auto; }
+
+/* DISCLAIMER */
+.disclaimer { background: #F5EDE2; border-left: 4px solid var(--gold); margin: 1.5rem auto; max-width: 1280px; padding: 0.9rem 1.25rem; border-radius: 0 var(--radius) var(--radius) 0; display: flex; align-items: flex-start; gap: 12px; }
+.disclaimer .icon { font-size: 18px; line-height: 1.4; flex-shrink: 0; color: var(--gold); }
+.disclaimer p { font-family: Arial, sans-serif; font-size: 13px; color: var(--navy); line-height: 1.5; }
+
+/* MAIN */
+main { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+/* CARDS */
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 1.5rem; overflow: hidden; box-shadow: var(--shadow); }
+.card-header { background: var(--navy); padding: 0.85rem 1.5rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.card-header h2 { color: var(--white); font-family: 'Palatino Linotype', Georgia, serif; font-size: 16px; font-weight: normal; }
+.card-header .badge { background: var(--gold); color: var(--navy); font-family: Arial, sans-serif; font-size: 10px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; }
+.num { width: 27px; height: 27px; border-radius: 50%; border: 1.5px solid var(--gold); color: var(--gold); font-family: Georgia, serif; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.card-body { padding: 1.5rem; }
+
+/* SUBSECTION */
+.subsection { border-left: 3px solid var(--gold); padding-left: 1rem; margin-bottom: 1.5rem; }
+.subsection:last-child { margin-bottom: 0; }
+.subsection-title { font-family: Arial, sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8A5030; margin-bottom: 0.75rem; font-weight: bold; }
+
+/* GRIDS */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+@media(max-width:700px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* FIELDS */
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-family: Arial, sans-serif; font-size: 12px; color: var(--text-medium); letter-spacing: 0.02em; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.field label .ref { font-size: 10px; color: var(--mid-gray); }
+.field input, .field select { border: 1px solid var(--border); border-radius: var(--radius); padding: 9px 12px; font-size: 14px; font-family: Arial, sans-serif; color: var(--text-dark); background: var(--white); transition: border-color 0.15s, box-shadow 0.15s; width: 100%; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(196,149,106,0.18); }
+.field .hint { font-family: Arial, sans-serif; font-size: 11px; color: var(--text-light); font-style: italic; }
+.field input.computed { background: var(--off-white); color: var(--navy); font-weight: bold; cursor: default; }
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+/* NET BANNER */
+.net-banner { background: var(--navy); border-radius: var(--radius); padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; margin-top: 1.25rem; }
+.net-banner .nb-label { color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.07em; font-size: 11px; font-family: Arial, sans-serif; }
+.net-banner .nb-val { font-family: 'Palatino Linotype', Georgia, serif; font-size: 22px; color: var(--gold-light); }
+
+/* INFO BOX */
+.info-box { background: #F5EDE2; border-left: 3px solid var(--gold); padding: 0.75rem 1rem; border-radius: 0 var(--radius) var(--radius) 0; font-family: Arial, sans-serif; font-size: 13px; color: var(--text-medium); line-height: 1.6; margin-bottom: 1.25rem; }
+.info-box strong { color: var(--navy); }
+
+/* TABLE héritiers */
+.herit-table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+.herit-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 13px; min-width: 780px; }
+.herit-table th { background: var(--navy); color: var(--white); padding: 8px 10px; font-weight: normal; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; text-align: left; white-space: nowrap; }
+.herit-table td { padding: 6px 8px; border-bottom: 1px solid var(--light-gray); vertical-align: middle; }
+.herit-table tr:hover td { background: rgba(196,149,106,0.06); }
+.herit-table input, .herit-table select { border: 1px solid var(--border); border-radius: 4px; padding: 5px 7px; font-size: 13px; font-family: Arial, sans-serif; width: 100%; min-width: 70px; background: var(--white); }
+.herit-table .total-row td { background: #EDE3D8; font-weight: bold; color: var(--navy); border-top: 2px solid var(--gold); }
+.herit-table .val-cell { font-family: Georgia, serif; color: var(--navy); text-align: right; white-space: nowrap; }
+.del-btn { background: none; border: none; cursor: pointer; color: var(--mid-gray); font-size: 16px; padding: 2px 6px; border-radius: 3px; transition: color 0.15s; }
+.del-btn:hover { color: var(--danger); background: #fef0f0; }
+.add-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--navy); color: var(--white); border: none; border-radius: var(--radius); padding: 8px 16px; font-family: Arial, sans-serif; font-size: 13px; cursor: pointer; transition: background 0.15s; margin-top: 0.5rem; }
+.add-btn:hover { background: var(--navy-light); }
+
+/* RESULTS */
+#results { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); margin-top: 2rem; }
+.results-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 12px; }
+.results-header h2 { color: var(--white); font-family: 'Palatino Linotype', Georgia, serif; font-size: 18px; font-weight: normal; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.results-body { padding: 1.5rem; }
+
+/* METRIC GRID */
+.metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.metric { background: var(--off-white); border-radius: var(--radius); padding: 0.85rem 1rem; border: 1px solid var(--border); }
+.metric .m-label { font-family: Arial, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-light); margin-bottom: 4px; }
+.metric .m-val { font-family: 'Palatino Linotype', Georgia, serif; font-size: 20px; color: var(--text-dark); }
+.metric .m-val.highlight { color: var(--navy); }
+.metric .m-sub { font-family: Arial, sans-serif; font-size: 11px; color: var(--text-light); margin-top: 2px; }
+.metric.featured { background: var(--navy); border-color: var(--navy); }
+.metric.featured .m-label { color: rgba(255,255,255,0.6); }
+.metric.featured .m-val { color: var(--gold-light); font-size: 26px; }
+.metric.featured .m-sub { color: rgba(255,255,255,0.45); }
+
+/* BREAKDOWN */
+.breakdown { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; }
+.breakdown-row { display: grid; grid-template-columns: 1fr auto; padding: 0.6rem 1rem; font-family: Arial, sans-serif; font-size: 13px; border-bottom: 1px solid var(--light-gray); align-items: center; }
+.breakdown-row:last-child { border-bottom: none; }
+.breakdown-row.section-head { background: #EDE3D8; color: var(--text-medium); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.5rem 1rem; border-bottom: 1px solid var(--border); }
+.breakdown-row.total-row { background: var(--navy); font-family: Georgia, serif; font-size: 16px; }
+.breakdown-row.total-row .label, .breakdown-row.total-row .amount { color: var(--white); }
+.breakdown-row.sub-total { background: #F0E8DE; font-weight: bold; }
+.breakdown-row.sub-total .label, .breakdown-row.sub-total .amount { color: var(--navy); }
+.breakdown-row.indent { padding-left: 2rem; }
+.breakdown-row.indent .label { color: var(--text-light); font-style: italic; }
+.breakdown-row .label { color: var(--text-medium); }
+.breakdown-row .amount { font-family: Georgia, serif; color: var(--text-dark); text-align: right; }
+
+/* HÉRITIER RESULT */
+.herit-result-block { background: var(--off-white); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden; }
+.herit-result-header { background: #EDE3D8; padding: 0.6rem 1rem; font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; color: var(--navy); letter-spacing: 0.04em; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+.herit-result-header .drp { font-family: Georgia, serif; font-size: 14px; color: var(--success); font-weight: normal; }
+.herit-result-header .drp.red { color: var(--danger); }
+
+/* BARÈME */
+.bareme-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 12px; margin-top: 0.75rem; }
+.bareme-table th { background: var(--navy); color: rgba(255,255,255,0.8); padding: 6px 10px; font-weight: normal; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; text-align: right; }
+.bareme-table th:first-child { text-align: left; }
+.bareme-table td { padding: 5px 10px; border-bottom: 1px solid var(--light-gray); color: var(--text-medium); text-align: right; }
+.bareme-table td:first-child { text-align: left; }
+.bareme-table .active-band td { background: rgba(196,149,106,0.12); color: var(--navy); font-weight: bold; }
+
+/* COMPARATEUR */
+.compare-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(44,24,16,0.7); overflow-y: auto; }
+.compare-panel.open { display: block; }
+.compare-inner { background: var(--off-white); max-width: 1100px; margin: 2rem auto; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 8px 48px rgba(0,0,0,0.3); }
+.compare-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+.compare-header h2 { color: var(--white); font-family: Georgia, serif; font-size: 20px; font-weight: normal; }
+.close-btn { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 22px; cursor: pointer; padding: 4px 8px; border-radius: 4px; }
+.close-btn:hover { color: var(--white); background: rgba(255,255,255,0.1); }
+.compare-body { padding: 1.5rem; overflow-x: auto; }
+.compare-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 13px; }
+.compare-table th { background: var(--navy); color: var(--white); padding: 10px 14px; font-weight: normal; font-size: 12px; text-align: left; }
+.compare-table th.scen-col { text-align: right; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; }
+.compare-table td { padding: 8px 14px; border-bottom: 1px solid var(--light-gray); }
+.compare-table td.scen-val { text-align: right; font-family: Georgia, serif; color: var(--navy); }
+.compare-table tr.section-row td { background: #EDE3D8; font-weight: bold; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-medium); padding: 5px 14px; }
+.compare-table tr.total-row td { background: var(--navy); color: var(--white); font-family: Georgia, serif; font-size: 15px; font-weight: bold; }
+.compare-table tr.highlight-row td.scen-val { font-weight: bold; }
+.compare-table .best { color: var(--success); }
+.compare-table .worst { color: var(--danger); }
+
+/* DOC MODAL */
+.doc-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998; background: rgba(44,24,16,0.72); overflow-y: auto; }
+.doc-modal.open { display: block; }
+.doc-inner { background: var(--off-white); max-width: 860px; margin: 2rem auto; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 8px 48px rgba(0,0,0,0.3); }
+.doc-header { background: var(--navy); padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 14px; justify-content: space-between; }
+.doc-header .dh-left { display: flex; align-items: center; gap: 14px; }
+.doc-header h2 { color: var(--white); font-family: Georgia, serif; font-size: 20px; font-weight: normal; }
+.doc-body { padding: 2rem; }
+.doc-toc { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+.doc-toc a { background: #EDE3D8; border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-family: Arial, sans-serif; font-size: 12px; color: var(--navy); text-decoration: none; transition: background 0.15s; }
+.doc-toc a:hover { background: var(--gold); color: var(--navy); }
+.doc-section { margin-bottom: 2rem; }
+.doc-section h3 { font-family: Georgia, serif; font-size: 17px; color: var(--navy); margin-bottom: 0.75rem; padding-bottom: 0.4rem; border-bottom: 2px solid var(--gold); }
+.doc-section h4 { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; color: var(--text-medium); margin: 1rem 0 0.4rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.doc-section p, .doc-section li { font-family: Arial, sans-serif; font-size: 13px; color: var(--text-medium); line-height: 1.7; margin-bottom: 0.5rem; }
+.doc-section ul { padding-left: 1.5rem; }
+.doc-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 12px; margin: 0.75rem 0; }
+.doc-table th { background: var(--navy); color: var(--white); padding: 7px 10px; font-weight: normal; font-size: 11px; letter-spacing: 0.05em; text-align: left; }
+.doc-table td { padding: 6px 10px; border-bottom: 1px solid var(--light-gray); }
+.doc-table tr:nth-child(even) td { background: #F5EDE2; }
+
+/* EMPTY */
+.empty-state { text-align: center; padding: 2.5rem; color: var(--text-light); font-family: Arial, sans-serif; font-size: 14px; }
+
+/* FOOTER */
+footer { background: var(--navy); border-top: 3px solid var(--gold); padding: 2rem; text-align: center; margin-top: 3rem; }
+footer p { font-family: Arial, sans-serif; font-size: 12px; color: rgba(255,255,255,0.42); line-height: 1.6; max-width: 620px; margin: 0 auto; }
+footer a { color: var(--gold-light); text-decoration: none; }
+
+/* Print */
+@media print {
+  .scenario-bar, header nav, .doc-btn, .export-btns, .compare-btn, .add-btn, .del-btn, .scen-btn-new { display: none !important; }
+  body { background: white; }
+  .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <svg width="216" height="141" viewBox="0 0 4000 2588" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+      <g><path fill="#fff" d="M1584.88,1654.46c-1.67-2.33-1-5.38-.31-7.75,16.02-1.54,30.8-6.31,44-15.56,10.09,9.45,21.51,15.87,33.16,23.02l-76.85.28h0Z"/><path fill="#fff" d="M1701.21,1629.64c-.12.78-.49.86-1.08.31-17.75-4.84-32.9-15.2-44.72-29.1,8.11-14.86,15.28-29.06,20.54-45.09l125.63-382.4c9.02-6.11,17.36-11.85,27.45-16.59l-58.5,182.26,226.49.05-116.71-339.18-36.01,108.87-24.65,9.6,60.35-184.03,52.36.06,114.56,327.71-11.1,27.27-31.7,75.69-242-.12-59.23,183.56c-4.96,15.37-7.92,30.21-8.74,46.03-.42,12.7,1.44,24.43,7.06,35.1h.01Z"/><path fill="#fff" d="M2009.54,1654.44c-1.94-2.5-1.03-5.06-.54-7.71,17.25-.02,33.98-1.04,50.62-5.37,22.55-5.88,24.8-27.69,22.74-47.73-1.85-12.22-4.79-23.26-8.91-34.96l-38.27-114.3c15.53-32.04,27.8-64.39,41.23-97.65l69.48,198.43c11.1,30.03,31.05,84.34,63.53,95.39,10.16,3.46,20.35,5.06,31.11,6.23.68,2.61.85,4.97-.12,7.66l-230.87.02h0Z"/></g>
+      <g><path fill="#fff" d="M2244.95,1633.81c-1.75-.11-2.49-.83-.89-1.91,52.93-21.81,95.42-61.87,120.02-113.55,13.61-28.6,19.18-59.65,18.82-91.44-1.04-92.93-74.61-140.76-158.39-153.08-19.07,3.97-52.38,10.44-70.16,5.51-2.07-.57-4.28-2.12-3.91-4.02.22-1.16,1.91-2.93,3.72-3.47,21.9-6.61,42.82-5.57,65.87-3.52,49.65-15.52,96.32-46.45,123.7-91.63,23.27-38.41,24.35-89.76-3.1-126.35-22.42-30.76-57.32-50.81-92.35-64.12-43.63,40.3-73.16,85.65-98.2,139.13-22.37,47.75-42.22,95.86-60.18,145.57-15.97,44.23-32.3,87.49-50.52,130.73-14.22,33.74-29.89,65.84-48.63,97.33-38.18,64.16-88.78,117.38-160.4,142.68-25.83,9.13-51.97,13.01-79.16,14.55-19.67,1.11-38.55-.25-57.6-5.23-65.82-17.2-100.78-74.88-103.62-140.74-1.72-40.04,4.52-79.53,16.71-117.99,23.83-75.24,66.91-143.21,124.47-197.13,46.17-43.25,108.2-79.15,171.92-86.24,1.68,2.31,2.21,4.69,2.55,7.43-62.53,8.12-122.4,46.56-165.73,91.53-54,56.03-93.62,124.83-114.53,199.9-9.6,34.46-14.81,69.31-13.61,104.78.92,27.23,7.19,53.3,19.67,77.07,17.7,33.71,50.04,54.98,87.63,58.53,21.3,2.01,41.38.22,62.34-4.27,40.31-8.63,75.92-28.66,104.59-58.02,11.73-12.01,22.45-23.32,32.81-36.59,20.18-25.85,37.39-52.91,52.39-82.4,24.17-47.5,46.15-95.44,66.13-144.89,21.51-53.23,43.45-105.66,67.92-157.61,17.71-36.89,37.19-72.09,60.24-105.72,19.87-28.99,42.86-54.25,70.56-76.9-59.86-19.81-117.16-25.23-179.06-26.56-33.98-.33-67.11,1.45-100.89,5.1-1.64-2.44-2.42-4.73-2.13-7.15,29.99-4.04,59.22-5.5,89.39-6.21,69.64-.95,138.63,5.41,205.5,25.54,27.98-19.6,58.59-33.42,91.55-40.99,1.79,1.07,2.39,3.2,1.14,5.07-29.25,7.75-56.34,20.78-80.42,39.72,45.23,16.36,87.91,39.6,113.1,80.98,11.57,19.99,16.43,42.05,15.88,65.27-1.7,71.77-86.92,130.18-149.72,147.75,47.76,6.86,87.84,22.05,123.66,53.19,49.77,43.61,62.71,120.48,43.88,181.7-21.56,70.1-84.01,121.78-153.08,141.01l-.68-11.55c-3.4-.74-6.37-.99-9.22-.76h.01Z"/></g>
+    </svg>
+    <div class="logo-text">Arthur Beldi<span>Droit fiscal</span></div>
+  </div>
+  <nav>
+    <a href="#" onclick="openDoc();return false;" class="doc-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:middle;margin-right:4px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Documentation
+    </a>
+    <a href="#">Succession</a>
+  </nav>
+</header>
+
+<!-- SCENARIO BAR -->
+<div class="scenario-bar">
+  <div class="scenario-bar-inner">
+    <span class="scenario-label">Scénarios :</span>
+    <div id="scenBtns"></div>
+    <button class="scen-btn-new" onclick="newScenario()">＋ Nouveau scénario</button>
+    <div class="export-btns">
+      <button class="exp-btn pdf" onclick="exportPDF()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+        Exporter PDF
+      </button>
+      <button class="exp-btn pptx" onclick="exportPPTX()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Export PPTX
+      </button>
+      <button class="compare-btn" onclick="openCompare()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Comparer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <p>Art. 777 et suivants du CGI</p>
+  <div class="gold-rule"></div>
+  <h1>Simulateur de Succession</h1>
+  <p style="margin-top:0.5rem">Liquidation civile et fiscale — Droits de mutation à titre gratuit</p>
+</div>
+
+<div style="padding:0 1.5rem; max-width:1280px; margin:1.5rem auto 0;">
+  <div class="disclaimer">
+    <div class="icon">⚠</div>
+    <p><strong>Avertissement :</strong> outil indicatif uniquement. Les résultats sont des estimations basées sur les règles générales du CGI et du Code civil. Ils ne constituent pas un conseil fiscal ou juridique. Consultez un notaire ou un avocat fiscaliste pour toute situation réelle.</p>
+  </div>
+</div>
+
+<main>
+
+  <!-- Nom du dossier -->
+  <div style="margin-bottom:1rem;">
+    <div class="field">
+      <label>Nom du dossier / défunt <span class="ref">(optionnel)</span></label>
+      <input type="text" id="nomDefunt" placeholder="ex. Succession Martin" style="max-width:360px" oninput="saveCurrentScenario()">
+    </div>
+  </div>
+
+  <!-- 1. ACTIF -->
+  <div class="card">
+    <div class="card-header"><div class="num">1</div><h2>Actif successoral brut</h2><span class="badge">CGI art. 750 ter</span></div>
+    <div class="card-body">
+      <div class="info-box">L'actif brut comprend l'ensemble des biens appartenant au défunt au jour du décès. Saisissez votre quote-part dans chaque poste (ex. : moitié des biens communs si régime de communauté).</div>
+      <div class="subsection">
+        <div class="subsection-title">Régime matrimonial</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>Situation familiale</label>
+            <select id="situFam" onchange="compute()">
+              <option value="celibataire">Célibataire / Veuf(ve) / Divorcé(e)</option>
+              <option value="marie_communaute">Marié(e) — Communauté réduite aux acquêts</option>
+              <option value="marie_separation">Marié(e) — Séparation de biens</option>
+              <option value="marie_communaute_universelle">Marié(e) — Communauté universelle</option>
+              <option value="pacsé">Pacsé(e)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="subsection">
+        <div class="subsection-title">Composition du patrimoine brut</div>
+        <div class="grid-2">
+          <div class="field"><label>Immobilier (valeur vénale) <span class="ref">€</span></label><input type="number" id="actifImmo" placeholder="0" min="0" oninput="compute()"><span class="hint">Résidence principale, locatif, terrain</span></div>
+          <div class="field"><label>Portefeuille titres / PEA <span class="ref">€</span></label><input type="number" id="actifTitres" placeholder="0" min="0" oninput="compute()"><span class="hint">Actions, obligations, OPCVM — valeur au jour du décès</span></div>
+          <div class="field"><label>Liquidités (comptes, livrets) <span class="ref">€</span></label><input type="number" id="actifLiquidites" placeholder="0" min="0" oninput="compute()"><span class="hint">Comptes courants, livrets A, LDDS, LEP</span></div>
+          <div class="field"><label>Assurance-vie (hors clause nominative) <span class="ref">€</span></label><input type="number" id="actifAV" placeholder="0" min="0" oninput="compute()"><span class="hint">Uniquement sans bénéficiaire désigné</span></div>
+          <div class="field"><label>Parts sociales / entreprise <span class="ref">€</span></label><input type="number" id="actifParts" placeholder="0" min="0" oninput="compute()"><span class="hint">Valeur avant exonération Dutreil</span></div>
+          <div class="field"><label>Meubles meublants <span class="ref">€</span></label><input type="number" id="actifMeubles" placeholder="0" min="0" oninput="compute()"><span class="hint">Forfait légal 5 % ou inventaire notarial</span></div>
+          <div class="field"><label>Autres actifs <span class="ref">€</span></label><input type="number" id="actifAutres" placeholder="0" min="0" oninput="compute()"><span class="hint">Créances, véhicules, collections…</span></div>
+        </div>
+      </div>
+      <div class="net-banner"><div><div class="nb-label">Actif brut successoral</div></div><div class="nb-val" id="totalActifBrut">0 €</div></div>
+    </div>
+  </div>
+
+  <!-- 2. PASSIF -->
+  <div class="card">
+    <div class="card-header"><div class="num">2</div><h2>Passif déductible</h2><span class="badge">CGI art. 768</span></div>
+    <div class="card-body">
+      <div class="info-box">Dettes existant au jour du décès dûment justifiées. Les frais funéraires sont déductibles jusqu'à <strong>1 500 €</strong> (forfait légal) ou pour leur montant réel si supérieur.</div>
+      <div class="grid-2">
+        <div class="field"><label>Emprunts immobiliers (CRD) <span class="ref">€</span></label><input type="number" id="passifEmprunt" placeholder="0" min="0" oninput="compute()"><span class="hint">Capital restant dû au jour du décès</span></div>
+        <div class="field"><label>Dettes fiscales <span class="ref">€</span></label><input type="number" id="passifFisc" placeholder="0" min="0" oninput="compute()"><span class="hint">IR, taxe foncière dus et non réglés</span></div>
+        <div class="field"><label>Autres dettes <span class="ref">€</span></label><input type="number" id="passifAutres" placeholder="0" min="0" oninput="compute()"><span class="hint">Justifiées par actes enregistrés</span></div>
+        <div class="field"><label>Frais funéraires <span class="ref">€</span></label><input type="number" id="passifFuneraires" placeholder="1500" min="0" oninput="compute()"><span class="hint">Forfait 1 500 € ou montant réel si supérieur</span></div>
+      </div>
+      <div class="net-banner"><div><div class="nb-label">Actif net (après passif)</div></div><div class="nb-val" id="actifNet">0 €</div></div>
+    </div>
+  </div>
+
+  <!-- 3. EXONÉRATIONS -->
+  <div class="card">
+    <div class="card-header"><div class="num">3</div><h2>Réductions &amp; exonérations</h2><span class="badge">CGI art. 787 B / 793</span></div>
+    <div class="card-body">
+      <div class="subsection">
+        <div class="subsection-title">Pacte Dutreil — Art. 787 B CGI</div>
+        <div class="info-box">Exonération de <strong>75 %</strong> de la valeur des parts sous conditions : engagement collectif de conservation 2 ans + engagement individuel 4 ans + exercice d'une fonction dirigeante.</div>
+        <div class="grid-3">
+          <div class="field"><label>Valeur des parts éligibles Dutreil <span class="ref">€</span></label><input type="number" id="dutreilValeur" placeholder="0" min="0" oninput="compute()"></div>
+          <div class="field"><label>Taux Dutreil</label><select id="dutreilTaux" onchange="compute()"><option value="0.75">75 % — Standard</option><option value="0.50">50 % — Partiel</option></select></div>
+          <div class="field"><label>Exonération Dutreil</label><input type="number" id="dutreilResult" readonly class="computed" placeholder="0"></div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="subsection">
+        <div class="subsection-title">Biens ruraux — Bail à long terme (Art. 793 CGI)</div>
+        <div class="grid-3">
+          <div class="field"><label>Valeur biens ruraux (tranche 75 %) <span class="ref">€</span></label><input type="number" id="ruralValeur75" placeholder="0" min="0" oninput="compute()"><span class="hint">Fraction jusqu'au seuil 101 897 €</span></div>
+          <div class="field"><label>Valeur biens ruraux (tranche 50 %) <span class="ref">€</span></label><input type="number" id="ruralValeur50" placeholder="0" min="0" oninput="compute()"><span class="hint">Fraction excédant le seuil</span></div>
+          <div class="field"><label>Exonération biens ruraux</label><input type="number" id="ruralResult" readonly class="computed" placeholder="0"></div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="subsection">
+        <div class="subsection-title">Autres exonérations</div>
+        <div class="grid-2">
+          <div class="field"><label>Monuments historiques <span class="ref">€</span></label><input type="number" id="exoMonuments" placeholder="0" min="0" oninput="compute()"></div>
+          <div class="field"><label>Autres (forêts, œuvres remises à l'État…) <span class="ref">€</span></label><input type="number" id="exoAutres" placeholder="0" min="0" oninput="compute()"></div>
+        </div>
+      </div>
+      <div class="net-banner"><div><div class="nb-label">Actif net taxable (après exonérations)</div></div><div class="nb-val" id="actifNetTaxable">0 €</div></div>
+    </div>
+  </div>
+
+  <!-- 4. HÉRITIERS -->
+  <div class="card">
+    <div class="card-header"><div class="num">4</div><h2>Héritiers &amp; dévolution successorale</h2><span class="badge">Code civil art. 731 et s.</span></div>
+    <div class="card-body">
+      <div class="info-box">Pour chaque héritier, indiquez sa part, son lien de parenté (détermine l'abattement et le barème) et les donations antérieures de moins de 15 ans (rappel fiscal art. 784 CGI).</div>
+      <div class="subsection">
+        <div class="subsection-title">Liste des héritiers / légataires</div>
+        <div class="herit-table-wrap">
+          <table class="herit-table">
+            <thead><tr>
+              <th>Nom / Prénom</th><th>Lien de parenté</th>
+              <th>Part <span style="font-size:9px">(%)</span></th>
+              <th>Montant reçu</th>
+              <th>Donations N−15 <span style="font-size:9px">(rappel)</span></th>
+              <th>Abattement</th><th>Base taxable</th><th>Droits estimés</th><th></th>
+            </tr></thead>
+            <tbody id="heritTbody"></tbody>
+            <tfoot><tr class="total-row">
+              <td colspan="2">Total</td>
+              <td class="val-cell" id="totalParts">0 %</td>
+              <td class="val-cell" id="totalMontantRecu">0 €</td>
+              <td></td><td></td><td></td>
+              <td class="val-cell" id="totalDroits">0 €</td>
+              <td></td>
+            </tr></tfoot>
+          </table>
+        </div>
+        <button class="add-btn" onclick="addHeritier()">+ Ajouter un héritier</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. ASSURANCE-VIE -->
+  <div class="card">
+    <div class="card-header"><div class="num">5</div><h2>Assurance-vie — Hors succession</h2><span class="badge">Art. 990 I / 757 B CGI</span></div>
+    <div class="card-body">
+      <div class="subsection">
+        <div class="subsection-title">Primes versées avant 70 ans — Art. 990 I CGI</div>
+        <div class="info-box">Abattement de <strong>152 500 €</strong> par bénéficiaire. Au-delà : prélèvement de <strong>20 %</strong> jusqu'à 700 000 € puis <strong>31,25 %</strong>. Le conjoint et le partenaire PACS sont totalement exonérés.</div>
+        <div class="herit-table-wrap">
+          <table class="herit-table" id="av1Table">
+            <thead><tr><th>Bénéficiaire</th><th>Capital reçu (€)</th><th>Abattement 152 500 €</th><th>Base taxable</th><th>Prélèvement (20%/31,25%)</th><th></th></tr></thead>
+            <tbody id="av1Tbody"></tbody>
+            <tfoot><tr class="total-row"><td>Total</td><td class="val-cell" id="av1TotalCapital">0 €</td><td></td><td class="val-cell" id="av1TotalBase">0 €</td><td class="val-cell" id="av1TotalPrel">0 €</td><td></td></tr></tfoot>
+          </table>
+        </div>
+        <button class="add-btn" onclick="addAV1()">+ Ajouter un bénéficiaire</button>
+      </div>
+      <hr class="divider">
+      <div class="subsection">
+        <div class="subsection-title">Primes versées après 70 ans — Art. 757 B CGI</div>
+        <div class="info-box">Les primes versées après 70 ans entrent dans la succession pour leur montant (hors intérêts) après un abattement global de <strong>30 500 €</strong> tous bénéficiaires confondus.</div>
+        <div class="grid-3">
+          <div class="field"><label>Total primes versées après 70 ans <span class="ref">€</span></label><input type="number" id="av2Primes" placeholder="0" min="0" oninput="compute()"></div>
+          <div class="field"><label>Abattement 30 500 €</label><input type="number" id="av2Abat" readonly class="computed"></div>
+          <div class="field"><label>Fraction imposable aux droits</label><input type="number" id="av2Taxable" readonly class="computed"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="results-header"><div class="dot"></div><h2>Résultats — Liquidation successorale</h2></div>
+    <div class="results-body" id="resultsBody">
+      <div class="empty-state"><div style="font-size:40px;margin-bottom:0.5rem;">⚖️</div>Renseignez l'actif et les héritiers pour afficher les résultats</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>Simulateur de succession — <a href="https://www.linkedin.com/in/arthurbe/" target="_blank" rel="noopener">Arthur Beldi</a> · Droit fiscal<br>
+  Outil indicatif — ne constitue pas un conseil fiscal ou juridique personnalisé — Art. 777 et s. CGI</p>
+</footer>
+
+<!-- COMPARATEUR -->
+<div class="compare-panel" id="comparePanel">
+  <div class="compare-inner">
+    <div class="compare-header">
+      <h2>⚖️ Comparaison des scénarios</h2>
+      <button class="close-btn" onclick="closeCompare()">✕</button>
+    </div>
+    <div class="compare-body" id="compareBody"></div>
+  </div>
+</div>
+
+<!-- DOC MODAL -->
+<div class="doc-modal" id="docModal">
+  <div class="doc-inner">
+    <div class="doc-header">
+      <div class="dh-left">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C4956A" stroke-width="1.8">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          <line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/>
+        </svg>
+        <h2>Documentation — Droit successoral français</h2>
+      </div>
+      <button class="close-btn" onclick="closeDoc()">✕</button>
+    </div>
+    <div class="doc-body">
+      <div class="doc-toc">
+        <a href="#doc-s1">1. Actif brut</a><a href="#doc-s2">2. Passif</a><a href="#doc-s3">3. Exonérations</a>
+        <a href="#doc-s4">4. Abattements</a><a href="#doc-s5">5. Barèmes</a><a href="#doc-s6">6. Assurance-vie</a>
+        <a href="#doc-s7">7. Délais &amp; paiement</a><a href="#doc-s8">8. Réserve héréditaire</a>
+      </div>
+
+      <div class="doc-section" id="doc-s1">
+        <h3>1. Actif brut successoral — Art. 750 ter CGI</h3>
+        <p>L'assiette des droits de succession est constituée de l'<strong>actif net</strong> recueilli par chaque héritier. L'actif brut comprend tous les biens appartenant au défunt au jour de son décès, quelle qu'en soit la nature (immobiliers, mobiliers, droits incorporels).</p>
+        <h4>Biens imposables</h4>
+        <ul>
+          <li>Biens immobiliers : valeur vénale réelle au jour du décès (hors abattement 20 % résidence principale sous conditions)</li>
+          <li>Valeurs mobilières cotées : moyenne des 30 derniers cours ou valeur au dernier cours coté</li>
+          <li>Parts de sociétés non cotées : valeur vénale appréciée selon la méthode patrimoniale ou de rendement</li>
+          <li>Créances, dépôts bancaires, liquidités</li>
+          <li>Meubles meublants : forfait 5 % de l'ensemble des autres biens (art. 764 CGI) ou inventaire notarial si plus favorable</li>
+        </ul>
+        <h4>Règles de territorialité</h4>
+        <p>Si le défunt était domicilié en France : tous ses biens sont imposables (résidents). Si non-résident : seuls les biens situés en France sont imposables, sauf convention fiscale applicable.</p>
+      </div>
+
+      <div class="doc-section" id="doc-s2">
+        <h3>2. Passif déductible — Art. 768 CGI</h3>
+        <p>Seules sont déductibles les <strong>dettes du défunt existant au jour de son décès</strong>, dûment justifiées.</p>
+        <ul>
+          <li><strong>Emprunts immobiliers :</strong> capital restant dû au jour du décès (tableau d'amortissement)</li>
+          <li><strong>Dettes fiscales :</strong> impôt sur le revenu, CSG/CRDS, taxe foncière et d'habitation dus</li>
+          <li><strong>Dettes envers des tiers :</strong> justifiées par acte authentique ou sous seing privé ayant date certaine</li>
+          <li><strong>Frais funéraires :</strong> déductibles à hauteur de 1 500 € forfaitaires (art. 775 CGI) ou pour leur montant réel si supérieur et justifié</li>
+        </ul>
+        <p>Attention : les dettes envers des héritiers sont présumées non déductibles sauf preuve contraire (art. 773-2° CGI).</p>
+      </div>
+
+      <div class="doc-section" id="doc-s3">
+        <h3>3. Exonérations — Art. 787 B, 793, 795 CGI</h3>
+        <h4>Pacte Dutreil — Art. 787 B CGI</h4>
+        <p>Exonération de <strong>75 %</strong> de la valeur des parts ou actions de sociétés ayant une activité industrielle, commerciale, artisanale, agricole ou libérale.</p>
+        <p><strong>Conditions cumulatives :</strong></p>
+        <ul>
+          <li>Engagement collectif de conservation d'au moins 2 ans en cours au jour de la transmission</li>
+          <li>Engagement individuel de conservation de 4 ans à compter du décès</li>
+          <li>Exercice d'une fonction de direction pendant 3 ans par l'un des signataires ou un héritier</li>
+          <li>Déclaration en annexe de la déclaration de succession</li>
+        </ul>
+        <h4>Biens ruraux — Art. 793 CGI</h4>
+        <p>Exonération partielle pour les biens ruraux loués par bail à long terme (minimum 18 ans) ou constitués en GFA/GPF :</p>
+        <ul>
+          <li><strong>75 %</strong> pour la fraction de valeur n'excédant pas 101 897 € par bénéficiaire et par bien</li>
+          <li><strong>50 %</strong> pour la fraction excédant ce seuil</li>
+        </ul>
+        <h4>Monuments historiques — Art. 795 A CGI</h4>
+        <p>Exonération totale sous conditions d'ouverture au public et de signature d'une convention avec le ministre de la Culture.</p>
+      </div>
+
+      <div class="doc-section" id="doc-s4">
+        <h3>4. Abattements personnels — Art. 779 CGI</h3>
+        <table class="doc-table">
+          <thead><tr><th>Qualité de l'héritier</th><th>Abattement</th><th>Barème applicable</th></tr></thead>
+          <tbody>
+            <tr><td>Conjoint survivant / Partenaire PACS</td><td>Exonération totale</td><td>Aucun droit</td></tr>
+            <tr><td>Enfant en ligne directe (ou ascendant direct)</td><td>100 000 €</td><td>Ligne directe</td></tr>
+            <tr><td>Petit-enfant (représentation)</td><td>1 594 €</td><td>Ligne directe</td></tr>
+            <tr><td>Arrière-petit-enfant</td><td>1 594 €</td><td>Ligne directe</td></tr>
+            <tr><td>Personne handicapée (art. 779 II)</td><td>159 325 € (cumulable)</td><td>Selon lien</td></tr>
+            <tr><td>Frère ou sœur</td><td>15 932 €</td><td>35 % / 45 %</td></tr>
+            <tr><td>Neveu ou nièce (représentation)</td><td>7 967 €</td><td>55 %</td></tr>
+            <tr><td>Autre personne (non-parent)</td><td>1 594 €</td><td>60 %</td></tr>
+          </tbody>
+        </table>
+        <p>Les abattements se renouvellent tous les <strong>15 ans</strong>. Les donations de moins de 15 ans s'imputent (rappel fiscal art. 784 CGI).</p>
+      </div>
+
+      <div class="doc-section" id="doc-s5">
+        <h3>5. Barèmes des droits — Art. 777 CGI</h3>
+        <h4>Ligne directe (enfants, parents)</h4>
+        <table class="doc-table">
+          <thead><tr><th>Fraction de la part nette</th><th>Taux</th></tr></thead>
+          <tbody>
+            <tr><td>Jusqu'à 8 072 €</td><td>5 %</td></tr>
+            <tr><td>De 8 073 € à 12 109 €</td><td>10 %</td></tr>
+            <tr><td>De 12 110 € à 15 932 €</td><td>15 %</td></tr>
+            <tr><td>De 15 933 € à 552 324 €</td><td>20 %</td></tr>
+            <tr><td>De 552 325 € à 902 838 €</td><td>30 %</td></tr>
+            <tr><td>De 902 839 € à 1 805 677 €</td><td>40 %</td></tr>
+            <tr><td>Au-delà de 1 805 677 €</td><td>45 %</td></tr>
+          </tbody>
+        </table>
+        <h4>Frères et sœurs</h4>
+        <table class="doc-table">
+          <thead><tr><th>Fraction de la part nette</th><th>Taux</th></tr></thead>
+          <tbody>
+            <tr><td>Jusqu'à 24 430 €</td><td>35 %</td></tr>
+            <tr><td>Au-delà de 24 430 €</td><td>45 %</td></tr>
+          </tbody>
+        </table>
+        <p>Neveux et nièces : <strong>55 %</strong> · Autres (non-parents) : <strong>60 %</strong></p>
+        <p>Abattement spécial frère/sœur célibataire, veuf ou divorcé domicilié avec le défunt depuis 5 ans : exonération totale sous conditions.</p>
+      </div>
+
+      <div class="doc-section" id="doc-s6">
+        <h3>6. Assurance-vie — Fiscalité spécifique</h3>
+        <h4>Art. 990 I CGI — Primes versées avant 70 ans</h4>
+        <p>Les capitaux décès transmis aux bénéficiaires désignés <strong>échappent à la succession civile</strong> et sont soumis à un prélèvement spécifique :</p>
+        <ul>
+          <li>Abattement de <strong>152 500 €</strong> par bénéficiaire</li>
+          <li>Prélèvement de <strong>20 %</strong> entre 152 500 € et 852 500 € (soit la tranche 0–700 000 € au-delà de l'abattement)</li>
+          <li>Prélèvement de <strong>31,25 %</strong> au-delà de 852 500 €</li>
+          <li>Exonération totale pour le conjoint survivant et le partenaire PACS</li>
+        </ul>
+        <h4>Art. 757 B CGI — Primes versées après 70 ans</h4>
+        <p>Les primes versées après 70 ans intègrent la masse successorale pour leur montant brut (hors intérêts capitalisés), après un abattement global de <strong>30 500 €</strong> réparti entre tous les bénéficiaires. Les droits de succession ordinaires s'appliquent.</p>
+      </div>
+
+      <div class="doc-section" id="doc-s7">
+        <h3>7. Délais, dépôt de déclaration et paiement</h3>
+        <ul>
+          <li><strong>Délai de dépôt :</strong> 6 mois à compter du décès pour les successions ouvertes en France métropolitaine (12 mois à l'étranger)</li>
+          <li><strong>Déclaration de succession :</strong> formulaire Cerfa n° 2705 (ou 2705-S pour les époux en communauté) déposé auprès du service de la publicité foncière (ex-recette des impôts)</li>
+          <li><strong>Paiement :</strong> comptant ou fractionné sur 10 ans (ligne directe) en cas de difficultés de liquidités — demande à formuler auprès de l'administration</li>
+          <li><strong>Paiement en nature :</strong> possible pour certains biens culturels ou naturels (dation en paiement)</li>
+          <li><strong>Intérêts de retard :</strong> 0,20 % par mois en cas de dépôt tardif (art. 1727 CGI)</li>
+        </ul>
+      </div>
+
+      <div class="doc-section" id="doc-s8">
+        <h3>8. Réserve héréditaire et quotité disponible</h3>
+        <p>La réserve héréditaire est la fraction minimale du patrimoine que les <strong>héritiers réservataires</strong> (descendants, à défaut conjoint) ne peuvent se voir priver par des libéralités.</p>
+        <table class="doc-table">
+          <thead><tr><th>Situation</th><th>Réserve totale</th><th>Quotité disponible</th></tr></thead>
+          <tbody>
+            <tr><td>1 enfant</td><td>½ de la succession</td><td>½</td></tr>
+            <tr><td>2 enfants</td><td>⅔ de la succession</td><td>⅓</td></tr>
+            <tr><td>3 enfants et plus</td><td>¾ de la succession</td><td>¼</td></tr>
+            <tr><td>Aucun descendant (conjoint seul)</td><td>¼ de la succession</td><td>¾</td></tr>
+          </tbody>
+        </table>
+        <p>L'action en réduction permet aux héritiers réservataires de faire réduire les libéralités qui portent atteinte à leur réserve.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// BARÈMES (CGI art. 777 — 2024)
+// ══════════════════════════════════════════════════════
+const BAREME_DIRECT = [
+  {min:0,      max:8072,    taux:0.05},
+  {min:8072,   max:12109,   taux:0.10},
+  {min:12109,  max:15932,   taux:0.15},
+  {min:15932,  max:552324,  taux:0.20},
+  {min:552324, max:902838,  taux:0.30},
+  {min:902838, max:1805677, taux:0.40},
+  {min:1805677,max:Infinity,taux:0.45},
+];
+const BAREME_FRERES = [{min:0,max:24430,taux:0.35},{min:24430,max:Infinity,taux:0.45}];
+const BAREME_NEVEUX = [{min:0,max:Infinity,taux:0.55}];
+const BAREME_TIERS  = [{min:0,max:Infinity,taux:0.60}];
+
+const LIENS = {
+  conjoint:    {label:'Conjoint / PACS',               abat:Infinity,  bareme:[]},
+  enfant:      {label:'Enfant',                         abat:100000,    bareme:BAREME_DIRECT},
+  ascendant:   {label:'Père / Mère',                    abat:100000,    bareme:BAREME_DIRECT},
+  petitenfant: {label:'Petit-enfant',                   abat:1594,      bareme:BAREME_DIRECT},
+  arriere:     {label:'Arrière-petit-enfant',           abat:1594,      bareme:BAREME_DIRECT},
+  frere_soeur: {label:'Frère / Sœur',                  abat:15932,     bareme:BAREME_FRERES},
+  neveu_niece: {label:'Neveu / Nièce',                  abat:7967,      bareme:BAREME_NEVEUX},
+  handicape:   {label:'Handicapé (art. 779 II)',        abat:159325,    bareme:BAREME_DIRECT},
+  autre:       {label:'Autre (non-parent)',              abat:1594,      bareme:BAREME_TIERS},
+};
+
+function calcDroits(base, bareme) {
+  if (!bareme || !bareme.length) return 0;
+  let imp = 0;
+  for (const t of bareme) {
+    if (base <= t.min) break;
+    imp += (Math.min(base, t.max) - t.min) * t.taux;
+  }
+  return imp;
+}
+
+// ══════════════════════════════════════════════════════
+// SCÉNARIOS
+// ══════════════════════════════════════════════════════
+let scenarios = [];
+let activeScen = 0;
+
+function defaultScenData() {
+  return {
+    name: 'Scénario',
+    nomDefunt:'', situFam:'celibataire',
+    actifImmo:0, actifTitres:0, actifLiquidites:0, actifAV:0, actifParts:0, actifMeubles:0, actifAutres:0,
+    passifEmprunt:0, passifFisc:0, passifAutres:0, passifFuneraires:1500,
+    dutreilValeur:0, dutreilTaux:0.75, ruralValeur75:0, ruralValeur50:0, exoMonuments:0, exoAutres:0,
+    heritiers:[], av1List:[], av2Primes:0,
+  };
+}
+
+function initScenarios() {
+  const s = defaultScenData();
+  s.name = 'Scénario 1';
+  s.heritiers = [
+    {id:1, nom:'Héritier 1', lien:'enfant', part:50, donations:0},
+    {id:2, nom:'Héritier 2', lien:'enfant', part:50, donations:0},
+  ];
+  s.av1List = [];
+  scenarios = [s];
+  activeScen = 0;
+  heritId = 2; av1Id = 0;
+  loadScenario(0);
+}
+
+function saveCurrentScenario() {
+  const s = scenarios[activeScen];
+  s.name = document.getElementById('nomDefunt').value || s.name;
+  s.nomDefunt = document.getElementById('nomDefunt').value;
+  s.situFam = val('situFam');
+  ['actifImmo','actifTitres','actifLiquidites','actifAV','actifParts','actifMeubles','actifAutres',
+   'passifEmprunt','passifFisc','passifAutres','passifFuneraires',
+   'dutreilValeur','ruralValeur75','ruralValeur50','exoMonuments','exoAutres','av2Primes'].forEach(id => {
+    s[id] = pf(id);
+  });
+  s.dutreilTaux = parseFloat(val('dutreilTaux')) || 0.75;
+  s.heritiers = heritiers.map(h => ({...h}));
+  s.av1List   = av1List.map(a => ({...a}));
+  renderScenButtons();
+}
+
+function loadScenario(idx) {
+  activeScen = idx;
+  const s = scenarios[idx];
+  document.getElementById('nomDefunt').value = s.nomDefunt || '';
+  document.getElementById('situFam').value   = s.situFam || 'celibataire';
+  ['actifImmo','actifTitres','actifLiquidites','actifAV','actifParts','actifMeubles','actifAutres',
+   'passifEmprunt','passifFisc','passifAutres',
+   'dutreilValeur','ruralValeur75','ruralValeur50','exoMonuments','exoAutres','av2Primes'].forEach(id => {
+    document.getElementById(id).value = s[id] || '';
+  });
+  document.getElementById('passifFuneraires').value = s.passifFuneraires || 1500;
+  document.getElementById('dutreilTaux').value = s.dutreilTaux || 0.75;
+  heritiers = (s.heritiers || []).map(h => ({...h}));
+  av1List   = (s.av1List || []).map(a => ({...a}));
+  heritId   = heritiers.reduce((m,h) => Math.max(m, h.id), 0);
+  av1Id     = av1List.reduce((m,a) => Math.max(m, a.id), 0);
+  renderScenButtons();
+  compute();
+}
+
+function newScenario() {
+  saveCurrentScenario();
+  const n = scenarios.length + 1;
+  const s = defaultScenData();
+  s.name = 'Scénario ' + n;
+  scenarios.push(s);
+  heritId = 0; av1Id = 0;
+  loadScenario(scenarios.length - 1);
+}
+
+function switchScenario(idx) {
+  saveCurrentScenario();
+  loadScenario(idx);
+}
+
+function renderScenButtons() {
+  const c = document.getElementById('scenBtns');
+  c.innerHTML = '';
+  scenarios.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'scen-btn ' + (i === activeScen ? 'active' : 'inactive');
+    b.textContent = s.name || ('Scénario ' + (i+1));
+    b.onclick = () => switchScenario(i);
+    c.appendChild(b);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// HÉRITIERS
+// ══════════════════════════════════════════════════════
+let heritiers = [];
+let heritId = 0;
+
+function addHeritier(data = {}) {
+  const id = ++heritId;
+  heritiers.push({ id, nom: data.nom||'', lien: data.lien||'enfant', part: data.part||0, donations: data.donations||0 });
+  renderHeritiers();
+  compute();
+}
+
+function removeHeritier(id) {
+  heritiers = heritiers.filter(h => h.id !== id);
+  renderHeritiers();
+  compute();
+}
+
+function setHV(id, f, v) { const h = heritiers.find(h=>h.id===id); if(h) h[f]=v; }
+
+function renderHeritiers() {
+  const ant = calcActifNetTaxable();
+  const tbody = document.getElementById('heritTbody');
+  tbody.innerHTML = '';
+  heritiers.forEach(h => {
+    const info = LIENS[h.lien] || LIENS.autre;
+    const mont = ant * (h.part / 100);
+    const abat = info.abat === Infinity ? mont + h.donations : info.abat;
+    const base = Math.max(0, mont + h.donations - abat);
+    const drts = info.abat === Infinity ? 0 : calcDroits(base, info.bareme);
+    const tr   = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" value="${esc(h.nom)}" placeholder="Prénom NOM" oninput="setHV(${h.id},'nom',this.value)"></td>
+      <td><select onchange="setHV(${h.id},'lien',this.value);compute()">
+        ${Object.entries(LIENS).map(([k,v])=>`<option value="${k}" ${h.lien===k?'selected':''}>${v.label}</option>`).join('')}
+      </select></td>
+      <td><input type="number" value="${h.part}" min="0" max="100" step="0.01" style="width:65px" oninput="setHV(${h.id},'part',parseFloat(this.value)||0);compute()"> %</td>
+      <td class="val-cell">${fmtE(mont)}</td>
+      <td><input type="number" value="${h.donations}" placeholder="0" min="0" style="width:110px" oninput="setHV(${h.id},'donations',parseFloat(this.value)||0);compute()"></td>
+      <td class="val-cell">${info.abat===Infinity?'Exonéré':fmtE(abat)}</td>
+      <td class="val-cell">${info.abat===Infinity?'0 €':fmtE(base)}</td>
+      <td class="val-cell" style="font-weight:bold;color:${drts>0?'var(--danger)':'var(--success)'}">${fmtE(drts)}</td>
+      <td><button class="del-btn" onclick="removeHeritier(${h.id})">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// ASSURANCE-VIE AV1
+// ══════════════════════════════════════════════════════
+let av1List = [];
+let av1Id   = 0;
+const AV1_ABAT = 152500;
+
+function addAV1(data={}) {
+  const id = ++av1Id;
+  av1List.push({id, nom:data.nom||'', capital:data.capital||0});
+  renderAV1(); compute();
+}
+function removeAV1(id) { av1List=av1List.filter(a=>a.id!==id); renderAV1(); compute(); }
+function setA1V(id,f,v){ const a=av1List.find(a=>a.id===id); if(a) a[f]=v; }
+function av1Prel(base) {
+  if (base<=0) return 0;
+  return Math.min(base,700000)*0.20 + Math.max(0,base-700000)*0.3125;
+}
+function renderAV1() {
+  const tbody=document.getElementById('av1Tbody');
+  tbody.innerHTML='';
+  let tC=0,tB=0,tP=0;
+  av1List.forEach(a=>{
+    const base=Math.max(0,a.capital-AV1_ABAT);
+    const prel=av1Prel(base);
+    tC+=a.capital; tB+=base; tP+=prel;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><input type="text" value="${esc(a.nom)}" placeholder="Bénéficiaire" oninput="setA1V(${a.id},'nom',this.value)"></td>
+      <td><input type="number" value="${a.capital}" placeholder="0" min="0" oninput="setA1V(${a.id},'capital',parseFloat(this.value)||0);renderAV1();compute()"></td>
+      <td class="val-cell">${fmtE(Math.min(a.capital,AV1_ABAT))}</td>
+      <td class="val-cell">${fmtE(base)}</td>
+      <td class="val-cell" style="font-weight:bold;color:${prel>0?'var(--danger)':'var(--success)'}">${fmtE(prel)}</td>
+      <td><button class="del-btn" onclick="removeAV1(${a.id})">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('av1TotalCapital').textContent=fmtE(tC);
+  document.getElementById('av1TotalBase').textContent=fmtE(tB);
+  document.getElementById('av1TotalPrel').textContent=fmtE(tP);
+}
+
+// ══════════════════════════════════════════════════════
+// CALCULS
+// ══════════════════════════════════════════════════════
+function calcActifBrut() {
+  return pf('actifImmo')+pf('actifTitres')+pf('actifLiquidites')+pf('actifAV')+pf('actifParts')+pf('actifMeubles')+pf('actifAutres');
+}
+function calcPassif() {
+  return pf('passifEmprunt')+pf('passifFisc')+pf('passifAutres')+(pf('passifFuneraires')||1500);
+}
+function calcExo() {
+  const dutreil=(pf('dutreilValeur'))*(parseFloat(val('dutreilTaux'))||0.75);
+  const r75=pf('ruralValeur75')*0.75, r50=pf('ruralValeur50')*0.50;
+  const mon=pf('exoMonuments'), aut=pf('exoAutres');
+  return {dutreil,r75,r50,mon,aut,total:dutreil+r75+r50+mon+aut};
+}
+function calcActifNetTaxable() {
+  return Math.max(0, calcActifBrut()-calcPassif()-calcExo().total);
+}
+
+function getComputedTotals() {
+  const ant = calcActifNetTaxable();
+  let totMont=0, totDroits=0, totParts=0;
+  const hData = heritiers.map(h => {
+    const info=LIENS[h.lien]||LIENS.autre;
+    const mont=ant*(h.part/100);
+    const abat=info.abat===Infinity?mont+h.donations:info.abat;
+    const base=Math.max(0,mont+h.donations-abat);
+    const drts=info.abat===Infinity?0:calcDroits(base,info.bareme);
+    totMont+=mont; totDroits+=drts; totParts+=h.part;
+    return {...h, lienLabel:info.label, montant:mont, abat:Math.min(abat,mont+h.donations), base, droits:drts};
+  });
+  const av2primes=pf('av2Primes'), av2abat=Math.min(av2primes,30500), av2taxable=Math.max(0,av2primes-30500);
+  let av1TotCap=0,av1TotBase=0,av1TotPrel=0;
+  av1List.forEach(a=>{ av1TotCap+=a.capital; const b=Math.max(0,a.capital-AV1_ABAT); av1TotBase+=b; av1TotPrel+=av1Prel(b); });
+  return {
+    brut:calcActifBrut(), passif:calcPassif(), exo:calcExo(),
+    actifNet:Math.max(0,calcActifBrut()-calcPassif()),
+    actifNetTaxable:ant,
+    heritiers:hData, totalMontant:totMont, totalDroits:totDroits, totalParts:totParts,
+    av1TotCap, av1TotBase, av1TotPrel,
+    av2primes, av2abat, av2taxable,
+    nomDefunt:document.getElementById('nomDefunt').value,
+  };
+}
+
+function compute() {
+  const brut=calcActifBrut();
+  document.getElementById('totalActifBrut').textContent=fmtE(brut);
+  const passif=calcPassif();
+  document.getElementById('actifNet').textContent=fmtE(Math.max(0,brut-passif));
+  const exo=calcExo();
+  document.getElementById('dutreilResult').value=exo.dutreil||'';
+  document.getElementById('ruralResult').value=(exo.r75+exo.r50)||'';
+  const ant=calcActifNetTaxable();
+  document.getElementById('actifNetTaxable').textContent=fmtE(ant);
+  renderHeritiers();
+  renderAV1();
+  // Héritiers totaux
+  let totP=0,totD=0,totM=0;
+  heritiers.forEach(h=>{
+    const info=LIENS[h.lien]||LIENS.autre;
+    const mont=ant*(h.part/100); totM+=mont; totP+=h.part;
+    const abat=info.abat===Infinity?mont+h.donations:info.abat;
+    const base=Math.max(0,mont+h.donations-abat);
+    totD+=info.abat===Infinity?0:calcDroits(base,info.bareme);
+  });
+  document.getElementById('totalParts').textContent=fmtN(totP,2)+' %';
+  document.getElementById('totalMontantRecu').textContent=fmtE(totM);
+  document.getElementById('totalDroits').textContent=fmtE(totD);
+  // AV2
+  const av2p=pf('av2Primes'),av2a=Math.min(av2p,30500);
+  document.getElementById('av2Abat').value=av2a||'';
+  document.getElementById('av2Taxable').value=Math.max(0,av2p-30500)||'';
+  renderResults(getComputedTotals());
+  saveCurrentScenario();
+}
+
+function renderResults(r) {
+  const body=document.getElementById('resultsBody');
+  if (r.brut===0 && r.heritiers.length===0) {
+    body.innerHTML='<div class="empty-state"><div style="font-size:40px;margin-bottom:.5rem">⚖️</div>Renseignez l\'actif et les héritiers pour afficher les résultats</div>';
+    return;
+  }
+  body.innerHTML=`
+    <div class="metric-grid">
+      <div class="metric"><div class="m-label">Actif brut</div><div class="m-val">${fmtE(r.brut)}</div></div>
+      <div class="metric"><div class="m-label">Passif + exonérations</div><div class="m-val">− ${fmtE(r.passif+r.exo.total)}</div></div>
+      <div class="metric"><div class="m-label">Actif net taxable</div><div class="m-val highlight">${fmtE(r.actifNetTaxable)}</div></div>
+    </div>
+
+    <div class="breakdown">
+      <div class="breakdown-row section-head"><span>Liquidation — Actif &amp; passif</span><span></span></div>
+      <div class="breakdown-row"><span class="label">Actif brut successoral</span><span class="amount">${fmtE(r.brut)}</span></div>
+      ${r.brut>0?`
+      <div class="breakdown-row indent"><span class="label">— Immobilier</span><span class="amount">${fmtE(pf('actifImmo'))}</span></div>
+      <div class="breakdown-row indent"><span class="label">— Titres financiers</span><span class="amount">${fmtE(pf('actifTitres'))}</span></div>
+      <div class="breakdown-row indent"><span class="label">— Liquidités</span><span class="amount">${fmtE(pf('actifLiquidites'))}</span></div>
+      <div class="breakdown-row indent"><span class="label">— Assurance-vie (succession)</span><span class="amount">${fmtE(pf('actifAV'))}</span></div>
+      <div class="breakdown-row indent"><span class="label">— Parts sociales</span><span class="amount">${fmtE(pf('actifParts'))}</span></div>
+      <div class="breakdown-row indent"><span class="label">— Meubles &amp; autres</span><span class="amount">${fmtE(pf('actifMeubles')+pf('actifAutres'))}</span></div>
+      `:''}
+      <div class="breakdown-row"><span class="label">Passif déductible</span><span class="amount">− ${fmtE(r.passif)}</span></div>
+      <div class="breakdown-row sub-total"><span class="label">Actif net avant exonérations</span><span class="amount">${fmtE(r.actifNet)}</span></div>
+      ${r.exo.total>0?`
+      ${r.exo.dutreil>0?`<div class="breakdown-row"><span class="label">Exo. Dutreil (art. 787 B)</span><span class="amount">− ${fmtE(r.exo.dutreil)}</span></div>`:''}
+      ${(r.exo.r75+r.exo.r50)>0?`<div class="breakdown-row"><span class="label">Exo. biens ruraux (art. 793)</span><span class="amount">− ${fmtE(r.exo.r75+r.exo.r50)}</span></div>`:''}
+      ${r.exo.mon>0?`<div class="breakdown-row"><span class="label">Exo. monuments historiques</span><span class="amount">− ${fmtE(r.exo.mon)}</span></div>`:''}
+      `:''}
+      <div class="breakdown-row total-row"><span class="label">Actif net taxable</span><span class="amount">${fmtE(r.actifNetTaxable)}</span></div>
+    </div>
+
+    ${r.heritiers.length>0?`
+    <div style="margin-bottom:1.5rem;">
+      ${r.heritiers.map(h=>{
+        const isExo=LIENS[h.lien]&&LIENS[h.lien].abat===Infinity;
+        return `
+        <div class="herit-result-block">
+          <div class="herit-result-header">
+            <span>${h.nom||'Héritier '+h.id} — ${h.lienLabel||h.lien}</span>
+            <span class="drp ${h.droits>0?'red':''}">${isExo?'⭐ Exonéré':'Droits : '+fmtE(h.droits)}</span>
+          </div>
+          <div class="breakdown" style="border:none;border-radius:0;margin:0;">
+            <div class="breakdown-row"><span class="label">Part successorale (${fmtN(h.part,2)} %)</span><span class="amount">${fmtE(h.montant)}</span></div>
+            ${h.donations>0?`<div class="breakdown-row"><span class="label">Rappel fiscal (donations &lt; 15 ans)</span><span class="amount">+ ${fmtE(h.donations)}</span></div>`:''}
+            <div class="breakdown-row"><span class="label">Abattement (${isExo?'exonération totale':fmtE(h.abat)})</span><span class="amount">− ${fmtE(isExo?h.montant+h.donations:Math.min(h.abat,h.montant+h.donations))}</span></div>
+            <div class="breakdown-row sub-total"><span class="label">Base taxable nette</span><span class="amount">${fmtE(h.base)}</span></div>
+            <div class="breakdown-row total-row"><span class="label">Droits de succession</span><span class="amount">${isExo?'0 € (exonéré)':fmtE(h.droits)}</span></div>
+          </div>
+          ${h.base>0&&!isExo?renderBareme(h.base,LIENS[h.lien].bareme):''}
+        </div>`;
+      }).join('')}
+    </div>
+    `:''}
+
+    ${r.av1TotCap>0||r.av2primes>0?`
+    <div class="breakdown" style="margin-bottom:1.5rem;">
+      ${r.av1TotCap>0?`
+      <div class="breakdown-row section-head"><span>Assurance-vie avant 70 ans — art. 990 I</span><span></span></div>
+      <div class="breakdown-row"><span class="label">Capitaux transmis</span><span class="amount">${fmtE(r.av1TotCap)}</span></div>
+      <div class="breakdown-row"><span class="label">Abattements (152 500 € / bénéf.)</span><span class="amount">− ${fmtE(r.av1TotCap-r.av1TotBase)}</span></div>
+      <div class="breakdown-row sub-total"><span class="label">Base taxable</span><span class="amount">${fmtE(r.av1TotBase)}</span></div>
+      <div class="breakdown-row total-row"><span class="label">Prélèvement forfaitaire</span><span class="amount">${fmtE(r.av1TotPrel)}</span></div>
+      `:''}
+      ${r.av2primes>0?`
+      <div class="breakdown-row section-head"><span>Assurance-vie après 70 ans — art. 757 B</span><span></span></div>
+      <div class="breakdown-row"><span class="label">Primes versées après 70 ans</span><span class="amount">${fmtE(r.av2primes)}</span></div>
+      <div class="breakdown-row"><span class="label">Abattement 30 500 €</span><span class="amount">− ${fmtE(r.av2abat)}</span></div>
+      <div class="breakdown-row sub-total"><span class="label">Fraction imposable</span><span class="amount">${fmtE(r.av2taxable)}</span></div>
+      `:''}
+    </div>
+    `:''}
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+      <div class="metric featured"><div class="m-label">Total droits succession</div><div class="m-val">${fmtE(r.totalDroits)}</div><div class="m-sub">${r.totalDroits>0?'Exigibles dans les 6 mois':'Aucun droit dû'}</div></div>
+      <div class="metric featured"><div class="m-label">Prélèvements AV (art. 990 I)</div><div class="m-val">${fmtE(r.av1TotPrel)}</div><div class="m-sub">Hors succession civile</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:0.5rem;">
+      <div class="metric"><div class="m-label">Actif net taxable</div><div class="m-val highlight">${fmtE(r.actifNetTaxable)}</div></div>
+      <div class="metric"><div class="m-label">Parts distribuées</div><div class="m-val">${fmtN(r.totalParts,2)} %</div><div class="m-sub">${Math.abs(r.totalParts-100)<0.01?'✔ Total = 100 %':r.totalParts>100?'⚠ Dépassement':'⚠ Parts incomplètes'}</div></div>
+      <div class="metric"><div class="m-label">Taux effectif global</div><div class="m-val">${r.actifNetTaxable>0&&r.totalMontant>0?((r.totalDroits/r.totalMontant)*100).toFixed(2)+' %':'—'}</div><div class="m-sub">Droits / montant distribué</div></div>
+    </div>`;
+}
+
+function renderBareme(base, bareme) {
+  const rows = bareme.map(t=>{
+    if (base<=t.min) return '';
+    const a=Math.min(base,t.max)-t.min, i=a*t.taux;
+    const ml=t.max===Infinity?'et plus':fmtE(t.max);
+    return `<tr class="active-band"><td>${fmtE(t.min)} — ${ml}</td><td>${(t.taux*100).toFixed(0)} %</td><td>${fmtE(a)}</td><td>${fmtE(i)}</td></tr>`;
+  }).join('');
+  if (!rows) return '';
+  return `<details style="font-family:Arial,sans-serif;font-size:12px;padding:0.75rem 1rem;background:var(--off-white);">
+    <summary style="cursor:pointer;color:var(--navy);">📊 Détail du barème</summary>
+    <table class="bareme-table" style="margin-top:.5rem">
+      <thead><tr><th>Tranche</th><th>Taux</th><th>Assiette</th><th>Impôt</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </details>`;
+}
+
+// ══════════════════════════════════════════════════════
+// COMPARATEUR
+// ══════════════════════════════════════════════════════
+function openCompare() {
+  saveCurrentScenario();
+  const body = document.getElementById('compareBody');
+  const valid = scenarios.filter(s => s.actifNetTaxable !== undefined || s.actifImmo > 0 || s.actifLiquidites > 0);
+  if (scenarios.length < 2) {
+    body.innerHTML = '<div class="empty-state">Créez au moins 2 scénarios pour les comparer.</div>';
+    document.getElementById('comparePanel').classList.add('open');
+    return;
+  }
+  // Recompute each scenario
+  const results = scenarios.map(s => {
+    const brut = s.actifImmo+s.actifTitres+s.actifLiquidites+s.actifAV+s.actifParts+s.actifMeubles+s.actifAutres;
+    const passif = s.passifEmprunt+s.passifFisc+s.passifAutres+(s.passifFuneraires||1500);
+    const actifNet = Math.max(0, brut-passif);
+    const dutreil=(s.dutreilValeur||0)*(s.dutreilTaux||0.75);
+    const r75=(s.ruralValeur75||0)*0.75, r50=(s.ruralValeur50||0)*0.50;
+    const exoTotal=dutreil+r75+r50+(s.exoMonuments||0)+(s.exoAutres||0);
+    const ant=Math.max(0,actifNet-exoTotal);
+    let totD=0, totM=0;
+    (s.heritiers||[]).forEach(h=>{
+      const info=LIENS[h.lien]||LIENS.autre;
+      const mont=ant*(h.part/100); totM+=mont;
+      const abat=info.abat===Infinity?mont+h.donations:info.abat;
+      const base=Math.max(0,mont+h.donations-abat);
+      totD+=info.abat===Infinity?0:calcDroits(base,info.bareme);
+    });
+    let av1P=0;
+    (s.av1List||[]).forEach(a=>{ const b=Math.max(0,a.capital-AV1_ABAT); av1P+=av1Prel(b); });
+    return {name:s.name||'Scénario', brut, passif, exoTotal, actifNet, actifNetTaxable:ant, totDroits:totD, totMontant:totM, av1Prel:av1P};
+  });
+
+  const minD = Math.min(...results.map(r=>r.totDroits));
+  const maxD = Math.max(...results.map(r=>r.totDroits));
+
+  const th = `<th class="scen-col">${results.map(r=>`${r.name}`).join('</th><th class="scen-col">')}</th>`;
+  function row(label, fn, isTotal=false, isSection=false) {
+    if (isSection) return `<tr class="section-row"><td colspan="${1+results.length}">${label}</td></tr>`;
+    const vals = results.map(r=>fn(r));
+    const mn=Math.min(...vals.filter(v=>isFinite(v))), mx=Math.max(...vals.filter(v=>isFinite(v)));
+    const cells = results.map(r=>{
+      const v=fn(r);
+      let cls='scen-val';
+      if (isTotal && v===mn && mn!==mx) cls+=' best';
+      if (isTotal && v===mx && mn!==mx) cls+=' worst';
+      return `<td class="${cls}">${isFinite(v)?fmtE(v):'—'}</td>`;
+    }).join('');
+    return `<tr${isTotal?' class="highlight-row"':''}><td>${label}</td>${cells}</tr>`;
+  }
+
+  body.innerHTML = `<table class="compare-table">
+    <thead><tr><th>Indicateur</th>${th}</tr></thead>
+    <tbody>
+      ${row('Actif &amp; passif','',false,true)}
+      ${row('Actif brut',r=>r.brut)}
+      ${row('Passif déductible',r=>r.passif)}
+      ${row('Exonérations (Dutreil, rural…)',r=>r.exoTotal)}
+      ${row('Actif net taxable',r=>r.actifNetTaxable,false)}
+      ${row('Droits de succession',''  ,false,true)}
+      ${row('Total droits succession',r=>r.totDroits,true)}
+      ${row('Prélèvements AV (art. 990 I)',r=>r.av1Prel)}
+      ${row('Charge fiscale totale',r=>r.totDroits+r.av1Prel,true)}
+      ${row('Taux effectif',r=>r.totMontant>0?parseFloat(((r.totDroits/r.totMontant)*100).toFixed(2)):0)}
+    </tbody>
+  </table>
+  <p style="font-family:Arial,sans-serif;font-size:11px;color:var(--text-light);margin-top:1rem;font-style:italic;">
+    🟢 Valeur la plus faible (meilleure) · 🔴 Valeur la plus élevée · Comparaison indicative</p>`;
+
+  document.getElementById('comparePanel').classList.add('open');
+}
+function closeCompare() { document.getElementById('comparePanel').classList.remove('open'); }
+
+// ══════════════════════════════════════════════════════
+// EXPORT PDF (impression navigateur)
+// ══════════════════════════════════════════════════════
+function exportPDF() {
+  saveCurrentScenario();
+  window.print();
+}
+
+// ══════════════════════════════════════════════════════
+// EXPORT PPTX (PptxGenJS côté navigateur)
+// ══════════════════════════════════════════════════════
+function exportPPTX() {
+  saveCurrentScenario();
+  const r = getComputedTotals();
+
+  const C = {
+    navy:  "2C1810", navyL: "3D2218", gold: "C4956A", goldL: "E0B990",
+    white: "FFFFFF", offW:  "FAF6F2", border:"D4B8A0", red:"A03030", green:"2D6A4F",
+    headBg:"EDE3D8",
+  };
+
+  let pres = new PptxGenJS();
+  pres.layout = 'LAYOUT_16x9';
+  pres.author = 'Arthur Beldi — Droit fiscal';
+  pres.title  = 'Succession — ' + (r.nomDefunt || 'Dossier');
+
+  const mk = () => ({ type:"outer", blur:5, offset:2, color:"000000", opacity:0.10 });
+
+  // ── Slide 1 — Couverture ────────────────────────────
+  let s1 = pres.addSlide();
+  s1.background = { color: C.navy };
+  s1.addShape(pres.shapes.RECTANGLE, { x:0, y:4.9, w:10, h:0.72, fill:{color:C.gold}, line:{color:C.gold} });
+  s1.addText("Simulation de Succession", { x:0.7, y:1.1, w:8.5, h:1.0, fontSize:36, bold:false, color:C.white, fontFace:"Georgia", align:"left" });
+  s1.addText("Liquidation civile et fiscale — Droits de mutation à titre gratuit", { x:0.7, y:2.1, w:8.5, h:0.4, fontSize:13, color:C.goldL, fontFace:"Arial", align:"left" });
+  if (r.nomDefunt) s1.addText("Dossier : "+r.nomDefunt, { x:0.7, y:2.65, w:8.5, h:0.35, fontSize:13, color:"AAAAAA", fontFace:"Arial" });
+  s1.addText("Outil indicatif — ne constitue pas un conseil fiscal · Art. 777 CGI", { x:0.7, y:3.5, w:8.5, h:0.35, fontSize:10, color:"888888", fontFace:"Arial", italic:true });
+  s1.addText("Arthur Beldi  ·  Droit fiscal", { x:0.7, y:4.95, w:8.5, h:0.35, fontSize:11, color:C.navy, fontFace:"Arial" });
+
+  // ── Slide 2 — Actif ────────────────────────────────
+  let s2 = pres.addSlide();
+  s2.background = { color: C.offW };
+  s2.addShape(pres.shapes.RECTANGLE, { x:0, y:0, w:10, h:0.7, fill:{color:C.navy}, line:{color:C.navy} });
+  s2.addText("Actif successoral", { x:0.4, y:0, w:7, h:0.7, fontSize:20, color:C.white, fontFace:"Georgia", valign:"middle" });
+  s2.addText("CGI art. 750 ter", { x:7.6, y:0.13, w:2, h:0.44, fontSize:10, color:C.navy, fontFace:"Arial", align:"center", bold:true, fill:{color:C.gold} });
+
+  const actifRows = [
+    [{text:"Poste",options:{bold:true,color:C.white,fill:{color:C.navy}}},{text:"Montant",options:{bold:true,color:C.white,fill:{color:C.navy},align:"right"}}],
+    ["Immobilier", {text:fmtE(r.brut?pf('actifImmo'):0),options:{align:"right"}}],
+    ["Titres financiers / PEA", {text:fmtE(pf('actifTitres')),options:{align:"right"}}],
+    ["Liquidités", {text:fmtE(pf('actifLiquidites')),options:{align:"right"}}],
+    ["Assurance-vie (succession)", {text:fmtE(pf('actifAV')),options:{align:"right"}}],
+    ["Parts sociales / entreprise", {text:fmtE(pf('actifParts')),options:{align:"right"}}],
+    ["Meubles & autres", {text:fmtE(pf('actifMeubles')+pf('actifAutres')),options:{align:"right"}}],
+    [{text:"Actif brut total",options:{bold:true,color:C.navy}},{text:fmtE(r.brut),options:{bold:true,color:C.navy,align:"right"}}],
+    [{text:"Passif déductible",options:{color:C.red}},{text:"− "+fmtE(r.passif),options:{color:C.red,align:"right"}}],
+    [{text:"Exonérations",options:{color:"777777"}},{text:"− "+fmtE(r.exo.total),options:{color:"777777",align:"right"}}],
+    [{text:"Actif net taxable",options:{bold:true,color:C.navy,fill:{color:C.headBg}}},{text:fmtE(r.actifNetTaxable),options:{bold:true,color:C.navy,align:"right",fill:{color:C.headBg}}}],
+  ];
+  s2.addTable(actifRows, { x:0.5, y:0.85, w:9, colW:[6,3], border:{pt:0.4,color:C.border}, fill:{color:C.white}, fontSize:12, fontFace:"Arial", rowH:0.32 });
+
+  // ── Slide 3 — Héritiers ─────────────────────────────
+  let s3 = pres.addSlide();
+  s3.background = { color: C.offW };
+  s3.addShape(pres.shapes.RECTANGLE, { x:0, y:0, w:10, h:0.7, fill:{color:C.navy}, line:{color:C.navy} });
+  s3.addText("Droits de succession par héritier", { x:0.4, y:0, w:9, h:0.7, fontSize:20, color:C.white, fontFace:"Georgia", valign:"middle" });
+
+  const hRows = [
+    [{text:"Héritier",options:{bold:true,color:C.white,fill:{color:C.navy}}},{text:"Lien",options:{bold:true,color:C.white,fill:{color:C.navy}}},{text:"Part",options:{bold:true,color:C.white,fill:{color:C.navy},align:"right"}},{text:"Montant",options:{bold:true,color:C.white,fill:{color:C.navy},align:"right"}},{text:"Abattement",options:{bold:true,color:C.white,fill:{color:C.navy},align:"right"}},{text:"Base taxable",options:{bold:true,color:C.white,fill:{color:C.navy},align:"right"}},{text:"Droits",options:{bold:true,color:C.white,fill:{color:C.navy},align:"right"}}],
+    ...r.heritiers.map(h=>[
+      h.nom||"—",
+      h.lienLabel||h.lien||"—",
+      {text:(h.part||0).toFixed(1)+" %",options:{align:"right"}},
+      {text:fmtE(h.montant),options:{align:"right"}},
+      {text:fmtE(h.abat),options:{align:"right"}},
+      {text:fmtE(h.base),options:{align:"right"}},
+      {text:fmtE(h.droits),options:{bold:true,color:(h.droits||0)>0?C.red:C.green,align:"right"}},
+    ]),
+    [{text:"TOTAL",options:{bold:true,fill:{color:C.headBg}}},{text:"",options:{fill:{color:C.headBg}}},{text:"",options:{fill:{color:C.headBg}}},{text:fmtE(r.totalMontant),options:{bold:true,align:"right",fill:{color:C.headBg}}},{text:"",options:{fill:{color:C.headBg}}},{text:"",options:{fill:{color:C.headBg}}},{text:fmtE(r.totalDroits),options:{bold:true,color:C.red,align:"right",fill:{color:C.headBg}}}],
+  ];
+  s3.addTable(hRows, { x:0.3, y:0.85, w:9.4, colW:[2.0,1.5,0.8,1.4,1.4,1.4,1.4], border:{pt:0.4,color:C.border}, fill:{color:C.white}, fontSize:11, fontFace:"Arial", rowH:0.33 });
+
+  // ── Slide 4 — Récap ─────────────────────────────────
+  let s4 = pres.addSlide();
+  s4.background = { color: C.navy };
+  s4.addText("Récapitulatif financier", { x:0.7, y:0.35, w:8, h:0.65, fontSize:28, color:C.white, fontFace:"Georgia" });
+  const boxes = [
+    {x:0.7,y:1.1,w:3.9,h:1.35,lbl:"Actif net taxable",val:fmtE(r.actifNetTaxable),vc:C.white},
+    {x:5.2,y:1.1,w:4.1,h:1.35,lbl:"Total droits succession",val:fmtE(r.totalDroits),vc:r.totalDroits>0?"FF8888":"88EEB0"},
+    {x:0.7,y:2.65,w:3.9,h:1.35,lbl:"Parts distribuées",val:r.totalParts.toFixed(1)+" %",vc:C.white},
+    {x:5.2,y:2.65,w:4.1,h:1.35,lbl:"Taux effectif global",val:r.totalMontant>0?((r.totalDroits/r.totalMontant)*100).toFixed(2)+" %":"—",vc:C.white},
+  ];
+  boxes.forEach(b=>{
+    s4.addShape(pres.shapes.RECTANGLE, { x:b.x, y:b.y, w:b.w, h:b.h, fill:{color:C.navyL}, line:{color:C.gold}, shadow:mk() });
+    s4.addText(b.lbl, { x:b.x+0.1, y:b.y+0.07, w:b.w-0.2, h:0.35, fontSize:10, color:C.goldL, fontFace:"Arial" });
+    s4.addText(b.val, { x:b.x+0.1, y:b.y+0.42, w:b.w-0.2, h:0.7, fontSize:24, color:b.vc, fontFace:"Georgia" });
+  });
+  if (r.av1TotPrel>0) {
+    s4.addShape(pres.shapes.RECTANGLE, { x:0.7, y:4.2, w:8.6, h:0.85, fill:{color:"1A2820"}, line:{color:C.gold} });
+    s4.addText("Prélèvements AV avant 70 ans (art. 990 I) : "+fmtE(r.av1TotPrel), { x:0.85, y:4.25, w:8.3, h:0.75, fontSize:13, color:C.goldL, fontFace:"Arial", valign:"middle" });
+  }
+  s4.addText("Outil indicatif — Arthur Beldi · Droit fiscal · Art. 777 et s. CGI", { x:0.5, y:5.3, w:9, h:0.3, fontSize:9, color:"555555", fontFace:"Arial", align:"center", italic:true });
+
+  const fname = 'Succession_'+(r.nomDefunt||'Dossier').replace(/\s+/g,'_')+'_AB.pptx';
+  pres.writeFile({fileName: fname});
+}
+
+// ══════════════════════════════════════════════════════
+// DOC MODAL
+// ══════════════════════════════════════════════════════
+function openDoc() { document.getElementById('docModal').classList.add('open'); }
+function closeDoc() { document.getElementById('docModal').classList.remove('open'); }
+
+// ══════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════
+function pf(id){ return parseFloat(document.getElementById(id)?.value)||0; }
+function val(id){ return document.getElementById(id)?.value||''; }
+function fmtN(n,d=0){ if(!isFinite(n)) return '—'; return n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function fmtE(n){ if(!isFinite(n)) return '—'; return fmtN(n,0)+' €'; }
+function esc(s){ return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', initScenarios);
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') { closeDoc(); closeCompare(); }
+});
+</script>
+</body>
+</html>
