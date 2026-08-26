@@ -261,6 +261,75 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 
 .fiche[data-bloquant="oui"] { border-color: var(--stop); }
 
+/* Une fiche arbitrée se réduit à son titre : elle reste consultable, sans
+   encombrer la lecture de ce qui reste à trancher. */
+.fiche.reduite { background: var(--surface-2); }
+.fiche.reduite[data-bloquant="oui"] { border-color: var(--rule); }
+
+.replier {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 22px;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.replier:hover { background: var(--surface); }
+
+.replier .fiche-ref { padding-top: 0; }
+
+.replier-titre {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -.01em;
+  margin-right: auto;
+  min-width: 0;
+}
+
+.resolu {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ok);
+  background: var(--ok-soft);
+  border-radius: 5px;
+  padding: 4px 9px;
+}
+
+.resolu::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  background: currentColor;
+}
+
+.resolu-detail {
+  flex: 0 1 auto;
+  font-size: 13px;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron { flex: 0 0 auto; color: var(--ink-faint); font-size: 12px; }
+
+@media (max-width: 700px) { .resolu-detail { display: none; } }
+
 .fiche-tete {
   display: flex;
   gap: 14px;
@@ -703,6 +772,7 @@ textarea::placeholder { color: var(--ink-faint); }
   var artifact = null;
   var capacite = "attente";
   var enAttente = false;
+  var deplies = {};
 
   /**
    * Brouillon local, propre au navigateur du lecteur.
@@ -800,7 +870,27 @@ textarea::placeholder { color: var(--ink-faint); }
     return h;
   }
 
+  /** Une fiche déjà arbitrée est réduite, sauf si le lecteur l'a rouverte. */
+  function estReduite(p) {
+    return !p.sansDecision && estRepondu(p) && !deplies[p.ref];
+  }
+
+  function ficheReduiteHtml(p) {
+    var r = etat.reponses[p.ref] || {};
+    var detail = p.libre ? (r.note || "").trim().split("\n")[0] : libelleChoix(p, r.choix);
+    var h = '<article class="fiche reduite" id="p-' + p.ref + '"' + (p.groupe === "bloquant" ? ' data-bloquant="oui"' : "") + ">";
+    h += '<button type="button" class="replier" data-deplier="' + p.ref + '" aria-expanded="false">';
+    h += '<span class="fiche-ref">' + ech(p.ref) + "</span>";
+    h += '<span class="replier-titre">' + ech(p.titre) + '<span class="fiche-sim">' + ech(p.simulateur) + "</span></span>";
+    h += '<span class="resolu">' + (p.libre ? "Répondu" : "Arbitré") + "</span>";
+    if (detail) h += '<span class="resolu-detail">' + ech(detail) + "</span>";
+    h += '<span class="chevron" aria-hidden="true">▾</span>';
+    h += "</button></article>";
+    return h;
+  }
+
   function ficheHtml(p) {
+    if (estReduite(p)) return ficheReduiteHtml(p);
     var r = etat.reponses[p.ref] || {};
     var h = '<article class="fiche" id="p-' + p.ref + '"' + (p.groupe === "bloquant" ? ' data-bloquant="oui"' : "") + ">";
 
@@ -951,15 +1041,15 @@ textarea::placeholder { color: var(--ink-faint); }
     barre.hidden = false;
   }
 
-  function brancher() {
-    document.querySelectorAll(".som-lien").forEach(function (b) {
+  /** Écouteurs d'une fiche : rejoués à chaque fois qu'elle est redessinée. */
+  function brancherFiche(racine) {
+    racine.querySelectorAll("[data-deplier]").forEach(function (b) {
       b.addEventListener("click", function () {
-        var cible = document.getElementById("p-" + b.dataset.vers);
-        if (cible) cible.scrollIntoView({ behavior: "smooth", block: "start" });
+        deplier(b.getAttribute("data-deplier"));
       });
     });
 
-    document.querySelectorAll(".choix button").forEach(function (b) {
+    racine.querySelectorAll(".choix button").forEach(function (b) {
       b.addEventListener("click", function () {
         var ref = b.dataset.ref;
         var r = etat.reponses[ref] || {};
@@ -974,7 +1064,7 @@ textarea::placeholder { color: var(--ink-faint); }
       });
     });
 
-    document.querySelectorAll("textarea[data-ref]").forEach(function (t) {
+    racine.querySelectorAll("textarea[data-ref]").forEach(function (t) {
       t.addEventListener("input", function () {
         var r = etat.reponses[t.dataset.ref] || {};
         r.note = t.value;
@@ -983,6 +1073,34 @@ textarea::placeholder { color: var(--ink-faint); }
         majPastilles();
         marquerModifie();
       });
+    });
+  }
+
+  /** Rouvre une fiche réduite sans redessiner toute la page. */
+  function deplier(ref) {
+    deplies[ref] = true;
+    var point = null;
+    POINTS.forEach(function (p) { if (p.ref === ref) point = p; });
+    var ancien = document.getElementById("p-" + ref);
+    if (!point || !ancien) return;
+    var enveloppe = document.createElement("div");
+    enveloppe.innerHTML = ficheHtml(point);
+    var nouveau = enveloppe.firstChild;
+    ancien.parentNode.replaceChild(nouveau, ancien);
+    brancherFiche(nouveau);
+    var premier = nouveau.querySelector(".choix button, textarea");
+    if (premier) premier.focus({ preventScroll: true });
+  }
+
+  function brancher() {
+    brancherFiche(document);
+
+    document.querySelectorAll(".som-lien").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var cible = document.getElementById("p-" + b.dataset.vers);
+        if (cible) cible.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
     });
 
     var enr = document.getElementById("enregistrer");
