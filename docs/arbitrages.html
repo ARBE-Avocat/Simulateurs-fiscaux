@@ -887,14 +887,14 @@ textarea::placeholder { color: var(--ink-faint); }
       etiquette: "À confirmer",
       ton: "action",
       titre: "Corrections appliquées qui modifient un résultat",
-      chapeau: "Ces quatre points modifient des montants affichés. Un comportement a été jugé fautif et corrigé ; il vous revient de dire si c'en était bien un."
+      chapeau: "Ces points modifient des montants affichés. Un comportement a été jugé fautif et corrigé ; il vous revient de dire si c'en était bien un."
     },
     {
       cle: "bloquant",
       etiquette: "Décision attendue",
       ton: "stop",
       titre: "Corrections non appliquées",
-      chapeau: "Le défaut est constaté mais rien n'a été corrigé : la correction suppose un choix fiscal. Ce sont les deux points qui empêchent aujourd'hui de clore ce chantier."
+      chapeau: "Le défaut est constaté mais rien n'a été corrigé : la correction suppose un choix fiscal. Ce sont ces points qui empêchent aujourd'hui de clore ce chantier."
     },
     {
       cle: "arbitrage",
@@ -1062,7 +1062,7 @@ textarea::placeholder { color: var(--ink-faint); }
       h += '<li><span class="me-num">' + (i + 1) + "</span><span>" + t + "</span></li>";
     });
     h += "</ol>";
-    h += '<p class="me-note">Rien n\'est obligatoire d\'un seul tenant : un point tranché se replie et affiche votre décision, et vous pouvez y revenir à tout moment. Les deux points bordés de rouge sont ceux qui bloquent la suite du chantier.</p>';
+    h += '<p class="me-note">Rien n\'est obligatoire d\'un seul tenant : un point tranché se replie et affiche votre décision, et vous pouvez y revenir à tout moment. Les points bordés de rouge sont ceux qui bloquent la suite du chantier.</p>';
     h += "</aside>";
     return h;
   }
