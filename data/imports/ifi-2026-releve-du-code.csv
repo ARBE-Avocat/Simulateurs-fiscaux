@@ -1,0 +1,16 @@
+id;libelle;type;unite;millesime;dateEffet;dateFin;statutValidation;valeur;borneInf;borneInfIncluse;borneSup;borneSupIncluse;taux;utilisePar;varianteCle;arbitrageDocument;arbitragePoint;arbitrageQuestion;sourceReference;sourceUrl;sourceDateConsultation;validationPar;validationDate;notes
+ifi.bareme.progressif;Barème progressif de l’impôt sur la fortune immobilière;bareme;decimal;2026;;;non-valide;;0;oui;800000;oui;0;ifi,irpp;;;;;;;;;;"Écriture reprise telle quelle des deux simulateurs : chaque tranche commence à la borne haute précédente augmentée d’un euro, ce qui laisse cinq intervalles d’un euro sans taux. Écart cumulé mesuré : 0,05 €. La validation le signale ; la correction relève de l’issue #7."
+ifi.bareme.progressif;Barème progressif de l’impôt sur la fortune immobilière;bareme;decimal;2026;;;non-valide;;800001;oui;1300000;oui;0,005;ifi,irpp;;;;;;;;;;
+ifi.bareme.progressif;Barème progressif de l’impôt sur la fortune immobilière;bareme;decimal;2026;;;non-valide;;1300001;oui;2570000;oui;0,007;ifi,irpp;;;;;;;;;;
+ifi.bareme.progressif;Barème progressif de l’impôt sur la fortune immobilière;bareme;decimal;2026;;;non-valide;;2570001;oui;5000000;oui;0,01;ifi,irpp;;;;;;;;;;
+ifi.bareme.progressif;Barème progressif de l’impôt sur la fortune immobilière;bareme;decimal;2026;;;non-valide;;5000001;oui;10000000;oui;0,0125;ifi,irpp;;;;;;;;;;
+ifi.bareme.progressif;Barème progressif de l’impôt sur la fortune immobilière;bareme;decimal;2026;;;non-valide;;10000001;oui;;;0,015;ifi,irpp;;;;;;;;;;
+ifi.seuil.assujettissement;Seuil d’assujettissement à l’IFI;montant;EUR;2026;;;non-valide;1300000;;;;;;ifi,irpp;;;;;;;;;;
+ifi.decote.montant;Décote — montant fixe;montant;EUR;2026;;;non-valide;17500;;;;;;ifi,irpp;;;;;;;;;;Les deux simulateurs emploient cette formule mais ne l’appliquent ni au même patrimoine ni sous la même condition, et l’un retranche l’IFI théorique de l’assiette avant de recalculer. Divergence de méthode soumise au référent fiscal, fiche 2.4 de docs/CORRECTIONS_A_VALIDER.md : 668,39 € d’écart mesuré. Ces valeurs, elles, sont identiques des deux côtés.
+ifi.decote.taux;Décote — taux appliqué au patrimoine;taux;decimal;2026;;;non-valide;0,0125;;;;;;ifi,irpp;;;;;;;;;;
+ifi.decote.plafond;Décote — patrimoine au-delà duquel elle ne s’applique plus;montant;EUR;2026;;;non-valide;1400000;;;;;;ifi,irpp;;;;;;;;;;
+ifi.residence-principale.abattement;Abattement sur la résidence principale;taux;decimal;2026;;;non-valide;0,3;;;;;;ifi,irpp;;;;;;;;;;Écrit dans le code sous la forme d’un coefficient de 0,70 appliqué à la valeur du bien.
+ifi.exoneration.biens-ruraux.taux-plein;Exonération des biens ruraux loués à long terme — taux plein;taux;decimal;2026;;;non-valide;0,75;;;;;;ifi;;;;;CGI art. 975, II;;2026-08-26;;;
+ifi.exoneration.biens-ruraux.taux-reduit;Exonération des biens ruraux loués à long terme — taux réduit au-delà du seuil;taux;decimal;2026;;;non-valide;0,5;;;;;;ifi;;;;;CGI art. 975, II;;2026-08-26;;;
+ifi.plafonnement.taux;Plafonnement — part maximale des revenus que peuvent représenter IFI et impôts sur les revenus;taux;decimal;2026;;;non-valide;0,75;;;;;;ifi;;;;;;;;;;
+ifi.reduction.dons.taux;Réduction d’impôt pour dons;taux;decimal;2026;;;non-valide;0,75;;;;;;ifi,irpp;;;;;CGI art. 978;;2026-08-26;;;

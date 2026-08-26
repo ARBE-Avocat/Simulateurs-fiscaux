@@ -1488,6 +1488,18 @@ const CEHR_BAREME = {
   couple: IR.bareme('cehr.bareme.couple'),
 };
 
+const REF_IFI = LectureReferentiels.lecteur('ifi');
+
+const IFI = {
+  bareme: REF_IFI.bareme('ifi.bareme.progressif'),
+  seuil: REF_IFI.valeur('ifi.seuil.assujettissement'),
+  decoteMontant: REF_IFI.valeur('ifi.decote.montant'),
+  decoteTaux: REF_IFI.valeur('ifi.decote.taux'),
+  decotePlafond: REF_IFI.valeur('ifi.decote.plafond'),
+  abattementResidencePrincipale: REF_IFI.valeur('ifi.residence-principale.abattement'),
+  reductionDonsTaux: REF_IFI.valeur('ifi.reduction.dons.taux'),
+};
+
 const CDHR = {
   tauxCible: IR.valeur('cdhr.taux.cible'),
   coefficientDecote: IR.valeur('cdhr.decote.coefficient'),
@@ -2319,10 +2331,10 @@ function pb(id, k, val) {
 function rmBien(id) { ifiBiens = ifiBiens.filter(b => b.id !== id); renderBiens(); }
 
 function calcIFI() {
-  const SEUIL_IFI = 1300000, SEUIL_DECOTE_MAX = 1400000;
+  const SEUIL_IFI = IFI.seuil, SEUIL_DECOTE_MAX = IFI.decotePlafond;
   let tot_venale=0, tot_ifi_val=0, tot_dette=0;
   ifiBiens.forEach(b => {
-    const val_ifi = b.rp ? b.valeur * 0.70 : b.valeur;
+    const val_ifi = b.rp ? b.valeur * (1 - IFI.abattementResidencePrincipale) : b.valeur;
     const val_nette = Math.max(0, val_ifi - b.dette);
     const e_val=$(`ifi_val_${b.id}`), e_net=$(`ifi_net_${b.id}`);
     if(e_val) e_val.textContent = fmt(val_ifi,2);
@@ -2334,7 +2346,7 @@ function calcIFI() {
   set('ifi_tot_dette',  fmt(tot_dette,2));  set('ifi_tot_net',  fmt(tot_net_biens,2));
 
   const taxes=v('ifi_taxes'), interets=v('ifi_interets'), depenses=v('ifi_depenses');
-  const dons_vers=v('ifi_dons_verses'), red_dons=dons_vers*0.75;
+  const dons_vers=v('ifi_dons_verses'), red_dons=dons_vers*IFI.reductionDonsTaux;
   const tot_ded=taxes+interets+depenses;
   set('ifi_tot_deductions', fmt(tot_ded,2)); set('ifi_red_dons', fmt(red_dons,2));
 
@@ -2345,10 +2357,9 @@ function calcIFI() {
   set('ifi_s_net_avant', fmt(pat_net_avant,2));
   set('ifi_res_net',     fmt(pat_net_avant,2));
 
-  const bareme=[
-    {de:0,a:800000,tx:0},{de:800001,a:1300000,tx:0.005},{de:1300001,a:2570000,tx:0.007},
-    {de:2570001,a:5000000,tx:0.010},{de:5000001,a:10000000,tx:0.0125},{de:10000001,a:Infinity,tx:0.015},
-  ];
+  // Barème lu dans les données. Le décalage d'un euro entre tranches est celui
+  // du référentiel et n'est pas corrigé ici : il relève de l'issue #7.
+  const bareme=IFI.bareme.map(t=>({de:t.min, a:t.max, tx:t.taux}));
   const ids=['ifi_t1','ifi_t2','ifi_t3','ifi_t4','ifi_t5','ifi_t6'];
   let ifi_theorique=0;
   bareme.forEach((t,i)=>{
@@ -2360,7 +2371,9 @@ function calcIFI() {
 
   let decote=0;
   if(pat_brut>=SEUIL_IFI && pat_brut<SEUIL_DECOTE_MAX){
-    decote=Math.max(0,17500-0.0125*pat_net_avant);
+    // Condition et base inchangées, différentes de celles du simulateur IFI :
+    // divergence de méthode soumise au référent fiscal, fiche 2.4.
+    decote=Math.max(0,IFI.decoteMontant-IFI.decoteTaux*pat_net_avant);
     set('ifi_s_decote',fmt(decote,2));
   } else { set('ifi_s_decote', pat_brut<SEUIL_IFI?'—':'0 €'); }
 

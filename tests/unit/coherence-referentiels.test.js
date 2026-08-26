@@ -29,6 +29,16 @@ function lecteurDmtg() {
   return contexte.LectureReferentiels.lecteur('dmtg');
 }
 
+/**
+ * Recopie une valeur venue du contexte isolé d'un simulateur.
+ *
+ * Les tableaux qui y sont créés n'ont pas le même prototype que ceux du test :
+ * une comparaison stricte échouerait alors que les valeurs sont identiques.
+ */
+function recopier(valeur) {
+  return JSON.parse(JSON.stringify(valeur));
+}
+
 /** Lit l'attribut `value` d'un champ du HTML, tel que le navigateur l'affiche. */
 function valeurPrerempli(html, id) {
   const motif = new RegExp(`<input[^>]*\\bid="${id}"[^>]*>`, 'i');
@@ -258,5 +268,38 @@ test('Prélèvements sociaux — les deux simulateurs désignent des variantes d
     lireHtml('ir-cehr-cdhr'),
     /PS\.variante\('ps\.taux\.global', '18-6'\)/,
     'le simulateur IR doit désigner explicitement sa variante',
+  );
+});
+
+// ── Impôt sur la fortune immobilière (#15) ──────────────────────────────────
+
+test('IFI — les deux simulateurs lisent le même barème, il n’en existe plus qu’un', () => {
+  // Avant l'extraction, le barème IFI était écrit deux fois, sous deux formes
+  // différentes. Rien ne garantissait qu'ils restent identiques.
+  const attendu = lecteur('ifi').bareme('ifi.bareme.progressif')
+    .map((t) => [t.min, t.max === Infinity ? null : t.max, t.taux]);
+
+  const depuisIfi = chargerSimulateur('ifi').evaluer('BAREME')
+    .map((t) => [t.min, t.max === Infinity ? null : t.max, t.taux]);
+  assert.deepEqual(recopier(depuisIfi), attendu, 'barème du simulateur IFI');
+
+  const depuisIrpp = chargerSimulateur('irpp').evaluer('IFI').bareme
+    .map((t) => [t.min, t.max === Infinity ? null : t.max, t.taux]);
+  assert.deepEqual(recopier(depuisIrpp), attendu, 'barème de la section IFI de l’IRPP');
+});
+
+test('IFI — le barème du référentiel signale ses intervalles non couverts', () => {
+  // Le barème réellement employé fait commencer chaque tranche un euro au-dessus
+  // de la précédente. L'extraction conserve ce comportement — le corriger
+  // changerait un résultat — mais la validation doit continuer de le dire.
+  const { validerReferentiel } = require('../../scripts/lib/schema-referentiel');
+  const referentiel = require('../../data/referentiels/ifi.json');
+  const rapport = validerReferentiel(referentiel);
+
+  assert.deepEqual(rapport.erreurs, []);
+  assert.equal(
+    rapport.avertissements.filter((a) => /intervalle non couvert/.test(a.message)).length,
+    5,
+    'cinq intervalles d’un euro restent sans taux (issue #7)',
   );
 });

@@ -38,7 +38,7 @@ Clés de simulateur employées : `ir-cehr-cdhr`, `irpp`, `ifi`, `pv-immobiliere`
 |---|---|---|---|
 | Impôt sur le revenu, CEHR, CDHR, PFU | `data/referentiels/ir.json` | `ir-cehr-cdhr`, `irpp` | #14 — **extrait** |
 | Prélèvements sociaux | `data/referentiels/prelevements-sociaux.json` | les trois qui les appliquent | #14 — **extrait pour deux d'entre eux** |
-| IFI | `data/referentiels/ifi.json` | `ifi`, `irpp` | #15 |
+| IFI | `data/referentiels/ifi.json` | `ifi`, `irpp` | #15 — **extrait** |
 | Mutations à titre gratuit, usufruit, assurance-vie | `data/referentiels/dmtg.json` | `succession`, `demembrement` | #16 — **extrait** |
 | Plus-value immobilière | `data/referentiels/pv-immobiliere.json` | `pv-immobiliere` | #17 |
 | Plus-value mobilière | `data/referentiels/pv-mobiliere.json` | `irpp`, `ir-cehr-cdhr` | #14 |
@@ -121,6 +121,21 @@ La plus-value immobilière reste à traiter : c'est l'objet de l'issue #17.
 | Exonération des biens ruraux — 75 % et 50 % | `ifi` | constantes en dur | « art. 975 II CGI » cité à l'affichage | non-valide |
 | Plafonnement — 75 % des revenus | `ifi` | constante en dur | texte de la page | non-valide |
 | Réduction pour dons IFI — 75 % | `ifi`, `irpp` | constante en dur | « art. 978 CGI » cité dans un commentaire | non-valide |
+
+**Extraction réalisée (#15).** Ces valeurs vivent désormais dans
+`data/referentiels/ifi.json` et les deux simulateurs les lisent. Le barème
+n'existe plus qu'en un exemplaire, alors qu'il était écrit deux fois sous deux
+formes différentes.
+
+Ce qui n'est **pas** extrait, parce que ce n'est pas une valeur : la méthode de
+liquidation et la condition de la décote, qui diffèrent d'un simulateur à
+l'autre. Ces différences restent dans le code, commentées et rattachées à la
+fiche 2.4. Un test les fige explicitement, écart de 668,39 € compris, pour
+qu'aucune extraction ultérieure ne les fasse disparaître par inadvertance.
+
+Le barème conserve son décalage d'un euro entre tranches ; la validation des
+données le signale par cinq avertissements nominatifs, et un test vérifie qu'il
+continue de les émettre.
 
 ---
 

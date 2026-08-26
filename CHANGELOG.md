@@ -6,6 +6,16 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.5] - 2026-08-26
+
+### Modifié
+
+- Le barème, le seuil, la décote, l'abattement sur la résidence principale, les exonérations de biens ruraux, le plafonnement et la réduction pour dons de l'IFI vivent désormais dans `data/referentiels/ifi.json`. Le simulateur IFI et la section IFI du simulateur IRPP les lisent au même endroit : le barème était jusqu'ici écrit deux fois, sous deux formes différentes, sans rien pour garantir qu'ils restent identiques. **Aucun montant affiché ne change** : vingt-cinq scénarios relevés avant l'extraction donnent les mêmes résultats après, détail par tranche compris.
+
+### Connu
+
+- Les deux pages qui calculent l'IFI continuent de le calculer différemment, et un même patrimoine y donne toujours deux impôts. Cette divergence, décrite en fiche 2.4 de `docs/CORRECTIONS_A_VALIDER.md`, n'est pas corrigée : elle porte sur la méthode de liquidation, non sur une valeur, et relève d'une décision du référent fiscal. Un contrôle automatique la fige désormais, écart de 668,39 € compris, pour qu'elle ne disparaisse pas par inadvertance avant d'avoir été tranchée.
+
 ## [0.5.0-beta.4] - 2026-08-26
 
 ### Modifié

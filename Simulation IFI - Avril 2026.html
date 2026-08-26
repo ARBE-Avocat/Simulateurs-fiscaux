@@ -623,6 +623,8 @@
   Cet outil est fourni à titre indicatif uniquement. Les calculs sont basés sur les règles générales du CGI et ne constituent pas un conseil fiscal ou juridique personnalisé.</p>
 </footer>
 
+<script src="src/genere/referentiels.js"></script>
+<script src="src/lecture-referentiels.js"></script>
 <script>
 // ============================================================
 // DATE INPUT + LIEN BANQUE DE FRANCE + MISE À JOUR DES TAUX
@@ -885,7 +887,7 @@ function renderBiens() {
   biens.forEach(b => {
     const tr = document.createElement('tr');
     const eurVal = convertToEur(b.valeur, b.devise);
-    const rpAbat = b.rp ? 0.70 : 1.0;
+    const rpAbat = b.rp ? (1 - ABATTEMENT_RESIDENCE_PRINCIPALE) : 1.0;
     const decoteAbat = b.decote ? Math.max(0, 1 - (b.decotePct || 0) / 100) : 1.0;
     const taxable = eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
     tr.innerHTML = `
@@ -941,7 +943,7 @@ function updateBienCells(id) {
   const b = biens.find(x => x.id === id);
   if (!b) return;
   const eurVal = convertToEur(b.valeur, b.devise);
-  const rpAbat = b.rp ? 0.70 : 1.0;
+  const rpAbat = b.rp ? (1 - ABATTEMENT_RESIDENCE_PRINCIPALE) : 1.0;
   const decoteAbat = b.decote ? Math.max(0, 1 - (b.decotePct || 0) / 100) : 1.0;
   const taxable = eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
   const eurCell = document.getElementById('eurCell_' + id);
@@ -963,7 +965,7 @@ function updateTotalBrut() {
 function computePatrimoineBrut() {
   return biens.reduce((sum, b) => {
     const eurVal = convertToEur(b.valeur, b.devise);
-    const rpAbat = b.rp ? 0.70 : 1.0;
+    const rpAbat = b.rp ? (1 - ABATTEMENT_RESIDENCE_PRINCIPALE) : 1.0;
     const decoteAbat = b.decote ? Math.max(0, 1 - (b.decotePct || 0) / 100) : 1.0;
     return sum + eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
   }, 0);
@@ -972,14 +974,25 @@ function computePatrimoineBrut() {
 // ============================================================
 // BARÈME IFI
 // ============================================================
-const BAREME = [
-  { min: 0,        max: 800000,   taux: 0 },
-  { min: 800001,   max: 1300000,  taux: 0.005 },
-  { min: 1300001,  max: 2570000,  taux: 0.007 },
-  { min: 2570001,  max: 5000000,  taux: 0.010 },
-  { min: 5000001,  max: 10000000, taux: 0.0125 },
-  { min: 10000001, max: Infinity, taux: 0.015 },
-];
+// Source de vérité : data/referentiels/ifi.json. Une mise à jour se fait dans
+// les données, puis « npm run donnees:generer ». Voir data/README.md.
+const REF_IFI = LectureReferentiels.lecteur('ifi');
+
+const BAREME = REF_IFI.bareme('ifi.bareme.progressif');
+
+const SEUIL_ASSUJETTISSEMENT = REF_IFI.valeur('ifi.seuil.assujettissement');
+const DECOTE = {
+  montant: REF_IFI.valeur('ifi.decote.montant'),
+  taux: REF_IFI.valeur('ifi.decote.taux'),
+  plafond: REF_IFI.valeur('ifi.decote.plafond'),
+};
+const ABATTEMENT_RESIDENCE_PRINCIPALE = REF_IFI.valeur('ifi.residence-principale.abattement');
+const EXONERATION_BIENS_RURAUX = {
+  tauxPlein: REF_IFI.valeur('ifi.exoneration.biens-ruraux.taux-plein'),
+  tauxReduit: REF_IFI.valeur('ifi.exoneration.biens-ruraux.taux-reduit'),
+};
+const PLAFONNEMENT_TAUX = REF_IFI.valeur('ifi.plafonnement.taux');
+const REDUCTION_DONS_TAUX = REF_IFI.valeur('ifi.reduction.dons.taux');
 
 function calcIFI(base) {
   let total = 0;
@@ -996,10 +1009,11 @@ function calcIFI(base) {
 }
 
 function calcDecote(patrimoineNet) {
-  // Décote: patrimoine brut < 1 400 000 €
-  // Décote = 17 500 - (1,25% × patrimoine net)
-  if (patrimoineNet >= 1400000) return 0;
-  const decote = 17500 - 0.0125 * patrimoineNet;
+  // Condition et base inchangées. Elles diffèrent de celles de la section IFI
+  // du simulateur IRPP : divergence de méthode soumise au référent fiscal,
+  // fiche 2.4 de docs/CORRECTIONS_A_VALIDER.md. L'extraction ne la tranche pas.
+  if (patrimoineNet >= DECOTE.plafond) return 0;
+  const decote = DECOTE.montant - DECOTE.taux * patrimoineNet;
   return Math.max(0, decote);
 }
 
@@ -1009,8 +1023,8 @@ function calcDecote(patrimoineNet) {
 function computeFermages() {
   const val75 = nombreSaisi(document.getElementById('fermage75Valeur').value, 0);
   const val50 = nombreSaisi(document.getElementById('fermage50Valeur').value, 0);
-  const exo75 = val75 * 0.75;
-  const exo50 = val50 * 0.50;
+  const exo75 = val75 * EXONERATION_BIENS_RURAUX.tauxPlein;
+  const exo50 = val50 * EXONERATION_BIENS_RURAUX.tauxReduit;
   const total = exo75 + exo50;
   document.getElementById('fermage75Result').value = Math.round(exo75);
   document.getElementById('fermage50Result').value = Math.round(exo50);
@@ -1058,11 +1072,12 @@ function compute() {
   // Fermages exonérations
   const fermage75Val = nombreSaisi(document.getElementById('fermage75Valeur').value, 0);
   const fermage50Val = nombreSaisi(document.getElementById('fermage50Valeur').value, 0);
-  const fermageExo = (fermage75Val * 0.75) + (fermage50Val * 0.50);
+  const fermageExo = (fermage75Val * EXONERATION_BIENS_RURAUX.tauxPlein)
+    + (fermage50Val * EXONERATION_BIENS_RURAUX.tauxReduit);
 
   const totalDed = dedTaxes + dedInterets + dedTravaux + dedAutres + fermageExo;
   const donsVerses = nombreSaisi(document.getElementById('donsVerses').value, 0);
-  const donsReduction = donsVerses * 0.75;
+  const donsReduction = donsVerses * REDUCTION_DONS_TAUX;
 
   // Update dons display
   document.getElementById('donsReduction').innerHTML = `Réduction : <strong>${fmtEur(donsReduction)}</strong>`;
@@ -1092,7 +1107,7 @@ function compute() {
   let plafond = 0, reductionPlafond = 0, ifiFinal = ifiApresReduction;
 
   if (revenus > 0) {
-    plafond = revenus * 0.75;
+    plafond = revenus * PLAFONNEMENT_TAUX;
     const totalImpots = ir + autresImpots + ifiApresReduction;
     if (totalImpots > plafond) {
       reductionPlafond = totalImpots - plafond;
@@ -1117,7 +1132,7 @@ function compute() {
 
 function renderResults(r) {
   const body = document.getElementById('resultsBody');
-  const SEUIL = 1300000;
+  const SEUIL = SEUIL_ASSUJETTISSEMENT;
 
   if (r.patrimoineNet < SEUIL) {
     body.innerHTML = `
