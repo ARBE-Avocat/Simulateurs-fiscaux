@@ -1581,15 +1581,46 @@ function calcCEHR(rfr, couple) {
 }
 
 // ── CDHR ──
+/**
+ * Calcule la CDHR à partir d'entrées explicites, sans lire le formulaire.
+ *
+ * ATTENTION — décote non corrigée (issue #4).
+ * La condition ci-dessous rend la décote systématiquement nulle : sous le
+ * seuil, `rfrr - seuil` est négatif et ramené à zéro ; au-dessus du seuil, la
+ * condition ne s'applique pas. Le détail retourné expose donc une décote
+ * toujours à 0.
+ *
+ * Le fichier `Simulateur_IR 2025 et CEHR_CDHR 2026.html` implémente une décote
+ * différente, applicable dans une bande située AU-DESSUS du seuil. Les deux
+ * implémentations du dépôt divergent, avec un écart pouvant dépasser 45 000 €.
+ * La formule et l'intervalle exacts doivent être confirmés par le référent
+ * fiscal avant toute correction : ils ne sont volontairement pas devinés ici.
+ *
+ * @param {object} entrees
+ * @param {number} entrees.rfrr revenu fiscal de référence retraité
+ * @param {number} entrees.irCehr impôt et CEHR déjà retenus
+ * @param {number} entrees.seuil seuil d'assujettissement applicable au foyer
+ * @param {number} entrees.abattementTotal abattements applicables au foyer
+ * @returns {{brut: number, decote: number, net: number, seuil: number}}
+ */
+function calculerCDHR({ rfrr, irCehr, seuil, abattementTotal }) {
+  const brut = Math.max(0, rfrr * 0.20 - irCehr - abattementTotal);
+  const decote = rfrr < seuil ? Math.max(0, (rfrr - seuil) * 0.825) : 0;
+  const net = Math.max(0, brut - decote);
+  return { brut, decote, net, seuil };
+}
+
+/** Lit le formulaire puis délègue le calcul de la CDHR. */
 function calcCDHR(rfrr, ir_cehr, couple, pac) {
   const seuil   = couple ? 500000 : 250000;
   const aba_ic  = couple ? v('cdhr_aba_ic') : 0;
   const aba_pac = pac * v('cdhr_aba_pac');
-  const aba_tot = aba_ic + aba_pac;
-  const cdhr_brut = Math.max(0, rfrr * 0.20 - ir_cehr - aba_tot);
-  const decote_mt = rfrr < seuil ? Math.max(0, (rfrr - seuil) * 0.825) : 0;
-  const cdhr_net  = Math.max(0, cdhr_brut - decote_mt);
-  return { brut: cdhr_brut, net: cdhr_net };
+  return calculerCDHR({
+    rfrr,
+    irCehr: ir_cehr,
+    seuil,
+    abattementTotal: aba_ic + aba_pac,
+  });
 }
 
 // ── DONS ──

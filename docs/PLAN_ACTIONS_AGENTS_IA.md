@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.6`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.7`.
 
 ## Objectifs de l’orchestration
 
@@ -17,7 +17,7 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 
 - La phase 0 de gouvernance est terminée sur `clv/preprod`.
 - La préversion de `clv/preprod` reste `0.3.0-beta.4` ; la version stable visée est `0.3.0`.
-- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.6`.
+- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.7`.
 - L'étape 1.1 (#10, socle de tests) est réalisée sur cette branche et attend relecture ; elle n'est pas intégrée à `clv/preprod`.
 - Les autres issues citées dans ce plan sont encore ouvertes au 26 août 2026.
 - L'issue #29 reste ouverte : seule sa première partie documentaire et de gouvernance est amorcée.
@@ -167,7 +167,7 @@ Un agent peut inventorier les cas, préparer les fixtures et retrouver les sourc
 
 Voie IRPP, à exécuter séquentiellement :
 
-1. [#4 — Corriger la décote CDHR](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/4)
+1. [#4 — Corriger la décote CDHR](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/4) — **bloquée sur validation métier**. Le calcul est isolé et testé, le défaut est enregistré en attente dans la suite de tests, et la question a été posée sur l'issue. Le dépôt contient deux implémentations divergentes de la décote ; l'écart atteint 45 000 € pour un célibataire proche du seuil. Ne pas trancher sans réponse du référent fiscal.
 2. [#5 — Recalculer les dons lorsque le RNI change](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/5) — corrigée, en attente de relecture
 
 L'ordre a été inversé : #5 est purement technique et a été traitée d'abord, tandis que #4 attend une décision métier. Les deux touchent le même fichier et restent séquentielles.
@@ -187,6 +187,12 @@ Les deux voies peuvent être confiées à deux agents différents en parallèle.
 L’issue #7 ne doit commencer qu’après la décision de #11 sur la représentation des tranches et les arrondis. Elle doit aussi intégrer les correctifs déjà fusionnés dans les fichiers IRPP et IFI.
 
 ### Point de contrôle humain A
+
+Décisions métier attendues, par ordre d'urgence :
+
+1. #4 — formule, intervalle et point d'application de la décote CDHR. Seul blocage restant du jalon `0.4`.
+2. #9 — cas fiscaux de référence, qui permettront de faire passer les fixtures actuelles de « non validé » à « validé ».
+3. #11 — champs obligatoires, bornes acceptées et messages d'erreur, reliquat de #8.
 
 Avant de poursuivre :
 

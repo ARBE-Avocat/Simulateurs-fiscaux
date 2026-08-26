@@ -6,6 +6,16 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.4.0-beta.7] - 2026-08-26
+
+### Ajouté
+
+- Calcul de la CDHR du simulateur IRPP isolé du formulaire dans une fonction testable sans navigateur, avec ses tests de part brute, d'abattements et de bornes (issue #4).
+
+### Connu
+
+- La décote CDHR du simulateur IRPP reste toujours nulle : la condition qui la déclenche est inatteignable. La correction est suspendue à la validation de la formule et de l'intervalle par le référent fiscal, demandée sur l'issue #4. Le dépôt contient deux implémentations divergentes, avec un écart pouvant dépasser 45 000 €. Le défaut est enregistré dans la suite de tests, en attente, et signalé dans le code.
+
 ## [0.4.0-beta.6] - 2026-08-26
 
 ### Corrigé
@@ -121,7 +131,8 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 - Première version regroupant six simulateurs HTML autonomes : IR et CEHR/CDHR, plus-value immobilière, IFI, IRPP, succession et démembrement immobilier.
 
-[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.6...HEAD
+[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.7...HEAD
+[0.4.0-beta.7]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.6...v0.4.0-beta.7
 [0.4.0-beta.6]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.5...v0.4.0-beta.6
 [0.4.0-beta.5]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.4...v0.4.0-beta.5
 [0.4.0-beta.4]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.3...v0.4.0-beta.4
