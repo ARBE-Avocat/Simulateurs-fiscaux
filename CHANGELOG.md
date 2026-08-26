@@ -6,6 +6,12 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.4.0-beta.12] - 2026-08-26
+
+### Modifié
+
+- Page d'arbitrage : suppression du bloc d'introduction. Le titre est porté par le bandeau, et les explications utiles restent en tête de chaque groupe de points.
+
 ## [0.4.0-beta.11] - 2026-08-26
 
 ### Ajouté
@@ -167,7 +173,8 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 - Première version regroupant six simulateurs HTML autonomes : IR et CEHR/CDHR, plus-value immobilière, IFI, IRPP, succession et démembrement immobilier.
 
-[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.11...HEAD
+[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.12...HEAD
+[0.4.0-beta.12]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.11...v0.4.0-beta.12
 [0.4.0-beta.11]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.10...v0.4.0-beta.11
 [0.4.0-beta.10]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.9...v0.4.0-beta.10
 [0.4.0-beta.9]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.8...v0.4.0-beta.9
