@@ -157,6 +157,30 @@ Le projet utilise des versions `X.Y.Z` avec les règles d'autorisation suivantes
 - `Y`, version mineure : nouvelle fonctionnalité, refactorisation significative ou évolution compatible. Après validation explicite de l'utilisateur, réaliser le travail sur une branche dédiée ; le bump, le tag et la release restent soumis à cette validation.
 - `Z`, correctif stable : correction compatible, petit entretien, documentation ou maintenance de données sans nouveau parcours. Hors préversion, l'agent peut décider et effectuer ce bump en autonomie dans le cadre d'une tâche autorisée, avec les contrôles et validations métier requis.
 
+### Changements sans incidence visible
+
+Certains changements ne touchent ni le produit, ni ce que le dépôt garantit, ni un document destiné à une personne. Ils ne reçoivent **ni bump `Z`, ni bump `beta.N`, ni tag, ni entrée de changelog** : ils sont simplement committés et poussés, et se retrouvent inclus dans la préversion ou le correctif suivant.
+
+Relèvent de ce cas :
+
+- les consignes destinées aux agents : `AGENTS.md`, `CLAUDE.md`, instructions locales ;
+- le pilotage interne : `docs/PLAN_ACTIONS_AGENTS_IA.md`, mise à jour d'état, d'ordre ou de jalon ;
+- les corrections de forme sans changement de fond : orthographe, reformulation, mise en page ;
+- les commentaires de code et les renommages internes sans effet sur le comportement ;
+- les fichiers de travail non livrés.
+
+Reçoivent au contraire un bump :
+
+- tout changement de comportement d'un simulateur, fût-il d'un centime ;
+- toute donnée fiscale : taux, seuil, abattement, barème ou millésime ;
+- l'outillage qui change ce que le dépôt garantit : tests, contrôles automatiques, build, intégration continue ;
+- `README.md` et tout document destiné au propriétaire ou au référent juridique, `docs/CORRECTIONS_A_VALIDER.md` inclus ;
+- toute modification d'un livrable publié.
+
+En cas de doute, la question est : « une personne autre que l'agent verrait-elle la différence ? ». Si oui, bump.
+
+Un commit sans bump reste un commit normal : message clair, périmètre limité, poussé sur la branche du jalon. Cette règle ne vaut que pour les changements à venir ; un tag déjà publié n'est jamais renuméroté ni supprimé.
+
 Un changement de taux reste soumis à la validation juridique même s'il n'incrémente que `Z`. L'autonomie de versionnement ne donne aucune autonomie d'interprétation fiscale. Chaque bump met à jour `VERSION` et `CHANGELOG.md` dans le même commit ; les tags ajoutent le préfixe `v` à la valeur de `VERSION`.
 
 ### Tags et release unique par `Y`
