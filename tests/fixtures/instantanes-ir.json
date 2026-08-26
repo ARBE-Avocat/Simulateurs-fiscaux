@@ -1,0 +1,1366 @@
+{
+  "description": "Instantané des résultats des simulateurs « IR, CEHR et CDHR » et IRPP, relevé AVANT l'extraction des référentiels IR, CEHR, CDHR, PFU et prélèvements sociaux (issue #14).",
+  "provenance": "Produit par exécution réelle des simulateurs sur la branche clv/y-0.5-donnees, commit 8c8fcb4, avant toute modification des fichiers HTML.",
+  "statutValidation": "NON VALIDÉ — ces valeurs figent le comportement existant afin de prouver qu'une refactorisation ne déplace aucun montant. Elles ne certifient aucun barème, et reproduisent notamment la décote CDHR défectueuse de l'issue #4.",
+  "tolerance": 0.01,
+  "irCehrCdhr": [
+    {
+      "nom": "célibataire, salaire 40000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 40000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 36000,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          1408,
+          1408,
+          1408
+        ],
+        "rates": [
+          3.911111111111111,
+          3.911111111111111,
+          3.911111111111111
+        ],
+        "hyp1": {
+          "irNet": 1408,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 1408,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 1408,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, salaire 120000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 120000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 108000,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          18607.98,
+          18607.98,
+          18607.98
+        ],
+        "rates": [
+          17.229611111111108,
+          17.229611111111108,
+          17.229611111111108
+        ],
+        "hyp1": {
+          "irNet": 18607.98,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 18607.98,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 18607.98,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, salaire 300000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 300000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 285445,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          84633.48999999999,
+          84633.48999999999,
+          84633.48999999999
+        ],
+        "rates": [
+          29.64966631049764,
+          29.64966631049764,
+          29.64966631049764
+        ],
+        "hyp1": {
+          "irNet": 84633.48999999999,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 84633.48999999999,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 84633.48999999999,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, salaire 600000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 600000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 2563.35,
+        "cehrNonLissee": 2563.35,
+        "rfrPlein": 585445,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          219061.28,
+          219061.28,
+          219061.28
+        ],
+        "rates": [
+          37.41790945349264,
+          37.41790945349264,
+          37.41790945349264
+        ],
+        "hyp1": {
+          "irNet": 216497.93,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 216497.93,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 216497.93,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "célibataire, salaire 1200000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 1200000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 22417.8,
+        "cehrNonLissee": 22417.8,
+        "rfrPlein": 1185445,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          508915.73,
+          508915.73,
+          508915.73
+        ],
+        "rates": [
+          42.930353580301066,
+          42.930353580301066,
+          42.930353580301066
+        ],
+        "hyp1": {
+          "irNet": 486497.93,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 486497.93,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 486497.93,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "plus-value de 100000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 120000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 100000,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 18600.000000000004,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 208000,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          50007.98,
+          71481.04,
+          67207.98
+        ],
+        "rates": [
+          24.04229807692308,
+          34.365884615384616,
+          32.31152884615384
+        ],
+        "hyp1": {
+          "irNet": 31407.98,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 52881.03999999999,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 48607.979999999996,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "plus-value de 500000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 120000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 500000,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 93000.00000000001,
+        "cehrLissee": 3240,
+        "cehrNonLissee": 3240,
+        "rfrPlein": 608000,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          178847.98,
+          322887.68,
+          292940.22000000003
+        ],
+        "rates": [
+          29.41578618421053,
+          53.10652631578947,
+          48.18095723684211
+        ],
+        "hyp1": {
+          "irNet": 82607.98,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 226647.68,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 196700.22,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "plus-value de 1000000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 120000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 1000000,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 186000.00000000003,
+        "cehrLissee": 19320,
+        "cehrNonLissee": 19320,
+        "rfrPlein": 1108000,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          354177.61732851993,
+          656967.68,
+          607020.22
+        ],
+        "rates": [
+          31.96548892856678,
+          59.29311191335741,
+          54.785218411552336
+        ],
+        "hyp1": {
+          "irNet": 146607.98,
+          "cdhrRetenue": 2249.6373285198642
+        },
+        "hyp2": {
+          "irNet": 451647.68,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 401700.22,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "plus-value de 3000000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 120000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 3000000,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 558000.0000000001,
+        "cehrLissee": 99320,
+        "cehrNonLissee": 99320,
+        "rfrPlein": 3108000,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          1077001.5444015446,
+          2008967.6800000002,
+          1958086.7800000003
+        ],
+        "rates": [
+          34.65255934367904,
+          64.63859974259975,
+          63.00150514800515
+        ],
+        "hyp1": {
+          "irNet": 402607.98,
+          "cdhrRetenue": 17073.564401544398
+        },
+        "hyp2": {
+          "irNet": 1351647.68,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 1300766.78,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "couple avec deux enfants et plus-value",
+      "champs": {
+        "situation": "couple",
+        "enfants": 2,
+        "enfantsGarde": 0,
+        "salaire1": 150000,
+        "salaire2": 90000,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 800000,
+        "abattement": 50,
+        "partCedee": 60,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 89280.00000000001,
+        "cehrLissee": 5893.349999999999,
+        "cehrNonLissee": 5893.349999999999,
+        "rfrPlein": 696445,
+        "credit": 0,
+        "majoration": 15500,
+        "eligibleLissage": false,
+        "totals": [
+          209342.84000000003,
+          250007.28000000003,
+          246302.84000000003
+        ],
+        "rates": [
+          30.058775639138773,
+          35.89763441477791,
+          35.36572737258506
+        ],
+        "hyp1": {
+          "irNet": 114169.48999999999,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 154833.93,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 151129.49,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "frais de garde et crédit d’impôt",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 2,
+        "enfantsGarde": 2,
+        "salaire1": 120000,
+        "salaire2": 0,
+        "fraisGarde": 9000,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 108000,
+        "credit": 3500,
+        "majoration": 15500,
+        "eligibleLissage": false,
+        "totals": [
+          11493.98,
+          11493.98,
+          11493.98
+        ],
+        "rates": [
+          10.642574074074073,
+          10.642574074074073,
+          10.642574074074073
+        ],
+        "hyp1": {
+          "irNet": 11493.98,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 11493.98,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 11493.98,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "lissage de la CEHR éligible",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 600000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 100000,
+        "rfrN2": 120000,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 2563.35,
+        "rfrPlein": 585445,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": true,
+        "totals": [
+          216497.93,
+          216497.93,
+          216497.93
+        ],
+        "rates": [
+          36.98006302897795,
+          36.98006302897795,
+          36.98006302897795
+        ],
+        "hyp1": {
+          "irNet": 216497.93,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 216497.93,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 216497.93,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "taux de prélèvements sociaux ramené à 17,2 %",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 120000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 1000000,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 17.2
+      },
+      "attendu": {
+        "ps": 172000,
+        "cehrLissee": 19320,
+        "cehrNonLissee": 19320,
+        "rfrPlein": 1108000,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          340177.6173285199,
+          642967.6799999999,
+          593020.22
+        ],
+        "rates": [
+          30.70195102242959,
+          58.029574007220205,
+          53.52168050541516
+        ],
+        "hyp1": {
+          "irNet": 146607.98,
+          "cdhrRetenue": 2249.6373285198642
+        },
+        "hyp2": {
+          "irNet": 451647.68,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 401700.22,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "seuil CEHR célibataire — salaire 250000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 250000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 235445,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          64133.48999999999,
+          64133.48999999999,
+          64133.48999999999
+        ],
+        "rates": [
+          27.2392660706322,
+          27.2392660706322,
+          27.2392660706322
+        ],
+        "hyp1": {
+          "irNet": 64133.48999999999,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 64133.48999999999,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 64133.48999999999,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "seuil supérieur CEHR — salaire 500000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 500000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 485445,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          171497.93,
+          171497.93,
+          171497.93
+        ],
+        "rates": [
+          35.32798360267383,
+          35.32798360267383,
+          35.32798360267383
+        ],
+        "hyp1": {
+          "irNet": 171497.93,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 171497.93,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 171497.93,
+          "cdhrRetenue": 0
+        }
+      }
+    },
+    {
+      "nom": "seuil CDHR haut — salaire 330000 €",
+      "champs": {
+        "situation": "celibataire",
+        "enfants": 0,
+        "enfantsGarde": 0,
+        "salaire1": 330000,
+        "salaire2": 0,
+        "fraisGarde": 0,
+        "rfrN1": 0,
+        "rfrN2": 0,
+        "pvBrute": 0,
+        "abattement": 0,
+        "partCedee": 100,
+        "tauxPS": 18.6
+      },
+      "attendu": {
+        "ps": 0,
+        "cehrLissee": 0,
+        "cehrNonLissee": 0,
+        "rfrPlein": 315445,
+        "credit": 0,
+        "majoration": 12500,
+        "eligibleLissage": false,
+        "totals": [
+          96933.48999999999,
+          96933.48999999999,
+          96933.48999999999
+        ],
+        "rates": [
+          30.72912552108925,
+          30.72912552108925,
+          30.72912552108925
+        ],
+        "hyp1": {
+          "irNet": 96933.48999999999,
+          "cdhrRetenue": 0
+        },
+        "hyp2": {
+          "irNet": 96933.48999999999,
+          "cdhrRetenue": 0
+        },
+        "hyp3": {
+          "irNet": 96933.48999999999,
+          "cdhrRetenue": 0
+        }
+      }
+    }
+  ],
+  "irpp": [
+    {
+      "nom": "salaires 30000 €, une part",
+      "champs": {
+        "sal_brut_d1": 30000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "27 000,00 €",
+        "res_quotient": "27 000,00 €",
+        "s_impot_foyer": "1 693,89 €",
+        "s_decote": "122,51 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "1 571,38 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "4 644,00 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "6 215,38 €",
+        "res_final": "6 215,38 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "salaires 60000 €, une part",
+      "champs": {
+        "sal_brut_d1": 60000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "54 000,00 €",
+        "res_quotient": "54 000,00 €",
+        "s_impot_foyer": "9 303,58 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "9 303,58 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "9 288,00 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "18 591,58 €",
+        "res_final": "18 591,58 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "salaires 120000 €, une part",
+      "champs": {
+        "sal_brut_d1": 120000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "108 000,00 €",
+        "res_quotient": "108 000,00 €",
+        "s_impot_foyer": "28 079,70 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "28 079,70 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "18 576,00 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "46 655,70 €",
+        "res_final": "46 655,70 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "salaires 300000 €, une part",
+      "champs": {
+        "sal_brut_d1": 300000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "285 445,00 €",
+        "res_quotient": "285 445,00 €",
+        "s_impot_foyer": "104 972,82 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "104 972,82 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "49 096,54 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "1 063,35 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "155 132,71 €",
+        "res_final": "155 132,71 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "salaires 700000 €, une part",
+      "champs": {
+        "sal_brut_d1": 700000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "685 445,00 €",
+        "res_quotient": "685 445,00 €",
+        "s_impot_foyer": "284 972,82 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "284 972,82 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "117 896,54 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "14 917,80 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "417 787,16 €",
+        "res_final": "417 787,16 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "salaires 150 000 €, 1 part(s)",
+      "champs": {
+        "sal_brut_d1": 150000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "135 445,00 €",
+        "res_quotient": "135 445,00 €",
+        "s_impot_foyer": "39 332,15 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "39 332,15 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "23 296,54 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "62 628,69 €",
+        "res_final": "62 628,69 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "salaires 150 000 €, 1.5 part(s)",
+      "champs": {
+        "sal_brut_d1": 150000,
+        "nb_parts": 1.5
+      },
+      "attendu": {
+        "res_rfr": "135 445,00 €",
+        "res_quotient": "90 296,67 €",
+        "s_impot_foyer": "31 232,00 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "31 232,00 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "23 296,54 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "54 528,54 €",
+        "res_final": "54 528,54 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "salaires 150 000 €, 2 part(s)",
+      "champs": {
+        "sal_brut_d1": 150000,
+        "nb_parts": 2
+      },
+      "attendu": {
+        "res_rfr": "135 445,00 €",
+        "res_quotient": "67 722,50 €",
+        "s_impot_foyer": "26 840,66 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "26 840,66 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "23 296,54 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "50 137,20 €",
+        "res_final": "50 137,20 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "salaires 150 000 €, 2.5 part(s)",
+      "champs": {
+        "sal_brut_d1": 150000,
+        "nb_parts": 2.5
+      },
+      "attendu": {
+        "res_rfr": "135 445,00 €",
+        "res_quotient": "54 178,00 €",
+        "s_impot_foyer": "23 392,45 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "23 392,45 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "23 296,54 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "46 688,99 €",
+        "res_final": "46 688,99 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "salaires 150 000 €, 3 part(s)",
+      "champs": {
+        "sal_brut_d1": 150000,
+        "nb_parts": 3
+      },
+      "attendu": {
+        "res_rfr": "135 445,00 €",
+        "res_quotient": "45 148,33 €",
+        "s_impot_foyer": "19 944,24 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "19 944,24 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "23 296,54 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "43 240,78 €",
+        "res_final": "43 240,78 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "décote célibataire",
+      "champs": {
+        "sal_brut_d1": 17000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "15 300,00 €",
+        "res_quotient": "15 300,00 €",
+        "s_impot_foyer": "406,89 €",
+        "s_decote": "704,88 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "0,00 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "2 631,60 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "2 631,60 €",
+        "res_final": "2 631,60 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "décote couple",
+      "champs": {
+        "sal_brut_d1": 34000,
+        "nb_parts": 2
+      },
+      "attendu": {
+        "res_rfr": "30 600,00 €",
+        "res_quotient": "15 300,00 €",
+        "s_impot_foyer": "813,78 €",
+        "s_decote": "1 101,76 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "0,00 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "5 263,20 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "5 263,20 €",
+        "res_final": "5 263,20 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "pensions et abattement foyer",
+      "champs": {
+        "pen_brut_d1": 40000,
+        "nb_parts": 2
+      },
+      "attendu": {
+        "res_rfr": "36 000,00 €",
+        "res_quotient": "18 000,00 €",
+        "s_impot_foyer": "1 407,78 €",
+        "s_decote": "832,98 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "574,80 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "0,00 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "574,80 €",
+        "res_final": "574,80 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "revenus au PFU",
+      "champs": {
+        "sal_brut_d1": 80000,
+        "div_brut": 50000,
+        "int_brut": 20000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "142 000,00 €",
+        "res_quotient": "72 000,00 €",
+        "s_impot_foyer": "14 703,58 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "14 703,58 €",
+        "s_ir_pfu": "8 960,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "12 384,00 €",
+        "s_ps_pfu": "12 040,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "48 087,58 €",
+        "res_final": "48 087,58 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "CEHR et CDHR, célibataire",
+      "champs": {
+        "sal_brut_d1": 400000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "385 445,00 €",
+        "res_quotient": "385 445,00 €",
+        "s_impot_foyer": "149 972,82 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "149 972,82 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "66 296,54 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "4 063,35 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "220 332,71 €",
+        "res_final": "220 332,71 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "CEHR et CDHR, couple",
+      "champs": {
+        "sal_brut_d1": 600000,
+        "sal_brut_d2": 400000,
+        "nb_parts": 2
+      },
+      "attendu": {
+        "res_rfr": "970 890,00 €",
+        "res_quotient": "485 445,00 €",
+        "s_impot_foyer": "389 945,64 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "389 945,64 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "166 993,08 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "14 126,70 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "571 065,42 €",
+        "res_final": "571 065,42 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "plus-values mobilières, abattement de droit commun",
+      "champs": {
+        "sal_brut_d1": 80000,
+        "nb_parts": 1
+      },
+      "pv": [
+        {
+          "da": "2015-01-10",
+          "dc": "2025-06-30",
+          "pu_a": 10,
+          "qte": 20000,
+          "pu_c": 60
+        },
+        {
+          "da": "2022-03-01",
+          "dc": "2025-06-30",
+          "pu_a": 50,
+          "qte": 4000,
+          "pu_c": 80
+        }
+      ],
+      "attendu": {
+        "res_rfr": "482 000,00 €",
+        "res_quotient": "482 000,00 €",
+        "s_impot_foyer": "193 422,57 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "193 422,57 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "12 384,00 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "192 640,00 €",
+        "s_cehr": "6 960,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "405 406,57 €",
+        "res_final": "405 406,57 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "plus-values mobilières, abattement renforcé",
+      "champs": {
+        "sal_brut_d1": 80000,
+        "nb_parts": 1
+      },
+      "pv": [
+        {
+          "da": "2016-01-10",
+          "dc": "2025-06-30",
+          "pu_a": 5,
+          "qte": 50000,
+          "pu_c": 40,
+          "renf": true
+        }
+      ],
+      "attendu": {
+        "res_rfr": "334 500,00 €",
+        "res_quotient": "334 500,00 €",
+        "s_impot_foyer": "127 047,57 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "127 047,57 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "12 384,00 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "301 000,00 €",
+        "s_cehr": "2 535,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "442 966,57 €",
+        "res_final": "442 966,57 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "plus-value et moins-value reportable",
+      "champs": {
+        "sal_brut_d1": 120000,
+        "nb_parts": 2,
+        "mv_report": 150000
+      },
+      "pv": [
+        {
+          "da": "2010-01-10",
+          "dc": "2025-06-30",
+          "pu_a": 2,
+          "qte": 100000,
+          "pu_c": 12
+        }
+      ],
+      "attendu": {
+        "res_rfr": "308 000,00 €",
+        "res_quotient": "154 000,00 €",
+        "s_impot_foyer": "93 879,40 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "93 879,40 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "18 576,00 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "172 000,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "284 455,40 €",
+        "res_final": "284 455,40 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "revenus fonciers réels",
+      "champs": {
+        "sal_brut_d1": 60000,
+        "fon_brut_d1": 30000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "84 000,00 €",
+        "res_quotient": "84 000,00 €",
+        "s_impot_foyer": "18 303,58 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "18 303,58 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "14 448,00 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "32 751,58 €",
+        "res_final": "32 751,58 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    },
+    {
+      "nom": "micro-foncier et location meublée",
+      "champs": {
+        "sal_brut_d1": 60000,
+        "microfon_brut_d1": 20000,
+        "loc_brut_d1": 15000,
+        "nb_parts": 1
+      },
+      "attendu": {
+        "res_rfr": "78 500,00 €",
+        "res_quotient": "78 500,00 €",
+        "s_impot_foyer": "16 653,58 €",
+        "s_decote": "0,00 €",
+        "s_red_dons": "0,00 €",
+        "s_impot_net": "16 653,58 €",
+        "s_ir_pfu": "0,00 €",
+        "s_ps_pen": "0,00 €",
+        "s_ps_fon": "13 502,00 €",
+        "s_ps_pfu": "0,00 €",
+        "s_ps_pv": "0,00 €",
+        "s_cehr": "0,00 €",
+        "s_cdhr": "0,00 €",
+        "s_final": "30 155,58 €",
+        "res_final": "30 155,58 €",
+        "s_csg_ded": "− 0,00 €",
+        "s_ps_etr": "0,00 €"
+      }
+    }
+  ]
+}

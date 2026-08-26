@@ -1439,10 +1439,70 @@ footer strong { color: var(--gold); font-weight: 400; }
   Outil indicatif à usage interne. Ne se substitue pas à un conseil juridique personnalisé. — Barème 2026 · Revenus 2025 · v4
 </footer>
 
+<script src="src/genere/referentiels.js"></script>
+<script src="src/lecture-referentiels.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const v  = id => parseFloat($(id)?.value) || 0;
 const cb = id => $(id)?.checked ?? true;
+
+// ── Référentiels fiscaux ────────────────────────────────────────────────────
+// Sources de vérité : data/referentiels/ir.json et
+// data/referentiels/prelevements-sociaux.json. Les valeurs ne sont plus
+// inscrites ici : une mise à jour se fait dans les données, puis
+// « npm run donnees:generer ». Voir data/README.md.
+const IR = LectureReferentiels.lecteur('ir');
+const PS = LectureReferentiels.lecteur('prelevements-sociaux');
+
+// Le taux des prélèvements sociaux est contesté : deux simulateurs du dépôt en
+// appliquent un différent. Ce simulateur désigne donc explicitement la variante
+// qu'il emploie aujourd'hui, plutôt que de lire une valeur unique qui n'existe
+// pas. Arbitrage attendu : fiche 2.2 de docs/CORRECTIONS_A_VALIDER.md.
+const PS_TAUX = PS.variante('ps.taux.global', '17-2');
+
+const BAREME_IR = IR.bareme('ir.bareme.progressif');
+const PFU_TAUX_IR = IR.valeur('pfu.taux.impot-revenu');
+
+const ABATTEMENT = {
+  salairesTaux: IR.valeur('ir.abattement.salaires.taux'),
+  salairesPlafond: IR.valeur('ir.abattement.salaires.plafond'),
+  pensionsTaux: IR.valeur('ir.abattement.pensions.taux'),
+  pensionsPlafond: IR.valeur('ir.abattement.pensions.plafond'),
+  pensionsPlancher: IR.valeur('ir.abattement.pensions.plancher'),
+};
+
+const DECOTE = {
+  taux: IR.valeur('ir.decote.taux'),
+  celibataire: {
+    seuil: IR.valeur('ir.decote.celibataire.seuil'),
+    montant: IR.valeur('ir.decote.celibataire.montant'),
+  },
+  couple: {
+    seuil: IR.valeur('ir.decote.couple.seuil'),
+    montant: IR.valeur('ir.decote.couple.montant'),
+  },
+};
+
+const CEHR_BAREME = {
+  celibataire: IR.bareme('cehr.bareme.celibataire'),
+  couple: IR.bareme('cehr.bareme.couple'),
+};
+
+const CDHR = {
+  tauxCible: IR.valeur('cdhr.taux.cible'),
+  coefficientDecote: IR.valeur('cdhr.decote.coefficient'),
+  seuilCelibataire: IR.valeur('cdhr.seuil.celibataire'),
+  seuilCouple: IR.valeur('cdhr.seuil.couple'),
+  abattementImpositionCommune: IR.valeur('cdhr.abattement.imposition-commune'),
+  abattementParPersonneACharge: IR.valeur('cdhr.abattement.personne-a-charge'),
+};
+
+// Les paramètres modifiables du formulaire — bornes du barème, plafonds
+// d'abattement, décote, abattements CDHR — restent lus dans les champs, avec
+// leurs valeurs pré-remplies dans le HTML. Les générer depuis le référentiel
+// changerait ce que la page fait au chargement, ce qui n'a pas sa place dans
+// une refactorisation. Un contrôle automatique interdit en revanche qu'elles
+// divergent des données : voir tests/unit/coherence-referentiels.test.js.
 const fmt = (n, d=0) => n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}) + ' €';
 
 function set(id, val, cls='') {
@@ -1556,8 +1616,14 @@ function toggleAcc(hdr) {
 
 // ── Barème IR ──
 function getBareme() {
+  // Le taux de la première tranche vient du référentiel ; les bornes et les
+  // autres taux restent lus dans le formulaire, où l'utilisateur peut les
+  // ajuster. La convention « la tranche suivante commence un euro plus haut »
+  // est celle du code existant et n'est pas modifiée ici : elle diffère de
+  // celle du simulateur « IR, CEHR et CDHR », pour un écart d'au plus 1,27 €
+  // relevant de l'issue #7.
   return [
-    {de:v('t1_de'), a:v('t1_a'),  tx:0},
+    {de:v('t1_de'), a:v('t1_a'),  tx:BAREME_IR[0].taux},
     {de:v('t1_a')+1, a:v('t2_a'), tx:v('t2_tx')/100},
     {de:v('t2_a')+1, a:v('t3_a'), tx:v('t3_tx')/100},
     {de:v('t3_a')+1, a:v('t4_a'), tx:v('t4_tx')/100},
@@ -1570,14 +1636,14 @@ function impot(rev) {
 
 // ── CEHR ──
 function calcCEHR(rfr, couple) {
-  if (couple) {
-    return Math.max(0, Math.min(rfr, 1000000) - 500000) * 0.03
-         + Math.max(0, rfr - 1000000) * 0.04;
-  } else {
-    return Math.max(0, Math.min(rfr, 500000) - 250000) * 0.03
-         + Math.max(0, Math.min(rfr, 1000000) - 500000) * 0.04
-         + Math.max(0, rfr - 1000000) * 0.04;
-  }
+  // Même résultat qu'auparavant : chaque tranche n'est imposée que sur la part
+  // du revenu qu'elle couvre. Le barème du célibataire comportait une tranche
+  // intermédiaire au même taux que la suivante ; les deux se confondent.
+  const tranches = couple ? CEHR_BAREME.couple : CEHR_BAREME.celibataire;
+  return tranches.reduce(
+    (total, t) => total + Math.max(0, Math.min(rfr, t.max) - t.min) * t.taux,
+    0,
+  );
 }
 
 // ── CDHR ──
@@ -1604,15 +1670,15 @@ function calcCEHR(rfr, couple) {
  * @returns {{brut: number, decote: number, net: number, seuil: number}}
  */
 function calculerCDHR({ rfrr, irCehr, seuil, abattementTotal }) {
-  const brut = Math.max(0, rfrr * 0.20 - irCehr - abattementTotal);
-  const decote = rfrr < seuil ? Math.max(0, (rfrr - seuil) * 0.825) : 0;
+  const brut = Math.max(0, rfrr * CDHR.tauxCible - irCehr - abattementTotal);
+  const decote = rfrr < seuil ? Math.max(0, (rfrr - seuil) * CDHR.coefficientDecote) : 0;
   const net = Math.max(0, brut - decote);
   return { brut, decote, net, seuil };
 }
 
 /** Lit le formulaire puis délègue le calcul de la CDHR. */
 function calcCDHR(rfrr, ir_cehr, couple, pac) {
-  const seuil   = couple ? 500000 : 250000;
+  const seuil   = couple ? CDHR.seuilCouple : CDHR.seuilCelibataire;
   const aba_ic  = couple ? v('cdhr_aba_ic') : 0;
   const aba_pac = pac * v('cdhr_aba_pac');
   return calculerCDHR({
@@ -1777,8 +1843,8 @@ function calc() {
   let pfu_b=0, pfu_ir_t=0, pfu_ps_t=0;
   pfuDefs.forEach(([p,bI,mI,psI]) => {
     const base = Math.max(0, v(bI) - v(mI));
-    const ir   = base * 0.128;
-    const ps   = cb(psI) ? base * 0.172 : 0;
+    const ir   = base * PFU_TAUX_IR;
+    const ps   = cb(psI) ? base * PS_TAUX : 0;
     set(`${p}_ir`,  fmt(ir,2));
     set(`${p}_ps`,  fmt(ps,2));
     set(`${p}_tot`, fmt(ir+ps,2));
@@ -1793,12 +1859,12 @@ function calc() {
 
   // ── Salaires ──
   const sal_b_d1 = v('sal_brut_d1'), sal_b_d2 = has_d2 ? v('sal_brut_d2') : 0;
-  const sal_aba_d1 = Math.min(sal_b_d1 * 0.10, aba_sal_val);
-  const sal_aba_d2 = Math.min(sal_b_d2 * 0.10, aba_sal_val);
+  const sal_aba_d1 = Math.min(sal_b_d1 * ABATTEMENT.salairesTaux, aba_sal_val);
+  const sal_aba_d2 = Math.min(sal_b_d2 * ABATTEMENT.salairesTaux, aba_sal_val);
   const sal_imp_d1 = Math.max(0, sal_b_d1 - sal_aba_d1);
   const sal_imp_d2 = Math.max(0, sal_b_d2 - sal_aba_d2);
   const sal_imp_tot_val = sal_imp_d1 + sal_imp_d2;
-  const sal_ps = cb('psx_sal') ? sal_imp_tot_val * 0.172 : 0;
+  const sal_ps = cb('psx_sal') ? sal_imp_tot_val * PS_TAUX : 0;
   set('sal_aba_d1', fmt(sal_aba_d1,2)); set('sal_imp_d1', fmt(sal_imp_d1,2));
   set('sal_aba_d2', fmt(sal_aba_d2,2)); set('sal_imp_d2', fmt(sal_imp_d2,2));
   set('sal_imp_tot', fmt(sal_imp_tot_val,2));
@@ -1810,7 +1876,7 @@ function calc() {
   const bspce_imp_d1 = Math.max(0, bspce_b_d1 - bspce_aba_d1);
   const bspce_imp_d2 = Math.max(0, bspce_b_d2 - bspce_aba_d2);
   const bspce_imp_tot_val = bspce_imp_d1 + bspce_imp_d2;
-  const bspce_ps = cb('psx_bspce') ? bspce_imp_tot_val * 0.172 : 0;
+  const bspce_ps = cb('psx_bspce') ? bspce_imp_tot_val * PS_TAUX : 0;
   set('bspce_aba_d1', fmt(bspce_aba_d1,2)); set('bspce_imp_d1', fmt(bspce_imp_d1,2));
   set('bspce_aba_d2', fmt(bspce_aba_d2,2)); set('bspce_imp_d2', fmt(bspce_imp_d2,2));
   set('bspce_imp_tot', fmt(bspce_imp_tot_val,2));
@@ -1830,7 +1896,7 @@ function calc() {
   const pen_d1 = v('pen_brut_d1'), pen_d2 = has_d2 ? v('pen_brut_d2') : 0;
   const pen_brut_foyer = pen_d1 + pen_d2;
   const pen_aba_calc   = pen_brut_foyer * 0.10;
-  const pen_aba_foyer  = Math.min(Math.max(pen_aba_calc, pen_brut_foyer > 0 ? 442 : 0), aba_pen_val);
+  const pen_aba_foyer  = Math.min(Math.max(pen_aba_calc, pen_brut_foyer > 0 ? ABATTEMENT.pensionsPlancher : 0), aba_pen_val);
   const pen_imp_foyer_val = Math.max(0, pen_brut_foyer - pen_aba_foyer);
   const pen_taux_ps_val = v('pen_taux_ps') / 100;
   const pen_ps_val     = pen_brut_foyer * pen_taux_ps_val;
@@ -1843,7 +1909,7 @@ function calc() {
   const pe_d1 = v('pen_etr_brut_d1'), pe_d2 = has_d2 ? v('pen_etr_brut_d2') : 0;
   const pe_brut_foyer = pe_d1 + pe_d2;
   const pe_aba_calc   = pe_brut_foyer * 0.10;
-  const pe_aba_foyer  = Math.min(Math.max(pe_aba_calc, pe_brut_foyer > 0 ? 442 : 0), aba_pen_val);
+  const pe_aba_foyer  = Math.min(Math.max(pe_aba_calc, pe_brut_foyer > 0 ? ABATTEMENT.pensionsPlancher : 0), aba_pen_val);
   const pe_imp_foyer_val = Math.max(0, pe_brut_foyer - pe_aba_foyer);
   const pe_ps_val     = cb('psx_pen_etr') ? pe_brut_foyer * 0.092 : 0;
   set('pen_etr_total_brut',   fmt(pe_brut_foyer,2));
@@ -1864,11 +1930,11 @@ function calc() {
 
   // ── Autres revenus avec abattement ──
   const abaRevs = [
-    ['microfon',       0.30, 'psx_microfon',       0.172],
-    ['loc',            0.30, 'psx_loc',             0.172],
-    ['microbnc',       0.34, 'psx_microbnc',        0.172],
-    ['microbic_vente', 0.71, 'psx_microbic_vente',  0.172],
-    ['microbic_serv',  0.50, 'psx_microbic_serv',   0.172],
+    ['microfon',       0.30, 'psx_microfon',       PS_TAUX],
+    ['loc',            0.30, 'psx_loc',             PS_TAUX],
+    ['microbnc',       0.34, 'psx_microbnc',        PS_TAUX],
+    ['microbic_vente', 0.71, 'psx_microbic_vente',  PS_TAUX],
+    ['microbic_serv',  0.50, 'psx_microbic_serv',   PS_TAUX],
   ];
   let aba_imp_tot_val = 0, aba_ps_tot_val = 0;
   abaRevs.forEach(([p, tx_aba, psId, tx_ps]) => {
@@ -1893,25 +1959,25 @@ function calc() {
   const fon_b = v('fon_brut_d1') + (has_d2 ? v('fon_brut_d2') : 0);
   set('fon_brut_tot', fmt(fon_b, 2));
   const fon_imp = Math.max(0, fon_b - v('fon_charges'));
-  const fon_ps  = cb('psx_fon') ? fon_imp * 0.172 : 0;
+  const fon_ps  = cb('psx_fon') ? fon_imp * PS_TAUX : 0;
   set('fon_imp', fmt(fon_imp,2)); set('fon_ps', fmt(fon_ps,2));
 
   const bnc_b = v('bnc_brut_d1') + (has_d2 ? v('bnc_brut_d2') : 0);
   set('bnc_brut_tot', fmt(bnc_b, 2));
   const bnc_imp = Math.max(0, bnc_b - v('bnc_charges'));
-  const bnc_ps  = cb('psx_bnc') ? bnc_imp * 0.172 : 0;
+  const bnc_ps  = cb('psx_bnc') ? bnc_imp * PS_TAUX : 0;
   set('bnc_imp', fmt(bnc_imp,2)); set('bnc_ps', fmt(bnc_ps,2));
 
   const bic_b = v('bic_brut_d1') + (has_d2 ? v('bic_brut_d2') : 0);
   set('bic_brut_tot', fmt(bic_b, 2));
   const bic_imp = Math.max(0, bic_b - v('bic_charges'));
-  const bic_ps  = cb('psx_bic') ? bic_imp * 0.172 : 0;
+  const bic_ps  = cb('psx_bic') ? bic_imp * PS_TAUX : 0;
   set('bic_imp', fmt(bic_imp,2)); set('bic_ps', fmt(bic_ps,2));
 
   const ar_b = v('autre_rev_brut_d1') + (has_d2 ? v('autre_rev_brut_d2') : 0);
   set('autre_rev_brut_tot', fmt(ar_b, 2));
   const ar_imp = Math.max(0, ar_b);
-  const ar_ps  = cb('psx_autre_rev') ? ar_imp * 0.172 : 0;
+  const ar_ps  = cb('psx_autre_rev') ? ar_imp * PS_TAUX : 0;
   set('autre_rev_imp', fmt(ar_imp,2)); set('autre_rev_ps', fmt(ar_ps,2));
 
   const reel_imp_tot_val = fon_imp + bnc_imp + bic_imp + ar_imp;
@@ -1948,8 +2014,8 @@ function calc() {
   const dec_cel_seuil = v('dec_cel_seuil'), dec_cel_mt = v('dec_cel_mt');
   const dec_cou_seuil = v('dec_cou_seuil'), dec_cou_mt = v('dec_cou_mt');
   let decote = 0;
-  if (couple) decote = imp_foy > dec_cou_seuil ? 0 : Math.max(0, dec_cou_mt - imp_foy * 0.4525);
-  else        decote = imp_foy > dec_cel_seuil ? 0 : Math.max(0, dec_cel_mt - imp_foy * 0.4525);
+  if (couple) decote = imp_foy > dec_cou_seuil ? 0 : Math.max(0, dec_cou_mt - imp_foy * DECOTE.taux);
+  else        decote = imp_foy > dec_cel_seuil ? 0 : Math.max(0, dec_cel_mt - imp_foy * DECOTE.taux);
 
   // Réductions (hors dons)
   const pas      = v('pas');
@@ -2128,7 +2194,7 @@ function pvCalc(r) {
   const pvmv=nc-na, y=dy(r.da,r.dc), tx=abTx(y,r.renf);
   const mt=pvmv>0?pvmv*tx:0, net=pvmv-mt;
   // PS calculé sur la PV brute (avant abattement durée) conformément aux règles fiscales
-  const ps=r.psx ? Math.max(0,pvmv)*0.172 : 0;
+  const ps=r.psx ? Math.max(0,pvmv)*PS_TAUX : 0;
   return {ba,na,bc,nc,pvmv,y,tx,mt,net,ps};
 }
 function updatePVCalc() {

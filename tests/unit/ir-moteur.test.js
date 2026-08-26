@@ -88,20 +88,28 @@ test("irAvecQuotientFamilial — des parts supplémentaires ne peuvent pas augme
   );
 });
 
+// Depuis l'extraction des référentiels (#14), `cehrBareme` reçoit les tranches
+// elles-mêmes et non plus deux seuils, les taux n'étant plus inscrits dans le
+// code. Le découpage en tranches, lui, est inchangé : le filet de
+// non-régression de `tests/integration/instantanes-ir.test.js` le prouve sur
+// les montants réellement affichés.
+const TRANCHES_CEHR = [
+  { min: 500000, max: 1000000, taux: 0.03 },
+  { min: 1000000, max: Infinity, taux: 0.04 },
+];
+
 test('cehrBareme — sous le premier seuil, la contribution est nulle', () => {
-  const seuils = [500000, 1000000];
-  assert.equal(cehrBareme(0, seuils), 0);
-  assert.equal(cehrBareme(499999, seuils), 0);
-  assert.equal(cehrBareme(500000, seuils), 0);
+  assert.equal(cehrBareme(0, TRANCHES_CEHR), 0);
+  assert.equal(cehrBareme(499999, TRANCHES_CEHR), 0);
+  assert.equal(cehrBareme(500000, TRANCHES_CEHR), 0);
 });
 
 test('cehrBareme — les deux tranches sont appliquées séparément', () => {
-  // Les seuils sont fournis en entrée par l'appelant : ce test vérifie la
-  // mécanique de découpage en tranches, pas la valeur juridique des seuils.
-  const seuils = [500000, 1000000];
-  assertProche(cehrBareme(600000, seuils), 100000 * 0.03, 0.01, 'première tranche seule');
+  // Les tranches sont fournies en entrée : ce test vérifie la mécanique de
+  // découpage, pas la valeur juridique des seuils.
+  assertProche(cehrBareme(600000, TRANCHES_CEHR), 100000 * 0.03, 0.01, 'première tranche seule');
   assertProche(
-    cehrBareme(1200000, seuils),
+    cehrBareme(1200000, TRANCHES_CEHR),
     500000 * 0.03 + 200000 * 0.04,
     0.01,
     'première et seconde tranches'

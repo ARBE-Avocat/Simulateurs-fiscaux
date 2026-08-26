@@ -158,3 +158,105 @@ test('Référentiels — un simulateur signale clairement des données absentes'
     /npm run donnees:generer/,
   );
 });
+
+// ── Impôt sur le revenu (#14) ───────────────────────────────────────────────
+
+/** Ouvre un lecteur de référentiel pour un domaine quelconque. */
+function lecteur(domaine) {
+  const contexte = { REFERENTIELS: require('../../src/genere/referentiels.js') };
+  vm.runInNewContext(
+    fs.readFileSync(chemin('src', 'lecture-referentiels.js'), 'utf8'),
+    contexte,
+    { filename: 'src/lecture-referentiels.js' },
+  );
+  return contexte.LectureReferentiels.lecteur(domaine);
+}
+
+test('IRPP — le barème pré-rempli dans le formulaire suit le référentiel', () => {
+  const ir = lecteur('ir');
+  const html = lireHtml('irpp');
+  const tranches = ir.bareme('ir.bareme.progressif');
+
+  assert.equal(valeurPrerempli(html, 't1_de'), tranches[0].min, 'début de la première tranche');
+  tranches.slice(0, -1).forEach((tranche, index) => {
+    assert.equal(
+      valeurPrerempli(html, `t${index + 1}_a`),
+      tranche.max,
+      `borne haute de la tranche ${index + 1}`,
+    );
+  });
+  tranches.slice(1).forEach((tranche, index) => {
+    assert.equal(
+      valeurPrerempli(html, `t${index + 2}_tx`),
+      tranche.taux * 100,
+      `taux de la tranche ${index + 2}`,
+    );
+  });
+});
+
+test('IRPP — les paramètres pré-remplis du formulaire suivent le référentiel', () => {
+  const ir = lecteur('ir');
+  const html = lireHtml('irpp');
+
+  const attendus = {
+    aba_sal: 'ir.abattement.salaires.plafond',
+    aba_pen: 'ir.abattement.pensions.plafond',
+    dec_cel_seuil: 'ir.decote.celibataire.seuil',
+    dec_cel_mt: 'ir.decote.celibataire.montant',
+    dec_cou_seuil: 'ir.decote.couple.seuil',
+    dec_cou_mt: 'ir.decote.couple.montant',
+    cdhr_aba_ic: 'cdhr.abattement.imposition-commune',
+    cdhr_aba_pac: 'cdhr.abattement.personne-a-charge',
+  };
+
+  for (const [champ, id] of Object.entries(attendus)) {
+    assert.equal(
+      valeurPrerempli(html, champ),
+      ir.valeur(id),
+      `${champ} affiché dans le formulaire ne correspond plus à data/referentiels/ir.json`,
+    );
+  }
+});
+
+test('IR, CEHR et CDHR — le taux de prélèvements sociaux pré-rempli est bien la variante employée', () => {
+  // Le champ est modifiable et sa valeur pré-remplie reste écrite dans le HTML.
+  // Ce contrôle garantit qu'elle reste celle que le simulateur déclare employer,
+  // et rend visible le jour où le référent fiscal tranchera la fiche 2.2.
+  const ps = lecteur('prelevements-sociaux');
+  const html = lireHtml('ir-cehr-cdhr');
+
+  assert.equal(
+    valeurPrerempli(html, 'tauxPS'),
+    ps.variante('ps.taux.global', '18-6') * 100,
+  );
+});
+
+test('Prélèvements sociaux — les deux simulateurs désignent des variantes différentes', () => {
+  // C'est la divergence de la fiche 2.2, représentée et non tranchée. Si un jour
+  // les deux simulateurs lisaient la même variante, ce test le signalerait :
+  // l'arbitrage doit passer par les données, pas par une retouche de code.
+  const ps = lecteur('prelevements-sociaux');
+  const entree = ps.entree('ps.taux.global');
+
+  assert.equal(entree.statutValidation, 'conteste');
+  assert.equal(entree.valeur, undefined, 'une règle contestée n\'a pas de valeur unique');
+
+  const parSimulateur = {};
+  entree.variantes.forEach((variante) => {
+    variante.utilisePar.forEach((cle) => { parSimulateur[cle] = variante.cle; });
+  });
+  assert.equal(parSimulateur.irpp, '17-2');
+  assert.equal(parSimulateur['pv-immobiliere'], '17-2');
+  assert.equal(parSimulateur['ir-cehr-cdhr'], '18-6');
+
+  assert.match(
+    lireHtml('irpp'),
+    /PS\.variante\('ps\.taux\.global', '17-2'\)/,
+    'le simulateur IRPP doit désigner explicitement sa variante',
+  );
+  assert.match(
+    lireHtml('ir-cehr-cdhr'),
+    /PS\.variante\('ps\.taux\.global', '18-6'\)/,
+    'le simulateur IR doit désigner explicitement sa variante',
+  );
+});

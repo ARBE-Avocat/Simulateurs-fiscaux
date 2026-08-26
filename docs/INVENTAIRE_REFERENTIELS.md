@@ -36,8 +36,8 @@ Clés de simulateur employées : `ir-cehr-cdhr`, `irpp`, `ifi`, `pv-immobiliere`
 
 | Domaine | Fichier de destination | Simulateurs concernés | Issue d'extraction |
 |---|---|---|---|
-| Impôt sur le revenu, CEHR, CDHR, PFU | `data/referentiels/ir.json` | `ir-cehr-cdhr`, `irpp` | #14 |
-| Prélèvements sociaux | `data/referentiels/prelevements-sociaux.json` | les trois qui les appliquent | #14 |
+| Impôt sur le revenu, CEHR, CDHR, PFU | `data/referentiels/ir.json` | `ir-cehr-cdhr`, `irpp` | #14 — **extrait** |
+| Prélèvements sociaux | `data/referentiels/prelevements-sociaux.json` | les trois qui les appliquent | #14 — **extrait pour deux d'entre eux** |
 | IFI | `data/referentiels/ifi.json` | `ifi`, `irpp` | #15 |
 | Mutations à titre gratuit, usufruit, assurance-vie | `data/referentiels/dmtg.json` | `succession`, `demembrement` | #16 — **extrait** |
 | Plus-value immobilière | `data/referentiels/pv-immobiliere.json` | `pv-immobiliere` | #17 |
@@ -68,11 +68,21 @@ Clés de simulateur employées : `ir-cehr-cdhr`, `irpp`, `ifi`, `pv-immobiliere`
 | CSG déductible — 6,8 % | `irpp` | champ modifiable | aucune | non-valide |
 | Année de référence des revenus — 2025 | `irpp` | `ANNEE_REF` | pied de page : « Barème 2026 · Revenus 2025 · v4 » | non-valide |
 
-**Point de vigilance.** Le barème et une partie des paramètres de l'IRPP sont
-des **champs de formulaire modifiables par l'utilisateur**, pré-remplis dans le
-HTML. Extraire ces valeurs suppose de décider si le référentiel fournit la
-valeur pré-remplie tout en laissant la modification possible — ce que la fiche
-1.3 de `docs/CORRECTIONS_A_VALIDER.md` soulève déjà pour le démembrement.
+**Extraction réalisée (#14).** Ces valeurs vivent désormais dans
+`data/referentiels/ir.json`, sauf le taux des prélèvements sociaux, qui a son
+propre fichier. La colonne « écriture actuelle » ci-dessus décrit l'état d'avant.
+
+**Point de vigilance, toujours ouvert.** Le barème et une partie des paramètres
+de l'IRPP sont des **champs de formulaire modifiables**, pré-remplis dans le
+HTML. Ils continuent d'être lus dans le formulaire : les générer changerait ce
+que la page fait au chargement, ce qui n'a pas sa place dans une refactorisation.
+Un contrôle automatique interdit en revanche qu'ils divergent du référentiel.
+Le même choix vaut pour le taux de prélèvements sociaux du simulateur IR, lui
+aussi modifiable.
+
+Décider si un champ modifiable doit être pré-rempli depuis les données rejoint
+la fiche 1.3 de `docs/CORRECTIONS_A_VALIDER.md`, qui pose la même question pour
+le démembrement.
 
 ---
 
@@ -82,9 +92,19 @@ valeur pré-remplie tout en laissant la modification possible — ce que la fich
 |---|---|---|---|---|
 | Taux global appliqué aux plus-values | `ir-cehr-cdhr` : 18,6 % · `irpp` et `pv-immobiliere` : 17,2 % | champ modifiable pré-rempli d'un côté, valeur en dur aux autres | aucune | **conteste** — fiche 2.2 |
 
-Le taux 17,2 % apparaît **seize fois** dans le simulateur IRPP et plusieurs fois
-dans la plus-value immobilière. L'extraction consiste ici autant à supprimer des
-duplications qu'à externaliser une valeur.
+Le taux 17,2 % apparaissait **seize fois** dans le simulateur IRPP et plusieurs
+fois dans la plus-value immobilière. L'extraction consistait ici autant à
+supprimer des duplications qu'à externaliser une valeur.
+
+**Extraction réalisée (#14) pour les simulateurs IRPP et « IR, CEHR et CDHR ».**
+La divergence est représentée, pas tranchée : l'entrée `ps.taux.global` est
+`conteste` et n'a **aucune valeur unique**. Chaque simulateur désigne
+explicitement, dans son code, la variante qu'il emploie aujourd'hui —
+`PS.variante('ps.taux.global', '17-2')` pour l'IRPP,
+`'18-6'` pour le simulateur IR. Le jour de l'arbitrage, la correction consistera
+à remplacer les variantes par une valeur unique dans les données.
+
+La plus-value immobilière reste à traiter : c'est l'objet de l'issue #17.
 
 ---
 

@@ -1,0 +1,32 @@
+id;libelle;type;unite;millesime;dateEffet;dateFin;statutValidation;valeur;borneInf;borneInfIncluse;borneSup;borneSupIncluse;taux;utilisePar;varianteCle;arbitrageDocument;arbitragePoint;arbitrageQuestion;sourceReference;sourceUrl;sourceDateConsultation;validationPar;validationDate;notes
+ir.bareme.progressif;Barème progressif de l’impôt sur le revenu, par part;bareme;decimal;2025;;;non-valide;;0;non;11600;oui;0;ir-cehr-cdhr,irpp;;;;;;;;;;"Bornes et taux identiques dans les deux simulateurs. Ils ne les appliquent pas de la même façon : le simulateur IR traite les tranches comme jointives, l’IRPP fait commencer chaque tranche à la borne précédente augmentée d’un euro. L’écart atteint 1,27 € d’impôt et relève de l’issue #7 ; il tient au code, non à ces valeurs."
+ir.bareme.progressif;Barème progressif de l’impôt sur le revenu, par part;bareme;decimal;2025;;;non-valide;;11600;non;29579;oui;0,11;ir-cehr-cdhr,irpp;;;;;;;;;;
+ir.bareme.progressif;Barème progressif de l’impôt sur le revenu, par part;bareme;decimal;2025;;;non-valide;;29579;non;84577;oui;0,3;ir-cehr-cdhr,irpp;;;;;;;;;;
+ir.bareme.progressif;Barème progressif de l’impôt sur le revenu, par part;bareme;decimal;2025;;;non-valide;;84577;non;181917;oui;0,41;ir-cehr-cdhr,irpp;;;;;;;;;;
+ir.bareme.progressif;Barème progressif de l’impôt sur le revenu, par part;bareme;decimal;2025;;;non-valide;;181917;non;;;0,45;ir-cehr-cdhr,irpp;;;;;;;;;;
+ir.abattement.salaires.taux;Abattement forfaitaire sur les salaires — taux;taux;decimal;2025;;;non-valide;0,1;;;;;;ir-cehr-cdhr,irpp;;;;;;;;;;
+ir.abattement.salaires.plafond;Abattement forfaitaire sur les salaires — plafond par déclarant;montant;EUR;2025;;;non-valide;14555;;;;;;ir-cehr-cdhr,irpp;;;;;;;;;;
+ir.abattement.pensions.taux;Abattement forfaitaire sur les pensions — taux;taux;decimal;2025;;;non-valide;0,1;;;;;;irpp;;;;;;;;;;
+ir.abattement.pensions.plafond;Abattement forfaitaire sur les pensions — plafond par foyer;montant;EUR;2025;;;non-valide;4439;;;;;;irpp;;;;;;;;;;
+ir.abattement.pensions.plancher;Abattement forfaitaire sur les pensions — plancher par foyer;montant;EUR;2025;;;non-valide;442;;;;;;irpp;;;;;;;;;;
+ir.decote.celibataire.seuil;Décote de l’impôt sur le revenu — seuil, personne seule;montant;EUR;2025;;;non-valide;1965;;;;;;irpp;;;;;;;;;;
+ir.decote.celibataire.montant;Décote de l’impôt sur le revenu — montant fixe, personne seule;montant;EUR;2025;;;non-valide;889;;;;;;irpp;;;;;;;;;;
+ir.decote.couple.seuil;Décote de l’impôt sur le revenu — seuil, imposition commune;montant;EUR;2025;;;non-valide;3249;;;;;;irpp;;;;;;;;;;
+ir.decote.couple.montant;Décote de l’impôt sur le revenu — montant fixe, imposition commune;montant;EUR;2025;;;non-valide;1470;;;;;;irpp;;;;;;;;;;
+ir.decote.taux;Décote de l’impôt sur le revenu — taux appliqué à l’impôt;taux;decimal;2025;;;non-valide;0,4525;;;;;;irpp;;;;;;;;;;
+ir.quotient.plafond-demi-part;Plafonnement de l’avantage en impôt procuré par une demi-part supplémentaire;montant;EUR;2025;;;non-valide;1807;;;;;;ir-cehr-cdhr;;;;;;;;;;Le simulateur IRPP n’applique aucun plafonnement du quotient familial : il divise par le nombre de parts sans limiter l’avantage. Divergence soumise au référent fiscal, fiche 2.3 de docs/CORRECTIONS_A_VALIDER.md, jusqu’à 19 985,10 € d’écart mesuré. Aucune valeur n’est ajoutée à l’IRPP ici : ce serait trancher.
+cehr.bareme.celibataire;Contribution exceptionnelle sur les hauts revenus — personne seule;bareme;decimal;2025;;;non-valide;;250000;non;500000;oui;0,03;ir-cehr-cdhr,irpp;;;;;;;;;;"Le simulateur IRPP écrivait une tranche intermédiaire de 500 000 € à 1 000 000 € au même taux de 4 % que celle qui suit ; les deux se confondent et donnent le même impôt."
+cehr.bareme.celibataire;Contribution exceptionnelle sur les hauts revenus — personne seule;bareme;decimal;2025;;;non-valide;;500000;non;;;0,04;ir-cehr-cdhr,irpp;;;;;;;;;;
+cehr.bareme.couple;Contribution exceptionnelle sur les hauts revenus — imposition commune;bareme;decimal;2025;;;non-valide;;500000;non;1000000;oui;0,03;ir-cehr-cdhr,irpp;;;;;;;;;;
+cehr.bareme.couple;Contribution exceptionnelle sur les hauts revenus — imposition commune;bareme;decimal;2025;;;non-valide;;1000000;non;;;0,04;ir-cehr-cdhr,irpp;;;;;;;;;;
+cdhr.taux.cible;Contribution différentielle sur les hauts revenus — taux d’imposition minimal visé;taux;decimal;2025;;;non-valide;0,2;;;;;;ir-cehr-cdhr,irpp;;;;;;;;;;
+cdhr.seuil.celibataire;Contribution différentielle — seuil d’assujettissement, personne seule;montant;EUR;2025;;;non-valide;250000;;;;;;ir-cehr-cdhr,irpp;;;;;;;;;;
+cdhr.seuil.couple;Contribution différentielle — seuil d’assujettissement, imposition commune;montant;EUR;2025;;;non-valide;500000;;;;;;ir-cehr-cdhr,irpp;;;;;;;;;;
+cdhr.abattement.imposition-commune;Contribution différentielle — abattement pour imposition commune;montant;EUR;2025;;;non-valide;12500;;;;;;ir-cehr-cdhr,irpp;;;;;;;;;;
+cdhr.abattement.personne-a-charge;Contribution différentielle — abattement par personne à charge;montant;EUR;2025;;;non-valide;1500;;;;;;ir-cehr-cdhr,irpp;;;;;;;;;;
+cdhr.decote.coefficient;Contribution différentielle — coefficient de la décote;taux;decimal;2025;;;non-valide;0,825;;;;;;ir-cehr-cdhr,irpp;;;;;;;;;;Les deux simulateurs emploient ce coefficient, mais pas dans la même formule ni au même endroit du calcul. La divergence porte sur la formule, non sur cette valeur : voir la fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md et l’issue #4.
+cdhr.decote.borne-haute.celibataire;Contribution différentielle — borne haute de la bande de décote, personne seule;montant;EUR;2025;;;non-valide;330000;;;;;;ir-cehr-cdhr;;;;;;;;;;Présente dans le seul simulateur « IR, CEHR et CDHR ». Le simulateur IRPP n’a pas de bande de décote. Bornes à confirmer, fiche 2.1.
+cdhr.decote.borne-haute.couple;Contribution différentielle — borne haute de la bande de décote, imposition commune;montant;EUR;2025;;;non-valide;660000;;;;;;ir-cehr-cdhr;;;;;;;;;;
+pfu.taux.impot-revenu;Prélèvement forfaitaire unique — part d’impôt sur le revenu;taux;decimal;2025;;;non-valide;0,128;;;;;;ir-cehr-cdhr,irpp;;;;;;;;;;
+ir.credit.garde-enfants.taux;Crédit d’impôt pour frais de garde — taux;taux;decimal;2025;;;non-valide;0,5;;;;;;ir-cehr-cdhr;;;;;;;;;;
+ir.credit.garde-enfants.plafond;Crédit d’impôt pour frais de garde — plafond de dépenses par enfant;montant;EUR;2025;;;non-valide;3500;;;;;;ir-cehr-cdhr;;;;;;;;;;

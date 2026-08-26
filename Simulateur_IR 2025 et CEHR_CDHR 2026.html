@@ -434,19 +434,59 @@
 
 </div>
 
+<script src="src/genere/referentiels.js"></script>
+<script src="src/lecture-referentiels.js"></script>
 <script>
 /* ============================================================
-   RÉFÉRENTIEL FISCAL 2025 (LFI 2026)
+   RÉFÉRENTIEL FISCAL
+   ============================================================
+   Sources de vérité : data/referentiels/ir.json et
+   data/referentiels/prelevements-sociaux.json. Les valeurs ne sont plus
+   inscrites ici : une mise à jour se fait dans les données, puis
+   « npm run donnees:generer ». Voir data/README.md.
    ============================================================ */
-const BAREME = [
-  { upto: 11600,      rate: 0.00 },
-  { upto: 29579,      rate: 0.11 },
-  { upto: 84577,      rate: 0.30 },
-  { upto: 181917,     rate: 0.41 },
-  { upto: Infinity,   rate: 0.45 },
-];
-const PLAFOND_DEMI_PART = 1807;
-const PFU_RATE = 0.128;
+const IR = LectureReferentiels.lecteur('ir');
+const PS = LectureReferentiels.lecteur('prelevements-sociaux');
+
+const BAREME = IR.bareme('ir.bareme.progressif').map(t => ({ upto: t.max, rate: t.taux }));
+const PLAFOND_DEMI_PART = IR.valeur('ir.quotient.plafond-demi-part');
+const PFU_RATE = IR.valeur('pfu.taux.impot-revenu');
+
+const CEHR_BAREME = {
+  celibataire: IR.bareme('cehr.bareme.celibataire'),
+  couple: IR.bareme('cehr.bareme.couple'),
+};
+
+const CDHR = {
+  tauxCible: IR.valeur('cdhr.taux.cible'),
+  coefficientDecote: IR.valeur('cdhr.decote.coefficient'),
+  seuil: {
+    celibataire: IR.valeur('cdhr.seuil.celibataire'),
+    couple: IR.valeur('cdhr.seuil.couple'),
+  },
+  borneHauteDecote: {
+    celibataire: IR.valeur('cdhr.decote.borne-haute.celibataire'),
+    couple: IR.valeur('cdhr.decote.borne-haute.couple'),
+  },
+  abattementImpositionCommune: IR.valeur('cdhr.abattement.imposition-commune'),
+  abattementParPersonneACharge: IR.valeur('cdhr.abattement.personne-a-charge'),
+};
+
+const ABATTEMENT_SALAIRES = {
+  taux: IR.valeur('ir.abattement.salaires.taux'),
+  plafond: IR.valeur('ir.abattement.salaires.plafond'),
+};
+
+const CREDIT_GARDE = {
+  taux: IR.valeur('ir.credit.garde-enfants.taux'),
+  plafondParEnfant: IR.valeur('ir.credit.garde-enfants.plafond'),
+};
+
+// Le taux des prélèvements sociaux est contesté : deux simulateurs du dépôt en
+// appliquent un différent. Ce simulateur désigne donc explicitement la variante
+// qu'il emploie aujourd'hui, au lieu de lire une valeur unique qui n'existe pas.
+// Arbitrage attendu : fiche 2.2 de docs/CORRECTIONS_A_VALIDER.md.
+const PS_TAUX_PAR_DEFAUT = PS.variante('ps.taux.global', '18-6');
 
 function bareme(x){
   if (x <= 0) return 0;
@@ -474,11 +514,13 @@ function irAvecQuotientFamilial(revenu, parts, partsRef){
   return taxN;
 }
 
-function cehrBareme(rfr, seuils){
-  if (rfr <= seuils[0]) return 0;
-  const t1 = Math.min(rfr, seuils[1]) - seuils[0];
-  const t2 = Math.max(0, rfr - seuils[1]);
-  return t1 * 0.03 + t2 * 0.04;
+function cehrBareme(rfr, tranches){
+  // Même résultat qu'auparavant : chaque tranche n'est imposée que sur la part
+  // du revenu qu'elle couvre. Les seuils et les taux viennent des données.
+  return tranches.reduce(
+    (total, t) => total + Math.max(0, Math.min(rfr, t.max) - t.min) * t.taux,
+    0,
+  );
 }
 
 function fmt(n){
@@ -520,7 +562,7 @@ function computeHypothese(mode, ctx){
   // mode: 'pfu' | 'bareme' | 'quotient'
   const { salairesNets, pvNetteCedee, pvBruteCedee, parts, partsRef,
           rfrPlein, cehrNonLissee, cehrLissee, credit, majoration,
-          seuilsCDHR, decoteSeuils, rfrRetraiteExc } = ctx;
+          decoteSeuils, rfrRetraiteExc } = ctx;
 
   let irNet;
   if (mode === 'pfu'){
@@ -537,15 +579,15 @@ function computeHypothese(mode, ctx){
   }
 
   // ---- CDHR sans régime exceptionnel ----
-  const targetSans = rfrPlein * 0.20;
+  const targetSans = rfrPlein * CDHR.tauxCible;
   const totalRetenuSans = irNet + cehrNonLissee + majoration;
   const cdhrSans = Math.max(0, targetSans - totalRetenuSans);
 
   // ---- CDHR avec régime exceptionnel ----
-  const targetBrutExc = rfrRetraiteExc * 0.20;
+  const targetBrutExc = rfrRetraiteExc * CDHR.tauxCible;
   let decoteExc = 0;
   if (rfrRetraiteExc > decoteSeuils[0] && rfrRetraiteExc <= decoteSeuils[1]){
-    decoteExc = Math.max(0, targetBrutExc - 0.825 * (rfrRetraiteExc - decoteSeuils[0]));
+    decoteExc = Math.max(0, targetBrutExc - CDHR.coefficientDecote * (rfrRetraiteExc - decoteSeuils[0]));
   }
   const targetExc = targetBrutExc - decoteExc;
 
@@ -600,7 +642,8 @@ function compute(){
   const partsRef = base;
 
   // ---- Salaires nets de 10% (plafond 14 555 €/pers.) ----
-  const abattt10 = (s) => Math.max(s * 0.9, s - 14555);
+  // Abattement forfaitaire : le taux et son plafond viennent des données.
+  const abattt10 = (s) => Math.max(s * (1 - ABATTEMENT_SALAIRES.taux), s - ABATTEMENT_SALAIRES.plafond);
   const salairesNets = abattt10(salaire1) + (situation==='couple' ? abattt10(salaire2) : 0);
 
   // ---- PV ----
@@ -611,17 +654,24 @@ function compute(){
   const rfrPlein = salairesNets + pvBruteCedee;
 
   // ---- Crédit d'impôt garde d'enfants ----
-  const plafondGarde = 3500 * Math.min(enfantsGarde, enfants);
+  const plafondGarde = CREDIT_GARDE.plafondParEnfant * Math.min(enfantsGarde, enfants);
   const baseGarde = Math.min(fraisGarde, plafondGarde);
-  const credit = baseGarde * 0.5;
+  const credit = baseGarde * CREDIT_GARDE.taux;
 
   // ---- Seuils CEHR / CDHR ----
-  const seuilsCEHR = situation==='couple' ? [500000, 1000000] : [250000, 500000];
-  const decoteSeuils = situation==='couple' ? [500000, 660000] : [250000, 330000];
-  const majoration = (situation==='couple' ? 12500 : 0) + 1500 * enfants;
+  const couple = situation === 'couple';
+  const tranchesCEHR = couple ? CEHR_BAREME.couple : CEHR_BAREME.celibataire;
+  // Les deux seuils que le reste du calcul manipulait sont les bornes des
+  // tranches du barème : le premier seuil d'imposition, puis le passage au
+  // taux supérieur.
+  const seuilsCEHR = [tranchesCEHR[0].min, tranchesCEHR[1].min];
+  const seuilCDHR = couple ? CDHR.seuil.couple : CDHR.seuil.celibataire;
+  const decoteSeuils = [seuilCDHR, couple ? CDHR.borneHauteDecote.couple : CDHR.borneHauteDecote.celibataire];
+  const majoration = (couple ? CDHR.abattementImpositionCommune : 0)
+    + CDHR.abattementParPersonneACharge * enfants;
 
   // ---- CEHR non lissée ----
-  const cehrNonLissee = cehrBareme(rfrPlein, seuilsCEHR);
+  const cehrNonLissee = cehrBareme(rfrPlein, tranchesCEHR);
 
   // ---- CEHR lissée (art. 223 sexies, II) ----
   const moyenneN1N2 = (rfrN1 + rfrN2) / 2;
@@ -630,7 +680,7 @@ function compute(){
   if (eligibleLissage){
     const excedent = rfrPlein - moyenneN1N2;
     const montantReconstitue = moyenneN1N2 + excedent/2;
-    cehrLissee = cehrBareme(montantReconstitue, seuilsCEHR) * 2;
+    cehrLissee = cehrBareme(montantReconstitue, tranchesCEHR) * 2;
   }
 
   // ---- RFR retraité (régime exceptionnel) ----
@@ -639,7 +689,7 @@ function compute(){
   const ctx = {
     salairesNets, pvNetteCedee, pvBruteCedee, parts, partsRef,
     rfrPlein, cehrNonLissee, cehrLissee, credit, majoration,
-    seuilsCDHR: seuilsCEHR, decoteSeuils, rfrRetraiteExc
+    decoteSeuils, rfrRetraiteExc
   };
 
   const hyp1 = computeHypothese('pfu', ctx);

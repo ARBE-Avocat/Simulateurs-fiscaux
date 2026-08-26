@@ -6,6 +6,18 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.4] - 2026-08-26
+
+### Modifié
+
+- Les barèmes et taux des simulateurs « IR, CEHR et CDHR » et IRPP ne sont plus inscrits dans les fichiers HTML : barème progressif, abattements sur salaires et pensions, décote, CEHR, CDHR, prélèvement forfaitaire unique et crédit pour frais de garde vivent dans `data/referentiels/ir.json`. **Aucun montant affiché ne change** : trente-sept scénarios relevés avant l'extraction, couvrant chaque tranche des barèmes, le quotient familial, le lissage de la CEHR, les plus-values mobilières et les revenus au forfait, donnent exactement les mêmes résultats après.
+- Le taux de 17,2 % de prélèvements sociaux, qui figurait à seize endroits du simulateur IRPP, n'y figure plus qu'une fois, sous forme de lecture d'une donnée.
+
+### Ajouté
+
+- La divergence sur le taux des prélèvements sociaux est désormais **représentée dans les données sans être tranchée** : la règle n'a aucune valeur unique, et chaque simulateur désigne explicitement, dans son code, celle des deux valeurs qu'il applique aujourd'hui. Le jour où le référent fiscal tranchera, la correction sera une modification de données et non de code. Des contrôles automatiques vérifient que les deux simulateurs continuent de déclarer ce qu'ils font réellement.
+- Des contrôles automatiques interdisent aux valeurs pré-remplies du formulaire de l'IRPP — bornes du barème, plafonds d'abattement, paramètres de décote — de diverger des données.
+
 ## [0.5.0-beta.3] - 2026-08-26
 
 ### Modifié
