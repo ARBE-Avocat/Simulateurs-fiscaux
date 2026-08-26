@@ -193,7 +193,7 @@ doit jamais dépendre de l'ordre de saisie.
 
 ---
 
-# Partie 2 — Correction **non appliquée**, en attente de votre décision
+# Partie 2 — Corrections **non appliquées**, en attente de votre décision
 
 ## 2.1 — IRPP : la décote de la CDHR ne se déclenche jamais
 
@@ -259,6 +259,43 @@ de milliers d'euros** pour un revenu situé juste au-dessus du seuil.
 
 Dès votre réponse, la correction est immédiate : le calcul a déjà été isolé et
 préparé pour ne plus dépendre que de cette formule.
+
+## 2.2 — Le taux des prélèvements sociaux n'est pas le même partout
+
+**Ce que voyait l'utilisateur.** Les simulateurs n'appliquent pas le même taux de
+prélèvements sociaux à une plus-value :
+
+| Simulateur | Taux appliqué | Comment |
+|---|---|---|
+| IR, CEHR et CDHR | **18,6 %** | champ modifiable, pré-rempli à 18,6 |
+| IRPP | **17,2 %** | inscrit en dur, à seize endroits |
+| Plus-value immobilière | **17,2 %** | inscrit en dur |
+
+**Pourquoi cela paraît anormal.** Un même prélèvement porte deux taux différents
+selon la page ouverte. Aucune mention n'explique l'écart : ni date d'effet, ni
+nature de revenu, ni source. Un utilisateur qui compare deux simulations du même
+projet obtient deux résultats, sans savoir lequel retenir.
+
+**Ce qui a été changé.** Rien. Choisir entre deux taux est une décision fiscale.
+
+**Ce que cela change en euros.** Sur une plus-value de cession de 1 000 000 € :
+
+| Taux appliqué | Prélèvements sociaux |
+|---|---|
+| 18,6 % — simulateur IR | 186 000 € |
+| 17,2 % — IRPP et PV immobilière | 172 000 € |
+| Écart | **14 000 €** |
+
+**Ce qui est attendu de vous.**
+
+1. Quel taux s'applique, et à quels revenus ? Le 18,6 % correspond-il à une
+   assiette ou à une période différente du 17,2 %, ou bien l'un des deux est-il
+   simplement périmé ?
+2. Si les deux sont justes selon le cas, lequel s'applique à quoi, et faut-il
+   l'indiquer à l'écran ?
+3. Le taux doit-il rester modifiable dans le simulateur IR, alors qu'il est figé
+   dans les deux autres ?
+4. Quelle source et quelle date d'effet citer ?
 
 ---
 

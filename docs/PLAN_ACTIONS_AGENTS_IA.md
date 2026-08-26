@@ -25,6 +25,7 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 - #8 est corrigée pour sa partie technique : un zéro saisi n'est plus remplacé par une valeur par défaut dans les simulateurs IFI, Succession et Démembrement. La validation explicite des champs obligatoires reste ouverte et bascule vers #11.
 - #5 est corrigée : la réduction pour dons de l'IRPP est recalculée dès que le revenu change, et le calcul est isolé du formulaire.
 - #4 est bloquée sur une validation métier : la formule et l'intervalle de la décote CDHR doivent être confirmés par le référent fiscal avant toute correction.
+- Second blocage du jalon, relevé au titre du point de contrôle A : le taux des prélèvements sociaux diverge entre simulateurs, 18,6 % dans le simulateur IR contre 17,2 % dans l'IRPP et la plus-value immobilière, soit 14 000 € d'écart sur une plus-value d'un million. Aucune issue ne le couvrait ; à trancher par le référent fiscal avant promotion.
 - #11 et #7 ont été déplacées vers le jalon `0.5` : le jalon `0.4` n'attend plus qu'un seul arbitrage, celui de #4.
 - Le jalon `0.4` est donc complet à l'exception de #4. Une fois la décote tranchée, il peut être promu.
 - Documents à soumettre au référent juridique : `docs/CORRECTIONS_A_VALIDER.md` pour les arbitrages, `docs/INVENTAIRE_CONVENTIONS.md` pour préparer #11.
@@ -204,9 +205,10 @@ Le document `docs/CORRECTIONS_A_VALIDER.md` rassemble, en langage non technique,
 
 Décisions métier attendues, par ordre d'urgence :
 
-1. #4 — formule, intervalle et point d'application de la décote CDHR. Seul blocage restant du jalon `0.4`.
-2. #9 — cas fiscaux de référence, qui permettront de faire passer les fixtures actuelles de « non validé » à « validé ».
-3. #11 — champs obligatoires, bornes acceptées et messages d'erreur, reliquat de #8.
+1. #4 — formule, intervalle et point d'application de la décote CDHR.
+2. Le taux des prélèvements sociaux, 17,2 % ou 18,6 %, et son champ d'application.
+3. #9 — cas fiscaux de référence, qui permettront de faire passer les fixtures actuelles de « non validé » à « validé ».
+4. #11 — champs obligatoires, bornes acceptées et messages d'erreur, reliquat de #8.
 
 Avant de poursuivre :
 

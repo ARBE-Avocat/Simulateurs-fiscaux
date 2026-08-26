@@ -665,6 +665,44 @@ textarea::placeholder { color: var(--ink-faint); }
       ]
     },
     {
+      groupe: "bloquant",
+      ref: "2.2",
+      titre: "Le taux des prélèvements sociaux n'est pas le même partout",
+      simulateur: "IR · IRPP · PV immobilière",
+      constat: "Les simulateurs n'appliquent pas le même taux de prélèvements sociaux à une plus-value : 18,6 % dans le simulateur IR, où le champ est modifiable, contre 17,2 % dans l'IRPP et la plus-value immobilière, où le taux est inscrit en dur.",
+      raison: "Un même prélèvement porte deux taux différents selon la page ouverte, sans qu'aucune mention n'explique l'écart : ni date d'effet, ni nature de revenu, ni source. Un utilisateur qui compare deux simulations du même projet obtient deux résultats sans savoir lequel retenir.",
+      change: "Rien n'a été changé. Choisir entre deux taux est une décision fiscale.",
+      comparaison: {
+        legende: "Ce que chaque simulateur applique",
+        colonnes: ["Simulateur", "Taux appliqué", "Comment"],
+        lignes: [
+          { cells: ["IR, CEHR et CDHR", "18,6 %", "champ modifiable, pré-rempli"] },
+          { cells: ["IRPP", "17,2 %", "inscrit en dur, à seize endroits"] },
+          { cells: ["Plus-value immobilière", "17,2 %", "inscrit en dur"] }
+        ]
+      },
+      tableau: {
+        legende: "Sur une plus-value de cession de 1 000 000 €",
+        colonnes: ["Taux appliqué", "Prélèvements sociaux"],
+        lignes: [
+          { cells: ["18,6 % — simulateur IR", "186 000 €"] },
+          { cells: ["17,2 % — IRPP et PV immobilière", "172 000 €"] },
+          { cells: ["Écart", "14 000 €"], marque: true, ton: "avant" }
+        ]
+      },
+      question: "Quel taux s'applique, et à quels revenus ?",
+      options: [
+        { cle: "172", libelle: "17,2 % partout", ton: "ok" },
+        { cle: "186", libelle: "18,6 % partout", ton: "ok" },
+        { cle: "selon", libelle: "Les deux, selon le cas", ton: "neutre" }
+      ],
+      complements: [
+        "Si les deux taux sont justes selon la situation, lequel s'applique à quoi, et faut-il l'indiquer à l'écran ?",
+        "Le taux doit-il rester modifiable dans le simulateur IR, alors qu'il est figé dans les deux autres ?",
+        "Quelle source et quelle date d'effet citer ?"
+      ]
+    },
+    {
       groupe: "arbitrage",
       ref: "3.1",
       titre: "L'âge et le nombre de donataires refusent le zéro",
@@ -741,8 +779,8 @@ textarea::placeholder { color: var(--ink-faint); }
       cle: "bloquant",
       etiquette: "Décision attendue",
       ton: "stop",
-      titre: "Correction non appliquée",
-      chapeau: "Le défaut est constaté mais rien n'a été corrigé : la correction suppose un choix fiscal. C'est le seul point qui empêche aujourd'hui de clore ce chantier."
+      titre: "Corrections non appliquées",
+      chapeau: "Le défaut est constaté mais rien n'a été corrigé : la correction suppose un choix fiscal. Ce sont les deux points qui empêchent aujourd'hui de clore ce chantier."
     },
     {
       cle: "arbitrage",
