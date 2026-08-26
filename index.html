@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateurs fiscaux — Arthur Beldi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest:     #06402B;
+  --forest2:    #085236;
+  --forest3:    #0a6640;
+  --gold:       #c4993a;
+  --gold2:      #dab55a;
+  --gold-light: #f5e4b0;
+  --cream:      #e8ebe8;
+  --white:      #ffffff;
+  --border:     #d4ddd6;
+  --border2:    #b8c8bc;
+  --text:       #1a1f1a;
+  --muted:      #5a7060;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --sans:       'Inter', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--cream); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+
+header { background: var(--forest); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 76px; border-bottom: 2px solid var(--gold); }
+.logo-zone { display: flex; align-items: center; gap: 14px; }
+.logo-mark { width: 40px; height: 40px; border: 1.5px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 21px; color: var(--gold); font-weight: 600; }
+.logo-text { font-family: var(--serif); font-size: 23px; color: var(--white); font-weight: 400; letter-spacing: 0.04em; }
+.logo-text em { color: var(--gold); font-style: normal; }
+.header-right { text-align: right; }
+.header-right .tagline { font-family: var(--serif); font-size: 13px; color: var(--gold-light); font-style: italic; }
+.header-right .year { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 3px; letter-spacing: 0.12em; text-transform: uppercase; }
+
+.hero { max-width: 1200px; margin: 0 auto; padding: 56px 48px 8px; }
+.hero p.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--forest3); margin-bottom: 10px; }
+.hero h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 4vw, 44px); color: var(--forest); letter-spacing: -0.01em; }
+.hero p.lead { margin-top: 14px; max-width: 680px; font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+.grid { max-width: 1200px; margin: 40px auto 0; padding: 0 48px 64px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+
+.card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; transition: transform .15s, box-shadow .15s, border-color .15s; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(6,64,43,0.14); border-color: var(--accent, var(--gold)); }
+.card-bar { height: 5px; background: var(--accent, var(--gold)); }
+.card-body { padding: 22px 24px 24px; flex: 1; display: flex; flex-direction: column; }
+.card-tag { display: inline-flex; align-self: flex-start; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent, var(--forest3)); background: color-mix(in srgb, var(--accent, var(--forest3)) 12%, white); border: 1px solid color-mix(in srgb, var(--accent, var(--forest3)) 30%, white); border-radius: 20px; padding: 3px 10px; margin-bottom: 12px; }
+.card h2 { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--forest); margin-bottom: 8px; }
+.card p { font-size: 13px; color: var(--muted); line-height: 1.55; flex: 1; }
+.card-cta { margin-top: 18px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--accent, var(--forest3)); display: flex; align-items: center; gap: 6px; }
+.card-cta .arrow { transition: transform .15s; }
+.card:hover .card-cta .arrow { transform: translateX(4px); }
+
+footer { border-top: 1px solid var(--border2); background: var(--white); }
+.footer-inner { max-width: 1200px; margin: 0 auto; padding: 28px 48px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
+.footer-inner p { font-size: 11.5px; color: var(--muted); line-height: 1.6; max-width: 680px; }
+.footer-inner a { color: var(--forest3); text-decoration: none; }
+.footer-inner a:hover { text-decoration: underline; }
+.footer-brand { font-family: var(--serif); font-size: 15px; color: var(--forest); white-space: nowrap; }
+.footer-brand em { color: var(--gold2); font-style: normal; }
+
+@media (max-width: 640px) {
+  header { padding: 0 20px; }
+  .hero { padding: 40px 20px 8px; }
+  .grid { padding: 0 20px 48px; }
+  .footer-inner { padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-zone">
+    <div class="logo-mark">AB</div>
+    <div class="logo-text">Arthur <em>Beldi</em></div>
+  </div>
+  <div class="header-right">
+    <div class="tagline">Droit fiscal &amp; patrimonial</div>
+    <div class="year">Simulateurs &amp; outils de calcul</div>
+  </div>
+</header>
+
+<div class="hero">
+  <p class="eyebrow">Accueil</p>
+  <h1>Simulateurs fiscaux</h1>
+  <p class="lead">Une sélection d'outils de simulation pour estimer rapidement un impôt ou un droit : impôt sur le revenu, IFI, droits de succession, plus-values et démembrement de propriété. Chaque simulateur est indépendant et peut être ouvert directement.</p>
+</div>
+
+<div class="grid">
+
+  <a class="card" style="--accent:#06402B" href="Simulation%20IRPP%20-%20Avril%202026.html">
+    <div class="card-bar"></div>
+    <div class="card-body">
+      <span class="card-tag">IR · CEHR · CDHR · IFI</span>
+      <h2>Calculateur IR complet</h2>
+      <p>Simulateur multi-onglets : impôt sur le revenu, CEHR, CDHR, plus-values, dons &amp; réductions et IFI. Barème 2026 sur les revenus 2025, pour un foyer fiscal complet.</p>
+      <div class="card-cta">Ouvrir le simulateur <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+  <a class="card" style="--accent:#7A2036" href="Simulateur_IR%202025%20et%20CEHR_CDHR%202026.html">
+    <div class="card-bar"></div>
+    <div class="card-body">
+      <span class="card-tag">Cession de titres</span>
+      <h2>IR · CEHR · CDHR — Cession de titres</h2>
+      <p>Comparaison des trois hypothèses d'imposition (flat tax, barème, barème + quotient) sur une cession de titres, avec simulation de l'impact d'un apport-cession 150-0 B ter.</p>
+      <div class="card-cta">Ouvrir le simulateur <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+  <a class="card" style="--accent:#183C4B" href="Simulateur_PV_Immobili%C3%A8re%20Juillet%202026.html">
+    <div class="card-bar"></div>
+    <div class="card-body">
+      <span class="card-tag">Plus-value immobilière</span>
+      <h2>Plus-Value Immobilière</h2>
+      <p>Calcul de la plus-value taxable et de l'impôt dû lors de la cession d'un bien immobilier, abattements pour durée de détention compris (art. 150 U et suivants du CGI).</p>
+      <div class="card-cta">Ouvrir le simulateur <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+  <a class="card" style="--accent:#0d2b1e" href="Simulation%20IFI%20-%20Avril%202026.html">
+    <div class="card-bar"></div>
+    <div class="card-body">
+      <span class="card-tag">IFI</span>
+      <h2>Impôt sur la Fortune Immobilière</h2>
+      <p>Estimation de l'IFI dû au 1er janvier à partir du patrimoine immobilier du foyer, dettes déductibles et plafonnement compris (art. 964 et suivants du CGI).</p>
+      <div class="card-cta">Ouvrir le simulateur <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+  <a class="card" style="--accent:#2C1810" href="Simulation%20Succession.html">
+    <div class="card-bar"></div>
+    <div class="card-body">
+      <span class="card-tag">Succession</span>
+      <h2>Simulateur Succession</h2>
+      <p>Calcul des droits de succession par héritier selon le lien de parenté, la dévolution légale et les abattements applicables (art. 777 et suivants du CGI, Code civil).</p>
+      <div class="card-cta">Ouvrir le simulateur <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+  <a class="card" style="--accent:#0d2b1e" href="Simulation%20d%C3%A9membrement%20immo%20-%20Juin%202026.html">
+    <div class="card-bar"></div>
+    <div class="card-body">
+      <span class="card-tag">Démembrement</span>
+      <h2>Donation en Nue-Propriété</h2>
+      <p>Simulation d'une donation avec démembrement de propriété : valeur de l'usufruit et de la nue-propriété selon l'âge de l'usufruitier, droits de donation associés.</p>
+      <div class="card-cta">Ouvrir le simulateur <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <p>Ces outils sont mis à disposition à titre purement informatif et indicatif. Ils ne constituent en aucun cas un conseil juridique ou fiscal personnalisé. Pour une analyse de votre situation, consultez un professionnel du droit fiscal.<br>
+    <strong>Arthur Beldi</strong> — Avocat, Droit fiscal · <a href="https://www.linkedin.com/in/arthurbe/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://arthur-beldi.com" target="_blank" rel="noopener">arthur-beldi.com</a></p>
+    <div class="footer-brand">Arthur <em>Beldi</em> — © 2026</div>
+  </div>
+</footer>
+
+</body>
+</html>
