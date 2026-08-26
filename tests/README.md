@@ -60,8 +60,15 @@ simulateur.dom.document.getElementById('salaire1').value = '50000';
 simulateur.evaluer('compute')();
 ```
 
+Pour rejouer l'initialisation d'une page, les écouteurs d'événements sont
+mémorisés et peuvent être déclenchés :
+
+```js
+simulateur.dom.declencher('DOMContentLoaded');
+```
+
 Ce faux DOM ne remplace pas une vérification visuelle dans un vrai navigateur :
-il sert à tester les calculs, pas l'affichage.
+il sert à tester les calculs, pas l'apparence.
 
 ## Écrire un nouveau test
 
@@ -95,6 +102,17 @@ relève des cas de référence validés par le référent métier (issue #9).
 
 Lorsqu'un cas est validé, mettre à jour `statutValidation` dans la fixture
 concernée en citant la source et la date de validation.
+
+## Vérifier qu'un test a des dents
+
+Un test qui passe ne prouve rien tant qu'on n'a pas vu ce qui le fait échouer.
+Après avoir écrit un test, introduire volontairement le défaut dans le code,
+vérifier que le test échoue, puis rétablir le code. Sans cette vérification, un
+test peut rester vert alors qu'il ne contrôle rien.
+
+Exemple rencontré : `fmtEur` transforme une valeur absente en tiret. Chercher
+« NaN » dans l'affichage ne détectait donc aucune erreur, et il a fallu compter
+les endroits où un montant doit apparaître.
 
 ## Corriger un bug
 

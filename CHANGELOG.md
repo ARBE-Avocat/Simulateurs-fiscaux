@@ -6,6 +6,18 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.4.0-beta.4] - 2026-08-26
+
+### Corrigé
+
+- Simulateur IFI : suppression du contournement lié à un nom de variable contenant des caractères cyrilliques (issue #6). Le calcul ne dépend plus d'une variable globale, `compute` n'est plus redéfini après sa déclaration et le code mort associé est retiré. Aucun montant n'est modifié.
+
+### Ajouté
+
+- Contrôle automatique interdisant les noms qui mélangent alphabet latin et alphabet cyrillique ou grec, appliqué aux six simulateurs.
+- Scénarios de non-régression du simulateur IFI : patrimoine, déductions, décote, dons, plafonnement, initialisation de la page et recalcul après modification d'un bien.
+- Faux DOM capable de rejouer un événement, afin de tester l'initialisation d'une page.
+
 ## [0.4.0-beta.3] - 2026-08-26
 
 ### Modifié
@@ -79,7 +91,8 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 - Première version regroupant six simulateurs HTML autonomes : IR et CEHR/CDHR, plus-value immobilière, IFI, IRPP, succession et démembrement immobilier.
 
-[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.3...HEAD
+[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.4...HEAD
+[0.4.0-beta.4]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.3...v0.4.0-beta.4
 [0.4.0-beta.3]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.2...v0.4.0-beta.3
 [0.4.0-beta.2]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.1...v0.4.0-beta.2
 [0.4.0-beta.1]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.4...v0.4.0-beta.1

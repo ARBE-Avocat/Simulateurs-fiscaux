@@ -1022,7 +1022,7 @@ function computeFermages() {
 // COMPUTE
 // ============================================================
 function compute() {
-  const patrimoineбрут = computePatrimoineBrut();
+  const patrimoineBrut = computePatrimoineBrut();
   const dedTaxes = parseFloat(document.getElementById('dedTaxes').value) || 0;
   const dedInterets = parseFloat(document.getElementById('dedInterets').value) || 0;
   const dedTravaux = parseFloat(document.getElementById('dedTravaux').value) || 0;
@@ -1040,7 +1040,7 @@ function compute() {
   // Update dons display
   document.getElementById('donsReduction').innerHTML = `Réduction : <strong>${fmtEur(donsReduction)}</strong>`;
 
-  const patrimoineNet = Math.max(0, patrimoinebrut - totalDed);
+  const patrimoineNet = Math.max(0, patrimoineBrut - totalDed);
 
   // Step 1: IFI théorique (barème sur patrimoine net AVANT déduction IFI théorique)
   // Méthode : patrimoine net taxable avant IFI théorique = patrimoine net
@@ -1075,7 +1075,7 @@ function compute() {
 
   updateTotalBrut();
   renderResults({
-    patrimoinebrut, totalDed, patrimoineNet,
+    patrimoineBrut, totalDed, patrimoineNet,
     ifiTheorique: ifiTheoriqueApresDecote,
     ifiTheoriqueNet,
     decote: decoteFinale,
@@ -1087,18 +1087,6 @@ function compute() {
     fermageExo
   });
 }
-
-// Alias fix
-var patrimoinebrut;
-
-function computePatrimoineBrut2() { return computePatrimoineBrut(); }
-
-// Patch compute to use correct var
-const _compute = compute;
-window.compute = function() {
-  patrimoinebrut = computePatrimoineBrut();
-  _compute();
-};
 
 function renderResults(r) {
   const body = document.getElementById('resultsBody');
@@ -1153,7 +1141,7 @@ function renderResults(r) {
     <div class="metric-grid">
       <div class="metric">
         <div class="m-label">Patrimoine brut taxable</div>
-        <div class="m-val">${fmtEur(r.patrimoinebrut)}</div>
+        <div class="m-val">${fmtEur(r.patrimoineBrut)}</div>
       </div>
       <div class="metric">
         <div class="m-label">Total déductions (passif + fermages)</div>
@@ -1167,7 +1155,7 @@ function renderResults(r) {
 
     <div class="breakdown">
       <div class="breakdown-row section-head"><span>Étape 1 — IFI théorique</span><span></span></div>
-      <div class="breakdown-row"><span class="label">Patrimoine brut taxable</span><span class="amount">${fmtEur(r.patrimoinebrut)}</span></div>
+      <div class="breakdown-row"><span class="label">Patrimoine brut taxable</span><span class="amount">${fmtEur(r.patrimoineBrut)}</span></div>
       ${r.fermageExo > 0 ? `<div class="breakdown-row"><span class="label">Exonération fermages (art. 975 II CGI)</span><span class="amount">− ${fmtEur(r.fermageExo)}</span></div>` : ''}
       ${(r.totalDed - (r.fermageExo||0)) > 0 ? `<div class="breakdown-row"><span class="label">Autres déductions du passif</span><span class="amount">− ${fmtEur(r.totalDed - (r.fermageExo||0))}</span></div>` : ''}
       <div class="breakdown-row"><span class="label">Patrimoine net taxable (assiette)</span><span class="amount">${fmtEur(r.patrimoineNet)}</span></div>

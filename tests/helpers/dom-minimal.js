@@ -87,6 +87,15 @@ function creerFauxDom() {
   // valeur écrite par un test serait perdue.
   const parId = new Map();
 
+  // Les écouteurs d'événements sont mémorisés plutôt qu'ignorés : les tests
+  // peuvent ainsi rejouer l'initialisation d'une page avec `declencher`.
+  const ecouteurs = new Map();
+  function enregistrer(cible, type, rappel) {
+    const clef = `${cible}:${type}`;
+    if (!ecouteurs.has(clef)) ecouteurs.set(clef, []);
+    ecouteurs.get(clef).push(rappel);
+  }
+
   const document = {
     getElementById(id) {
       if (!parId.has(id)) {
@@ -99,7 +108,9 @@ function creerFauxDom() {
     createElement: (tagName) => creerElement(tagName),
     querySelector: () => creerElement(),
     querySelectorAll: () => [],
-    addEventListener() {},
+    addEventListener(type, rappel) {
+      enregistrer('document', type, rappel);
+    },
     removeEventListener() {},
     body: creerElement('body'),
     documentElement: creerElement('html'),
@@ -122,7 +133,9 @@ function creerFauxDom() {
       return true;
     },
     print() {},
-    addEventListener() {},
+    addEventListener(type, rappel) {
+      enregistrer('window', type, rappel);
+    },
     removeEventListener() {},
     matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {} }),
     requestAnimationFrame: (callback) => setTimeout(() => callback(0), 0),
@@ -136,7 +149,20 @@ function creerFauxDom() {
   global.window = global;
   global.self = global;
 
-  return { global, document, elementsParId: parId };
+  /**
+   * Rejoue un événement enregistré, par exemple `DOMContentLoaded`.
+   * Retourne le nombre d'écouteurs appelés, afin qu'un test puisse vérifier
+   * que l'initialisation a réellement eu lieu.
+   */
+  function declencher(type, cible = 'window', evenement = { type }) {
+    const rappels = ecouteurs.get(`${cible}:${type}`) || [];
+    for (const rappel of rappels) {
+      rappel(evenement);
+    }
+    return rappels.length;
+  }
+
+  return { global, document, elementsParId: parId, declencher };
 }
 
 module.exports = { creerFauxDom, creerElement };

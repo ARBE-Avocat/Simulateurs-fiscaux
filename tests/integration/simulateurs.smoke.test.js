@@ -10,6 +10,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 
+const { trouverMelangesAlphabets } = require('../helpers/confusables');
 const {
   SIMULATEURS,
   chemin,
@@ -40,6 +41,20 @@ for (const { cle, fichier } of SIMULATEURS) {
 
   test(`simulateur ${cle} — le script s'exécute sans erreur hors navigateur`, () => {
     assert.doesNotThrow(() => chargerSimulateur(cle));
+  });
+
+  test(`simulateur ${cle} — aucun nom ne mélange alphabet latin et non latin`, () => {
+    const trouvailles = extraireScripts(lireHtml(cle)).flatMap((source) =>
+      trouverMelangesAlphabets(source)
+    );
+    const details = trouvailles
+      .map((t) => `ligne ${t.ligne} du script : ...${t.extrait}...`)
+      .join('\n');
+    assert.equal(
+      trouvailles.length,
+      0,
+      `caractère non latin détecté au milieu d'un nom, ce qui crée deux noms visuellement identiques :\n${details}`
+    );
   });
 }
 

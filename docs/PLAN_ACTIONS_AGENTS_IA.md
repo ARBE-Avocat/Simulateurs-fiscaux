@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.3`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.4`.
 
 ## Objectifs de l’orchestration
 
@@ -17,11 +17,12 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 
 - La phase 0 de gouvernance est terminée sur `clv/preprod`.
 - La préversion de `clv/preprod` reste `0.3.0-beta.4` ; la version stable visée est `0.3.0`.
-- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.3`.
+- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.4`.
 - L'étape 1.1 (#10, socle de tests) est réalisée sur cette branche et attend relecture ; elle n'est pas intégrée à `clv/preprod`.
 - Les autres issues citées dans ce plan sont encore ouvertes au 26 août 2026.
 - L'issue #29 reste ouverte : seule sa première partie documentaire et de gouvernance est amorcée.
-- Prochaines étapes du jalon : #9 en fil rouge, puis les deux voies de correctifs #4/#5 et #6/#8.
+- #6 est corrigée sur la branche du jalon et attend relecture : le simulateur IFI ne dépend plus d'une variable globale et un contrôle automatique interdit désormais les noms mélangeant plusieurs alphabets.
+- Prochaines étapes du jalon : #8 pour terminer la voie IFI, la voie IRPP #4 puis #5, et #9 en fil rouge côté métier.
 - Nouvelle issue #31 — unification de l'identité visuelle et des composants d'interface, ouverte à la demande du référent métier. Elle dépend de #20 et n'appartient pas au jalon `0.4`.
 
 ## Décisions d'architecture déjà arbitrées
@@ -168,7 +169,7 @@ Voie IRPP, à exécuter séquentiellement :
 
 Voie IFI et saisies, à exécuter séquentiellement :
 
-1. [#6 — Supprimer le contournement lié à la variable cyrillique](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/6)
+1. [#6 — Supprimer le contournement lié à la variable cyrillique](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/6) — corrigée, en attente de relecture
 2. [#8 — Distinguer la valeur zéro des champs vides](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/8)
 
 Les deux voies peuvent être confiées à deux agents différents en parallèle. Les issues d’une même voie ne doivent pas être parallélisées car elles touchent les mêmes fichiers.

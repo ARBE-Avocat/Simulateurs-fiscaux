@@ -1,0 +1,78 @@
+{
+  "description": "Scénarios de bout en bout du simulateur IFI : patrimoine, déductions, décote, dons et plafonnement.",
+  "provenance": "Résultats produits par 'Simulation IFI - Avril 2026.html' avant la correction de l'issue #6, par le chemin de calcul réellement utilisé dans le navigateur.",
+  "statutValidation": "NON VALIDÉ - ces valeurs figent le comportement existant afin de prouver qu'une refactorisation ne change aucun résultat. Elles ne certifient ni le barème, ni la décote, ni la méthode de plafonnement, qui relèvent de #9.",
+  "unite": "euros",
+  "tolerance": 0.01,
+  "cas": [
+    {
+      "nom": "résidence principale abattue et bien en quote-part, avec déductions",
+      "biens": [
+        { "valeur": 2000000, "rp": true },
+        { "valeur": 800000, "quotePart": 50 }
+      ],
+      "champs": { "dedTaxes": 10000, "dedInterets": 250000 },
+      "attendu": {
+        "patrimoineBrut": 1800000,
+        "totalDed": 260000,
+        "patrimoineNet": 1540000,
+        "decote": 0,
+        "ifiApresDecote": 4150.728084,
+        "ifiFinal": 4150.728084
+      }
+    },
+    {
+      "nom": "patrimoine dans la zone de décote",
+      "biens": [{ "valeur": 1400000 }],
+      "champs": {},
+      "attendu": {
+        "patrimoineBrut": 1400000,
+        "totalDed": 0,
+        "patrimoineNet": 1400000,
+        "decote": 39.99985,
+        "ifiApresDecote": 3137.588234,
+        "ifiFinal": 3137.588234
+      }
+    },
+    {
+      "nom": "patrimoine sous le seuil d'imposition",
+      "biens": [{ "valeur": 1000000 }],
+      "champs": {},
+      "attendu": {
+        "patrimoineBrut": 1000000,
+        "totalDed": 0,
+        "patrimoineNet": 1000000,
+        "decote": 5000,
+        "ifiAvantDecote": 999.995,
+        "ifiApresDecote": 0,
+        "ifiFinal": 0
+      }
+    },
+    {
+      "nom": "réduction pour dons",
+      "biens": [{ "valeur": 3000000 }],
+      "champs": { "donsVerses": 5000 },
+      "attendu": {
+        "patrimoineBrut": 3000000,
+        "totalDed": 0,
+        "patrimoineNet": 3000000,
+        "donsReduction": 3750,
+        "ifiApresDecote": 15570.57822,
+        "ifiFinal": 11820.57822
+      }
+    },
+    {
+      "nom": "plafonnement des impôts qui réduit l'IFI",
+      "biens": [{ "valeur": 5000000 }],
+      "champs": { "plafRevenus": 40000, "plafIR": 10000 },
+      "attendu": {
+        "patrimoineBrut": 5000000,
+        "patrimoineNet": 5000000,
+        "ifiApresDecote": 35333.07822,
+        "plafond": 30000,
+        "reductionPlafond": 15333.07822,
+        "ifiFinal": 20000
+      }
+    }
+  ]
+}
