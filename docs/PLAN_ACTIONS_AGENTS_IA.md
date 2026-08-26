@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-beta.2`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-beta.3`.
 
 ## Objectifs de l’orchestration
 
@@ -34,6 +34,7 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-bet
 - #20 est traitée : `docs/ARCHITECTURE_CIBLE.md` fixe l'arborescence, les URL stables, la source de vérité de chaque type de fichier et l'ordre de migration. Aucun fichier n'est encore déplacé.
 - #12 est traitée : `data/schema/README.md` définit le format commun, `scripts/lib/schema-referentiel.js` en est la définition exécutable, et `docs/INVENTAIRE_REFERENTIELS.md` recense les valeurs fiscales, leur simulateur, leur contexte et ce que le dépôt sait de leur source. Aucune valeur n'est encore extraite.
 - #18 est traitée : `npm run donnees:valider`, `npm run donnees:importer` et `npm run donnees:generer` forment la chaîne reproductible qui remplacera la réécriture du HTML. L'import est déterministe et n'écrit rien lorsqu'une donnée est invalide. Procédure et format documentés dans `data/README.md`.
+- #16 est traitée : les référentiels DMTG, usufruit et assurance-vie sont extraits vers `data/referentiels/dmtg.json`, lus par les simulateurs Succession et Démembrement. Aucun montant ne bouge : 42 scénarios relevés avant l'extraction donnent les mêmes résultats après. La vague A est donc à moitié faite ; #14 reste à traiter.
 - Deux divergences supplémentaires ont été découvertes pendant l'inventaire et ajoutées aux fiches 2.3 et 2.4 de `docs/CORRECTIONS_A_VALIDER.md` : le plafonnement du quotient familial, appliqué par le simulateur IR et absent de l'IRPP, jusqu'à 19 985,10 € d'écart ; et la méthode de liquidation de l'IFI, différente entre le simulateur IFI et la section IFI de l'IRPP, 668,39 € d'écart sur l'exemple relevé. Aucune n'est tranchée.
 - `docs/arbitrages.html` porte désormais ces deux points. **La page publiée n'a pas encore été republiée** : elle doit l'être à la même adresse, par CLV, avant la prochaine sollicitation du référent juridique.
 
@@ -334,7 +335,17 @@ Reste hors périmètre, à traiter lors des extractions qui en auront besoin : l
 Vague A, parallélisable car les fichiers concernés sont distincts :
 
 - [#14 — Référentiel IR, CEHR, CDHR, PFU et PS](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/14)
-- [#16 — Référentiels DMTG, usufruit et assurance-vie](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/16)
+- [#16 — Référentiels DMTG, usufruit et assurance-vie](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/16) — **réalisée**
+
+Méthode suivie par #16, à reprendre pour les extractions suivantes :
+
+1. relever les résultats **avant** toute modification, par exécution réelle et sur un éventail large de scénarios, et enregistrer ce relevé comme filet de non-régression ;
+2. décrire les valeurs dans un CSV déposé dans `data/imports/`, puis les importer avec `npm run donnees:importer` — la chaîne de #18 sert donc dès la première extraction ;
+3. remplacer les constantes du HTML par des lectures du référentiel, sans toucher aux formules ;
+4. rejouer le filet et comparer au centime ;
+5. vérifier que les tests ont des dents, en modifiant une valeur dans `data/` : ils doivent échouer.
+
+Le relevé de #16 ne doit jamais être régénéré après une modification : ce serait enregistrer la régression au lieu de la détecter.
 
 Vague B, après fusion de la vague A :
 

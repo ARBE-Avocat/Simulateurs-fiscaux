@@ -1,0 +1,2277 @@
+{
+  "description": "Instantané des résultats des simulateurs Succession et Démembrement, relevé AVANT l'extraction des référentiels DMTG (issue #16).",
+  "provenance": "Produit par exécution réelle des simulateurs sur la branche clv/y-0.5-donnees, commit b1c6cf6, avant toute modification des fichiers HTML.",
+  "statutValidation": "NON VALIDÉ — ces valeurs figent le comportement existant afin de prouver qu'une refactorisation ne déplace aucun montant. Elles ne certifient aucun barème.",
+  "tolerance": 0.01,
+  "succession": [
+    {
+      "nom": "héritier unique — conjoint",
+      "champs": {
+        "actifImmo": 1200000,
+        "actifTitres": 300000,
+        "passifEmprunt": 80000,
+        "passifFuneraires": 4000
+      },
+      "heritiers": [
+        {
+          "lien": "conjoint",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1500000,
+        "passif": 84000,
+        "exoTotal": 0,
+        "actifNet": 1416000,
+        "actifNetTaxable": 1416000,
+        "totalMontant": 1416000,
+        "totalDroits": 0,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "conjoint",
+            "montant": 1416000,
+            "abat": 1416000,
+            "base": 0,
+            "droits": 0
+          }
+        ]
+      }
+    },
+    {
+      "nom": "héritier unique — enfant",
+      "champs": {
+        "actifImmo": 1200000,
+        "actifTitres": 300000,
+        "passifEmprunt": 80000,
+        "passifFuneraires": 4000
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1500000,
+        "passif": 84000,
+        "exoTotal": 0,
+        "actifNet": 1416000,
+        "actifNetTaxable": 1416000,
+        "totalMontant": 1416000,
+        "totalDroits": 379078.15,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 1416000,
+            "abat": 100000,
+            "base": 1316000,
+            "droits": 379078.15
+          }
+        ]
+      }
+    },
+    {
+      "nom": "héritier unique — ascendant",
+      "champs": {
+        "actifImmo": 1200000,
+        "actifTitres": 300000,
+        "passifEmprunt": 80000,
+        "passifFuneraires": 4000
+      },
+      "heritiers": [
+        {
+          "lien": "ascendant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1500000,
+        "passif": 84000,
+        "exoTotal": 0,
+        "actifNet": 1416000,
+        "actifNetTaxable": 1416000,
+        "totalMontant": 1416000,
+        "totalDroits": 379078.15,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "ascendant",
+            "montant": 1416000,
+            "abat": 100000,
+            "base": 1316000,
+            "droits": 379078.15
+          }
+        ]
+      }
+    },
+    {
+      "nom": "héritier unique — petitenfant",
+      "champs": {
+        "actifImmo": 1200000,
+        "actifTitres": 300000,
+        "passifEmprunt": 80000,
+        "passifFuneraires": 4000
+      },
+      "heritiers": [
+        {
+          "lien": "petitenfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1500000,
+        "passif": 84000,
+        "exoTotal": 0,
+        "actifNet": 1416000,
+        "actifNetTaxable": 1416000,
+        "totalMontant": 1416000,
+        "totalDroits": 418440.55000000005,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "petitenfant",
+            "montant": 1416000,
+            "abat": 1594,
+            "base": 1414406,
+            "droits": 418440.55000000005
+          }
+        ]
+      }
+    },
+    {
+      "nom": "héritier unique — arriere",
+      "champs": {
+        "actifImmo": 1200000,
+        "actifTitres": 300000,
+        "passifEmprunt": 80000,
+        "passifFuneraires": 4000
+      },
+      "heritiers": [
+        {
+          "lien": "arriere",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1500000,
+        "passif": 84000,
+        "exoTotal": 0,
+        "actifNet": 1416000,
+        "actifNetTaxable": 1416000,
+        "totalMontant": 1416000,
+        "totalDroits": 418440.55000000005,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "arriere",
+            "montant": 1416000,
+            "abat": 1594,
+            "base": 1414406,
+            "droits": 418440.55000000005
+          }
+        ]
+      }
+    },
+    {
+      "nom": "héritier unique — frere_soeur",
+      "champs": {
+        "actifImmo": 1200000,
+        "actifTitres": 300000,
+        "passifEmprunt": 80000,
+        "passifFuneraires": 4000
+      },
+      "heritiers": [
+        {
+          "lien": "frere_soeur",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1500000,
+        "passif": 84000,
+        "exoTotal": 0,
+        "actifNet": 1416000,
+        "actifNetTaxable": 1416000,
+        "totalMontant": 1416000,
+        "totalDroits": 627587.6,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "frere_soeur",
+            "montant": 1416000,
+            "abat": 15932,
+            "base": 1400068,
+            "droits": 627587.6
+          }
+        ]
+      }
+    },
+    {
+      "nom": "héritier unique — neveu_niece",
+      "champs": {
+        "actifImmo": 1200000,
+        "actifTitres": 300000,
+        "passifEmprunt": 80000,
+        "passifFuneraires": 4000
+      },
+      "heritiers": [
+        {
+          "lien": "neveu_niece",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1500000,
+        "passif": 84000,
+        "exoTotal": 0,
+        "actifNet": 1416000,
+        "actifNetTaxable": 1416000,
+        "totalMontant": 1416000,
+        "totalDroits": 774418.15,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "neveu_niece",
+            "montant": 1416000,
+            "abat": 7967,
+            "base": 1408033,
+            "droits": 774418.15
+          }
+        ]
+      }
+    },
+    {
+      "nom": "héritier unique — handicape",
+      "champs": {
+        "actifImmo": 1200000,
+        "actifTitres": 300000,
+        "passifEmprunt": 80000,
+        "passifFuneraires": 4000
+      },
+      "heritiers": [
+        {
+          "lien": "handicape",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1500000,
+        "passif": 84000,
+        "exoTotal": 0,
+        "actifNet": 1416000,
+        "actifNetTaxable": 1416000,
+        "totalMontant": 1416000,
+        "totalDroits": 355348.15,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "handicape",
+            "montant": 1416000,
+            "abat": 159325,
+            "base": 1256675,
+            "droits": 355348.15
+          }
+        ]
+      }
+    },
+    {
+      "nom": "héritier unique — autre",
+      "champs": {
+        "actifImmo": 1200000,
+        "actifTitres": 300000,
+        "passifEmprunt": 80000,
+        "passifFuneraires": 4000
+      },
+      "heritiers": [
+        {
+          "lien": "autre",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1500000,
+        "passif": 84000,
+        "exoTotal": 0,
+        "actifNet": 1416000,
+        "actifNetTaxable": 1416000,
+        "totalMontant": 1416000,
+        "totalDroits": 848643.6,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "autre",
+            "montant": 1416000,
+            "abat": 1594,
+            "base": 1414406,
+            "droits": 848643.6
+          }
+        ]
+      }
+    },
+    {
+      "nom": "trois enfants à parts égales",
+      "champs": {
+        "actifImmo": 2000000,
+        "actifTitres": 0,
+        "passifEmprunt": 0,
+        "passifFuneraires": 1500
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 33.333333333333336,
+          "donations": 0
+        },
+        {
+          "lien": "enfant",
+          "part": 33.333333333333336,
+          "donations": 0
+        },
+        {
+          "lien": "enfant",
+          "part": 33.333333333333336,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 2000000,
+        "passif": 1500,
+        "exoTotal": 0,
+        "actifNet": 1998500,
+        "actifNetTaxable": 1998500,
+        "totalMontant": 1998500.0000000002,
+        "totalDroits": 338435.8500000001,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 666166.6666666667,
+            "abat": 100000,
+            "base": 566166.6666666667,
+            "droits": 112811.95000000003
+          },
+          {
+            "lien": "enfant",
+            "montant": 666166.6666666667,
+            "abat": 100000,
+            "base": 566166.6666666667,
+            "droits": 112811.95000000003
+          },
+          {
+            "lien": "enfant",
+            "montant": 666166.6666666667,
+            "abat": 100000,
+            "base": 566166.6666666667,
+            "droits": 112811.95000000003
+          }
+        ]
+      }
+    },
+    {
+      "nom": "conjoint et deux enfants, donations antérieures",
+      "champs": {
+        "actifImmo": 3000000,
+        "actifTitres": 500000,
+        "passifEmprunt": 200000,
+        "passifFuneraires": 2500
+      },
+      "heritiers": [
+        {
+          "lien": "conjoint",
+          "part": 50,
+          "donations": 0
+        },
+        {
+          "lien": "enfant",
+          "part": 25,
+          "donations": 150000
+        },
+        {
+          "lien": "enfant",
+          "part": 25,
+          "donations": 50000
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 3500000,
+        "passif": 202500,
+        "exoTotal": 0,
+        "actifNet": 3297500,
+        "actifNetTaxable": 3297500,
+        "totalMontant": 3297500,
+        "totalDroits": 380548.9,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "conjoint",
+            "montant": 1648750,
+            "abat": 1648750,
+            "base": 0,
+            "droits": 0
+          },
+          {
+            "lien": "enfant",
+            "montant": 824375,
+            "abat": 100000,
+            "base": 874375,
+            "droits": 205274.45
+          },
+          {
+            "lien": "enfant",
+            "montant": 824375,
+            "abat": 100000,
+            "base": 774375,
+            "droits": 175274.45
+          }
+        ]
+      }
+    },
+    {
+      "nom": "franchissement de chaque tranche du barème direct",
+      "champs": {
+        "actifImmo": 120000,
+        "actifTitres": 0,
+        "passifEmprunt": 0,
+        "passifFuneraires": 0
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 120000,
+        "passif": 0,
+        "exoTotal": 0,
+        "actifNet": 120000,
+        "actifNetTaxable": 120000,
+        "totalMontant": 120000,
+        "totalDroits": 2194.35,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 120000,
+            "abat": 100000,
+            "base": 20000,
+            "droits": 2194.35
+          }
+        ]
+      }
+    },
+    {
+      "nom": "actif net de 108072 € — enfant unique",
+      "champs": {
+        "actifImmo": 108072,
+        "actifTitres": 0,
+        "passifEmprunt": 0,
+        "passifFuneraires": 0
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 108072,
+        "passif": 0,
+        "exoTotal": 0,
+        "actifNet": 108072,
+        "actifNetTaxable": 108072,
+        "totalMontant": 108072,
+        "totalDroits": 403.6,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 108072,
+            "abat": 100000,
+            "base": 8072,
+            "droits": 403.6
+          }
+        ]
+      }
+    },
+    {
+      "nom": "actif net de 112109 € — enfant unique",
+      "champs": {
+        "actifImmo": 112109,
+        "actifTitres": 0,
+        "passifEmprunt": 0,
+        "passifFuneraires": 0
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 112109,
+        "passif": 0,
+        "exoTotal": 0,
+        "actifNet": 112109,
+        "actifNetTaxable": 112109,
+        "totalMontant": 112109,
+        "totalDroits": 807.3000000000001,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 112109,
+            "abat": 100000,
+            "base": 12109,
+            "droits": 807.3000000000001
+          }
+        ]
+      }
+    },
+    {
+      "nom": "actif net de 115932 € — enfant unique",
+      "champs": {
+        "actifImmo": 115932,
+        "actifTitres": 0,
+        "passifEmprunt": 0,
+        "passifFuneraires": 0
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 115932,
+        "passif": 0,
+        "exoTotal": 0,
+        "actifNet": 115932,
+        "actifNetTaxable": 115932,
+        "totalMontant": 115932,
+        "totalDroits": 1380.75,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 115932,
+            "abat": 100000,
+            "base": 15932,
+            "droits": 1380.75
+          }
+        ]
+      }
+    },
+    {
+      "nom": "actif net de 652324 € — enfant unique",
+      "champs": {
+        "actifImmo": 652324,
+        "actifTitres": 0,
+        "passifEmprunt": 0,
+        "passifFuneraires": 0
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 652324,
+        "passif": 0,
+        "exoTotal": 0,
+        "actifNet": 652324,
+        "actifNetTaxable": 652324,
+        "totalMontant": 652324,
+        "totalDroits": 108659.15000000001,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 652324,
+            "abat": 100000,
+            "base": 552324,
+            "droits": 108659.15000000001
+          }
+        ]
+      }
+    },
+    {
+      "nom": "actif net de 1002838 € — enfant unique",
+      "champs": {
+        "actifImmo": 1002838,
+        "actifTitres": 0,
+        "passifEmprunt": 0,
+        "passifFuneraires": 0
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1002838,
+        "passif": 0,
+        "exoTotal": 0,
+        "actifNet": 1002838,
+        "actifNetTaxable": 1002838,
+        "totalMontant": 1002838,
+        "totalDroits": 213813.35,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 1002838,
+            "abat": 100000,
+            "base": 902838,
+            "droits": 213813.35
+          }
+        ]
+      }
+    },
+    {
+      "nom": "actif net de 1905677 € — enfant unique",
+      "champs": {
+        "actifImmo": 1905677,
+        "actifTitres": 0,
+        "passifEmprunt": 0,
+        "passifFuneraires": 0
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1905677,
+        "passif": 0,
+        "exoTotal": 0,
+        "actifNet": 1905677,
+        "actifNetTaxable": 1905677,
+        "totalMontant": 1905677,
+        "totalDroits": 574948.9500000001,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 1905677,
+            "abat": 100000,
+            "base": 1805677,
+            "droits": 574948.9500000001
+          }
+        ]
+      }
+    },
+    {
+      "nom": "actif net de 5000000 € — enfant unique",
+      "champs": {
+        "actifImmo": 5000000,
+        "actifTitres": 0,
+        "passifEmprunt": 0,
+        "passifFuneraires": 0
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 5000000,
+        "passif": 0,
+        "exoTotal": 0,
+        "actifNet": 5000000,
+        "actifNetTaxable": 5000000,
+        "totalMontant": 5000000,
+        "totalDroits": 1967394.3000000003,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 5000000,
+            "abat": 100000,
+            "base": 4900000,
+            "droits": 1967394.3000000003
+          }
+        ]
+      }
+    },
+    {
+      "nom": "assurance-vie avant et après 70 ans",
+      "champs": {
+        "actifImmo": 500000,
+        "actifTitres": 0,
+        "passifEmprunt": 0,
+        "passifFuneraires": 1500
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 100,
+          "donations": 0
+        }
+      ],
+      "av1": [
+        {
+          "capital": 200000
+        },
+        {
+          "capital": 900000
+        },
+        {
+          "capital": 152500
+        }
+      ],
+      "av2": 80000,
+      "attendu": {
+        "brut": 500000,
+        "passif": 1500,
+        "exoTotal": 0,
+        "actifNet": 498500,
+        "actifNetTaxable": 498500,
+        "totalMontant": 498500,
+        "totalDroits": 77894.35,
+        "av1TotCap": 1252500,
+        "av1TotBase": 795000,
+        "av1TotPrel": 164343.75,
+        "av2primes": 80000,
+        "av2abat": 30500,
+        "av2taxable": 49500,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 498500,
+            "abat": 100000,
+            "base": 398500,
+            "droits": 77894.35
+          }
+        ]
+      }
+    },
+    {
+      "nom": "exonérations Dutreil et rural",
+      "champs": {
+        "actifImmo": 1000000,
+        "actifTitres": 800000,
+        "passifEmprunt": 0,
+        "passifFuneraires": 1500,
+        "dutreilValeur": 400000,
+        "dutreilTaux": 0.75,
+        "ruralValeur75": 300000,
+        "ruralValeur50": 100000
+      },
+      "heritiers": [
+        {
+          "lien": "enfant",
+          "part": 60,
+          "donations": 0
+        },
+        {
+          "lien": "frere_soeur",
+          "part": 40,
+          "donations": 0
+        }
+      ],
+      "av1": [],
+      "av2": 0,
+      "attendu": {
+        "brut": 1800000,
+        "passif": 1500,
+        "exoTotal": 575000,
+        "actifNet": 1798500,
+        "actifNetTaxable": 1223500,
+        "totalMontant": 1223500,
+        "totalDroits": 343809.55000000005,
+        "av1TotCap": 0,
+        "av1TotBase": 0,
+        "av1TotPrel": 0,
+        "av2primes": 0,
+        "av2abat": 0,
+        "av2taxable": 0,
+        "heritiers": [
+          {
+            "lien": "enfant",
+            "montant": 734100,
+            "abat": 100000,
+            "base": 634100,
+            "droits": 133191.95
+          },
+          {
+            "lien": "frere_soeur",
+            "montant": 489400,
+            "abat": 15932,
+            "base": 473468,
+            "droits": 210617.6
+          }
+        ]
+      }
+    }
+  ],
+  "demembrement": [
+    {
+      "nom": "nue-propriété, 15 ans",
+      "champs": {
+        "valeurPP": 800000,
+        "age": 15,
+        "nbDonataires": 1,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "10 %",
+          "valeurNPDisplay": "80 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "0 €",
+          "droitsTotaux": "0 €",
+          "tauxEffectif": "0,00 %",
+          "td_droitsTotal": "0 €",
+          "br_droits": "0 €",
+          "sp_droits": "0 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "nue-propriété, 25 ans",
+      "champs": {
+        "valeurPP": 800000,
+        "age": 25,
+        "nbDonataires": 1,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "20 %",
+          "valeurNPDisplay": "160 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "60 000 €",
+          "droitsTotaux": "10 194,35 €",
+          "tauxEffectif": "6,37 %",
+          "td_droitsTotal": "10 194,35 €",
+          "br_droits": "10 194,35 €",
+          "sp_droits": "10 194,35 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "nue-propriété, 35 ans",
+      "champs": {
+        "valeurPP": 800000,
+        "age": 35,
+        "nbDonataires": 1,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "30 %",
+          "valeurNPDisplay": "240 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "140 000 €",
+          "droitsTotaux": "26 194,35 €",
+          "tauxEffectif": "10,91 %",
+          "td_droitsTotal": "26 194,35 €",
+          "br_droits": "26 194,35 €",
+          "sp_droits": "26 194,35 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "nue-propriété, 45 ans",
+      "champs": {
+        "valeurPP": 800000,
+        "age": 45,
+        "nbDonataires": 1,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "40 %",
+          "valeurNPDisplay": "320 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "220 000 €",
+          "droitsTotaux": "42 194,35 €",
+          "tauxEffectif": "13,19 %",
+          "td_droitsTotal": "42 194,35 €",
+          "br_droits": "42 194,35 €",
+          "sp_droits": "42 194,35 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "nue-propriété, 55 ans",
+      "champs": {
+        "valeurPP": 800000,
+        "age": 55,
+        "nbDonataires": 1,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "50 %",
+          "valeurNPDisplay": "400 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "300 000 €",
+          "droitsTotaux": "58 194,35 €",
+          "tauxEffectif": "14,55 %",
+          "td_droitsTotal": "58 194,35 €",
+          "br_droits": "58 194,35 €",
+          "sp_droits": "58 194,35 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "nue-propriété, 65 ans",
+      "champs": {
+        "valeurPP": 800000,
+        "age": 65,
+        "nbDonataires": 1,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "60 %",
+          "valeurNPDisplay": "480 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "380 000 €",
+          "droitsTotaux": "74 194,35 €",
+          "tauxEffectif": "15,46 %",
+          "td_droitsTotal": "74 194,35 €",
+          "br_droits": "74 194,35 €",
+          "sp_droits": "74 194,35 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "nue-propriété, 75 ans",
+      "champs": {
+        "valeurPP": 800000,
+        "age": 75,
+        "nbDonataires": 1,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "70 %",
+          "valeurNPDisplay": "560 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "460 000 €",
+          "droitsTotaux": "90 194,35 €",
+          "tauxEffectif": "16,11 %",
+          "td_droitsTotal": "90 194,35 €",
+          "br_droits": "90 194,35 €",
+          "sp_droits": "90 194,35 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "nue-propriété, 85 ans",
+      "champs": {
+        "valeurPP": 800000,
+        "age": 85,
+        "nbDonataires": 1,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "80 %",
+          "valeurNPDisplay": "640 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "540 000 €",
+          "droitsTotaux": "106 194,35 €",
+          "tauxEffectif": "16,59 %",
+          "td_droitsTotal": "106 194,35 €",
+          "br_droits": "106 194,35 €",
+          "sp_droits": "106 194,35 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "nue-propriété, 95 ans",
+      "champs": {
+        "valeurPP": 800000,
+        "age": 95,
+        "nbDonataires": 1,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "90 %",
+          "valeurNPDisplay": "720 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "620 000 €",
+          "droitsTotaux": "128 961,95 €",
+          "tauxEffectif": "17,91 %",
+          "td_droitsTotal": "128 961,95 €",
+          "br_droits": "128 961,95 €",
+          "sp_droits": "128 961,95 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "lien directe",
+      "champs": {
+        "valeurPP": 900000,
+        "age": 68,
+        "nbDonataires": 2,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "60 %",
+          "valeurNPDisplay": "540 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "200 000 €",
+          "baseTaxableNette": "170 000 €",
+          "droitsTotaux": "64 388,7 €",
+          "tauxEffectif": "11,92 %",
+          "td_droitsTotal": "64 388,7 €",
+          "br_droits": "64 388,7 €",
+          "sp_droits": "64 388,7 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "lien frere",
+      "champs": {
+        "valeurPP": 900000,
+        "age": 68,
+        "nbDonataires": 2,
+        "natureOp": "np",
+        "lienParente": "frere"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "60 %",
+          "valeurNPDisplay": "540 000 €",
+          "abattementDisplay": "15 932 €",
+          "abattementTotal": "31 864 €",
+          "baseTaxableNette": "254 068 €",
+          "droitsTotaux": "98 015,9 €",
+          "tauxEffectif": "18,15 %",
+          "td_droitsTotal": "98 015,9 €",
+          "br_droits": "98 015,9 €",
+          "sp_droits": "98 015,9 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "lien neveu",
+      "champs": {
+        "valeurPP": 900000,
+        "age": 68,
+        "nbDonataires": 2,
+        "natureOp": "np",
+        "lienParente": "neveu"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "60 %",
+          "valeurNPDisplay": "540 000 €",
+          "abattementDisplay": "7 967 €",
+          "abattementTotal": "15 934 €",
+          "baseTaxableNette": "262 033 €",
+          "droitsTotaux": "101 201,9 €",
+          "tauxEffectif": "18,74 %",
+          "td_droitsTotal": "101 201,9 €",
+          "br_droits": "101 201,9 €",
+          "sp_droits": "101 201,9 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "lien autre",
+      "champs": {
+        "valeurPP": 900000,
+        "age": 68,
+        "nbDonataires": 2,
+        "natureOp": "np",
+        "lienParente": "autre"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "60 %",
+          "valeurNPDisplay": "540 000 €",
+          "abattementDisplay": "1 594 €",
+          "abattementTotal": "3 188 €",
+          "baseTaxableNette": "268 406 €",
+          "droitsTotaux": "103 751,1 €",
+          "tauxEffectif": "19,21 %",
+          "td_droitsTotal": "103 751,1 €",
+          "br_droits": "103 751,1 €",
+          "sp_droits": "103 751,1 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "pleine propriété, 50000 €",
+      "champs": {
+        "valeurPP": 50000,
+        "age": 68,
+        "nbDonataires": 1,
+        "natureOp": "pp",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "100 % (pleine propriété)",
+          "valeurNPDisplay": "50 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "0 €",
+          "droitsTotaux": "0 €",
+          "tauxEffectif": "0,00 %",
+          "td_droitsTotal": "0 €",
+          "br_droits": "0 €",
+          "sp_droits": "0 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "pleine propriété, 150000 €",
+      "champs": {
+        "valeurPP": 150000,
+        "age": 68,
+        "nbDonataires": 1,
+        "natureOp": "pp",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "100 % (pleine propriété)",
+          "valeurNPDisplay": "150 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "50 000 €",
+          "droitsTotaux": "8 194,35 €",
+          "tauxEffectif": "5,46 %",
+          "td_droitsTotal": "8 194,35 €",
+          "br_droits": "8 194,35 €",
+          "sp_droits": "8 194,35 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "pleine propriété, 600000 €",
+      "champs": {
+        "valeurPP": 600000,
+        "age": 68,
+        "nbDonataires": 1,
+        "natureOp": "pp",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "100 % (pleine propriété)",
+          "valeurNPDisplay": "600 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "500 000 €",
+          "droitsTotaux": "98 194,35 €",
+          "tauxEffectif": "16,37 %",
+          "td_droitsTotal": "98 194,35 €",
+          "br_droits": "98 194,35 €",
+          "sp_droits": "98 194,35 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "pleine propriété, 1500000 €",
+      "champs": {
+        "valeurPP": 1500000,
+        "age": 68,
+        "nbDonataires": 1,
+        "natureOp": "pp",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "100 % (pleine propriété)",
+          "valeurNPDisplay": "1 500 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "1 400 000 €",
+          "droitsTotaux": "412 678,15 €",
+          "tauxEffectif": "27,51 %",
+          "td_droitsTotal": "412 678,15 €",
+          "br_droits": "412 678,15 €",
+          "sp_droits": "412 678,15 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "pleine propriété, 4000000 €",
+      "champs": {
+        "valeurPP": 4000000,
+        "age": 68,
+        "nbDonataires": 1,
+        "natureOp": "pp",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "100 % (pleine propriété)",
+          "valeurNPDisplay": "4 000 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "100 000 €",
+          "baseTaxableNette": "3 900 000 €",
+          "droitsTotaux": "1 517 394,3 €",
+          "tauxEffectif": "37,93 %",
+          "td_droitsTotal": "1 517 394,3 €",
+          "br_droits": "1 517 394,3 €",
+          "sp_droits": "1 517 394,3 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "nom": "quatre donataires",
+      "champs": {
+        "valeurPP": 2000000,
+        "age": 70,
+        "nbDonataires": 4,
+        "natureOp": "np",
+        "lienParente": "directe"
+      },
+      "attendu": {
+        "affichage": {
+          "tauxNPDisplay": "60 %",
+          "valeurNPDisplay": "1 200 000 €",
+          "abattementDisplay": "100 000 €",
+          "abattementTotal": "400 000 €",
+          "baseTaxableNette": "200 000 €",
+          "droitsTotaux": "152 777,4 €",
+          "tauxEffectif": "12,73 %",
+          "td_droitsTotal": "152 777,4 €",
+          "br_droits": "152 777,4 €",
+          "sp_droits": "152 777,4 €"
+        },
+        "parametres": {
+          "abattements": [
+            100000,
+            15932,
+            7967,
+            1594
+          ],
+          "tranches": [
+            [
+              0,
+              8072,
+              0.05
+            ],
+            [
+              8072,
+              12109,
+              0.1
+            ],
+            [
+              12109,
+              15932,
+              0.15
+            ],
+            [
+              15932,
+              552324,
+              0.2
+            ],
+            [
+              552324,
+              902838,
+              0.3
+            ],
+            [
+              902838,
+              1805677,
+              0.4
+            ],
+            [
+              1805677,
+              null,
+              0.45
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}

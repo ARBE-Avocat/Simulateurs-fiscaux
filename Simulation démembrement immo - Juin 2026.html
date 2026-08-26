@@ -715,20 +715,40 @@
   </div>
 </div>
 
+<script src="src/genere/referentiels.js"></script>
+<script src="src/lecture-referentiels.js"></script>
 <script>
+// ============================================================
+// RÉFÉRENTIEL DES MUTATIONS À TITRE GRATUIT
+// ============================================================
+// Source de vérité : data/referentiels/dmtg.json. Les barèmes et abattements ne
+// sont plus inscrits ici : une mise à jour se fait dans les données, puis
+// « npm run donnees:generer ». Voir data/README.md.
+const DMTG = LectureReferentiels.lecteur('dmtg');
+
+const USUFRUIT = DMTG.bareme('dmtg.usufruit.taux-nue-propriete');
+
+const ABATTEMENTS_DEFAUT = {
+  directe: DMTG.valeur('dmtg.abattement.enfant'),
+  frere:   DMTG.valeur('dmtg.abattement.frere-soeur'),
+  neveu:   DMTG.valeur('dmtg.abattement.neveu-niece'),
+  autre:   DMTG.valeur('dmtg.abattement.autre'),
+};
+
+const TRANCHES_DEFAUT = DMTG.bareme('dmtg.bareme.ligne-directe');
+
 // ============================================================
 // BARÈME USUFRUIT (CGI art. 669) — déterminé par l'âge
 // ============================================================
 function getTauxNP(age) {
-  if (age <= 20)  return 0.10;
-  if (age <= 30)  return 0.20;
-  if (age <= 40)  return 0.30;
-  if (age <= 50)  return 0.40;
-  if (age <= 60)  return 0.50;
-  if (age <= 70)  return 0.60;
-  if (age <= 80)  return 0.70;
-  if (age <= 90)  return 0.80;
-  return 0.90;
+  // Comportement inchangé : la première tranche dont la borne haute n'est pas
+  // dépassée l'emporte. Un âge négatif relève donc toujours de la première
+  // tranche, et un âge aberrant de la dernière — anomalie soumise au référent
+  // fiscal, fiche 3.2 de docs/CORRECTIONS_A_VALIDER.md.
+  for (const tranche of USUFRUIT) {
+    if (age <= tranche.max) return tranche.taux;
+  }
+  return USUFRUIT[USUFRUIT.length - 1].taux;
 }
 
 // ============================================================
@@ -775,20 +795,24 @@ function nombreSaisi(valeurBrute, valeurParDefaut = 0) {
 // BARÈME PROGRESSIF — lecture des paramètres
 // ============================================================
 function getParams() {
+  // Les valeurs pré-remplies viennent du référentiel ; la saisie de
+  // l'utilisateur continue de primer, y compris un zéro volontaire (issue #8).
+  // Seule la dernière tranche n'a pas de borne haute modifiable.
   return {
-    aba_directe: nombreSaisi(document.getElementById('p_aba_directe').value, 100000),
-    aba_frere:   nombreSaisi(document.getElementById('p_aba_frere').value, 15932),
-    aba_neveu:   nombreSaisi(document.getElementById('p_aba_neveu').value, 7967),
-    aba_autre:   nombreSaisi(document.getElementById('p_aba_autre').value, 1594),
-    tranches: [
-      { low: nombreSaisi(document.getElementById('p_t1_low').value, 0),       high: nombreSaisi(document.getElementById('p_t1_high').value, 8072),    taux: (nombreSaisi(document.getElementById('p_t1_taux').value, 5))/100 },
-      { low: nombreSaisi(document.getElementById('p_t2_low').value, 8072),    high: nombreSaisi(document.getElementById('p_t2_high').value, 12109),   taux: (nombreSaisi(document.getElementById('p_t2_taux').value, 10))/100 },
-      { low: nombreSaisi(document.getElementById('p_t3_low').value, 12109),   high: nombreSaisi(document.getElementById('p_t3_high').value, 15932),   taux: (nombreSaisi(document.getElementById('p_t3_taux').value, 15))/100 },
-      { low: nombreSaisi(document.getElementById('p_t4_low').value, 15932),   high: nombreSaisi(document.getElementById('p_t4_high').value, 552324),  taux: (nombreSaisi(document.getElementById('p_t4_taux').value, 20))/100 },
-      { low: nombreSaisi(document.getElementById('p_t5_low').value, 552324),  high: nombreSaisi(document.getElementById('p_t5_high').value, 902838),  taux: (nombreSaisi(document.getElementById('p_t5_taux').value, 30))/100 },
-      { low: nombreSaisi(document.getElementById('p_t6_low').value, 902838),  high: nombreSaisi(document.getElementById('p_t6_high').value, 1805677), taux: (nombreSaisi(document.getElementById('p_t6_taux').value, 40))/100 },
-      { low: nombreSaisi(document.getElementById('p_t7_low').value, 1805677), high: Infinity,                                                         taux: (nombreSaisi(document.getElementById('p_t7_taux').value, 45))/100 },
-    ]
+    aba_directe: nombreSaisi(document.getElementById('p_aba_directe').value, ABATTEMENTS_DEFAUT.directe),
+    aba_frere:   nombreSaisi(document.getElementById('p_aba_frere').value, ABATTEMENTS_DEFAUT.frere),
+    aba_neveu:   nombreSaisi(document.getElementById('p_aba_neveu').value, ABATTEMENTS_DEFAUT.neveu),
+    aba_autre:   nombreSaisi(document.getElementById('p_aba_autre').value, ABATTEMENTS_DEFAUT.autre),
+    tranches: TRANCHES_DEFAUT.map((tranche, index) => {
+      const idx = index + 1;
+      const derniere = index === TRANCHES_DEFAUT.length - 1;
+      const champHigh = document.getElementById(`p_t${idx}_high`);
+      return {
+        low:  nombreSaisi(document.getElementById(`p_t${idx}_low`).value, tranche.min),
+        high: derniere ? Infinity : nombreSaisi(champHigh.value, tranche.max),
+        taux: nombreSaisi(document.getElementById(`p_t${idx}_taux`).value, tranche.taux * 100) / 100,
+      };
+    }),
   };
 }
 
@@ -982,21 +1006,17 @@ function applySettings() {
   recalculate();
 }
 function resetParams() {
-  // Abattements
-  document.getElementById('p_aba_directe').value = 100000;
-  document.getElementById('p_aba_frere').value   = 15932;
-  document.getElementById('p_aba_neveu').value   = 7967;
-  document.getElementById('p_aba_autre').value   = 1594;
-  // Tranches CGI 777 ligne directe
-  const defaults = [
-    [0,8072,5],[8072,12109,10],[12109,15932,15],[15932,552324,20],
-    [552324,902838,30],[902838,1805677,40],[1805677,null,45]
-  ];
-  defaults.forEach((d, i) => {
+  // Remet les valeurs du référentiel, et non des chiffres recopiés ici : après
+  // une mise à jour des données, ce bouton rétablit bien le barème à jour.
+  document.getElementById('p_aba_directe').value = ABATTEMENTS_DEFAUT.directe;
+  document.getElementById('p_aba_frere').value   = ABATTEMENTS_DEFAUT.frere;
+  document.getElementById('p_aba_neveu').value   = ABATTEMENTS_DEFAUT.neveu;
+  document.getElementById('p_aba_autre').value   = ABATTEMENTS_DEFAUT.autre;
+  TRANCHES_DEFAUT.forEach((tranche, i) => {
     const idx = i + 1;
-    document.getElementById(`p_t${idx}_low`).value  = d[0];
-    if (d[1] !== null) document.getElementById(`p_t${idx}_high`).value = d[1];
-    document.getElementById(`p_t${idx}_taux`).value = d[2];
+    document.getElementById(`p_t${idx}_low`).value  = tranche.min;
+    if (tranche.max !== Infinity) document.getElementById(`p_t${idx}_high`).value = tranche.max;
+    document.getElementById(`p_t${idx}_taux`).value = tranche.taux * 100;
   });
 }
 

@@ -39,7 +39,7 @@ Clés de simulateur employées : `ir-cehr-cdhr`, `irpp`, `ifi`, `pv-immobiliere`
 | Impôt sur le revenu, CEHR, CDHR, PFU | `data/referentiels/ir.json` | `ir-cehr-cdhr`, `irpp` | #14 |
 | Prélèvements sociaux | `data/referentiels/prelevements-sociaux.json` | les trois qui les appliquent | #14 |
 | IFI | `data/referentiels/ifi.json` | `ifi`, `irpp` | #15 |
-| Mutations à titre gratuit, usufruit, assurance-vie | `data/referentiels/dmtg.json` | `succession`, `demembrement` | #16 |
+| Mutations à titre gratuit, usufruit, assurance-vie | `data/referentiels/dmtg.json` | `succession`, `demembrement` | #16 — **extrait** |
 | Plus-value immobilière | `data/referentiels/pv-immobiliere.json` | `pv-immobiliere` | #17 |
 | Plus-value mobilière | `data/referentiels/pv-mobiliere.json` | `irpp`, `ir-cehr-cdhr` | #14 |
 | Taux de change | `data/referentiels/change/` | `ifi`, `pv-immobiliere` | #13 |
@@ -124,10 +124,21 @@ duplications qu'à externaliser une valeur.
 | Assurance-vie, primes après 70 ans — abattement global 30 500 € | `succession` | valeur en dur, répétée à trois endroits | texte de la page | non-valide |
 | Rappel fiscal des donations — 15 ans | `succession` | libellé et champ de saisie | « art. 784 CGI » cité dans le texte | non-valide |
 
-**Point de vigilance.** Le barème en ligne directe et les abattements existent
-en deux exemplaires : constantes figées dans la succession, champs modifiables
-dans le démembrement. Les valeurs concordent aujourd'hui ; rien ne garantit
-qu'elles resteront synchronisées. C'est le cas type que l'extraction supprime.
+**Extraction réalisée (#16).** Ces valeurs vivent désormais dans
+`data/referentiels/dmtg.json` et les deux simulateurs les lisent. La colonne
+« écriture actuelle » ci-dessus décrit donc l'état d'avant.
+
+Le duplicat qui motivait l'extraction est supprimé : le barème en ligne directe
+et les abattements existaient en deux exemplaires — constantes figées dans la
+succession, champs modifiables dans le démembrement — dont rien ne garantissait
+la synchronisation.
+
+Deux points subsistent : l'abattement infini du conjoint est devenu un booléen
+`dmtg.conjoint.exonere`, `Infinity` n'existant pas dans un fichier de données ;
+et les valeurs pré-remplies des champs modifiables du démembrement restent
+écrites dans des attributs `value` du HTML. Un contrôle automatique
+(`tests/unit/coherence-referentiels.test.js`) interdit qu'elles divergent des
+données ; leur génération relève d'une étape ultérieure.
 
 ---
 

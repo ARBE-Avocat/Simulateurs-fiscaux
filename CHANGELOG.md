@@ -6,6 +6,19 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.3] - 2026-08-26
+
+### Modifié
+
+- Les barèmes, abattements et taux des simulateurs Succession et Démembrement ne sont plus inscrits dans les fichiers HTML : ils vivent dans `data/referentiels/dmtg.json`, où chaque valeur porte sa source lorsqu'elle est connue, sa date d'effet et son statut de validation. **Aucun montant affiché ne change** : quarante-deux scénarios relevés avant l'extraction, couvrant les neuf liens de parenté, chaque tranche des barèmes, les donations antérieures et l'assurance-vie, donnent exactement les mêmes résultats après.
+- Le barème en ligne directe et les abattements existaient en deux exemplaires, figés dans la succession et modifiables dans le démembrement, sans rien pour garantir qu'ils restent identiques. Il n'y en a plus qu'un.
+- Le bouton « rétablir les valeurs par défaut » du simulateur de démembrement rétablit désormais le barème du référentiel, et non des chiffres recopiés dans le code : après une mise à jour des données, il rétablit bien le barème à jour.
+- Les deux simulateurs concernés chargent maintenant deux fichiers voisins et ne sont donc plus distribuables isolément, conformément à l'architecture arrêtée.
+
+### Ajouté
+
+- Un contrôle automatique interdit aux valeurs pré-remplies affichées dans le formulaire du démembrement de diverger des données. Sans lui, une mise à jour ferait afficher l'ancien barème tout en calculant avec le nouveau.
+
 ## [0.5.0-beta.2] - 2026-08-26
 
 ### Ajouté

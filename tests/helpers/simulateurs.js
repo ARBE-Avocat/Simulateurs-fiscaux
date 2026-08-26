@@ -52,7 +52,7 @@ function lireHtml(cle) {
 }
 
 /**
- * Extrait le contenu des balises `<script>` sans attribut `src`.
+ * Extrait le contenu des balises `<script>` embarquées.
  * Retourne un tableau de blocs, dans l'ordre du document.
  */
 function extraireScripts(html) {
@@ -65,6 +65,31 @@ function extraireScripts(html) {
     blocs.push(correspondance[2]);
   }
   return blocs;
+}
+
+/**
+ * Extrait les scripts référencés par `src`, dans l'ordre du document.
+ *
+ * Depuis le jalon `0.5`, un simulateur peut charger une ressource partagée —
+ * les référentiels fiscaux générés — au lieu de tout embarquer. Le harnais doit
+ * donc résoudre ces chemins comme le ferait le navigateur, faute de quoi les
+ * données seraient absentes des tests alors qu'elles sont présentes à l'écran.
+ *
+ * Seuls les chemins relatifs internes au dépôt sont chargés. Une URL externe est
+ * ignorée : les tests ne font aucun appel réseau.
+ */
+function extraireScriptsExternes(html) {
+  const chemins = [];
+  const motif = /<script\b([^>]*)>/gi;
+  let correspondance;
+  while ((correspondance = motif.exec(html)) !== null) {
+    const src = /\bsrc\s*=\s*["']([^"']+)["']/i.exec(correspondance[1]);
+    if (!src) continue;
+    const valeur = src[1];
+    if (/^(?:[a-z]+:)?\/\//i.test(valeur) || valeur.startsWith('data:')) continue;
+    chemins.push(valeur);
+  }
+  return chemins;
 }
 
 /**
@@ -87,6 +112,20 @@ function chargerSimulateur(cle) {
 
   const dom = creerFauxDom();
   const contexte = vm.createContext(dom.global);
+
+  // Les ressources externes sont exécutées avant les scripts embarqués, comme
+  // le fait le navigateur pour des balises `<script>` sans `defer` placées plus
+  // haut dans le document.
+  for (const relatif of extraireScriptsExternes(html)) {
+    const absolu = chemin(relatif);
+    if (!fs.existsSync(absolu)) {
+      throw new Error(
+        `${simulateur(cle).fichier} référence ${relatif}, introuvable. `
+          + 'Si c\'est un fichier généré, lancer : npm run donnees:generer',
+      );
+    }
+    vm.runInContext(fs.readFileSync(absolu, 'utf8'), contexte, { filename: relatif });
+  }
 
   scripts.forEach((source, index) => {
     // `filename` rend les traces d'erreur lisibles quand un script échoue.
@@ -117,6 +156,7 @@ module.exports = {
   chemin,
   chargerSimulateur,
   extraireScripts,
+  extraireScriptsExternes,
   lireHtml,
   simulateur,
   verifierSyntaxe,

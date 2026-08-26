@@ -56,6 +56,7 @@ est la traçabilité des données fiscales, non la complexité de l'interface.
 | CSV et JSON officiels déposés en entrée | `data/imports/` | non, dépôt brut daté |
 | Schéma des référentiels | `data/schema/` | non |
 | Référentiels consommés par le navigateur et les tests | `src/genere/referentiels.js` | **oui**, ne jamais éditer à la main |
+| Lecture des référentiels par les simulateurs | `src/lecture-referentiels.js` | non |
 | Moteurs de calcul | `src/moteurs/` | non |
 | Pages des simulateurs | `src/simulateurs/<slug>/index.html` | non |
 | Habillage commun | `src/styles/` | non |
@@ -252,7 +253,7 @@ Aucune étape ne mélange déplacement de fichiers et changement de calcul.
 | Étape | Jalon | Contenu | Risque |
 |---|---|---|---|
 | M1 | 0.5 | `_config.yml` protecteur ; création de `data/`, du schéma (#12) et de l'outillage (#18). Aucun HTML déplacé ni modifié. | nul |
-| M2 | 0.5 | Extraction des référentiels (#14 à #17, #13). Les HTML restent à la racine et chargent `src/genere/referentiels.js` par chemin relatif. | faible, verrouillé par comparaison avant/après |
+| M2 | 0.5 | Extraction des référentiels (#14 à #17, #13). Les HTML restent à la racine et chargent `src/genere/referentiels.js` par chemin relatif. **Engagée** : #16 est livrée. | faible, verrouillé par comparaison avant/après |
 | M3 | 0.6 | Déplacement vers `src/simulateurs/<slug>/`, build `site/`, redirections, bascule de Pages sur GitHub Actions (avec #28). | moyen, concentré sur les chemins |
 | M4 | 0.6 | Découplage des moteurs vers `src/moteurs/` (#21). | moyen |
 | M5 | 0.6 / 0.7 | Feuille de style commune dans `src/styles/` (#31), en PR distinctes du découplage. | faible |
