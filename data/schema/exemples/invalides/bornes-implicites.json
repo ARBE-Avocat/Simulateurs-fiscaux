@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "Les bornes ouvertes ou fermées ne sont jamais déduites : c'est précisément l'ambiguïté à l'origine de l'issue #7.",
+  "entrees": [
+    {
+      "type": "bareme",
+      "unite": "decimal",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": "inconnue",
+      "statutValidation": "non-valide",
+      "id": "ir.bareme",
+      "libelle": "Barème",
+      "valeur": [
+        {
+          "borneInf": 0,
+          "borneSup": 11600,
+          "taux": 0
+        }
+      ]
+    }
+  ]
+}

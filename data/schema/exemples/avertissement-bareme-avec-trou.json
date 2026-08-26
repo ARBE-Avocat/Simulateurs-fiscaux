@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple valide mais signalé : barème dont les tranches laissent un intervalle non couvert",
+  "commentaire": "Écriture réellement employée aujourd'hui par le barème IFI des simulateurs IFI et IRPP : chaque tranche commence à la borne haute précédente + 1, ce qui laisse un euro sans taux à chaque seuil. Le schéma l'accepte, parce que l'extraction doit conserver le comportement existant, mais le signale. La correction relève de l'issue #7 et d'une décision du référent fiscal.",
+  "entrees": [
+    {
+      "id": "ifi.bareme.progressif",
+      "libelle": "Barème progressif de l'impôt sur la fortune immobilière",
+      "type": "bareme",
+      "unite": "decimal",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "valeur": [
+        { "borneInf": 0, "borneInfIncluse": true, "borneSup": 800000, "borneSupIncluse": true, "taux": 0 },
+        { "borneInf": 800001, "borneInfIncluse": true, "borneSup": 1300000, "borneSupIncluse": true, "taux": 0.005 },
+        { "borneInf": 1300001, "borneInfIncluse": true, "borneSup": 2570000, "borneSupIncluse": true, "taux": 0.007 },
+        { "borneInf": 2570001, "borneInfIncluse": true, "borneSup": 5000000, "borneSupIncluse": true, "taux": 0.01 },
+        { "borneInf": 5000001, "borneInfIncluse": true, "borneSup": 10000000, "borneSupIncluse": true, "taux": 0.0125 },
+        { "borneInf": 10000001, "borneInfIncluse": true, "borneSup": null, "borneSupIncluse": false, "taux": 0.015 }
+      ],
+      "utilisePar": ["ifi", "irpp"],
+      "source": "inconnue",
+      "statutValidation": "non-valide",
+      "notes": "Cinq intervalles d'un euro ne sont couverts par aucune tranche. Écart cumulé mesuré : 0,05 € pour un patrimoine dépassant la dernière tranche."
+    }
+  ]
+}

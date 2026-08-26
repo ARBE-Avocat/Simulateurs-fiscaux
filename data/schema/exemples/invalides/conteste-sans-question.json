@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "Une divergence sans question posée au référent fiscal resterait invisible.",
+  "entrees": [
+    {
+      "id": "ps.taux",
+      "libelle": "Prélèvements sociaux",
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "conteste",
+      "variantes": [
+        {
+          "cle": "17-2",
+          "valeur": 0.172,
+          "utilisePar": [
+            "irpp"
+          ],
+          "source": "inconnue"
+        },
+        {
+          "cle": "18-6",
+          "valeur": 0.186,
+          "utilisePar": [
+            "ir-cehr-cdhr"
+          ],
+          "source": "inconnue"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "Une valeur ne peut pas être déclarée validée alors que sa source reste inconnue.",
+  "entrees": [
+    {
+      "type": "montant",
+      "unite": "EUR",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": "inconnue",
+      "statutValidation": "valide",
+      "id": "dmtg.abattement.directe",
+      "libelle": "Abattement ligne directe",
+      "valeur": 100000,
+      "validation": {
+        "par": "CLV",
+        "date": "2026-08-26"
+      }
+    }
+  ]
+}

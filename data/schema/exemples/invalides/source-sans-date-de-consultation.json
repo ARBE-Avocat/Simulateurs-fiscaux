@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "Une source sans date de consultation ne permet pas de savoir si elle est périmée.",
+  "entrees": [
+    {
+      "type": "montant",
+      "unite": "EUR",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": {
+        "reference": "CGI art. 779, I"
+      },
+      "statutValidation": "non-valide",
+      "id": "dmtg.abattement.directe",
+      "libelle": "Abattement ligne directe",
+      "valeur": 100000
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple complet et valide de référentiel",
+  "commentaire": "Fichier de documentation du schéma, pas un référentiel de production. Les valeurs sont recopiées de l'existant et ne sont pas validées juridiquement.",
+  "entrees": [
+    {
+      "id": "ir.bareme.progressif",
+      "libelle": "Barème progressif de l'impôt sur le revenu, par part",
+      "type": "bareme",
+      "unite": "decimal",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "valeur": [
+        { "borneInf": 0, "borneInfIncluse": true, "borneSup": 11600, "borneSupIncluse": true, "taux": 0 },
+        { "borneInf": 11600, "borneInfIncluse": false, "borneSup": 29579, "borneSupIncluse": true, "taux": 0.11 },
+        { "borneInf": 29579, "borneInfIncluse": false, "borneSup": 84577, "borneSupIncluse": true, "taux": 0.3 },
+        { "borneInf": 84577, "borneInfIncluse": false, "borneSup": 181917, "borneSupIncluse": true, "taux": 0.41 },
+        { "borneInf": 181917, "borneInfIncluse": false, "borneSup": null, "borneSupIncluse": false, "taux": 0.45 }
+      ],
+      "utilisePar": ["ir-cehr-cdhr", "irpp"],
+      "source": "inconnue",
+      "statutValidation": "non-valide",
+      "notes": "Valeur relevée dans le code existant. Aucune source n'y figure : voir docs/CORRECTIONS_A_VALIDER.md §3.3."
+    },
+    {
+      "id": "ir.abattement.salaires.plafond",
+      "libelle": "Abattement de 10 % sur les salaires — plafond par déclarant",
+      "type": "montant",
+      "unite": "EUR",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "valeur": 14555,
+      "utilisePar": ["ir-cehr-cdhr", "irpp"],
+      "source": "inconnue",
+      "statutValidation": "non-valide"
+    },
+    {
+      "id": "dmtg.usufruit.abattement.ligne-directe",
+      "libelle": "Abattement en ligne directe — droits de mutation à titre gratuit",
+      "type": "montant",
+      "unite": "EUR",
+      "millesime": 2025,
+      "dateEffet": "2011-08-01",
+      "dateFin": null,
+      "valeur": 100000,
+      "utilisePar": ["succession", "demembrement"],
+      "source": {
+        "reference": "CGI art. 779, I",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000041471074",
+        "dateConsultation": "2026-08-26"
+      },
+      "statutValidation": "non-valide",
+      "notes": "La référence CGI est citée par le simulateur de démembrement. Le rattachement de la valeur à cet article reste à confirmer par le référent fiscal."
+    },
+    {
+      "id": "ps.taux.plus-values",
+      "libelle": "Taux global des prélèvements sociaux appliqué aux plus-values",
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "conteste",
+      "variantes": [
+        {
+          "cle": "17-2",
+          "valeur": 0.172,
+          "utilisePar": ["irpp", "pv-immobiliere"],
+          "source": "inconnue"
+        },
+        {
+          "cle": "18-6",
+          "valeur": 0.186,
+          "utilisePar": ["ir-cehr-cdhr"],
+          "source": "inconnue"
+        }
+      ],
+      "arbitrage": {
+        "document": "docs/CORRECTIONS_A_VALIDER.md",
+        "point": "2.2",
+        "question": "Quel taux de prélèvements sociaux s'applique, à quels revenus, et à compter de quelle date ? 17,2 % ou 18,6 % ?"
+      },
+      "notes": "Écart mesuré : 14 000 € sur une plus-value d'un million d'euros. Aucun code ne doit choisir : chaque simulateur lit la variante qu'il emploie aujourd'hui."
+    }
+  ]
+}

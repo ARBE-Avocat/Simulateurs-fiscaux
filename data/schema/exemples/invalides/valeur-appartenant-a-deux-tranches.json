@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "La borne 11 600 est incluse des deux côtés : la valeur relève de deux taux à la fois.",
+  "entrees": [
+    {
+      "type": "bareme",
+      "unite": "decimal",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": "inconnue",
+      "statutValidation": "non-valide",
+      "id": "ir.bareme",
+      "libelle": "Barème",
+      "valeur": [
+        {
+          "borneInf": 0,
+          "borneInfIncluse": true,
+          "borneSup": 11600,
+          "borneSupIncluse": true,
+          "taux": 0
+        },
+        {
+          "borneInf": 11600,
+          "borneInfIncluse": true,
+          "borneSup": null,
+          "borneSupIncluse": false,
+          "taux": 0.11
+        }
+      ]
+    }
+  ]
+}

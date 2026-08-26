@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "`Infinity` n'existe pas en JSON. Une tranche sans limite haute s'écrit borneSup: null.",
+  "entrees": [
+    {
+      "type": "bareme",
+      "unite": "decimal",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": "inconnue",
+      "statutValidation": "non-valide",
+      "id": "ir.bareme",
+      "libelle": "Barème",
+      "valeur": [
+        {
+          "borneInf": 0,
+          "borneInfIncluse": true,
+          "borneSup": 11600,
+          "borneSupIncluse": false,
+          "taux": 0
+        },
+        {
+          "borneInf": 11600,
+          "borneInfIncluse": true,
+          "borneSup": "Infinity",
+          "borneSupIncluse": false,
+          "taux": 0.11
+        }
+      ]
+    }
+  ]
+}

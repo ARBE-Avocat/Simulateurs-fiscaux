@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "Période d'application impossible.",
+  "entrees": [
+    {
+      "type": "montant",
+      "unite": "EUR",
+      "millesime": 2025,
+      "dateEffet": "2025-01-01",
+      "dateFin": "2024-12-31",
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": "inconnue",
+      "statutValidation": "non-valide",
+      "id": "ir.abattement",
+      "libelle": "Abattement",
+      "valeur": 14555
+    }
+  ]
+}

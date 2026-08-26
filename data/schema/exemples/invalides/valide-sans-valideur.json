@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "Une valeur validée doit dire par qui et quand.",
+  "entrees": [
+    {
+      "type": "montant",
+      "unite": "EUR",
+      "millesime": 2025,
+      "dateEffet": "2011-08-01",
+      "dateFin": null,
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": {
+        "reference": "CGI art. 779, I",
+        "dateConsultation": "2026-08-26"
+      },
+      "statutValidation": "valide",
+      "id": "dmtg.abattement.directe",
+      "libelle": "Abattement ligne directe",
+      "valeur": 100000
+    }
+  ]
+}

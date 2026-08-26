@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "Le rattachement se fait sur la liste des simulateurs réellement présents dans le dépôt.",
+  "entrees": [
+    {
+      "type": "montant",
+      "unite": "EUR",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "utilisePar": [
+        "isf"
+      ],
+      "source": "inconnue",
+      "statutValidation": "non-valide",
+      "id": "ir.abattement",
+      "libelle": "Abattement",
+      "valeur": 14555
+    }
+  ]
+}

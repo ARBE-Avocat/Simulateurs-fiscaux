@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "Seuls trois statuts existent : non-valide, valide, conteste.",
+  "entrees": [
+    {
+      "type": "montant",
+      "unite": "EUR",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": "inconnue",
+      "statutValidation": "a-verifier",
+      "id": "ir.abattement",
+      "libelle": "Abattement",
+      "valeur": 14555
+    }
+  ]
+}

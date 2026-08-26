@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "Deux entrées pour le même identifiant et le même millésime : laquelle fait foi ?",
+  "entrees": [
+    {
+      "type": "montant",
+      "unite": "EUR",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": "inconnue",
+      "statutValidation": "non-valide",
+      "id": "ir.abattement",
+      "libelle": "Abattement",
+      "valeur": 14555
+    },
+    {
+      "type": "montant",
+      "unite": "EUR",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": "inconnue",
+      "statutValidation": "non-valide",
+      "id": "ir.abattement",
+      "libelle": "Abattement",
+      "valeur": 14171
+    }
+  ]
+}

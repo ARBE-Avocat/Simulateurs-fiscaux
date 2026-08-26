@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.15`, jalon `0.5` ouvert.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-beta.1`.
 
 ## Objectifs de l’orchestration
 
@@ -32,6 +32,9 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 - Nouvelle issue #31 — unification de l'identité visuelle et des composants d'interface, ouverte à la demande du référent métier. Elle dépend de #20 et n'appartient pas au jalon `0.4`.
 - Le jalon `Y = 0.5` est ouvert sur la branche `clv/y-0.5-donnees`, créée depuis `clv/y-0.4-fiabilite` et non depuis `clv/preprod` : la `0.4` n'est pas encore intégrée, la pile est conservée.
 - #20 est traitée : `docs/ARCHITECTURE_CIBLE.md` fixe l'arborescence, les URL stables, la source de vérité de chaque type de fichier et l'ordre de migration. Aucun fichier n'est encore déplacé.
+- #12 est traitée : `data/schema/README.md` définit le format commun, `scripts/lib/schema-referentiel.js` en est la définition exécutable, et `docs/INVENTAIRE_REFERENTIELS.md` recense les valeurs fiscales, leur simulateur, leur contexte et ce que le dépôt sait de leur source. Aucune valeur n'est encore extraite.
+- Deux divergences supplémentaires ont été découvertes pendant l'inventaire et ajoutées aux fiches 2.3 et 2.4 de `docs/CORRECTIONS_A_VALIDER.md` : le plafonnement du quotient familial, appliqué par le simulateur IR et absent de l'IRPP, jusqu'à 19 985,10 € d'écart ; et la méthode de liquidation de l'IFI, différente entre le simulateur IFI et la section IFI de l'IRPP, 668,39 € d'écart sur l'exemple relevé. Aucune n'est tranchée.
+- `docs/arbitrages.html` porte désormais ces deux points. **La page publiée n'a pas encore été republiée** : elle doit l'être à la même adresse, par CLV, avant la prochaine sollicitation du référent juridique.
 
 ## Décisions d'architecture déjà arbitrées
 
@@ -254,7 +257,7 @@ Contraintes d'entrée intégrées au document de décision :
 - l'unification de l'interface (#31) suppose une feuille de style commune à un seul endroit ;
 - l'emplacement de cette feuille commune et des données doit être fixé ici, avant toute migration visuelle.
 
-### Étape 2.2 — Définir le contrat des données
+### Étape 2.2 — Définir le contrat des données — réalisée
 
 Sous-issue de l’epic [#2](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/2) :
 
@@ -265,6 +268,20 @@ Dépendance stricte : #20, pour savoir où vivent les données.
 #9 et #11 ne bloquent plus cette étape, à une condition : **le schéma doit savoir porter une valeur non validée.** Décision du 26 août 2026.
 
 L’agent doit commencer par les exemples et le schéma, sans extraire immédiatement toutes les constantes.
+
+Livré :
+
+- `data/schema/README.md`, explication du format en langage clair ;
+- `scripts/lib/schema-referentiel.js`, définition exécutable qui décide seule de ce qui est valide ;
+- `data/schema/exemples/` : un référentiel valide, un cas accepté mais signalé, quinze cas invalides ;
+- `tests/unit/schema-referentiel.test.js`, dix-neuf contrôles ;
+- `docs/INVENTAIRE_REFERENTIELS.md`, inventaire valeur → simulateur → contexte → source.
+
+Choix structurants à connaître avant les extractions :
+
+- source et date d'effet sont **obligatoires**, mais la valeur `"inconnue"` est admise ; en contrepartie une entrée dont l'une des deux est inconnue ne peut pas porter le statut `valide`. Rien n'est inventé, rien n'est masqué ;
+- une entrée `conteste` **perd son champ `valeur`** et porte des `variantes` rattachées chacune aux simulateurs qui l'emploient, plus la question posée au référent. Le code ne peut donc pas lire une valeur unique par inattention, et l'extraction ne peut pas trancher ;
+- les bornes de tranches sont écrites explicitement, `Infinity` est remplacé par `null`, et un intervalle non couvert est **accepté mais signalé** : refuser les barèmes actuels rendrait les données inextractibles.
 
 ### Principe des valeurs non validées
 

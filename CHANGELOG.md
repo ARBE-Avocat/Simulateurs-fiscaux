@@ -6,6 +6,17 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.1] - 2026-08-26
+
+### Ajouté
+
+- Schéma commun des référentiels fiscaux et son contrôle automatique. Toute valeur extraite du code devra désormais porter sa source, sa date d'effet et son statut de validation. Le schéma sait représenter un désaccord entre deux simulateurs sans en choisir un : une règle contestée n'a pas de valeur unique, seulement des variantes rattachées aux simulateurs qui les emploient, et la question posée au référent fiscal.
+- Dix-neuf contrôles automatiques du schéma, dont quinze exemples de référentiels invalides : un fichier qui redeviendrait acceptable fait échouer les tests.
+
+### Connu
+
+- Deux nouvelles divergences entre simulateurs, relevées pendant l'inventaire des valeurs fiscales et **non corrigées** faute de décision du référent fiscal. Le plafonnement de l'avantage procuré par les demi-parts supplémentaires est appliqué par le simulateur « IR, CEHR et CDHR » et absent du simulateur IRPP : jusqu'à 19 985,10 € d'écart d'impôt pour un célibataire avec trois enfants et 200 000 € de revenu. L'IFI, calculé à deux endroits, l'est selon deux méthodes différentes : 668,39 € d'écart sur un patrimoine de 1 450 000 € grevé de 100 000 € de passif. Les deux points sont décrits dans `docs/CORRECTIONS_A_VALIDER.md`.
+
 ## [0.4.0-beta.15] - 2026-08-26
 
 ### Modifié

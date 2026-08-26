@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "domaine": "exemple",
+  "libelle": "Exemple invalide",
+  "commentaire": "Un taux de 45 % écrit 45 au lieu de 0.45 : erreur d'un facteur 100, invisible à l'exécution.",
+  "entrees": [
+    {
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "utilisePar": [
+        "irpp"
+      ],
+      "source": "inconnue",
+      "statutValidation": "non-valide",
+      "id": "ir.taux.derniere-tranche",
+      "libelle": "Dernière tranche",
+      "valeur": 45
+    }
+  ]
+}

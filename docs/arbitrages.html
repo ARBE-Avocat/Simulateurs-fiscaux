@@ -746,6 +746,77 @@ textarea::placeholder { color: var(--ink-faint); }
       ]
     },
     {
+      groupe: "bloquant",
+      ref: "2.3",
+      titre: "Le plafonnement du quotient familial n'est pas appliqué",
+      simulateur: "IRPP",
+      constat: "Le simulateur IRPP divise le revenu par le nombre de parts, calcule l'impôt et remultiplie, sans jamais limiter l'avantage procuré par les parts supplémentaires. Le simulateur « IR, CEHR et CDHR » limite au contraire cet avantage à 1 807 € par demi-part.",
+      raison: "Deux simulateurs du même dépôt appliquent des règles différentes au même mécanisme, et c'est le simulateur d'impôt sur le revenu complet qui est le plus affecté. Le plafond de 1 807 € est par ailleurs inscrit en dur, sans source ni millésime.",
+      change: "Rien n'a été changé. Ajouter un plafonnement, ou confirmer qu'il ne doit pas s'appliquer, est une décision fiscale.",
+      tableau: {
+        legende: "Célibataire avec enfants à charge — impôt avant décote et réductions",
+        colonnes: ["Revenu", "Situation", "Simulateur IR", "Simulateur IRPP", "Écart"],
+        lignes: [
+          { cells: ["60 000 €", "1 enfant — 1,5 part", "9 296,99 €", "7 655,37 €", "1 641,62 €"] },
+          { cells: ["60 000 €", "2 enfants — 2 parts", "7 489,99 €", "4 207,16 €", "3 282,83 €"] },
+          { cells: ["100 000 €", "2 enfants — 2 parts", "21 186,52 €", "16 207,16 €", "4 979,36 €"], marque: true },
+          { cells: ["200 000 €", "2 enfants — 2 parts", "62 909,84 €", "49 599,40 €", "13 310,44 €"] },
+          { cells: ["200 000 €", "3 enfants — 3 parts", "59 295,84 €", "39 310,74 €", "19 985,10 €"], marque: true, ton: "avant" }
+        ]
+      },
+      encart: "L'écart croît avec le revenu et le nombre d'enfants. Le simulateur IRPP annonce le montant le plus faible : il <strong>sous-estime l'impôt dû</strong>, si le plafonnement est bien applicable. Réserve : le simulateur IRPP demande un nombre de parts et non une situation familiale. Pour un couple sans enfant, deux parts, il n'y a rien à plafonner et les deux simulateurs concordent ; la divergence n'apparaît que lorsque les parts viennent de personnes à charge, ce que le simulateur ne sait pas distinguer aujourd'hui.",
+      question: "Le plafonnement de l'avantage procuré par les demi-parts supplémentaires doit-il s'appliquer dans le simulateur IRPP ?",
+      options: [
+        { cle: "oui", libelle: "Oui, il doit être ajouté", ton: "ok" },
+        { cle: "non", libelle: "Non, il ne s'applique pas ici", ton: "ok" },
+        { cle: "selon", libelle: "Selon la situation, à préciser", ton: "neutre" }
+      ],
+      complements: [
+        "Le montant de 1 807 € par demi-part est-il le bon, et pour quel millésime ? Quelle source citer ?",
+        "Le simulateur doit-il alors demander la situation familiale plutôt qu'un simple nombre de parts, afin de savoir quelles parts sont plafonnables ?"
+      ]
+    },
+    {
+      groupe: "bloquant",
+      ref: "2.4",
+      titre: "L'IFI n'est pas calculé de la même façon dans les deux simulateurs qui le calculent",
+      simulateur: "IFI · IRPP",
+      constat: "L'IFI est calculé à deux endroits : dans le simulateur IFI, et dans une section du simulateur IRPP. Le barème et ses taux sont identiques, mais la méthode et la décote diffèrent, et les deux pages n'annoncent pas le même impôt pour le même patrimoine.",
+      raison: "Un utilisateur qui saisit le même patrimoine dans les deux pages du même cabinet obtient deux montants différents, sans qu'aucune mention n'explique pourquoi. Les deux méthodes ne peuvent pas être justes en même temps.",
+      change: "Rien n'a été changé. Choisir une méthode de liquidation est une décision fiscale.",
+      comparaison: {
+        legende: "Les deux méthodes présentes dans le dépôt",
+        colonnes: ["", "Simulateur IFI", "Section IFI de l'IRPP"],
+        lignes: [
+          { cells: ["Assiette", "l'IFI théorique est retranché du patrimoine, puis l'impôt est recalculé", "un seul calcul, sur le patrimoine net"] },
+          { cells: ["Condition de la décote", "net après IFI théorique < 1 400 000 €", "patrimoine brut entre 1 300 000 € et 1 400 000 €"] },
+          { cells: ["Base de la décote", "net après IFI théorique", "patrimoine net"] }
+        ]
+      },
+      tableau: {
+        legende: "Un bien de 1 450 000 €, un passif déductible de 100 000 €, aucun don ni plafonnement",
+        colonnes: ["Étape", "Simulateur IFI", "Section IFI de l'IRPP"],
+        lignes: [
+          { cells: ["Patrimoine net", "1 350 000 €", "1 350 000 €"] },
+          { cells: ["Impôt au barème", "2 849,99 €", "2 849,99 €"] },
+          { cells: ["Décote", "625,00 € puis 652,81 €", "0 €"], ton: "avant" },
+          { cells: ["IFI dû", "2 181,60 €", "2 849,99 €"], marque: true }
+        ]
+      },
+      encart: "L'écart est de <strong>668,39 €</strong>, soit près d'un tiers de l'impôt annoncé par le simulateur IFI. La différence de décote produit un effet de seuil marqué : dès que le passif fait passer le patrimoine sous 1 400 000 € alors que le brut le dépasse, un simulateur accorde la décote et l'autre la refuse entièrement.",
+      question: "L'IFI théorique doit-il être retranché du patrimoine avant le calcul définitif, comme le fait le simulateur IFI, ou l'impôt se liquide-t-il en une seule fois, comme le fait l'IRPP ?",
+      options: [
+        { cle: "deux-temps", libelle: "En deux temps, méthode du simulateur IFI", ton: "ok" },
+        { cle: "un-temps", libelle: "En une fois, méthode de l'IRPP", ton: "ok" },
+        { cle: "autre", libelle: "Une autre méthode, précisée ci-dessous", ton: "neutre" }
+      ],
+      complements: [
+        "La décote s'apprécie-t-elle sur le patrimoine brut ou sur le patrimoine net ? Et sur lequel des deux se calcule-t-elle ?",
+        "La borne de 1 400 000 € et la formule « 17 500 € − 1,25 % du patrimoine » sont-elles confirmées, et pour quel millésime ?",
+        "Quelle source citer ?"
+      ]
+    },
+    {
       groupe: "arbitrage",
       ref: "3.1",
       titre: "L'âge et le nombre de donataires refusent le zéro",

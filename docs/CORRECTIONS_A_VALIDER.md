@@ -6,7 +6,7 @@ jugé fautif mais **laissé en l'état** faute de certitude.
 
 Aucune connaissance technique n'est nécessaire pour le lire.
 
-Dernière mise à jour : 26 août 2026 — préversion `0.4.0-beta.15`.
+Dernière mise à jour : 26 août 2026 — jalon `0.5`, chantier des référentiels.
 
 **Version interactive :** <https://claude.ai/code/artifact/ed86515a-2108-4df9-b7fc-acc15b0682d3>
 Cette page reprend le contenu ci-dessous et permet de répondre point par point.
@@ -296,6 +296,109 @@ projet obtient deux résultats, sans savoir lequel retenir.
 3. Le taux doit-il rester modifiable dans le simulateur IR, alors qu'il est figé
    dans les deux autres ?
 4. Quelle source et quelle date d'effet citer ?
+
+## 2.3 — IRPP : le plafonnement du quotient familial n'est pas appliqué
+
+**Ce que voit l'utilisateur.** Le simulateur IRPP demande un nombre de parts,
+divise le revenu par ce nombre, calcule l'impôt sur le quotient obtenu et
+multiplie le résultat par le nombre de parts. Aucun plafond n'intervient.
+
+Le simulateur « IR, CEHR et CDHR », lui, calcule d'abord l'impôt sans les parts
+supplémentaires, puis limite l'avantage qu'elles procurent à **1 807 € par
+demi-part**.
+
+**Pourquoi cela paraît anormal.** Deux simulateurs du même dépôt appliquent des
+règles différentes au même mécanisme. Le simulateur IRPP est celui qui calcule
+un impôt sur le revenu complet ; c'est donc celui où l'absence de plafond a le
+plus d'effet. Le montant du plafond, 1 807 €, est par ailleurs inscrit en dur
+dans le simulateur IR, sans source ni millésime.
+
+**Ce qui a été changé.** Rien. Ajouter un plafonnement, ou confirmer qu'il ne
+doit pas s'appliquer, est une décision fiscale.
+
+**Ce que cela change en euros.** Célibataire avec enfants à charge, revenu net
+imposable indiqué en première colonne, impôt sur le revenu avant décote et
+réductions :
+
+| Revenu | Situation | Simulateur IR | Simulateur IRPP | Écart |
+|---|---|---|---|---|
+| 60 000 € | 1 enfant — 1,5 part | 9 296,99 € | 7 655,37 € | 1 641,62 € |
+| 60 000 € | 2 enfants — 2 parts | 7 489,99 € | 4 207,16 € | 3 282,83 € |
+| 100 000 € | 2 enfants — 2 parts | 21 186,52 € | 16 207,16 € | **4 979,36 €** |
+| 200 000 € | 2 enfants — 2 parts | 62 909,84 € | 49 599,40 € | 13 310,44 € |
+| 200 000 € | 3 enfants — 3 parts | 59 295,84 € | 39 310,74 € | **19 985,10 €** |
+
+L'écart croît avec le revenu et avec le nombre d'enfants. Le simulateur IRPP est
+celui qui annonce le montant le plus faible : il **sous-estime l'impôt dû**, si
+le plafonnement est bien applicable.
+
+**Une réserve importante.** Le simulateur IRPP ne demande pas la situation
+familiale mais un nombre de parts. Pour un couple sans enfant, 2 parts, il n'y a
+rien à plafonner et les deux simulateurs concordent. La divergence n'apparaît
+que lorsque les parts proviennent de personnes à charge, ce que le simulateur
+IRPP n'a aujourd'hui aucun moyen de distinguer.
+
+**Ce qui est attendu de vous.** Trois questions :
+
+1. le plafonnement de l'avantage en impôt procuré par les demi-parts
+   supplémentaires doit-il s'appliquer dans le simulateur IRPP ?
+2. si oui, le montant de 1 807 € par demi-part est-il le bon, et pour quel
+   millésime ? Quelle source citer ?
+3. le simulateur doit-il alors demander la situation familiale plutôt qu'un
+   simple nombre de parts, afin de savoir quelles parts sont plafonnables ?
+
+## 2.4 — L'IFI n'est pas calculé de la même façon dans les deux simulateurs qui le calculent
+
+**Ce que voit l'utilisateur.** L'IFI est calculé à deux endroits : dans le
+simulateur IFI, et dans une section du simulateur IRPP. Pour un même patrimoine,
+les deux ne donnent pas le même impôt.
+
+Le barème et ses taux sont pourtant identiques dans les deux fichiers. Ce sont
+la méthode et la décote qui diffèrent :
+
+| | Simulateur IFI | Section IFI de l'IRPP |
+|---|---|---|
+| Assiette | l'IFI théorique est **retranché du patrimoine**, puis l'impôt est recalculé sur cette base réduite | un seul calcul, sur le patrimoine net |
+| Condition de la décote | patrimoine net après IFI théorique inférieur à 1 400 000 € | patrimoine **brut** compris entre 1 300 000 € et 1 400 000 € |
+| Base de la décote | patrimoine net après IFI théorique | patrimoine net |
+
+**Pourquoi cela paraît anormal.** Un utilisateur qui saisit le même patrimoine
+dans les deux pages du même cabinet obtient deux montants différents, sans
+qu'aucune mention n'explique pourquoi. Les deux méthodes ne peuvent pas être
+justes en même temps.
+
+La seconde différence a un effet de seuil marqué : dès que le passif fait passer
+le patrimoine sous 1 400 000 € alors que le brut le dépasse, un simulateur
+accorde la décote et l'autre la refuse entièrement.
+
+**Ce qui a été changé.** Rien. Choisir une méthode de liquidation est une
+décision fiscale.
+
+**Ce que cela change en euros.** Un bien immobilier de 1 450 000 €, un passif
+déductible de 100 000 €, aucun don ni plafonnement :
+
+| Étape | Simulateur IFI | Section IFI de l'IRPP |
+|---|---|---|
+| Patrimoine brut | 1 450 000 € | 1 450 000 € |
+| Patrimoine net | 1 350 000 € | 1 350 000 € |
+| Impôt au barème | 2 849,99 € | 2 849,99 € |
+| Décote | 625,00 € puis 652,81 € | **0 €** |
+| Base du second calcul | 1 347 775,01 € | — |
+| **IFI dû** | **2 181,60 €** | **2 849,99 €** |
+
+L'écart est de **668,39 €**, soit près d'un tiers de l'impôt annoncé par le
+simulateur IFI.
+
+**Ce qui est attendu de vous.** Quatre questions :
+
+1. l'IFI théorique doit-il être retranché du patrimoine avant le calcul
+   définitif, comme le fait le simulateur IFI, ou l'impôt se liquide-t-il en une
+   seule fois, comme le fait l'IRPP ?
+2. la décote s'apprécie-t-elle sur le patrimoine **brut** ou sur le patrimoine
+   **net** ? Et sur lequel des deux se calcule-t-elle ?
+3. la borne de 1 400 000 € et la formule « 17 500 € − 1,25 % du patrimoine »
+   sont-elles confirmées, et pour quel millésime ?
+4. quelle source citer ?
 
 ---
 
