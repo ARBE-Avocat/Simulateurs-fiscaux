@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-beta.6`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-beta.7`.
 
 ## Objectifs de l’orchestration
 
@@ -368,12 +368,12 @@ Traiter d’abord le service de change commun de #13, puis sa sous-issue #1. Le 
 
 Les interfaces IFI et plus-value immobilière sont stabilisées depuis #15 et #17 : la vague C peut commencer.
 
-**Une décision d'architecture est à prendre avant de commencer #13.** Les taux de change ne peuvent pas rejoindre `src/genere/referentiels.js` : ce fichier est chargé par les six simulateurs, et l'historique de change du simulateur de plus-value immobilière pèse à lui seul près de 3,8 Mo. Y verser les changes ferait télécharger cet historique à qui ouvre le simulateur de succession. Il faut donc un **second fichier généré**, chargé par les seuls simulateurs qui en ont besoin, et `docs/ARCHITECTURE_CIBLE.md` doit être complété en conséquence.
+**Les deux décisions préalables sont prises.**
 
-Deux points supplémentaires, propres au change :
+1. *Découpage des fichiers générés* — décision de CLV du 26 août 2026, appliquée dans `v0.5.0-beta.7` : un fichier généré par domaine, chaque simulateur ne chargeant que les domaines qu'il emploie, la correspondance étant déduite du champ `utilisePar` des données et vérifiée automatiquement. Les taux de change formeront donc leur propre domaine, chargé par les seuls simulateurs IFI et plus-value immobilière. Voir `docs/ARCHITECTURE_CIBLE.md` §2.4.
+2. *Ce qui fait foi* — décision de CLV du 26 août 2026 : le taux retenu est celui **appelé en ligne auprès de la Banque de France**. Les taux versionnés dans le dépôt ne servent que de repli lorsque l'appel échoue, et l'écran doit indiquer lequel des deux a été employé.
 
-- ce n'est pas une donnée fiscale : ni date d'effet, ni statut de validation au même sens. Le schéma des référentiels ne lui convient pas tel quel, et lui en imposer un serait forcer le format ;
-- le simulateur IFI appelle deux services de change en ligne au chargement, avec repli sur des taux figés non datés. Externaliser les changes suppose de décider ce qui fait foi : les taux appelés au chargement, ou ceux du dépôt.
+Reste propre au change, à traiter dans #13 : ce n'est pas une donnée fiscale — ni date d'effet, ni statut de validation au même sens. Les changes vivront dans `data/change/`, avec leur propre format et leur propre validation ; leur imposer le schéma fiscal reviendrait à forcer le format. Le repli actuel du simulateur IFI est en outre **non daté**, ce qui interdit de dire honnêtement à l'écran de quand il date : à corriger.
 
 ### Étape 2.5 — Ajouter la sélection de millésime
 

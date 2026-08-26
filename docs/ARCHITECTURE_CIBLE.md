@@ -55,7 +55,8 @@ est la traçabilité des données fiscales, non la complexité de l'interface.
 | Valeurs fiscales : barèmes, taux, seuils, abattements, plafonds | `data/referentiels/*.json` | non, écrit ou importé |
 | CSV et JSON officiels déposés en entrée | `data/imports/` | non, dépôt brut daté |
 | Schéma des référentiels | `data/schema/` | non |
-| Référentiels consommés par le navigateur et les tests | `src/genere/referentiels.js` | **oui**, ne jamais éditer à la main |
+| Référentiels consommés par le navigateur et les tests | `src/genere/referentiels/<domaine>.js` | **oui**, ne jamais éditer à la main |
+| Inventaire des fichiers générés et de leurs lecteurs | `src/genere/referentiels/manifeste.json` | **oui** |
 | Lecture des référentiels par les simulateurs | `src/lecture-referentiels.js` | non |
 | Moteurs de calcul | `src/moteurs/` | non |
 | Pages des simulateurs | `src/simulateurs/<slug>/index.html` | non |
@@ -101,21 +102,31 @@ l'un à l'autre.
 
 ### 2.4 — Comment les données arrivent dans le navigateur
 
-Décision : **un fichier JavaScript généré, chargé par balise `<script>`**, et non
-un `fetch` de JSON au moment de l'affichage.
+Deux décisions, prises ensemble.
+
+**Un fichier JavaScript généré, chargé par balise `<script>`**, et non un `fetch`
+de JSON au moment de l'affichage.
+
+**Un fichier par domaine de données, et non un fichier unique.** Une page ne
+charge que ce dont elle se sert :
 
 ```html
-<script src="../../genere/referentiels.js"></script>
+<script src="src/genere/referentiels/ir.js"></script>
+<script src="src/genere/referentiels/prelevements-sociaux.js"></script>
 ```
 
-Le fichier généré expose le même objet aux deux mondes :
+Chaque fichier généré s'enregistre sous son propre domaine et expose le même
+objet aux deux mondes :
 
 ```js
-// src/genere/referentiels.js — fichier généré, ne pas éditer
+// src/genere/referentiels/ir.js — fichier généré, ne pas éditer
 (function (global) {
-  const REFERENTIELS = { /* … contenu produit depuis data/ … */ };
-  if (typeof module === 'object' && module.exports) module.exports = REFERENTIELS;
-  else global.REFERENTIELS = REFERENTIELS;
+  var DOMAINE = { /* … contenu produit depuis data/referentiels/ir.json … */ };
+  if (typeof module === 'object' && module.exports) module.exports = DOMAINE;
+  else {
+    global.REFERENTIELS = global.REFERENTIELS || {};
+    global.REFERENTIELS['ir'] = DOMAINE;
+  }
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 ```
 
@@ -133,7 +144,40 @@ Trois raisons :
    d'être relu : c'est `data/referentiels/*.json` qui est revu en pull request.
 
 `data/` reste donc le format de travail — lisible, diffable, validable — et
-`src/genere/referentiels.js` n'est qu'un moyen de transport.
+`src/genere/referentiels/` n'est qu'un moyen de transport.
+
+#### Pourquoi un fichier par domaine
+
+Un fichier unique aurait obligé le simulateur de succession à télécharger les
+barèmes de l'IFI, de l'impôt sur le revenu et de la plus-value immobilière, dont
+il n'a aucun usage. Aujourd'hui l'écart est de quelques dizaines de kilo-octets ;
+avec l'historique des taux de change de l'issue #13, il serait de **près de
+4 Mo** sur une page qui n'affiche aucun montant en devise.
+
+La règle est donc : **un simulateur charge exactement les domaines qu'il
+emploie, ni plus, ni moins.**
+
+Le point important est que cette correspondance **n'est écrite nulle part à la
+main.** Chaque valeur du référentiel déclare déjà, par son champ `utilisePar`,
+les simulateurs qui s'en servent. La génération en déduit le contenu de
+`manifeste.json`, et un contrôle automatique confronte ce manifeste aux balises
+`<script>` réellement présentes dans chaque page. Extraire une valeur pour un
+nouveau simulateur sans ajouter la balise correspondante fait échouer les tests ;
+inversement, une page qui charge un domaine devenu inutile est signalée.
+
+Une liste tenue à la main se serait périmée au premier oubli. Celle-ci ne le
+peut pas.
+
+Conséquences pratiques :
+
+- ajouter un domaine, c'est ajouter un fichier dans `data/referentiels/`, lancer
+  la génération, et ajouter une balise dans les pages concernées ;
+- retirer un domaine supprime son fichier généré : la génération efface les
+  fichiers auxquels plus aucune donnée ne correspond, afin qu'une page ne puisse
+  pas continuer de charger des données mortes ;
+- un domaine qui n'est pas une donnée fiscale — les taux de change — suit la
+  même règle de découpage avec son propre générateur et son propre format. Voir
+  le §7 bis.
 
 ### 2.5 — Statut de validation porté par la donnée
 
@@ -316,20 +360,26 @@ dépendance npm.
 
 ---
 
-## 7 bis. Un point resté ouvert : les taux de change
+## 7 bis. Les taux de change
 
-`src/genere/referentiels.js` est chargé par les six simulateurs. Il convient
-aux référentiels fiscaux, qui pèsent quelques kilo-octets.
+Le découpage par domaine du §2.4 règle la question du volume : les taux de
+change formeront leur propre fichier généré, chargé par les seuls simulateurs
+IFI et plus-value immobilière. Le simulateur de succession ne les téléchargera
+pas.
 
-Il ne conviendra **pas** aux taux de change. L'historique embarqué dans le
-simulateur de plus-value immobilière pèse à lui seul près de 3,8 Mo : le verser
-dans le fichier commun le ferait télécharger à qui ouvre le simulateur de
-succession, qui n'en a aucun usage.
+Deux points leur restent propres, et relèvent de l'issue #13 :
 
-L'issue #13 devra donc produire un **second fichier généré**, chargé par les
-seuls simulateurs qui en ont besoin, et ce document sera complété à ce
-moment-là. Le point est noté ici pour qu'il ne soit pas découvert en cours de
-route.
+- **ce n'est pas une donnée fiscale.** Ni date d'effet, ni statut de validation
+  au sens du schéma des référentiels. Ils vivront dans `data/change/`, avec leur
+  propre format — devise, date de cotation, taux — et leur propre validation.
+  Leur imposer le schéma fiscal reviendrait à forcer le format ;
+- **ce qui fait foi est arbitré.** Décision de CLV du 26 août 2026 : le taux
+  retenu est celui **appelé en ligne auprès de la Banque de France**. Les taux
+  versionnés dans le dépôt ne servent que de repli lorsque l'appel échoue, et
+  l'écran doit dire lequel des deux a été employé. Le simulateur IFI appelle
+  aujourd'hui deux services tiers avec un repli sur des taux figés **non datés** :
+  cette absence de date est à corriger, un repli non daté ne pouvant pas être
+  signalé honnêtement.
 
 ## 8. Ce que ce document ne tranche pas
 

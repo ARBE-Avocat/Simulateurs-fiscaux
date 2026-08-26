@@ -6,6 +6,16 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.7] - 2026-08-26
+
+### Modifié
+
+- Chaque simulateur ne charge plus que les données fiscales dont il se sert. Les référentiels étaient réunis dans un fichier unique servi aux six pages ; ils sont désormais découpés par domaine. Le simulateur de succession télécharge 12 Ko au lieu de 44, et surtout il ne téléchargera pas l'historique des taux de change — près de 4 Mo — quand celui-ci sortira du simulateur de plus-value immobilière.
+- La correspondance entre un simulateur et les données qu'il charge n'est écrite nulle part à la main : elle se déduit de ce que les données déclarent, et un contrôle automatique la confronte à ce que chaque page charge réellement. Une valeur extraite pour un simulateur dont la page n'a pas été mise à jour fait échouer les tests, en nommant le fichier manquant.
+- Un référentiel supprimé des données voit son fichier généré effacé, pour qu'aucune page ne continue de charger des données mortes.
+
+Aucun montant affiché ne change.
+
 ## [0.5.0-beta.6] - 2026-08-26
 
 ### Modifié

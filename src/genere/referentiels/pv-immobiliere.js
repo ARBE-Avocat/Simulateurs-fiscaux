@@ -1,0 +1,295 @@
+/**
+ * FICHIER GÉNÉRÉ — NE PAS MODIFIER À LA MAIN.
+ *
+ * Source de vérité : data/referentiels/pv-immobiliere.json
+ * Régénération    : npm run donnees:generer
+ *
+ * Toute correction se fait dans data/, jamais ici : une modification manuelle
+ * serait perdue à la prochaine génération, et « npm run donnees:generer --
+ * --verifier » la signale.
+ *
+ * Chargé par : pv-immobiliere
+ */
+
+'use strict';
+
+(function (global) {
+  var DOMAINE = {
+  "schema": 1,
+  "domaine": "pv-immobiliere",
+  "libelle": "Plus-value immobilière",
+  "entrees": [
+    {
+      "id": "pv-immobiliere.abattement.ir.annee-debut",
+      "libelle": "Abattement impôt sur le revenu — dernière année sans abattement",
+      "type": "quantite",
+      "unite": "annee",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 5,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": {
+        "reference": "CGI art. 150 VC",
+        "dateConsultation": "2026-08-26"
+      },
+      "notes": "L’abattement commence à la sixième année : le code compare la durée à cette valeur."
+    },
+    {
+      "id": "pv-immobiliere.abattement.ir.annee-exoneration",
+      "libelle": "Abattement impôt sur le revenu — année à partir de laquelle la plus-value est exonérée",
+      "type": "quantite",
+      "unite": "annee",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 22,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": {
+        "reference": "CGI art. 150 VC",
+        "dateConsultation": "2026-08-26"
+      }
+    },
+    {
+      "id": "pv-immobiliere.abattement.ir.taux-annuel",
+      "libelle": "Abattement pour durée de détention, impôt sur le revenu — taux par année",
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 0.06,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": {
+        "reference": "CGI art. 150 VC",
+        "dateConsultation": "2026-08-26"
+      }
+    },
+    {
+      "id": "pv-immobiliere.abattement.ps.annee-exoneration",
+      "libelle": "Abattement prélèvements sociaux — année à partir de laquelle la plus-value est exonérée",
+      "type": "quantite",
+      "unite": "annee",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 30,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": {
+        "reference": "CGI art. 150 VC",
+        "dateConsultation": "2026-08-26"
+      }
+    },
+    {
+      "id": "pv-immobiliere.abattement.ps.taux-annee-22",
+      "libelle": "Abattement prélèvements sociaux — taux de la 22ᵉ année",
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 0.016,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": {
+        "reference": "CGI art. 150 VC",
+        "dateConsultation": "2026-08-26"
+      }
+    },
+    {
+      "id": "pv-immobiliere.abattement.ps.taux-annuel",
+      "libelle": "Abattement pour durée de détention, prélèvements sociaux — taux par année jusqu’à la 21ᵉ",
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 0.0165,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": {
+        "reference": "CGI art. 150 VC",
+        "dateConsultation": "2026-08-26"
+      }
+    },
+    {
+      "id": "pv-immobiliere.abattement.ps.taux-annuel-apres-22",
+      "libelle": "Abattement prélèvements sociaux — taux par année au-delà de la 22ᵉ",
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 0.09,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": {
+        "reference": "CGI art. 150 VC",
+        "dateConsultation": "2026-08-26"
+      }
+    },
+    {
+      "id": "pv-immobiliere.forfait.frais-acquisition",
+      "libelle": "Forfait de frais d’acquisition, retenu à défaut de frais réels",
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 0.075,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": "inconnue",
+      "notes": "Appliqué au prix d’acquisition. Les frais réels, s’ils sont renseignés, sont retenus à sa place."
+    },
+    {
+      "id": "pv-immobiliere.forfait.travaux",
+      "libelle": "Forfait de travaux, retenu à défaut de travaux réels",
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 0.15,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": "inconnue",
+      "notes": "Réservé aux immeubles bâtis détenus depuis plus de cinq ans. Le simulateur affiche un avertissement en deçà mais applique tout de même le forfait ; ce comportement n’est pas modifié par l’extraction."
+    },
+    {
+      "id": "pv-immobiliere.forfait.travaux.duree-minimale",
+      "libelle": "Durée de détention minimale pour le forfait de travaux",
+      "type": "quantite",
+      "unite": "annee",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 5,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": "inconnue"
+    },
+    {
+      "id": "pv-immobiliere.surtaxe.paliers",
+      "libelle": "Surtaxe sur les plus-values imposables supérieures à 50 000 € — paliers",
+      "type": "table",
+      "unite": "sans-unite",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": [
+        {
+          "plafond": 50000,
+          "taux": 0,
+          "lissage": 0
+        },
+        {
+          "plafond": 60000,
+          "taux": 0.02,
+          "lissage": 0.05
+        },
+        {
+          "plafond": 100000,
+          "taux": 0.02,
+          "lissage": 0
+        },
+        {
+          "plafond": 110000,
+          "taux": 0.03,
+          "lissage": 0.1
+        },
+        {
+          "plafond": 150000,
+          "taux": 0.03,
+          "lissage": 0
+        },
+        {
+          "plafond": 160000,
+          "taux": 0.04,
+          "lissage": 0.15
+        },
+        {
+          "plafond": 200000,
+          "taux": 0.04,
+          "lissage": 0
+        },
+        {
+          "plafond": 210000,
+          "taux": 0.05,
+          "lissage": 0.2
+        },
+        {
+          "plafond": 250000,
+          "taux": 0.05,
+          "lissage": 0
+        },
+        {
+          "plafond": 260000,
+          "taux": 0.06,
+          "lissage": 0.25
+        },
+        {
+          "plafond": null,
+          "taux": 0.06,
+          "lissage": 0
+        }
+      ],
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": {
+        "reference": "CGI art. 1609 nonies G · BOI-RFPI-TPVIE-20",
+        "dateConsultation": "2026-08-26"
+      },
+      "notes": "Chaque palier s’applique tant que la plus-value ne dépasse pas son plafond ; le dernier n’en a pas. La surtaxe vaut le taux appliqué à la plus-value, diminué du lissage multiplié par ce qui manque pour atteindre le plafond. Un lissage nul signifie un palier plat."
+    },
+    {
+      "id": "pv-immobiliere.taux.impot-revenu",
+      "libelle": "Taux d’imposition à l’impôt sur le revenu de la plus-value immobilière",
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2026,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "non-valide",
+      "valeur": 0.19,
+      "utilisePar": [
+        "pv-immobiliere"
+      ],
+      "source": "inconnue"
+    }
+  ]
+};
+
+  if (typeof module === 'object' && module.exports) {
+    module.exports = DOMAINE;
+  } else {
+    global.REFERENTIELS = global.REFERENTIELS || {};
+    global.REFERENTIELS["pv-immobiliere"] = DOMAINE;
+  }
+})(typeof globalThis !== 'undefined' ? globalThis : this);

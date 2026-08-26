@@ -1,0 +1,66 @@
+/**
+ * FICHIER GÉNÉRÉ — NE PAS MODIFIER À LA MAIN.
+ *
+ * Source de vérité : data/referentiels/prelevements-sociaux.json
+ * Régénération    : npm run donnees:generer
+ *
+ * Toute correction se fait dans data/, jamais ici : une modification manuelle
+ * serait perdue à la prochaine génération, et « npm run donnees:generer --
+ * --verifier » la signale.
+ *
+ * Chargé par : ir-cehr-cdhr, irpp, pv-immobiliere
+ */
+
+'use strict';
+
+(function (global) {
+  var DOMAINE = {
+  "schema": 1,
+  "domaine": "prelevements-sociaux",
+  "libelle": "Prélèvements sociaux",
+  "entrees": [
+    {
+      "id": "ps.taux.global",
+      "libelle": "Taux global des prélèvements sociaux",
+      "type": "taux",
+      "unite": "decimal",
+      "millesime": 2025,
+      "dateEffet": "inconnue",
+      "dateFin": null,
+      "statutValidation": "conteste",
+      "variantes": [
+        {
+          "cle": "17-2",
+          "valeur": 0.172,
+          "utilisePar": [
+            "irpp",
+            "pv-immobiliere"
+          ],
+          "source": "inconnue"
+        },
+        {
+          "cle": "18-6",
+          "valeur": 0.186,
+          "utilisePar": [
+            "ir-cehr-cdhr"
+          ],
+          "source": "inconnue"
+        }
+      ],
+      "arbitrage": {
+        "question": "Quel taux de prélèvements sociaux s’applique, à quels revenus, et à compter de quelle date ? 17,2 % ou 18,6 % ?",
+        "document": "docs/CORRECTIONS_A_VALIDER.md",
+        "point": "2.2"
+      },
+      "notes": "17,2 % est inscrit en dur, à seize endroits du simulateur IRPP et à plusieurs endroits de la plus-value immobilière. 18,6 % est un champ modifiable, pré-rempli, dans le simulateur « IR, CEHR et CDHR ». Écart mesuré entre les deux : 14 000 € par million de plus-value. Aucun des deux n’est retenu comme valeur unique : chaque simulateur désigne explicitement la variante qu’il emploie aujourd’hui."
+    }
+  ]
+};
+
+  if (typeof module === 'object' && module.exports) {
+    module.exports = DOMAINE;
+  } else {
+    global.REFERENTIELS = global.REFERENTIELS || {};
+    global.REFERENTIELS["prelevements-sociaux"] = DOMAINE;
+  }
+})(typeof globalThis !== 'undefined' ? globalThis : this);

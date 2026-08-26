@@ -20,22 +20,23 @@
 'use strict';
 
 (function (global) {
-  function referentiels() {
-    var source = global.REFERENTIELS;
-    if (!source) {
-      throw new Error(
-        'Référentiels absents : la page doit charger src/genere/referentiels.js '
-          + 'avant son script. Si le fichier manque, lancer : npm run donnees:generer',
-      );
-    }
-    return source;
-  }
-
-  /** Ouvre un domaine — « dmtg », « ir », « ifi »… — et retourne son lecteur. */
+  /**
+   * Ouvre un domaine — « dmtg », « ir », « ifi »… — et retourne son lecteur.
+   *
+   * Chaque domaine est un fichier généré distinct, que la page charge par une
+   * balise `<script>` avant son propre script. Un simulateur ne charge donc que
+   * ce dont il se sert. Le message d'erreur dit quelle balise manque, parce que
+   * c'est la panne la plus probable après l'ajout d'un domaine.
+   */
   function lecteur(domaine) {
-    var contenu = referentiels()[domaine];
+    var contenu = (global.REFERENTIELS || {})[domaine];
     if (!contenu) {
-      throw new Error('Référentiel absent : domaine « ' + domaine + ' »');
+      throw new Error(
+        'Référentiel « ' + domaine + ' » non chargé. La page doit contenir '
+          + '<script src="src/genere/referentiels/' + domaine + '.js"></script> '
+          + 'avant son propre script. Si le fichier manque, lancer : '
+          + 'npm run donnees:generer',
+      );
     }
 
     var parId = {};

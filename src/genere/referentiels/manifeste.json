@@ -1,0 +1,50 @@
+{
+  "commentaire": "FICHIER GÉNÉRÉ — ne pas modifier à la main. Décrit les référentiels générés, leur contenu et les simulateurs qui les emploient. La liste des simulateurs est déduite du champ utilisePar des données : elle ne se tient pas à la main et ne peut donc pas se périmer. Régénération : npm run donnees:generer.",
+  "domaines": {
+    "dmtg": {
+      "libelle": "Mutations à titre gratuit, usufruit et assurance-vie",
+      "fichier": "src/genere/referentiels/dmtg.js",
+      "entrees": 17,
+      "simulateurs": [
+        "demembrement",
+        "succession"
+      ]
+    },
+    "ifi": {
+      "libelle": "Impôt sur la fortune immobilière",
+      "fichier": "src/genere/referentiels/ifi.js",
+      "entrees": 10,
+      "simulateurs": [
+        "ifi",
+        "irpp"
+      ]
+    },
+    "ir": {
+      "libelle": "Impôt sur le revenu, CEHR, CDHR et PFU",
+      "fichier": "src/genere/referentiels/ir.js",
+      "entrees": 25,
+      "simulateurs": [
+        "ir-cehr-cdhr",
+        "irpp"
+      ]
+    },
+    "prelevements-sociaux": {
+      "libelle": "Prélèvements sociaux",
+      "fichier": "src/genere/referentiels/prelevements-sociaux.js",
+      "entrees": 1,
+      "simulateurs": [
+        "ir-cehr-cdhr",
+        "irpp",
+        "pv-immobiliere"
+      ]
+    },
+    "pv-immobiliere": {
+      "libelle": "Plus-value immobilière",
+      "fichier": "src/genere/referentiels/pv-immobiliere.js",
+      "entrees": 12,
+      "simulateurs": [
+        "pv-immobiliere"
+      ]
+    }
+  }
+}

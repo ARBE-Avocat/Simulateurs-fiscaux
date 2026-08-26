@@ -17,17 +17,10 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 
 const { chargerSimulateur, lireHtml, chemin } = require('../helpers/simulateurs');
+const { lecteur, contexteAvec, description, domaines } = require('../helpers/referentiels');
 
-/** Ouvre un lecteur de référentiel hors navigateur. */
-function lecteurDmtg() {
-  const contexte = { REFERENTIELS: require('../../src/genere/referentiels.js') };
-  vm.runInNewContext(
-    fs.readFileSync(chemin('src', 'lecture-referentiels.js'), 'utf8'),
-    contexte,
-    { filename: 'src/lecture-referentiels.js' },
-  );
-  return contexte.LectureReferentiels.lecteur('dmtg');
-}
+/** Ouvre un lecteur du domaine des mutations à titre gratuit. */
+const lecteurDmtg = () => lecteur('dmtg');
 
 /**
  * Recopie une valeur venue du contexte isolé d'un simulateur.
@@ -154,33 +147,18 @@ test('Référentiels — aucune valeur contestée ne peut être lue comme une va
   );
 });
 
-test('Référentiels — un simulateur signale clairement des données absentes', () => {
-  // Panne la plus probable en exploitation : le fichier généré n'a pas été
-  // produit. Le message doit dire quoi faire, pas planter sur « undefined ».
-  const contexte = {};
-  vm.runInNewContext(
-    fs.readFileSync(chemin('src', 'lecture-referentiels.js'), 'utf8'),
-    contexte,
-    { filename: 'src/lecture-referentiels.js' },
-  );
+test('Référentiels — un domaine non chargé produit un message qui dit quoi faire', () => {
+  // Panne la plus probable après l'ajout d'un domaine : la page a oublié une
+  // balise. Le message doit nommer le fichier à charger, pas planter sur
+  // « undefined ».
+  const contexte = contexteAvec();
   assert.throws(
     () => contexte.LectureReferentiels.lecteur('dmtg'),
-    /npm run donnees:generer/,
+    /src\/genere\/referentiels\/dmtg\.js/,
   );
 });
 
 // ── Impôt sur le revenu (#14) ───────────────────────────────────────────────
-
-/** Ouvre un lecteur de référentiel pour un domaine quelconque. */
-function lecteur(domaine) {
-  const contexte = { REFERENTIELS: require('../../src/genere/referentiels.js') };
-  vm.runInNewContext(
-    fs.readFileSync(chemin('src', 'lecture-referentiels.js'), 'utf8'),
-    contexte,
-    { filename: 'src/lecture-referentiels.js' },
-  );
-  return contexte.LectureReferentiels.lecteur(domaine);
-}
 
 test('IRPP — le barème pré-rempli dans le formulaire suit le référentiel', () => {
   const ir = lecteur('ir');
@@ -276,8 +254,10 @@ test('Prélèvements sociaux — les deux simulateurs désignent des variantes d
 test('IFI — les deux simulateurs lisent le même barème, il n’en existe plus qu’un', () => {
   // Avant l'extraction, le barème IFI était écrit deux fois, sous deux formes
   // différentes. Rien ne garantissait qu'ils restent identiques.
-  const attendu = lecteur('ifi').bareme('ifi.bareme.progressif')
-    .map((t) => [t.min, t.max === Infinity ? null : t.max, t.taux]);
+  // `recopier` des deux côtés : les lecteurs de référentiel s'exécutent eux
+  // aussi dans un contexte isolé, comme les simulateurs.
+  const attendu = recopier(lecteur('ifi').bareme('ifi.bareme.progressif')
+    .map((t) => [t.min, t.max === Infinity ? null : t.max, t.taux]));
 
   const depuisIfi = chargerSimulateur('ifi').evaluer('BAREME')
     .map((t) => [t.min, t.max === Infinity ? null : t.max, t.taux]);

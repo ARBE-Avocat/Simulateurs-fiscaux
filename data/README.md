@@ -10,8 +10,16 @@ simulateurs se contenteront de les lire.
 | `referentiels/` | Les référentiels par domaine fiscal. **Source de vérité.** | oui, ou par import |
 | `imports/` | Les CSV officiels déposés tels quels, datés. | déposés, jamais réécrits |
 
-Le fichier `src/genere/referentiels.js` est **produit** à partir de ce dossier.
-Il ne se modifie jamais à la main : voir `docs/ARCHITECTURE_CIBLE.md` §2.4.
+Les fichiers de `src/genere/referentiels/` sont **produits** à partir de ce
+dossier, à raison d'**un fichier par domaine**. Ils ne se modifient jamais à la
+main : voir `docs/ARCHITECTURE_CIBLE.md` §2.4.
+
+Une page ne charge que les domaines qu'elle emploie. Cette correspondance n'est
+écrite nulle part à la main : elle se déduit du champ `utilisePar` des données,
+`manifeste.json` la récapitule, et un test la confronte aux balises `<script>`
+de chaque simulateur. **Extraire une valeur pour un simulateur suppose donc
+d'ajouter la balise correspondante dans sa page** — sinon les tests échouent, en
+nommant le fichier manquant.
 
 ---
 

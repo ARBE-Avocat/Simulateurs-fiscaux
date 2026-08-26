@@ -178,19 +178,60 @@ test('génération — le fichier généré correspond au contenu de data/', () 
 
 test('génération — le fichier produit est lisible par Node et par un navigateur', () => {
   const { construire } = require('../../scripts/generer-referentiels');
-  const contenu = construire({ exemple: { schema: 1, domaine: 'exemple', entrees: [] } });
+  const contenu = construire({
+    schema: 1,
+    domaine: 'exemple',
+    libelle: 'Exemple',
+    entrees: [{
+      id: 'x.y', libelle: 'X', type: 'montant', unite: 'EUR', millesime: 2025,
+      dateEffet: 'inconnue', dateFin: null, valeur: 42, utilisePar: ['irpp'],
+      source: 'inconnue', statutValidation: 'non-valide',
+    }],
+  });
 
   assert.match(contenu, /NE PAS MODIFIER À LA MAIN/);
-  assert.match(contenu, /module\.exports = REFERENTIELS/);
-  assert.match(contenu, /global\.REFERENTIELS = REFERENTIELS/);
+  assert.match(contenu, /Chargé par : irpp/);
+  assert.match(contenu, /module\.exports = DOMAINE/);
   assert.equal(contenu.includes('Infinity'), false);
 
   // Le fichier doit s'évaluer sans erreur dans un contexte sans `module`,
-  // c'est-à-dire comme le ferait une balise <script> dans le navigateur.
+  // c'est-à-dire comme le ferait une balise <script> dans le navigateur, et
+  // s'enregistrer sous son propre domaine sans écraser les autres.
   const vm = require('node:vm');
-  const global_ = {};
-  vm.runInNewContext(contenu, global_, { filename: 'referentiels.js' });
-  assert.deepEqual(Object.keys(global_.REFERENTIELS), ['exemple']);
+  const global_ = { REFERENTIELS: { deja: {} } };
+  vm.runInNewContext(contenu, global_, { filename: 'exemple.js' });
+  assert.deepEqual(Object.keys(global_.REFERENTIELS).sort(), ['deja', 'exemple']);
+  assert.equal(global_.REFERENTIELS.exemple.entrees[0].valeur, 42);
+});
+
+test('génération — chaque simulateur charge exactement les domaines que ses données déclarent', () => {
+  // La liste n'est tenue nulle part à la main : le manifeste la déduit du champ
+  // `utilisePar` des données, et ce test la confronte aux balises `<script>`
+  // réellement présentes dans chaque page. Extraire une valeur pour un nouveau
+  // simulateur sans ajouter la balise correspondante échoue ici.
+  const { SIMULATEURS, lireHtml, extraireScriptsExternes } = require('../helpers/simulateurs');
+  const { MANIFESTE } = require('../helpers/referentiels');
+
+  const attendusParSimulateur = {};
+  for (const [domaine, description] of Object.entries(MANIFESTE.domaines)) {
+    for (const cle of description.simulateurs) {
+      (attendusParSimulateur[cle] = attendusParSimulateur[cle] || []).push(domaine);
+    }
+  }
+
+  for (const { cle } of SIMULATEURS) {
+    const charges = extraireScriptsExternes(lireHtml(cle))
+      .map((chemin) => /referentiels\/([a-z0-9-]+)\.js$/.exec(chemin))
+      .filter(Boolean)
+      .map((m) => m[1])
+      .sort();
+
+    assert.deepEqual(
+      charges,
+      (attendusParSimulateur[cle] || []).sort(),
+      `${cle} ne charge pas les domaines que ses données déclarent`,
+    );
+  }
 });
 
 test('import — une table est lue depuis du JSON, et un JSON invalide est refusé', () => {
