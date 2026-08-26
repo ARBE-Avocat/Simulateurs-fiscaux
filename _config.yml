@@ -1,0 +1,27 @@
+# Configuration de la construction GitHub Pages.
+#
+# GitHub Pages sert aujourd'hui la racine de la branche `main`. Sans ce fichier,
+# tout le dépôt serait publié, y compris les supports de travail internes :
+# `AGENTS.md` interdit que `docs/arbitrages.html` soit servi par Pages.
+#
+# Ce fichier est une protection provisoire. La cible, décrite dans
+# `docs/ARCHITECTURE_CIBLE.md` §2.6, est de publier uniquement le dossier `site/`
+# construit par `npm run build`, via GitHub Actions (issue #28). Une liste
+# d'exclusions doit être maintenue ; un dossier de sortie, non.
+#
+# Toute nouvelle ressource non destinée au public doit être ajoutée ici.
+
+exclude:
+  - docs/
+  - tests/
+  - scripts/
+  - data/
+  - node_modules/
+  - package.json
+  - package-lock.json
+  - AGENTS.md
+  - AGENTS.override.md
+  - CLAUDE.md
+  - CHANGELOG.md
+  - README.md
+  - VERSION

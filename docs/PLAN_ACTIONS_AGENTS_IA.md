@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.13`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.15`, jalon `0.5` ouvert.
 
 ## Objectifs de l’orchestration
 
@@ -30,13 +30,15 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 - Le jalon `0.4` est donc complet à l'exception de #4. Une fois la décote tranchée, il peut être promu.
 - Documents à soumettre au référent juridique : `docs/CORRECTIONS_A_VALIDER.md` pour les arbitrages, `docs/INVENTAIRE_CONVENTIONS.md` pour préparer #11.
 - Nouvelle issue #31 — unification de l'identité visuelle et des composants d'interface, ouverte à la demande du référent métier. Elle dépend de #20 et n'appartient pas au jalon `0.4`.
+- Le jalon `Y = 0.5` est ouvert sur la branche `clv/y-0.5-donnees`, créée depuis `clv/y-0.4-fiabilite` et non depuis `clv/preprod` : la `0.4` n'est pas encore intégrée, la pile est conservée.
+- #20 est traitée : `docs/ARCHITECTURE_CIBLE.md` fixe l'arborescence, les URL stables, la source de vérité de chaque type de fichier et l'ordre de migration. Aucun fichier n'est encore déplacé.
 
 ## Décisions d'architecture déjà arbitrées
 
-Ces décisions sont prises et ne sont plus à rouvrir dans les tâches courantes. Elles doivent être formalisées dans le document de décision attendu par #20.
+Ces décisions sont prises et ne sont plus à rouvrir dans les tâches courantes. Elles sont désormais formalisées dans `docs/ARCHITECTURE_CIBLE.md`, livrable de #20.
 
 - **Les fichiers HTML n'ont pas vocation à être utilisés seuls ni à rester autonomes.** Arbitrage de CLV du 26 août 2026. Il répond au point « Décider si les HTML autonomes restent un livrable requis » de #20. Conséquences : des ressources partagées (feuille de style, scripts, données) peuvent être référencées par chemin relatif ; le dossier doit rester complet ; la distribution d'un fichier HTML isolé n'est plus un cas d'usage à préserver.
-- Tant que #20 n'est pas clos, `AGENTS.md` §7 continue d'interdire de désassembler les HTML de sa propre initiative dans une tâche sans rapport. La décision ci-dessus autorise la cible, pas une migration opportuniste.
+- La cible est autorisée, pas une migration opportuniste. `AGENTS.md` §7 continue d'interdire de désassembler un HTML de sa propre initiative dans une tâche sans rapport : un déplacement de fichier n'a lieu que dans l'étape de migration qui le porte, M1 à M6 de `docs/ARCHITECTURE_CIBLE.md`.
 
 ## Maintenance obligatoire du plan
 
@@ -230,7 +232,7 @@ Déplacées depuis le jalon `0.4`. #7 ne commence qu'après la décision de #11 
 
 L'inventaire préparatoire `docs/INVENTAIRE_CONVENTIONS.md` est à lire avant d'ouvrir ces deux issues : il évite de refaire le relevé et transforme #11 en une série de choix à cocher.
 
-### Étape 2.1 — Décider de l’architecture cible
+### Étape 2.1 — Décider de l’architecture cible — réalisée
 
 - [#20 — Définir l’architecture, les URL stables et les livrables](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/20)
 
@@ -238,7 +240,15 @@ Cette décision précède la création de `src/`, `data/`, `scripts/` et des fic
 
 Le choix « HTML autonomes ou site composé de plusieurs assets » est déjà arbitré : voir la section « Décisions d'architecture déjà arbitrées ». Les fichiers HTML ne sont pas destinés à un usage isolé, et #20 doit acter ce point plutôt que le rouvrir.
 
-Contraintes d'entrée à intégrer explicitement au document de décision :
+Livrable : `docs/ARCHITECTURE_CIBLE.md`. Décisions retenues, résumées :
+
+- pas de framework applicatif, aucune dépendance de production ;
+- source de vérité fiscale unique dans `data/`, transportée vers le navigateur et les tests par un fichier généré `src/genere/referentiels.js`, chargé de façon synchrone ; pas de `fetch` de JSON pendant l'extraction, afin de ne pas rendre asynchrones les calculs dans la même opération ;
+- URL cibles en dossier, sans espace, sans accent et sans millésime, avec redirections définitives depuis les anciens noms ;
+- publication du seul dossier `site/` construit par `npm run build`, via GitHub Actions (#28). Mesure immédiate en attendant : un `_config.yml` exclut `docs/`, `tests/`, `scripts/` et `data/` de la construction Pages. Sans cette mesure, la fusion de la `0.4` dans `main` aurait rendu `docs/arbitrages.html` accessible publiquement, contrairement à la règle d'`AGENTS.md` ;
+- migration en six étapes M1 à M6, réparties sur les jalons `0.5` à `0.7` ; aucune n'associe déplacement de fichiers et changement de calcul.
+
+Contraintes d'entrée intégrées au document de décision :
 
 - l'externalisation des données (#2 et suivantes) suppose des ressources partagées ;
 - l'unification de l'interface (#31) suppose une feuille de style commune à un seul endroit ;

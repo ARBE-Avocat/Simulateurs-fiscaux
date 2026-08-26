@@ -22,6 +22,7 @@ Une instruction locale non versionnée peut compléter ce socle, mais jamais aut
 - `README.md` : utilisation et simulateurs disponibles.
 - `docs/PLAN_ACTIONS_AGENTS_IA.md` : ordre des chantiers et dépendances.
 - `docs/CORRECTIONS_A_VALIDER.md` : corrections à effet fiscal en attente de validation du propriétaire. Toute correction modifiant un montant affiché y est ajoutée dans la même PR.
+- `docs/ARCHITECTURE_CIBLE.md` : architecture cible, URL stables, livrables et ordre de migration. Décision de l'issue #20. Fixe où vivent les données, les styles et les fichiers générés ; ne tranche aucune valeur fiscale.
 - `docs/INVENTAIRE_CONVENTIONS.md` : constat des conventions d'unités, de taux, d'arrondis et de bornes réellement employées. Document préparatoire à #11, sans valeur normative.
 - `docs/arbitrages.html` : source de la page d'arbitrage soumise au référent juridique. Elle est publiée en artifact claude.ai, partagée nominativement, et **jamais servie par GitHub Pages ni liée depuis `index.html`** : c'est un outil de travail interne, pas un livrable du produit. La republier suppose de conserver la même adresse, sous peine de perdre les arbitrages déjà saisis.
 - `AGENTS.md` : règles communes canoniques.
