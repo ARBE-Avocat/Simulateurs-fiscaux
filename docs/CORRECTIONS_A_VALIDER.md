@@ -6,7 +6,12 @@ jugé fautif mais **laissé en l'état** faute de certitude.
 
 Aucune connaissance technique n'est nécessaire pour le lire.
 
-Dernière mise à jour : 26 août 2026 — préversion `0.4.0-beta.8`.
+Dernière mise à jour : 26 août 2026 — préversion `0.4.0-beta.10`.
+
+**Version interactive :** <https://claude.ai/code/artifact/ed86515a-2108-4df9-b7fc-acc15b0682d3>
+Cette page reprend le contenu ci-dessous et permet de répondre point par point.
+Les réponses y sont enregistrées et peuvent être exportées. Le présent fichier
+reste la version de référence, versionnée avec le code.
 
 ## Pourquoi votre validation est demandée
 
