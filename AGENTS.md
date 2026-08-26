@@ -156,15 +156,16 @@ Le projet utilise des versions `X.Y.Z` avec les règles d'autorisation suivantes
 
 Un changement de taux reste soumis à la validation juridique même s'il n'incrémente que `Z`. L'autonomie de versionnement ne donne aucune autonomie d'interprétation fiscale. Chaque bump met à jour `VERSION` et `CHANGELOG.md` dans le même commit ; les tags ajoutent le préfixe `v` à la valeur de `VERSION`.
 
-### Versions stables
+### Tags et release unique par `Y`
 
-- Chaque version stable `X.Y.Z` reçoit exactement un tag annoté et immuable `vX.Y.Z`, créé sur le commit effectivement intégré dans `main`.
-- Ne jamais réutiliser, déplacer ou écraser un tag stable publié.
-- Une seule GitHub Release est conservée par série mineure `X.Y`.
-- Cette release est créée lors de `X.Y.0`. À chaque nouveau correctif `X.Y.Z`, créer le nouveau tag stable, mettre `CHANGELOG.md` à jour, puis rattacher la même release au dernier tag et compléter ses notes.
-- Le titre de la release identifie la série, par exemple `v0.3 — Référentiels fiscaux`, et son contenu indique clairement le dernier correctif disponible.
-- Ne pas créer une nouvelle GitHub Release pour chaque `Z`.
-- Avant tout tag : contrôles pertinents, validation des référentiels, changelog à jour et présence du commit dans `main`.
+- Chaque beta et chaque version stable `X.Y.Z` reçoit son propre tag annoté et immuable. Ne jamais réutiliser, déplacer ou écraser un tag publié.
+- Un nouveau tag `Z` ou `beta.N` ne crée pas une nouvelle GitHub Release : une seule release est conservée pour chaque série mineure `X.Y`.
+- Pendant les beta, créer une unique GitHub Pre-release glissante pour la série. À chaque beta, rattacher cette même prerelease au nouveau tag et mettre ses notes cumulées à jour avec le changelog de toutes les beta du `Y`.
+- Lors du merge dans `main`, fusionner les sections beta de `CHANGELOG.md` en une seule section stable `X.Y.Z`, créer le nouveau tag stable, puis créer la release stable marquée `Latest` avec ce changelog consolidé.
+- Après vérification de la release stable, supprimer la prerelease glissante sans supprimer ses tags beta. Il ne reste ainsi qu'une release pour le `Y`.
+- Après stabilisation, chaque correctif `Z` crée un nouveau tag, puis rattache la même release stable au dernier tag et enrichit son changelog. Ne jamais créer une release supplémentaire pour un `Z`.
+- Le titre identifie la série, par exemple `v0.4 — Fiabilité`, et le corps indique toujours le dernier tag disponible.
+- Avant tout tag : contrôles pertinents, validation des référentiels concernés, `VERSION` et `CHANGELOG.md` à jour.
 
 L'agent peut préparer et committer un bump `Z` sans nouvelle autorisation. Il ne doit jamais contourner la règle selon laquelle seul le propriétaire fusionne dans `main`. Le tag stable et la mise à jour distante de la release interviennent seulement après cette fusion.
 
@@ -176,8 +177,8 @@ L'agent peut préparer et committer un bump `Z` sans nouvelle autorisation. Il n
 - `X.Y.Z` est exactement la version stable visée ultérieurement dans `main` ; la promotion retire seulement le suffixe `-beta.N`.
 - Tant que la version est en beta, un correctif incrémente `N` et conserve `X.Y.Z`, sauf demande explicite de l'utilisateur visant une autre version stable.
 - Incrémenter aussi `N` pour chaque autre état cohérent de préprod identifié comme nouvelle préversion. Ne jamais réutiliser un numéro de beta déjà publié.
-- Les éventuels tags `vX.Y.Z-beta.N` sont des tags de préversion et ne remplacent pas le tag stable `vX.Y.Z`.
-- Chaque beta publiée reçoit son propre tag annoté et sa propre GitHub Pre-release ; elle ne compte pas comme la release stable unique de la série `X.Y`.
+- Les tags `vX.Y.Z-beta.N` sont des tags de préversion et ne remplacent pas le tag stable `vX.Y.Z`.
+- Chaque beta publiée reçoit son propre tag, mais toutes les beta d'un même `Y` partagent une seule GitHub Pre-release glissante.
 - Ne jamais créer ou mettre à jour la release stable de la série depuis `clv/preprod`.
 
 Si le propriétaire fusionne entre-temps une autre PR propre dans `main`, synchroniser d'abord `main` et les tags, identifier la dernière version stable réellement publiée, puis recalculer la cible de préversion. Continuer la numérotation disponible sans écraser un tag et reporter proprement les entrées `Non publié` du changelog.

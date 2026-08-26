@@ -2,9 +2,16 @@
 
 Ce fichier recense les changements notables du projet. Les entrées sont regroupées par version stable ; le travail en cours reste dans `Non publié` jusqu'à sa promotion.
 
-Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque version stable possède un tag `vX.Y.Z`. Une unique GitHub Release récapitule chaque série mineure `X.Y` et est mise à jour lors des correctifs `Z`.
+Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque beta et chaque version stable possèdent leur tag. Une unique GitHub Release récapitule chaque série mineure `X.Y` et pointe toujours vers son dernier tag publié.
 
 ## [Non publié]
+
+## [0.4.0-beta.2] - 2026-08-26
+
+### Corrigé
+
+- Une série mineure `Y` utilise désormais une seule release glissante, mise à jour à chaque tag `beta.N` ou `Z`, au lieu d'une release par beta.
+- Le workflow de stabilisation consolide les changelogs beta dans la release `Latest` créée lors du merge dans `main`.
 
 ## [0.4.0-beta.1] - 2026-08-26
 
@@ -65,7 +72,9 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque v
 
 - Première version regroupant six simulateurs HTML autonomes : IR et CEHR/CDHR, plus-value immobilière, IFI, IRPP, succession et démembrement immobilier.
 
-[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.4...HEAD
+[Non publié]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.2...HEAD
+[0.4.0-beta.2]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.4.0-beta.1...v0.4.0-beta.2
+[0.4.0-beta.1]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.4...v0.4.0-beta.1
 [0.3.0-beta.4]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.3...v0.3.0-beta.4
 [0.3.0-beta.3]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.2...v0.3.0-beta.3
 [0.3.0-beta.2]: https://github.com/ARBE-Avocat/Simulateurs-fiscaux/compare/v0.3.0-beta.1...v0.3.0-beta.2

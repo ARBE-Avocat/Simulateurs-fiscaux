@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.1`.
+Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-beta.2`.
 
 ## Objectifs de l’orchestration
 
@@ -17,7 +17,7 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.4.0-bet
 
 - La phase 0 de gouvernance est terminée sur `clv/preprod`.
 - La préversion de `clv/preprod` reste `0.3.0-beta.4` ; la version stable visée est `0.3.0`.
-- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.1`.
+- Le jalon `Y = 0.4` est ouvert sur la branche `clv/y-0.4-fiabilite`, en préversion `0.4.0-beta.2`.
 - L'étape 1.1 (#10, socle de tests) est réalisée sur cette branche et attend relecture ; elle n'est pas intégrée à `clv/preprod`.
 - Les autres issues citées dans ce plan sont encore ouvertes au 26 août 2026.
 - L'issue #29 reste ouverte : seule sa première partie documentaire et de gouvernance est amorcée.
@@ -389,6 +389,10 @@ Chaque nouvelle version mineure `Y` reste soumise à une validation explicite de
 | Architecture | `clv/y-0.6-architecture` | #21 terminé et six moteurs découplés | `v0.6.0` indicatif |
 | Qualité | `clv/y-0.7-qualite` | #28 et #29 terminés | `v0.7.0` indicatif |
 
-Pour CLV, `clv/preprod` utilise `X.Y.Z-beta.N`. Un correctif en beta incrémente `N`, sauf demande contraire. Chaque beta publiée possède son tag annoté et sa GitHub Pre-release.
+Chaque `beta.N` ou correctif stable `Z` possède son tag annoté immuable. Il n'existe toutefois qu'une seule GitHub Release par série `X.Y`.
 
-Pour une version stable, chaque `X.Y.Z` possède un tag annoté immuable. Une seule GitHub Release est conservée par série `X.Y` et rattachée au dernier tag `Z` lors de chaque correctif. Avant toute publication : contrôles applicables, validation des référentiels concernés, `VERSION` et `CHANGELOG.md` à jour.
+Pendant les beta, cette release est une prerelease glissante : elle est rattachée au dernier tag beta et ses notes cumulent le changelog de toutes les beta du jalon. Une nouvelle beta met à jour cette prerelease ; elle n'en crée pas une autre.
+
+Lors du merge dans `main`, toutes les sections beta sont fusionnées en une section stable `X.Y.Z` dans `CHANGELOG.md`. Un nouveau tag stable est créé et une release `Latest` reprend ce changelog consolidé. Après vérification, la prerelease glissante est supprimée sans supprimer les tags beta.
+
+Pour chaque correctif stable `Z`, créer le tag puis rattacher la même release stable du `Y` au dernier tag et mettre ses notes à jour. Avant toute publication : contrôles applicables, validation des référentiels concernés, `VERSION` et `CHANGELOG.md` à jour.
