@@ -287,6 +287,8 @@
           <span class="val" id="dureeVal">—</span>
         </div>
       </div>
+      <!-- Millésime fiscal employé (#19) — rempli par src/millesime.js -->
+      <div id="bandeauMillesime"></div>
     </div>
   </div>
 
@@ -532,6 +534,7 @@
 <script src="src/genere/referentiels/prelevements-sociaux.js"></script>
 <script src="src/genere/referentiels/pv-immobiliere.js"></script>
 <script src="src/lecture-referentiels.js"></script>
+<script src="src/millesime.js"></script>
 <script src="src/change.js"></script>
 <script>
 
@@ -593,34 +596,109 @@ function fullYears(d1, d2) {
 // data/referentiels/prelevements-sociaux.json. Les valeurs ne sont plus
 // inscrites ici : une mise à jour se fait dans les données, puis
 // « npm run donnees:generer ». Voir data/README.md.
-const PVI = LectureReferentiels.lecteur('pv-immobiliere');
-const REF_PS = LectureReferentiels.lecteur('prelevements-sociaux');
+//
+// MILLÉSIME (#19) — le référentiel employé est choisi à partir de la date de
+// cession, et non subi. C'est le seul des six simulateurs qui dispose
+// aujourd'hui d'une date fiscale saisie par l'utilisateur ; les autres ne
+// peuvent qu'annoncer le millésime qu'ils appliquent.
+//
+// Les valeurs sont donc relues à chaque changement d'année plutôt que figées au
+// chargement. Tant qu'un seul millésime existe par domaine, aucun montant ne
+// change : `appliquerMillesime` relit exactement les mêmes entrées.
+let PVI;
+let REF_PS;
 
-const TAUX_IR = PVI.valeur('pv-immobiliere.taux.impot-revenu');
-const FORFAIT_FRAIS_ACQUISITION = PVI.valeur('pv-immobiliere.forfait.frais-acquisition');
-const FORFAIT_TRAVAUX = PVI.valeur('pv-immobiliere.forfait.travaux');
-const FORFAIT_TRAVAUX_DUREE_MINIMALE = PVI.valeur('pv-immobiliere.forfait.travaux.duree-minimale');
+let TAUX_IR;
+let FORFAIT_FRAIS_ACQUISITION;
+let FORFAIT_TRAVAUX;
+let FORFAIT_TRAVAUX_DUREE_MINIMALE;
+let ABATTEMENT_IR;
+let ABATTEMENT_PS;
+let SURTAXE_PALIERS;
+let TAUX_PS;
 
-const ABATTEMENT_IR = {
-  tauxAnnuel: PVI.valeur('pv-immobiliere.abattement.ir.taux-annuel'),
-  anneeDebut: PVI.valeur('pv-immobiliere.abattement.ir.annee-debut'),
-  anneeExoneration: PVI.valeur('pv-immobiliere.abattement.ir.annee-exoneration'),
-};
+// `undefined` signifie « jamais chargé », `null` « chargé sans date de
+// rattachement ». Les confondre empêcherait le tout premier chargement.
+let millesimeCharge;
+let millesimeManuel = null;
+let derniereAnneeCession;
 
-const ABATTEMENT_PS = {
-  tauxAnnuel: PVI.valeur('pv-immobiliere.abattement.ps.taux-annuel'),
-  tauxAnnee22: PVI.valeur('pv-immobiliere.abattement.ps.taux-annee-22'),
-  tauxAnnuelApres22: PVI.valeur('pv-immobiliere.abattement.ps.taux-annuel-apres-22'),
-  anneeExoneration: PVI.valeur('pv-immobiliere.abattement.ps.annee-exoneration'),
-};
+/** Année de la cession, qui détermine le droit applicable. */
+function anneeDeCession() {
+  const saisie = document.getElementById('dateCes').value;
+  return /^\d{4}-/.test(saisie) ? Number(saisie.slice(0, 4)) : null;
+}
 
-const SURTAXE_PALIERS = PVI.valeur('pv-immobiliere.surtaxe.paliers');
+/**
+ * Ouvre les référentiels sur une année donnée et en tire les valeurs.
+ *
+ * Retourne `true` si quelque chose a changé, afin que `compute()` sache s'il
+ * doit rafraîchir le bandeau.
+ */
+function appliquerMillesime(annee) {
+  if (millesimeCharge !== undefined && millesimeCharge === annee) return false;
 
-// Le taux des prélèvements sociaux est contesté : deux simulateurs du dépôt en
-// appliquent un différent. Ce simulateur désigne donc explicitement la variante
-// qu'il emploie aujourd'hui. Arbitrage attendu : fiche 2.2 de
-// docs/CORRECTIONS_A_VALIDER.md.
-const TAUX_PS = REF_PS.variante('ps.taux.global', '17-2');
+  PVI = LectureReferentiels.lecteur('pv-immobiliere', { millesime: annee });
+  REF_PS = LectureReferentiels.lecteur('prelevements-sociaux', { millesime: annee });
+
+  TAUX_IR = PVI.valeur('pv-immobiliere.taux.impot-revenu');
+  FORFAIT_FRAIS_ACQUISITION = PVI.valeur('pv-immobiliere.forfait.frais-acquisition');
+  FORFAIT_TRAVAUX = PVI.valeur('pv-immobiliere.forfait.travaux');
+  FORFAIT_TRAVAUX_DUREE_MINIMALE = PVI.valeur('pv-immobiliere.forfait.travaux.duree-minimale');
+
+  ABATTEMENT_IR = {
+    tauxAnnuel: PVI.valeur('pv-immobiliere.abattement.ir.taux-annuel'),
+    anneeDebut: PVI.valeur('pv-immobiliere.abattement.ir.annee-debut'),
+    anneeExoneration: PVI.valeur('pv-immobiliere.abattement.ir.annee-exoneration'),
+  };
+
+  ABATTEMENT_PS = {
+    tauxAnnuel: PVI.valeur('pv-immobiliere.abattement.ps.taux-annuel'),
+    tauxAnnee22: PVI.valeur('pv-immobiliere.abattement.ps.taux-annee-22'),
+    tauxAnnuelApres22: PVI.valeur('pv-immobiliere.abattement.ps.taux-annuel-apres-22'),
+    anneeExoneration: PVI.valeur('pv-immobiliere.abattement.ps.annee-exoneration'),
+  };
+
+  SURTAXE_PALIERS = PVI.valeur('pv-immobiliere.surtaxe.paliers');
+
+  // Le taux des prélèvements sociaux est contesté : deux simulateurs du dépôt en
+  // appliquent un différent. Ce simulateur désigne donc explicitement la variante
+  // qu'il emploie aujourd'hui. Arbitrage attendu : fiche 2.2 de
+  // docs/CORRECTIONS_A_VALIDER.md.
+  TAUX_PS = REF_PS.variante('ps.taux.global', '17-2');
+
+  millesimeCharge = annee;
+  return true;
+}
+
+/** Met le bandeau « Référentiel fiscal employé » à jour. */
+function afficherMillesime() {
+  // L'ancre est toujours transmise, même sans date saisie : le bandeau doit
+  // pouvoir dire « tant que le champ Date de cession n'est pas renseigné… »
+  // plutôt que de laisser croire que ce simulateur n'en demande aucune.
+  //
+  // `origine` dit d'où vient réellement le millésime. Après un choix manuel, ce
+  // n'est plus la date de cession, et l'écrire serait faux.
+  const dateCes = document.getElementById('dateCes').value;
+  const ancre = {
+    libelle: 'Date de cession',
+    valeur: dateCes || null,
+    origine: millesimeManuel !== null ? 'de votre choix manuel de millésime' : null,
+  };
+
+  Millesime.rendre(
+    document.getElementById('bandeauMillesime'),
+    Millesime.resumer([PVI.resolution(), REF_PS.resolution()], ancre),
+    {
+      surChangementMillesime(domaine, millesime) {
+        millesimeManuel = millesime;
+        compute();
+      },
+    },
+  );
+}
+
+appliquerMillesime(null);
 
 // Abattement IR pour durée de détention — CGI art. 150 VC
 function abatIR(years) {
@@ -664,6 +742,21 @@ function surtaxe(pv) {
 }
 
 function compute() {
+  // Le droit applicable est celui de l'année de cession. Un choix manuel de
+  // l'utilisateur, s'il existe, prime : c'est le seul cas où le millésime ne
+  // suit pas la date saisie, et le bandeau le dit.
+  //
+  // Ce choix est abandonné dès que la date de cession change : sans cela, une
+  // nouvelle simulation continuerait d'employer le millésime choisi pour la
+  // précédente, ce qui est exactement le silence que l'issue #19 corrige.
+  const anneeCession = anneeDeCession();
+  if (anneeCession !== derniereAnneeCession) {
+    millesimeManuel = null;
+    derniereAnneeCession = anneeCession;
+  }
+  appliquerMillesime(millesimeManuel !== null ? millesimeManuel : anneeCession);
+  afficherMillesime();
+
   const dAcq = getDate('dateAcq');
   const dCes = getDate('dateCes');
   const devise = el('devise').value;

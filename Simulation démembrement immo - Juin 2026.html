@@ -251,6 +251,9 @@
 
 <main>
 
+  <!-- Millésime fiscal employé (#19) — rempli par src/millesime.js -->
+  <div id="bandeauMillesime"></div>
+
   <!-- SECTION 1 : PARTIES -->
   <div class="card">
     <div class="card-header">
@@ -717,6 +720,7 @@
 
 <script src="src/genere/referentiels/dmtg.js"></script>
 <script src="src/lecture-referentiels.js"></script>
+<script src="src/millesime.js"></script>
 <script>
 // ============================================================
 // RÉFÉRENTIEL DES MUTATIONS À TITRE GRATUIT
@@ -725,6 +729,26 @@
 // sont plus inscrits ici : une mise à jour se fait dans les données, puis
 // « npm run donnees:generer ». Voir data/README.md.
 const DMTG = LectureReferentiels.lecteur('dmtg');
+
+// ============================================================
+// MILLÉSIME FISCAL EMPLOYÉ (#19)
+// ============================================================
+// Ce simulateur ne demande aucune date fiscale : ni année de revenus, ni date
+// de décès, de donation ou de valorisation. Le millésime appliqué ne peut donc
+// pas être déduit d'une saisie ; le bandeau annonce celui qui s'applique de
+// fait, plutôt que de le laisser deviner au nom du fichier.
+//
+// Rattacher ce simulateur à une date suppose de décider quelle date commande
+// quel millésime : c'est une question fiscale, posée en fiche 3.6 de
+// docs/CORRECTIONS_A_VALIDER.md.
+function afficherMillesime() {
+  Millesime.rendre(
+    document.getElementById('bandeauMillesime'),
+    Millesime.resumer([DMTG.resolution()], null),
+  );
+}
+afficherMillesime();
+
 
 const USUFRUIT = DMTG.bareme('dmtg.usufruit.taux-nue-propriete');
 

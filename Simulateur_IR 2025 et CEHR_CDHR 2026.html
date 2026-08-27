@@ -317,6 +317,9 @@
     <p class="subhead">Renseignez la situation du foyer et les données de la cession ci-dessous. Les trois hypothèses (flat tax, barème, barème + quotient) et l'impact d'un apport-cession 150-0 B ter se recalculent automatiquement.</p>
   </header>
 
+  <!-- Millésime fiscal employé (#19) — rempli par src/millesime.js -->
+  <div id="bandeauMillesime"></div>
+
   <!-- ============ INPUT FORM ============ -->
   <section class="card">
     <h2>1. Foyer fiscal &amp; revenus</h2>
@@ -437,6 +440,7 @@
 <script src="src/genere/referentiels/ir.js"></script>
 <script src="src/genere/referentiels/prelevements-sociaux.js"></script>
 <script src="src/lecture-referentiels.js"></script>
+<script src="src/millesime.js"></script>
 <script>
 /* ============================================================
    RÉFÉRENTIEL FISCAL
@@ -448,6 +452,26 @@
    ============================================================ */
 const IR = LectureReferentiels.lecteur('ir');
 const PS = LectureReferentiels.lecteur('prelevements-sociaux');
+
+// ============================================================
+// MILLÉSIME FISCAL EMPLOYÉ (#19)
+// ============================================================
+// Ce simulateur ne demande aucune date fiscale : ni année de revenus, ni date
+// de décès, de donation ou de valorisation. Le millésime appliqué ne peut donc
+// pas être déduit d'une saisie ; le bandeau annonce celui qui s'applique de
+// fait, plutôt que de le laisser deviner au nom du fichier.
+//
+// Rattacher ce simulateur à une date suppose de décider quelle date commande
+// quel millésime : c'est une question fiscale, posée en fiche 3.6 de
+// docs/CORRECTIONS_A_VALIDER.md.
+function afficherMillesime() {
+  Millesime.rendre(
+    document.getElementById('bandeauMillesime'),
+    Millesime.resumer([IR.resolution(), PS.resolution()], null),
+  );
+}
+afficherMillesime();
+
 
 const BAREME = IR.bareme('ir.bareme.progressif').map(t => ({ upto: t.max, rate: t.taux }));
 const PLAFOND_DEMI_PART = IR.valeur('ir.quotient.plafond-demi-part');
