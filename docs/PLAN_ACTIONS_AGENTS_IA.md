@@ -233,6 +233,8 @@ Avant de poursuivre :
 
 Branche CLV du jalon : `clv/y-0.5-donnees`, créée depuis la branche `Y = 0.4` validée techniquement mais pas nécessairement encore intégrée.
 
+Cette branche porte aussi les deux premières étapes de #28, la CI, décrites dans la phase transversale plus bas : les contrôles n'ont de valeur que s'ils tournent tout seuls, et les données du jalon `0.5` sont précisément ce qu'ils protègent.
+
 ### Étape 2.0 — Fixer les conventions, puis les bornes
 
 1. [#11 — Définir validation, unités et arrondis](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/11) — reprend aussi le reliquat de #8 : quels champs sont obligatoires, quelles bornes sont acceptées et quel message d'erreur s'affiche
@@ -331,7 +333,7 @@ Deux garanties à connaître avant les extractions :
 - **l'import est déterministe** — entrées triées par identifiant puis millésime, tranches par borne basse, variantes par clé. Réordonner un CSV ne produit aucun diff ;
 - **une donnée invalide n'écrit rien.** Le référentiel publié n'est jamais laissé dans un état intermédiaire.
 
-`npm run donnees:generer -- --verifier` échoue si `src/genere/referentiels.js` ne correspond plus à `data/` : c'est ce contrôle qui rend visible une modification manuelle d'un fichier généré. Il a vocation à rejoindre la CI de #28.
+`npm run donnees:generer -- --verifier` échoue si les fichiers de `src/genere/referentiels/` ne correspondent plus à `data/` : c'est ce contrôle qui rend visible une modification manuelle d'un fichier généré. Il est exécuté par la CI depuis #28.
 
 Reste hors périmètre, à traiter lors des extractions qui en auront besoin : les contrôles propres aux devises et aux jours de cotation, qui appartiennent à #13 et #1, et l'import d'un barème contesté, aujourd'hui explicitement refusé plutôt que deviné.
 
@@ -463,10 +465,31 @@ Clore #21 uniquement lorsque :
 
 Cette issue peut être traitée en plusieurs PR liées à la même issue :
 
-1. après #10 : tests et contrôle de syntaxe obligatoires ;
-2. après #18 : validation des référentiels ;
+1. après #10 : tests et contrôle de syntaxe obligatoires — **réalisé** ;
+2. après #18 : validation des référentiels — **réalisé** ;
 3. après #20 : build et vérification des livrables ;
 4. après #21 : smoke tests desktop des six simulateurs.
+
+Les deux premières étapes sont livrées sur `clv/y-0.5-donnees`. Le workflow
+`.github/workflows/controles.yml` exécute, à chaque `push` sur `main` ou sur une
+branche `clv/`, à chaque pull request et à la demande : le contrôle de syntaxe
+de tout le JavaScript du dépôt, la validation des référentiels, la vérification
+que les fichiers générés correspondent aux données, la validation de la série de
+taux de change, puis les tests. Chaque contrôle est une étape distincte, afin
+que l'onglet Actions montre lequel a échoué sans lire un journal.
+
+La même suite se lance en local par `npm run verifier`, avec les mêmes commandes
+dans le même ordre : un échec en ligne se reproduit sur le poste sans attendre.
+
+Le contrôle de syntaxe existe parce que le dépôt n'a aucune étape de
+compilation : une parenthèse manquante ne se voyait qu'à l'ouverture de la page.
+Il compile sans les exécuter les fichiers `.js` de `scripts/`, `src/` et
+`tests/`, ainsi que le JavaScript embarqué dans les pages HTML — 44 sources
+aujourd'hui, dont les six simulateurs. Il ne détecte aucune erreur de calcul :
+c'est un garde-fou, pas un test.
+
+Les étapes 3 et 4 restent à faire : la première suppose le dossier `site/`
+construit, qui appartient au jalon `0.6`, la seconde suppose #21.
 
 Ne pas conserver une branche #28 ouverte pendant tout le projet. Pour CLV, chaque PR partielle repart de la dernière version de `clv/preprod` ; pour un autre contributeur, de la base indiquée ou de `main`. Chaque PR référence #28 avec `Part of #28`, et la dernière utilise `Closes #28`.
 

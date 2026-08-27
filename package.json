@@ -6,6 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "test": "node --test \"tests/**/*.test.js\"",
+    "verifier": "npm run verifier:syntaxe && npm run donnees:valider && npm run donnees:generer -- --verifier && npm run change:valider && npm test",
+    "verifier:syntaxe": "node scripts/verifier-syntaxe.js",
     "donnees:valider": "node scripts/valider-referentiels.js",
     "donnees:importer": "node scripts/importer-referentiel.js",
     "donnees:generer": "node scripts/generer-referentiels.js",

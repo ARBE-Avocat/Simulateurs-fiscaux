@@ -6,6 +6,16 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.10] - 2026-08-27
+
+### Ajouté
+
+- **Les contrôles du dépôt s'exécutent désormais tout seuls, à chaque envoi de code et sur chaque proposition de fusion.** Ils vérifient la syntaxe de tout le JavaScript, la cohérence des référentiels fiscaux, le fait que les fichiers générés correspondent bien aux données, la validité de la série de taux de change, puis lancent les 321 tests. Jusqu'ici, rien n'obligeait à les lancer : une erreur pouvait arriver dans le dépôt sans que personne ne s'en aperçoive avant d'ouvrir une page.
+- `npm run verifier` enchaîne exactement les mêmes contrôles en local, dans le même ordre. Un échec constaté en ligne se reproduit sur le poste sans attendre.
+- `npm run verifier:syntaxe` compile, sans les exécuter, les 44 sources JavaScript du dépôt, y compris celles embarquées dans les pages HTML. Le dépôt n'ayant aucune étape de compilation, une parenthèse manquante ne se voyait jusqu'ici qu'à l'ouverture de la page concernée.
+
+Aucun simulateur n'est modifié : aucun montant affiché ne change.
+
 ## [0.5.0-beta.9] - 2026-08-27
 
 ### Ajouté

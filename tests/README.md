@@ -19,6 +19,12 @@ node --test tests/unit/ir-moteur.test.js
 Les tests ne font aucun appel réseau et n'ouvrent aucun navigateur : ils
 s'exécutent hors ligne, en quelques centaines de millisecondes.
 
+Les tests ne sont qu'un des contrôles du dépôt. `npm run verifier` les enchaîne
+avec le contrôle de syntaxe, la validation des référentiels et celle de la série
+de taux de change — la même suite que celle exécutée à chaque `push` par
+`.github/workflows/controles.yml`. Avant de pousser, c'est cette commande-là
+qu'il faut lancer.
+
 ## Organisation
 
 ```

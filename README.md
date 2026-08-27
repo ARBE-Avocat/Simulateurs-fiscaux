@@ -85,6 +85,24 @@ npm run donnees:importer -- <fichier.csv>   # normalise un CSV officiel
 `data/README.md` décrit la procédure complète de mise à jour d'une valeur
 fiscale et le format des CSV acceptés.
 
+## Contrôles complets
+
+Une seule commande enchaîne tous les contrôles du dépôt :
+
+```bash
+npm run verifier
+```
+
+Elle contrôle la syntaxe de tout le JavaScript — y compris celui embarqué dans
+les pages HTML —, valide les référentiels fiscaux, vérifie que les fichiers
+générés correspondent toujours aux données, valide la série de taux de change,
+puis lance les tests.
+
+Ce sont exactement les contrôles exécutés automatiquement à chaque `push` et sur
+chaque pull request : ce qui passe sur votre poste passe sur GitHub. En cas
+d'échec en ligne, relancer cette commande en local reproduit le problème sans
+attendre.
+
 ## Avertissement
 
 Ces outils sont fournis à titre purement informatif et indicatif. Ils ne constituent en aucun cas un conseil juridique ou fiscal personnalisé. Pour toute situation réelle, consultez un professionnel du droit fiscal.
