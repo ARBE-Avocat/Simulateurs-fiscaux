@@ -817,6 +817,48 @@ textarea::placeholder { color: var(--ink-faint); }
       ]
     },
     {
+      groupe: "bloquant",
+      ref: "2.5",
+      titre: "L'abattement pour durée de détention des plus-values mobilières emploie deux règles opposées",
+      simulateur: "IRPP",
+      constat: "Le simulateur applique un abattement pour durée de détention aux cessions de titres, avec un régime de droit commun et un régime renforcé. Les deux sont calculés dans la même expression, mais ne comptent pas les années de la même façon : le renforcé ouvre son palier dès 2, 4 et 8 ans révolus, le droit commun seulement au-delà.",
+      raison: "À deux ans exactement, le droit commun n'accorde aucun abattement là où le renforcé en accorde la moitié. À huit ans exactement, le droit commun en est encore au palier des deux ans. Les deux écritures cohabitent dans la même ligne de code et ne peuvent pas être justes en même temps : le mot employé par le texte fiscal — « au moins deux ans » ou « plus de deux ans » — décide de la bonne.",
+      change: "Rien n'a été changé. Corriger l'une ou l'autre modifie l'impôt.",
+      comparaison: {
+        legende: "Taux d'abattement selon la durée de détention",
+        colonnes: ["Durée de détention", "Droit commun", "Renforcé"],
+        lignes: [
+          { cells: ["1 an", "0 %", "0 %"] },
+          { cells: ["2 ans", "0 %", "50 %"], marque: true, ton: "avant" },
+          { cells: ["3 ans", "50 %", "50 %"] },
+          { cells: ["4 ans", "50 %", "65 %"], ton: "avant" },
+          { cells: ["7 ans", "50 %", "65 %"] },
+          { cells: ["8 ans", "50 %", "85 %"], ton: "avant" },
+          { cells: ["9 ans", "65 %", "85 %"] }
+        ]
+      },
+      tableau: {
+        legende: "Cession de 1 000 titres achetés 100 € et revendus 600 €, soit 500 000 € de plus-value. Salaire de 60 000 €, une part, régime de droit commun.",
+        colonnes: ["Durée de détention", "Impôt net affiché"],
+        lignes: [
+          { cells: ["1 an", "225 822,57 €"] },
+          { cells: ["2 ans", "225 822,57 €"], marque: true, ton: "avant" },
+          { cells: ["3 ans", "113 322,57 €"], ton: "apres" }
+        ]
+      },
+      encart: "Détenir les titres deux ans exactement coûte <strong>112 500 € d'impôt de plus</strong> que de les détenir un jour de plus. Si la règle est « au moins deux ans », le montant à deux ans devrait être celui de la troisième ligne.",
+      question: "L'abattement de droit commun s'ouvre-t-il à partir de deux ans révolus, ou seulement au-delà de deux ans ?",
+      options: [
+        { cle: "au-moins", libelle: "Dès deux ans révolus", ton: "ok" },
+        { cle: "au-dela", libelle: "Seulement au-delà de deux ans", ton: "ok" },
+        { cle: "autre", libelle: "Une autre règle, précisée ci-dessous", ton: "neutre" }
+      ],
+      complements: [
+        "La même réponse vaut-elle pour le passage au palier supérieur — huit ans pour le droit commun, quatre et huit ans pour le renforcé ?",
+        "Quelle source et quel millésime citer ?"
+      ]
+    },
+    {
       groupe: "arbitrage",
       ref: "3.1",
       titre: "L'âge et le nombre de donataires refusent le zéro",
@@ -857,6 +899,29 @@ textarea::placeholder { color: var(--ink-faint); }
       raison: "Il est donc impossible, aujourd'hui, de vérifier un chiffre sans le rechercher soi-même. Cela empêche aussi de savoir quel millésime un résultat reflète.",
       change: "Rien n'a été changé. C'est l'objet d'un chantier séparé, qui supposera pour chaque valeur une source officielle et un millésime.",
       question: "Souhaitez-vous être associé au relevé des sources dès maintenant, ou lorsque le chantier de référentiels démarrera ?",
+      libre: true
+    },
+    {
+      groupe: "arbitrage",
+      ref: "3.4",
+      titre: "Le seuil de la surtaxe n'est pas lissé",
+      simulateur: "PV immobilière",
+      constat: "La surtaxe sur les plus-values supérieures à 50 000 € comporte des paliers de raccordement, destinés à éviter qu'un euro de plus-value supplémentaire ne déclenche brutalement plusieurs milliers d'euros d'impôt. Ces raccordements fonctionnent partout, sauf au premier seuil.",
+      raison: "Un euro de plus-value supplémentaire coûte 500 € de surtaxe au franchissement de 50 000 €. Au palier suivant, le même euro n'en coûte que treize centimes.",
+      change: "Rien n'a été changé, et rien ne le sera sans votre réponse. Un contrôle automatique constate désormais ce ressaut plutôt que de le laisser passer pour une continuité.",
+      tableau: {
+        legende: "Surtaxe selon la plus-value imposable",
+        colonnes: ["Plus-value imposable", "Surtaxe"],
+        lignes: [
+          { cells: ["50 000 €", "0 €"] },
+          { cells: ["50 001 €", "500,07 €"], marque: true, ton: "avant" },
+          { cells: ["60 000 €", "1 200 €"] },
+          { cells: ["100 000 €", "2 000 €"] },
+          { cells: ["100 001 €", "2 000,13 €"], ton: "apres" }
+        ]
+      },
+      encart: "<strong>Ce point est signalé sans être présenté comme un défaut.</strong> Le coefficient employé sur la première bande suit la progression régulière des autres — 1/20, puis 1/10, 0,15, 0,20, 0,25 — et correspond à la table publiée que le code cite en référence. Il est donc possible que ce ressaut soit voulu par le texte lui-même, un seuil d'entrée n'ayant pas la même fonction qu'un raccordement entre deux taux.",
+      question: "Le franchissement de 50 000 € doit-il produire ce ressaut de 500 €, ou la première bande doit-elle ramener la surtaxe à zéro au seuil, comme le font les autres raccordements ?",
       libre: true
     },
     {

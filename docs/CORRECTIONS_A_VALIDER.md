@@ -499,6 +499,16 @@ qu'il ne repose sur aucune situation réelle.
 Le comportement n'a pas été modifié, faute de savoir ce qui doit s'afficher à la
 place. Voir la question posée au point 3.1.
 
+## 3.3 — Les barèmes ne portent ni source ni date
+
+Tous les barèmes, seuils, abattements et taux des simulateurs sont inscrits
+directement dans les fichiers, sans mention de leur source ni de leur date
+d'application. Il est donc impossible, aujourd'hui, de vérifier un chiffre sans
+le rechercher soi-même.
+
+C'est l'objet d'un chantier séparé. Il supposera, pour chaque valeur, une source
+officielle et un millésime que vous seul pouvez confirmer.
+
 ## 3.4 — Plus-value immobilière : le seuil de la surtaxe n'est pas lissé
 
 **Ce que voit l'utilisateur.** La surtaxe sur les plus-values immobilières
@@ -532,16 +542,6 @@ passer pour une continuité.
 **Ce qui est attendu de vous.** Le franchissement de 50 000 € doit-il produire
 ce ressaut de 500 €, ou la première bande doit-elle ramener la surtaxe à zéro au
 seuil, comme le font les autres raccordements ? Quelle source citer ?
-
-## 3.3 — Les barèmes ne portent ni source ni date
-
-Tous les barèmes, seuils, abattements et taux des simulateurs sont inscrits
-directement dans les fichiers, sans mention de leur source ni de leur date
-d'application. Il est donc impossible, aujourd'hui, de vérifier un chiffre sans
-le rechercher soi-même.
-
-C'est l'objet d'un chantier séparé. Il supposera, pour chaque valeur, une source
-officielle et un millésime que vous seul pouvez confirmer.
 
 ---
 
