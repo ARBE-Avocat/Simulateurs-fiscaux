@@ -93,6 +93,13 @@ Un fichier couvre un **domaine** : `ir`, `ifi`, `dmtg`, `pv-immobiliere`,
 
 L'unicité porte sur le couple `id` + `millesime`, jamais sur `id` seul.
 
+Depuis l'issue #19, le millésime lu est **choisi, jamais subi** :
+`LectureReferentiels.lecteur(domaine, { millesime })` retient l'année demandée,
+et `resolution()` dit comment il l'a fait — millésime exact, absence de date de
+rattachement, ou millésime hors couverture. Sans option `millesime`, le lecteur
+reste utilisable tant qu'un domaine n'en porte qu'un ; au-delà, il refuse de
+deviner. Voir `src/lecture-referentiels.js` et `src/millesime.js`.
+
 ### 3.1 — Les taux s'écrivent en décimal
 
 Un taux de 17,2 % s'écrit `0.172`, jamais `17.2`. C'est la convention majoritaire

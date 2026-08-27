@@ -6,7 +6,7 @@ jugé fautif mais **laissé en l'état** faute de certitude.
 
 Aucune connaissance technique n'est nécessaire pour le lire.
 
-Dernière mise à jour : 27 août 2026 — jalon `0.5`, #13 (taux de change) terminée.
+Dernière mise à jour : 27 août 2026 — jalon `0.5`, #19 (millésime fiscal affiché).
 
 **Version interactive :** <https://claude.ai/code/artifact/ed86515a-2108-4df9-b7fc-acc15b0682d3>
 Cette page reprend le contenu ci-dessous et permet de répondre point par point.
@@ -590,6 +590,69 @@ automatique la rejoue sur 3 375 taux.
    par la Banque de France. **Ce n'est qu'une supposition** : tant qu'elle n'est
    pas confirmée, la source reste inscrite comme « inconnue ».
 
+## 3.6 — Aucune date ne rattache un simulateur à un millésime fiscal
+
+**Ce que voit l'utilisateur.** Depuis cette version, chaque simulateur affiche
+en tête un bandeau « Référentiel fiscal employé » : le millésime des barèmes
+réellement utilisés, leur date d'effet, leur date de dernière révision et leur
+statut de validation. Ce bandeau apparaît aussi à l'impression et dans l'export
+PowerPoint de la succession.
+
+Il révèle un point qui était jusqu'ici invisible : **cinq simulateurs sur six ne
+demandent aucune date fiscale**, et appliquent donc un millésime unique à toute
+situation, quelle que soit son année réelle.
+
+| Simulateur | Date fiscale demandée | Millésime appliqué |
+|---|---|---|
+| Plus-value immobilière | date de cession | 2026 (plus-value), 2025 (prélèvements sociaux) |
+| IR, CEHR et CDHR | aucune | 2025 |
+| IRPP | aucune | 2025 (IR et prélèvements sociaux), 2026 (IFI) |
+| IFI | aucune | 2026 |
+| Succession | aucune | 2025 |
+| Démembrement | aucune | 2025 |
+
+Le nom des fichiers n'y correspond pas toujours : le simulateur « IR 2025 et
+CEHR/CDHR 2026 » annonce deux années, alors que **toutes** ses valeurs — barème
+de l'IR, CEHR, CDHR et prélèvement forfaitaire unique — portent le millésime
+2025. Le simulateur de démembrement « Juin 2026 » emploie un barème de mutations
+à titre gratuit de millésime 2025.
+
+**Pourquoi cela demande votre avis.** Trois décisions se présentent, et aucune
+n'est technique.
+
+1. **Quelle date commande le millésime ?** Pour la plus-value immobilière, la
+   date de cession paraissait l'évidence, et c'est elle qui a été retenue. Pour
+   les autres, il faut le dire : année des revenus pour l'IR et l'IRPP, date du
+   décès pour la succession, date de l'acte pour la donation, 1er janvier de
+   l'année de valorisation pour l'IFI ? Tant que la réponse n'est pas donnée,
+   **aucun champ de date n'a été ajouté** à ces cinq simulateurs : ajouter un
+   champ, c'est décider ce qu'il commande.
+
+2. **Que faire lorsque le millésime exact n'existe pas ?** Une cession de 2019
+   n'a aujourd'hui aucun référentiel de 2019 : le simulateur applique le
+   millésime 2026 et l'écrit désormais en rouge à l'écran. La règle provisoire
+   retenue est de prendre **le dernier millésime antérieur ou égal**, à défaut
+   le plus ancien disponible. Elle n'a aujourd'hui aucun effet, puisqu'un seul
+   millésime existe par domaine. Faut-il, le jour où plusieurs coexisteront,
+   appliquer cette règle, ou refuser de calculer ?
+
+3. **Une valeur sans date de fin est-elle toujours en vigueur ?** Le taux des
+   prélèvements sociaux porte le millésime 2025 et aucune date de fin. Il est
+   donc appliqué à une cession de 2026, et le bandeau le mentionne sans dire que
+   c'est faux — nous n'en savons rien. La même question vaut pour le barème des
+   mutations à titre gratuit de 2025 employé en 2026.
+
+**Ce que cela change en euros.** Rien, aujourd'hui : aucun montant affiché n'est
+modifié par ce chantier. Les simulateurs appliquaient déjà ces millésimes ; ils
+le disent désormais au lieu de le taire.
+
+**Ce qui est attendu de vous.** Pour chacun des cinq simulateurs sans date :
+quelle date faut-il demander à l'utilisateur, et quel millésime cette date
+doit-elle commander ? Puis : que doit-il se passer lorsque le millésime exact
+manque, et une valeur sans date de fin doit-elle être présumée toujours en
+vigueur ?
+
+
 ---
 
 # Partie 4 — Corrections sans aucun effet sur les résultats
@@ -627,6 +690,19 @@ utilisateur n'a pu le rencontrer.
 Le calcul attend désormais le taux et affiche « Chargement des taux de change en
 cours… » pendant ce court délai, plutôt qu'un montant construit sur une donnée
 manquante.
+
+## 4.4 — Le millésime employé est désormais écrit à l'écran
+
+Chaque simulateur affiche le référentiel qu'il emploie, y compris à l'impression
+et dans l'export PowerPoint de la succession. Une simulation peut ainsi être
+reproduite plus tard avec les mêmes données.
+
+Aucun montant affiché ne change. Le seul cas où le calcul suit désormais une
+date saisie est la plus-value immobilière, et comme un seul millésime existe,
+elle lit exactement les mêmes valeurs qu'avant.
+
+Ce point est mentionné pour information. La décision qu'il appelle est en fiche
+3.6.
 
 ---
 

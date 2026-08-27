@@ -953,6 +953,34 @@ textarea::placeholder { color: var(--ink-faint); }
       ]
     },
     {
+      groupe: "arbitrage",
+      ref: "3.6",
+      titre: "Aucune date ne rattache un simulateur à un millésime fiscal",
+      simulateur: "Les six simulateurs",
+      constat: "Cinq simulateurs sur six ne demandent aucune date fiscale : ni année de revenus, ni date de décès, de donation, ni année de valorisation au 1er janvier. Ils appliquent donc un millésime unique à toute situation, quelle que soit son année réelle. Seule la plus-value immobilière dispose d'une date de cession, désormais employée pour choisir son référentiel.",
+      raison: "Le nom des fichiers n'y correspond pas toujours. Le simulateur « IR 2025 et CEHR/CDHR 2026 » annonce deux années alors que toutes ses valeurs portent le millésime 2025. Le simulateur de démembrement « Juin 2026 » emploie un barème de mutations à titre gratuit de millésime 2025. Le taux des prélèvements sociaux, de millésime 2025, s'applique à une cession de 2026.",
+      change: "Aucun montant n'est modifié. Le millésime réellement employé est désormais affiché, y compris à l'impression, au lieu d'être deviné au nom du fichier. Aucun champ de date n'a été ajouté aux cinq autres simulateurs : ajouter un champ, c'est décider ce qu'il commande.",
+      tableau: {
+        legende: "Ce que chaque simulateur applique aujourd'hui",
+        colonnes: ["Simulateur", "Date fiscale demandée", "Millésime appliqué"],
+        lignes: [
+          { cells: ["Plus-value immobilière", "date de cession", "2026 — et 2025 pour les prélèvements sociaux"], ton: "apres" },
+          { cells: ["IR, CEHR et CDHR", "aucune", "2025"], ton: "avant" },
+          { cells: ["IRPP", "aucune", "2025 — et 2026 pour l'IFI"], ton: "avant" },
+          { cells: ["IFI", "aucune", "2026"], ton: "avant" },
+          { cells: ["Succession", "aucune", "2025"], ton: "avant" },
+          { cells: ["Démembrement", "aucune", "2025"], ton: "avant" }
+        ]
+      },
+      encart: "Une cession de 2019 est aujourd'hui calculée avec le référentiel 2026. Le simulateur l'écrit désormais en rouge : « les montants affichés ne reflètent donc pas le droit de 2019 ». <strong>C'était déjà le cas avant ce chantier ; seul l'avertissement est nouveau.</strong>",
+      question: "Pour les cinq simulateurs sans date, quelle date faut-il demander à l'utilisateur, et quel millésime cette date doit-elle commander ?",
+      libre: true,
+      complements: [
+        "Que doit-il se passer lorsque le millésime exact n'existe pas ? La règle provisoire retenue est de prendre le dernier millésime antérieur ou égal, à défaut le plus ancien. Elle n'a aucun effet aujourd'hui, puisqu'un seul millésime existe par domaine. Faut-il l'appliquer le jour où plusieurs coexisteront, ou refuser de calculer ?",
+        "Une valeur sans date de fin est-elle présumée toujours en vigueur ? Le taux des prélèvements sociaux de 2025 est appliqué à une cession de 2026, et le barème des mutations à titre gratuit de 2025 à une donation de 2026. Le bandeau le mentionne sans dire que c'est faux : nous n'en savons rien."
+      ]
+    },
+    {
       groupe: "information",
       ref: "4.1",
       titre: "Un nom de variable contenant des caractères invisibles à l'œil",
@@ -970,6 +998,26 @@ textarea::placeholder { color: var(--ink-faint); }
       constat: "Un bloc de calcul du plafond des dons n'était jamais utilisé et employait un plafond de 1 000 € inscrit en dur, sans tenir compte de l'option à 2 000 €.",
       raison: "Son résultat n'étant lu nulle part, sa suppression ne change aucun montant.",
       change: "Aucun montant affiché ne change.",
+      sansDecision: true
+    },
+    {
+      groupe: "information",
+      ref: "4.3",
+      titre: "Un bien en devise aurait pu compter pour 0 € pendant un court instant",
+      simulateur: "IFI",
+      constat: "En construisant le service de change commun (#13), un bien en devise étrangère dont le taux n'était pas encore reçu du réseau aurait compté pour 0 € dans le patrimoine taxable, le temps d'un aller-retour réseau généralement inférieur à une seconde.",
+      raison: "Ce comportement n'a jamais été mis en ligne : détecté par un test écrit en même temps que le code qui l'aurait introduit, avant toute publication. Aucun utilisateur n'a pu le rencontrer.",
+      change: "Le calcul attend désormais le taux et affiche « Chargement des taux de change en cours… » pendant ce court délai, plutôt qu'un montant construit sur une donnée manquante.",
+      sansDecision: true
+    },
+    {
+      groupe: "information",
+      ref: "4.4",
+      titre: "Le millésime employé est désormais écrit à l'écran",
+      simulateur: "Les six simulateurs",
+      constat: "Chaque simulateur affiche en tête un bandeau « Référentiel fiscal employé » : millésime des barèmes utilisés, date d'effet, dernière révision et statut de validation. Il est conservé à l'impression et dans l'export PowerPoint de la succession.",
+      raison: "Jusqu'ici, la seule indication de fraîcheur fiscale était le nom du fichier. Une simulation imprimée ne disait pas de quel référentiel elle provenait, et ne pouvait donc pas être reproduite plus tard.",
+      change: "Aucun montant affiché ne change. La décision que ce chantier appelle est en fiche 3.6.",
       sansDecision: true
     }
   ];

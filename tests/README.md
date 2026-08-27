@@ -96,7 +96,7 @@ Une limite subsiste :
 
 ## Tests des données fiscales
 
-Deux fichiers ne chargent aucun simulateur : ils testent la chaîne de données du
+Trois fichiers ne chargent aucun simulateur : ils testent la chaîne de données du
 jalon `0.5`.
 
 - `unit/schema-referentiel.test.js` vérifie le schéma des référentiels à partir
@@ -105,7 +105,16 @@ jalon `0.5`.
   acceptable fait échouer les tests ;
 - `unit/importeur-referentiels.test.js` vérifie l'import d'un CSV, son
   déterminisme et le refus d'écrire quoi que ce soit lorsqu'une donnée est
-  invalide.
+  invalide ;
+- `unit/millesime.test.js` vérifie la sélection du millésime fiscal (#19). Les
+  référentiels du dépôt ne portant qu'un millésime par domaine, les cas à
+  plusieurs millésimes sont joués sur un référentiel d'essai construit dans le
+  test et **passé au schéma** : un cas de test qui ne serait pas un référentiel
+  acceptable ne prouverait rien du comportement réel.
+
+`integration/millesime-simulateurs.test.js` vérifie de son côté que les six
+simulateurs affichent bien le millésime qu'ils emploient, et qu'aucun ne
+l'applique en silence.
 
 Ajouter un cas de refus au schéma se fait en ajoutant **un fichier** dans
 `data/schema/exemples/invalides/` : le test le prend en compte automatiquement.

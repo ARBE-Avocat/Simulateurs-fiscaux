@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 27 août 2026 — synchronisé avec `v0.5.0-beta.12`.
+Dernière mise à jour du plan : 27 août 2026 — synchronisé avec `v0.5.0-beta.13`.
 
 ## Objectifs de l’orchestration
 
@@ -41,7 +41,7 @@ Dernière mise à jour du plan : 27 août 2026 — synchronisé avec `v0.5.0-bet
 - La première étape de #13 est livrée : `data/change/` contient la série de taux, un fichier par année. Extraction vérifiée exhaustivement, 301 044 comparaisons sans écart.
 - La deuxième étape de #13 est livrée : le simulateur de plus-value immobilière lit désormais le taux à la date depuis `src/change.js` — BCE en ligne d'abord, `data/change/` en repli, source affichée à l'écran. Rejoué sur quatre scénarios en devise capturés avant ce changement et confirmé en navigateur réel, réseau réel, y compris le cas de repli forcé. Reste la troisième étape : l'unification avec l'IFI.
 - La troisième et dernière étape de #13 est livrée : le simulateur IFI partage désormais `src/change.js` — `exchangerate-api.com` et le repli non daté `FX_FALLBACK` sont retirés. #13 est terminée. Reste #1 (jours non ouvrés), qui en dépendait.
-- Trois points supplémentaires ont été ajoutés au dossier d'arbitrage le 27 août 2026, dont la règle de résolution des dates non cotées (fiche 3.5, issue #1). Deux points supplémentaires y ont été ajoutés le 27 août 2026, découverts en revue de code : l'abattement pour durée de détention des plus-values mobilières de l'IRPP emploie deux conventions de bornes opposées dans la même expression, jusqu'à 112 500 € d'écart d'impôt (fiche 2.5) ; et le franchissement du seuil de 50 000 € de la surtaxe de plus-value immobilière n'est pas lissé, 500 € pour un euro de plus-value (fiche 3.4, signalé sans être présenté comme un défaut).
+- Une fiche 3.6 a été ajoutée le 27 août 2026 : aucune date ne rattache cinq des six simulateurs à un millésime fiscal (issue #19). Trois points supplémentaires ont été ajoutés au dossier d'arbitrage le 27 août 2026, dont la règle de résolution des dates non cotées (fiche 3.5, issue #1). Deux points supplémentaires y ont été ajoutés le 27 août 2026, découverts en revue de code : l'abattement pour durée de détention des plus-values mobilières de l'IRPP emploie deux conventions de bornes opposées dans la même expression, jusqu'à 112 500 € d'écart d'impôt (fiche 2.5) ; et le franchissement du seuil de 50 000 € de la surtaxe de plus-value immobilière n'est pas lissé, 500 € pour un euro de plus-value (fiche 3.4, signalé sans être présenté comme un défaut).
 - Deux divergences supplémentaires ont été découvertes pendant l'inventaire et ajoutées aux fiches 2.3 et 2.4 de `docs/CORRECTIONS_A_VALIDER.md` : le plafonnement du quotient familial, appliqué par le simulateur IR et absent de l'IRPP, jusqu'à 19 985,10 € d'écart ; et la méthode de liquidation de l'IFI, différente entre le simulateur IFI et la section IFI de l'IRPP, 668,39 € d'écart sur l'exemple relevé. Aucune n'est tranchée.
 - `docs/arbitrages.html` porte désormais ces deux points. **La page publiée n'a pas encore été republiée** : elle doit l'être à la même adresse, par CLV, avant la prochaine sollicitation du référent juridique.
 
@@ -402,11 +402,25 @@ Les interfaces IFI et plus-value immobilière sont stabilisées depuis #15 et #1
 
 Reste propre au change, à traiter dans #13 : ce n'est pas une donnée fiscale — ni date d'effet, ni statut de validation au même sens. Les changes vivront dans `data/change/`, avec leur propre format et leur propre validation ; leur imposer le schéma fiscal reviendrait à forcer le format. Le repli actuel du simulateur IFI est en outre **non daté**, ce qui interdit de dire honnêtement à l'écran de quand il date : à corriger.
 
-### Étape 2.5 — Ajouter la sélection de millésime
+### Étape 2.5 — Ajouter la sélection de millésime — partiellement réalisée
 
 - [#19 — Sélectionner et afficher le millésime fiscal](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/19)
 
 Cette issue vient après les référentiels : elle les relie aux dates de revenus, cession, décès, donation ou valorisation IFI.
+
+**Livré dans `v0.5.0-beta.13`** — la partie qui ne demandait aucune décision fiscale :
+
+- `lecteur(domaine, { millesime })` résout le millésime explicitement et rend compte de sa résolution. Le lecteur indexait ses entrées par identifiant seul : deux millésimes d'une même règle, et la dernière entrée lue l'emportait sans que rien ne le signale, alors que le schéma de #12 autorise leur cohabitation depuis le début ;
+- `src/millesime.js` met cette résolution en mots et construit le bandeau « Référentiel fiscal employé », affiché par les six simulateurs, conservé à l'impression et repris dans l'export PowerPoint de la succession ;
+- la plus-value immobilière **choisit son référentiel d'après la date de cession saisie** — le seul des six à disposer d'une date fiscale.
+
+**Enseignement du chantier, et ce qui reste bloqué.** Chercher les dates de rattachement a montré que **cinq simulateurs sur six n'en demandent aucune** : ni année de revenus, ni date de décès, de donation, ni année de valorisation au 1er janvier. Le millésime employé ne peut donc pas y être déduit d'une saisie.
+
+Ajouter un champ de date à ces cinq pages n'est pas un travail technique : c'est décider quelle date commande quel millésime, et ce que devient une simulation dont le millésime exact n'existe pas. **Ces décisions sont posées au référent en fiche 3.6 de `docs/CORRECTIONS_A_VALIDER.md`**, avec deux constats découverts au passage : le nom des fichiers ne correspond pas aux données (« IR 2025 et CEHR/CDHR 2026 » porte des valeurs entièrement de 2025), et un référentiel de 2025 sans date de fin est aujourd'hui appliqué à une situation de 2026 sans que personne ait dit s'il le devait.
+
+En attendant, la règle de repli — dernier millésime antérieur, à défaut le plus ancien — est écrite, testée et sans effet : un seul millésime existe par domaine.
+
+Reste donc ouvert dans #19, après réponse du référent : les champs de date des cinq autres simulateurs, et la confirmation de la règle de repli. Le critère « les URL restent stables lors d'un changement annuel » ne relève pas de cette issue : il est traité par le renommage des fichiers de `docs/ARCHITECTURE_CIBLE.md` §4, au jalon `0.6`.
 
 ### Étape 2.6 — Clore l’epic des référentiels
 
