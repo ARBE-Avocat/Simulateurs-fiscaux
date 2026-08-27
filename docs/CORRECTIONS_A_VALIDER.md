@@ -6,7 +6,7 @@ jugé fautif mais **laissé en l'état** faute de certitude.
 
 Aucune connaissance technique n'est nécessaire pour le lire.
 
-Dernière mise à jour : 27 août 2026 — jalon `0.5`, chantier des référentiels.
+Dernière mise à jour : 27 août 2026 — jalon `0.5`, #13 (taux de change) terminée.
 
 **Version interactive :** <https://claude.ai/code/artifact/ed86515a-2108-4df9-b7fc-acc15b0682d3>
 Cette page reprend le contenu ci-dessous et permet de répondre point par point.
@@ -612,6 +612,21 @@ automatique interdit désormais ce type de nom dans les six simulateurs.
 Un bloc de calcul du plafond des dons n'était jamais utilisé et employait un
 plafond de 1 000 € inscrit en dur, sans tenir compte de l'option à 2 000 €. Comme
 son résultat n'était lu nulle part, sa suppression ne change aucun montant.
+
+## 4.3 — IFI : un bien en devise aurait pu compter pour 0 € pendant un court instant
+
+En construisant le service de change commun (issue #13), un bien en devise
+étrangère dont le taux de conversion n'était pas encore reçu du réseau aurait
+compté pour **0 €** dans le patrimoine taxable, le temps d'un aller-retour
+réseau généralement inférieur à une seconde, plutôt que d'attendre ce taux.
+
+Ce comportement n'a jamais été mis en ligne : il a été détecté par un test écrit
+en même temps que le code qui l'aurait introduit, avant toute publication. Aucun
+utilisateur n'a pu le rencontrer.
+
+Le calcul attend désormais le taux et affiche « Chargement des taux de change en
+cours… » pendant ce court délai, plutôt qu'un montant construit sur une donnée
+manquante.
 
 ---
 
