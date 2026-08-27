@@ -625,9 +625,103 @@
 
 <script src="src/genere/referentiels/ifi.js"></script>
 <script src="src/lecture-referentiels.js"></script>
+<script src="src/change.js"></script>
 <script>
 // ============================================================
-// DATE INPUT + LIEN BANQUE DE FRANCE + MISE À JOUR DES TAUX
+// TAUX DE CHANGE (voir docs/ARCHITECTURE_CIBLE.md §7 bis et src/change.js)
+// ============================================================
+// Les 25 devises proposées dans les biens et dans le convertisseur manuel.
+const DEVISES = [
+  'USD', 'GBP', 'CHF', 'JPY', 'CAD', 'AUD', 'CNY', 'SEK', 'NOK', 'SGD',
+  'DKK', 'HKD', 'PLN', 'CZK', 'HUF', 'TRY', 'ZAR', 'INR', 'KRW', 'NZD',
+  'MXN', 'BRL', 'ILS', 'MYR', 'THB',
+];
+
+// { [devise]: { taux, source: 'bce'|'depot'|'aucune', date } }, rempli par
+// chargerTaux(). Un taux absent du cache n'est pas encore résolu : compute()
+// doit alors afficher « — » plutôt qu'un montant, jamais traiter la devise
+// comme si elle valait l'euro.
+let tauxCache = {};
+let dateTauxAffichee = null;
+
+function getRate(currency) {
+  if (!currency || currency === 'EUR') return 1;
+  const c = tauxCache[currency];
+  return c ? c.taux : null;
+}
+
+function getRateSource(currency) {
+  const c = tauxCache[currency];
+  return c ? c.source : null;
+}
+
+function libelleSource(source) {
+  return source === 'bce' ? 'Banque centrale européenne (BCE)' : 'dépôt, source à confirmer';
+}
+
+function convertToEur(amount, currency) {
+  if (!currency || currency === 'EUR') return amount;
+  const r = getRate(currency);
+  return r ? amount / r : null;
+}
+
+async function chargerTaux(dateISO) {
+  dateTauxAffichee = dateISO;
+  const statusEl = document.getElementById('fxStatus');
+  const gridEl = document.getElementById('fxGrid');
+  const dateEl = document.getElementById('fxDate');
+
+  statusEl.style.display = 'block';
+  gridEl.style.display = 'none';
+
+  const resultats = await ChangeReferentiel.tauxALaDateMultiple(DEVISES, dateISO);
+  if (dateTauxAffichee !== dateISO) return; // une demande plus récente a pris le relais
+
+  tauxCache = resultats;
+
+  const sources = new Set(Object.values(tauxCache).map((r) => r.source));
+  const dateAffichage = new Date(`${dateISO}T00:00:00Z`).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+  if (sources.has('aucune')) {
+    dateEl.textContent = `⚠ Certains taux du ${dateAffichage} sont indisponibles (ni la BCE ni le dépôt n'ont répondu)`;
+  } else if (sources.size === 1) {
+    dateEl.textContent = `Taux du ${dateAffichage} — Source : ${libelleSource([...sources][0])}`;
+  } else {
+    dateEl.textContent = `Taux du ${dateAffichage} — Sources mêlées : ${[...sources].map(libelleSource).join(' et ')}`;
+  }
+
+  statusEl.style.display = 'none';
+  gridEl.style.display = 'block';
+  renderFxBadges();
+  updateBiensFxDisplay();
+  compute();
+}
+
+/** Taux « du jour » : la date du jour, avec remontée automatique si la BCE ne l'a pas encore publiée (voir §7 bis). */
+function loadFxRates() {
+  chargerTaux(new Date().toISOString().slice(0, 10));
+}
+
+function loadFxRatesForDate(dd, mm, yyyy) {
+  chargerTaux(`${yyyy}-${mm}-${dd}`);
+}
+
+function renderFxBadges() {
+  const badgesEl = document.getElementById('fxBadges');
+  badgesEl.innerHTML = '';
+  const showCurrencies = ['USD', 'GBP', 'CHF', 'JPY', 'CAD', 'AUD', 'CNY', 'SEK', 'NOK', 'SGD'];
+  showCurrencies.forEach((c) => {
+    const r = tauxCache[c];
+    if (r && typeof r.taux === 'number') {
+      const b = document.createElement('div');
+      b.className = 'fx-badge';
+      b.innerHTML = `<span class="fx-rate">1 EUR = ${r.taux > 10 ? fmtNum(r.taux, 2) : fmtNum(r.taux, 4)} ${c}</span>`;
+      badgesEl.appendChild(b);
+    }
+  });
+}
+
+// ============================================================
+// DATE INPUT + LIEN BANQUE DE FRANCE
 // ============================================================
 function formatDateInput(input) {
   let v = input.value.replace(/[^0-9]/g, '');
@@ -655,7 +749,8 @@ function onFxDateBlur() {
 function updateBdfLink(dd, mm, yyyy) {
   const link = document.getElementById('bdfLink');
   const hint = document.getElementById('bdfLinkHint');
-  // Format BdF URL: https://www.banque-france.fr/fr/statistiques/taux-et-cours/taux-de-change-parites-quotidiennes-YYYY-MM-DD
+  // La Banque de France ne publie pas d'API : ce lien reste une page pour
+  // vérification humaine, voir docs/ARCHITECTURE_CIBLE.md §7 bis.
   const url = `https://www.banque-france.fr/fr/statistiques/taux-et-cours/taux-de-change-parites-quotidiennes-${yyyy}-${mm}-${dd}`;
   link.href = url;
   hint.textContent = `Lien généré pour le ${dd}/${mm}/${yyyy}`;
@@ -668,171 +763,6 @@ function resetBdfLink() {
   link.href = 'https://www.banque-france.fr/fr/statistiques/taux-et-cours/taux-de-change-parites-quotidiennes';
   hint.textContent = 'Saisissez une date complète (JJ MM AAAA) pour filtrer par date';
   hint.style.color = 'var(--mid-gray)';
-}
-
-async function loadFxRatesForDate(dd, mm, yyyy) {
-  const dateEl = document.getElementById('fxDate');
-  const badgesEl = document.getElementById('fxBadges');
-  const dateISO = `${yyyy}-${mm}-${dd}`;
-  const dateDisplay = `${dd}/${mm}/${yyyy}`;
-
-  dateEl.textContent = '⏳ Chargement des taux pour le ' + dateDisplay + '...';
-  badgesEl.innerHTML = '';
-
-  const currencies = ['USD','GBP','CHF','JPY','CAD','AUD','CNY','SEK','NOK','SGD','DKK','HKD','PLN','CZK','HUF','TRY','ZAR','INR','KRW','NZD','MXN','BRL','ILS','MYR','THB'];
-  const newRates = {};
-  let loaded = false;
-
-  // Fetch all currencies in one request but parse each series individually
-  // to guarantee correct currency→rate mapping (avoids index ambiguity in multi-key queries)
-  try {
-    const promises = currencies.map(async (c) => {
-      try {
-        const url = `https://data-api.ecb.europa.eu/service/data/EXR/D.${c}.EUR.SP00.A?startPeriod=${dateISO}&endPeriod=${dateISO}&format=jsondata`;
-        const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
-        if (!res.ok) return;
-        const data = await res.json();
-        // With a single-currency query, there is exactly one series entry
-        const series = data.dataSets?.[0]?.series;
-        if (!series) return;
-        const firstSeries = Object.values(series)[0];
-        if (!firstSeries) return;
-        const obs = firstSeries.observations;
-        if (!obs) return;
-        const vals = Object.values(obs);
-        // Each obs value is an array; first element is the rate
-        // ECB quotes: 1 EUR = X currency (e.g. USD=1.1721, JPY=183.94)
-        if (vals.length && vals[0][0] != null) {
-          newRates[c] = vals[0][0];
-        }
-      } catch(e) {}
-    });
-    await Promise.all(promises);
-    if (Object.keys(newRates).length > 0) {
-      loaded = true;
-    }
-  } catch(e) {}
-
-  if (!loaded) {
-    dateEl.textContent = `⚠ Taux non disponibles pour le ${dateDisplay} (jour férié/week-end ?) — taux de repli affichés`;
-    fxRates = { ...FX_FALLBACK };
-    renderFxBadges();
-    updateBiensFxDisplay();
-    compute();
-    return;
-  }
-
-  fxRates = newRates;
-  dateEl.textContent = `Taux du ${dateDisplay} — Source : Banque Centrale Européenne (BCE)`;
-  renderFxBadges();
-  updateBiensFxDisplay();
-  compute();
-}
-
-function renderFxBadges() {
-  const badgesEl = document.getElementById('fxBadges');
-  badgesEl.innerHTML = '';
-  const showCurrencies = ['USD','GBP','CHF','JPY','CAD','AUD','CNY','SEK','NOK','SGD'];
-  showCurrencies.forEach(c => {
-    if (fxRates[c]) {
-      const b = document.createElement('div');
-      b.className = 'fx-badge';
-      const rate = fxRates[c];
-      b.innerHTML = `<span class="fx-rate">1 EUR = ${rate > 10 ? fmtNum(rate, 2) : fmtNum(rate, 4)} ${c}</span>`;
-      badgesEl.appendChild(b);
-    }
-  });
-}
-
-// ============================================================
-// TAUX DE CHANGE
-// ============================================================
-const FX_FALLBACK = {
-  USD:1.0892, GBP:0.8602, CHF:0.9390, JPY:161.75, AUD:1.7020,
-  CAD:1.5618, CNY:7.9230, SEK:11.6450, NOK:11.8820, DKK:7.4628,
-  SGD:1.4703, HKD:8.4720, PLN:4.2480, CZK:25.130, HUF:410.50,
-  TRY:37.550, ZAR:20.230, INR:91.850, KRW:1548.0, NZD:1.9170,
-  MXN:21.340, BRL:6.3120, ILS:4.0320, MYR:4.9880, THB:37.250
-};
-let fxRates = {};
-let fxSource = 'Taux de repli (données intégrées)';
-let fxDateStr = '';
-
-async function loadFxRates() {
-  const statusEl = document.getElementById('fxStatus');
-  const gridEl = document.getElementById('fxGrid');
-  const dateEl = document.getElementById('fxDate');
-  const badgesEl = document.getElementById('fxBadges');
-
-  // Try to fetch from ECB (more accessible)
-  try {
-    const res = await fetch('https://api.exchangerate-api.com/v4/latest/EUR', { signal: AbortSignal.timeout(5000) });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.rates) {
-        for (const [k, v] of Object.entries(data.rates)) {
-          fxRates[k] = v; // already per EUR
-        }
-        fxSource = 'ExchangeRate-API (taux actualisés)';
-        fxDateStr = 'Taux actualisés au ' + new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'});
-      }
-    }
-  } catch(e) {}
-
-  // Fallback to ECB — one request per currency to guarantee correct mapping
-  if (!Object.keys(fxRates).length) {
-    try {
-      const currencies = ['USD','GBP','CHF','JPY','CAD','AUD','CNY','SEK','NOK','SGD','DKK','HKD','PLN','CZK','HUF','TRY','ZAR','INR','KRW','NZD','MXN','BRL','ILS','MYR','THB'];
-      const promises = currencies.map(async (c) => {
-        try {
-          const res = await fetch(`https://data-api.ecb.europa.eu/service/data/EXR/D.${c}.EUR.SP00.A?lastNObservations=1&format=jsondata`, { signal: AbortSignal.timeout(5000) });
-          if (!res.ok) return;
-          const data = await res.json();
-          const firstSeries = Object.values(data.dataSets?.[0]?.series || {})[0];
-          if (!firstSeries) return;
-          const vals = Object.values(firstSeries.observations || {});
-          if (vals.length && vals[0][0] != null) fxRates[c] = vals[0][0];
-        } catch(e) {}
-      });
-      await Promise.all(promises);
-      if (Object.keys(fxRates).length) {
-        fxSource = 'Banque Centrale Européenne (BCE)';
-        fxDateStr = 'Taux du jour — BCE';
-      }
-    } catch(e) {}
-  }
-
-  // Use fallback if needed
-  if (!Object.keys(fxRates).length) {
-    fxRates = { ...FX_FALLBACK };
-    fxDateStr = 'Taux de repli intégrés — non connecté';
-  }
-
-  // Display
-  statusEl.style.display = 'none';
-  gridEl.style.display = 'block';
-  dateEl.textContent = fxDateStr + ' — Source : ' + fxSource;
-
-  renderFxBadges();
-
-  updateBiensFxDisplay();
-  compute();
-}
-
-function getRate(currency) {
-  if (!currency || currency === 'EUR') return 1;
-  const r = fxRates[currency] || FX_FALLBACK[currency];
-  if (!r) return 1;
-  return 1 / r; // r is EUR per 1 unit of foreign, or units of foreign per EUR
-  // ECB quotes as: 1 EUR = X currency. So to convert X currency to EUR: amount / rate
-}
-
-function convertToEur(amount, currency) {
-  if (!currency || currency === 'EUR') return amount;
-  const r = fxRates[currency] || FX_FALLBACK[currency];
-  if (!r) return amount;
-  // r = units of currency per 1 EUR → EUR = amount / r
-  return amount / r;
 }
 
 function computeFxConvert() {
@@ -848,9 +778,11 @@ function computeFxConvert() {
   }
 
   const eur = convertToEur(amount, currency);
-  const r = fxRates[currency] || FX_FALLBACK[currency];
-  resultEl.textContent = fmtEur(eur);
-  if (r) detailEl.textContent = `Taux appliqué : 1 EUR = ${r.toFixed(4)} ${currency} (${fmtNum(amount, 0)} ${currency} ÷ ${r.toFixed(4)} = ${fmtEur(eur)})`;
+  const r = getRate(currency);
+  resultEl.textContent = eur !== null ? fmtEur(eur) : 'chargement…';
+  detailEl.textContent = r
+    ? `Taux appliqué : 1 EUR = ${r.toFixed(4)} ${currency} (${fmtNum(amount, 0)} ${currency} ÷ ${r.toFixed(4)} = ${fmtEur(eur)})`
+    : '';
 }
 
 // ============================================================
@@ -889,7 +821,9 @@ function renderBiens() {
     const eurVal = convertToEur(b.valeur, b.devise);
     const rpAbat = b.rp ? (1 - ABATTEMENT_RESIDENCE_PRINCIPALE) : 1.0;
     const decoteAbat = b.decote ? Math.max(0, 1 - (b.decotePct || 0) / 100) : 1.0;
-    const taxable = eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
+    // eurVal vaut `null` tant que le taux de cette devise n'est pas encore
+    // résolu : ne jamais le traiter comme 0, ce sous-évaluerait le bien.
+    const taxable = eurVal === null ? null : eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
     tr.innerHTML = `
       <td><input type="text" value="${esc(b.localisation)}" placeholder="ex. Paris 8e" oninput="setBienVal(${b.id},'localisation',this.value)"></td>
       <td>
@@ -929,9 +863,9 @@ function renderBiens() {
           <option value="HKD" ${b.devise==='HKD'?'selected':''}>HKD</option>
         </select>
       </td>
-      <td class="val-cell" id="eurCell_${b.id}">${b.devise !== 'EUR' ? fmtEur(eurVal) : '—'}</td>
+      <td class="val-cell" id="eurCell_${b.id}">${b.devise !== 'EUR' ? (eurVal === null ? 'chargement…' : fmtEur(eurVal)) : '—'}</td>
       <td><input type="number" value="${b.quotePart}" min="0" max="100" step="1" style="width:60px" oninput="setBienVal(${b.id},'quotePart',nombreSaisi(this.value, 100));renderBiens();compute();">%</td>
-      <td class="val-cell" id="taxCell_${b.id}">${fmtEur(taxable)}</td>
+      <td class="val-cell" id="taxCell_${b.id}">${taxable === null ? 'chargement…' : fmtEur(taxable)}</td>
       <td><button class="del-btn" onclick="removeBien(${b.id})" title="Supprimer">✕</button></td>
     `;
     tbody.appendChild(tr);
@@ -945,11 +879,11 @@ function updateBienCells(id) {
   const eurVal = convertToEur(b.valeur, b.devise);
   const rpAbat = b.rp ? (1 - ABATTEMENT_RESIDENCE_PRINCIPALE) : 1.0;
   const decoteAbat = b.decote ? Math.max(0, 1 - (b.decotePct || 0) / 100) : 1.0;
-  const taxable = eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
+  const taxable = eurVal === null ? null : eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
   const eurCell = document.getElementById('eurCell_' + id);
   const taxCell = document.getElementById('taxCell_' + id);
-  if (eurCell) eurCell.textContent = b.devise !== 'EUR' ? fmtEur(eurVal) : '—';
-  if (taxCell) taxCell.textContent = fmtEur(taxable);
+  if (eurCell) eurCell.textContent = b.devise !== 'EUR' ? (eurVal === null ? 'chargement…' : fmtEur(eurVal)) : '—';
+  if (taxCell) taxCell.textContent = taxable === null ? 'chargement…' : fmtEur(taxable);
   updateTotalBrut();
 }
 
@@ -959,16 +893,24 @@ function updateBiensFxDisplay() {
 
 function updateTotalBrut() {
   const total = computePatrimoineBrut();
-  document.getElementById('totalBrut').textContent = fmtEur(total);
+  document.getElementById('totalBrut').textContent = total === null ? 'chargement…' : fmtEur(total);
 }
 
+/**
+ * Retourne `null` tant qu'un bien en devise étrangère n'a pas encore de taux
+ * résolu — jamais une somme partielle qui sous-évaluerait silencieusement le
+ * patrimoine taxable.
+ */
 function computePatrimoineBrut() {
-  return biens.reduce((sum, b) => {
+  let indisponible = false;
+  const total = biens.reduce((sum, b) => {
     const eurVal = convertToEur(b.valeur, b.devise);
+    if (eurVal === null) { indisponible = true; return sum; }
     const rpAbat = b.rp ? (1 - ABATTEMENT_RESIDENCE_PRINCIPALE) : 1.0;
     const decoteAbat = b.decote ? Math.max(0, 1 - (b.decotePct || 0) / 100) : 1.0;
     return sum + eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
   }, 0);
+  return indisponible ? null : total;
 }
 
 // ============================================================
@@ -1064,6 +1006,11 @@ function nombreSaisi(valeurBrute, valeurParDefaut = 0) {
 // ============================================================
 function compute() {
   const patrimoineBrut = computePatrimoineBrut();
+  if (patrimoineBrut === null) {
+    document.getElementById('resultsBody').innerHTML =
+      '<div class="empty-state"><div class="big">⏳</div>Chargement des taux de change en cours…</div>';
+    return;
+  }
   const dedTaxes = nombreSaisi(document.getElementById('dedTaxes').value, 0);
   const dedInterets = nombreSaisi(document.getElementById('dedInterets').value, 0);
   const dedTravaux = nombreSaisi(document.getElementById('dedTravaux').value, 0);

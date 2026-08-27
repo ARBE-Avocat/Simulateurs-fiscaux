@@ -1214,5 +1214,83 @@
         "ifi_t6": "0,00 €"
       }
     }
-  ]
+  ],
+  "scenariosDevise": {
+    "_description": "Relevés le 27 août 2026 depuis le code d'avant l'étape 3 de #13 (avant le retrait de exchangerate-api.com et FX_FALLBACK), en injectant directement des taux connus dans fxRates pour éviter tout aléa réseau. Le test correspondant injecte les mêmes taux dans tauxCache après refactor : si le calcul est inchangé, patrimoineBrut doit être identique au centime près. Les valeurs de taux elles-mêmes sont arbitraires (1,10 / 0,86 / 175) et ne représentent aucune source réelle — seule l'invariance du calcul est ici prouvée.",
+    "cas": [
+      {
+        "nom": "FX IFI — un bien en USD",
+        "biens": [
+          {
+            "localisation": "Bien A",
+            "type": "Détenu en direct",
+            "rp": false,
+            "decote": false,
+            "valeur": 1000000,
+            "devise": "USD",
+            "quotePart": 100
+          }
+        ],
+        "taux": {
+          "USD": 1.1,
+          "GBP": 0.86,
+          "JPY": 175
+        },
+        "attendu": {
+          "patrimoineBrut": 909090.9090909091,
+          "patrimoineNet": 909090.9090909091
+        }
+      },
+      {
+        "nom": "FX IFI — plusieurs biens en devises différentes, un en EUR",
+        "biens": [
+          {
+            "localisation": "Bien A",
+            "type": "Détenu en direct",
+            "rp": false,
+            "decote": false,
+            "valeur": 1000000,
+            "devise": "USD",
+            "quotePart": 100
+          },
+          {
+            "localisation": "Bien B",
+            "type": "Détenu en direct",
+            "rp": false,
+            "decote": false,
+            "valeur": 500000,
+            "devise": "GBP",
+            "quotePart": 100
+          },
+          {
+            "localisation": "Bien C",
+            "type": "Détenu en direct",
+            "rp": false,
+            "decote": false,
+            "valeur": 200000,
+            "devise": "EUR",
+            "quotePart": 100
+          },
+          {
+            "localisation": "Bien D",
+            "type": "Détenu en direct",
+            "rp": false,
+            "decote": false,
+            "valeur": 80000000,
+            "devise": "JPY",
+            "quotePart": 50
+          }
+        ],
+        "taux": {
+          "USD": 1.1,
+          "GBP": 0.86,
+          "JPY": 175
+        },
+        "attendu": {
+          "patrimoineBrut": 1919057.686499547,
+          "patrimoineNet": 1919057.686499547
+        }
+      }
+    ]
+  }
 }

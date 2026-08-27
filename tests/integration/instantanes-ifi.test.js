@@ -113,3 +113,45 @@ test("IFI — les deux simulateurs continuent de diverger, sans que l'extraction
 
   assertProche(ecart, 668.39, 0.01, 'écart entre les deux méthodes de liquidation');
 });
+
+test("IFI — la conversion de devise n'a pas bougé avec l'étape 3 de #13", async (t) => {
+  // Ces scénarios ont été relevés depuis le code d'AVANT cette étape, en
+  // injectant directement des taux connus dans `fxRates` pour éviter tout aléa
+  // réseau (voir tests/fixtures/instantanes-ifi.json, clé `scenariosDevise`).
+  // Le test injecte les mêmes taux dans `tauxCache` après refactor : si le
+  // calcul est inchangé, `patrimoineBrut` doit être identique au centime près.
+  for (const cas of instantane.scenariosDevise.cas) {
+    await t.test(cas.nom, () => {
+      const simulateur = chargerSimulateur('ifi');
+      let resultat = null;
+      simulateur.contexte.renderResults = (r) => { resultat = r; };
+
+      const tauxCache = simulateur.evaluer('tauxCache');
+      for (const [devise, taux] of Object.entries(cas.taux)) {
+        tauxCache[devise] = { taux, source: 'depot', date: '2026-08-27' };
+      }
+
+      cas.biens.forEach((bien) => simulateur.evaluer('addBien')(bien));
+      simulateur.evaluer('compute')();
+
+      assert.ok(resultat, `${cas.nom} — le calcul n'a rien produit`);
+      assertProche(resultat.patrimoineBrut, cas.attendu.patrimoineBrut, tolerance, `${cas.nom} — patrimoineBrut`);
+      assertProche(resultat.patrimoineNet, cas.attendu.patrimoineNet, tolerance, `${cas.nom} — patrimoineNet`);
+    });
+  }
+});
+
+test('IFI — un bien en devise sans taux résolu ne compte ni pour 0 ni pour sa valeur brute', () => {
+  // Défaut trouvé en construisant l'étape 3 de #13 : computePatrimoineBrut
+  // traitait un taux non résolu comme s'il valait 0 (silencieux) plutôt que de
+  // signaler que le calcul n'est pas encore possible.
+  const simulateur = chargerSimulateur('ifi');
+  simulateur.evaluer('addBien')({
+    localisation: 'Bien en attente de taux', type: 'Détenu en direct',
+    rp: false, decote: false, valeur: 1000000, devise: 'USD', quotePart: 100,
+  });
+
+  // tauxCache reste vide : aucun taux n'a encore été résolu.
+  const total = simulateur.evaluer('computePatrimoineBrut')();
+  assert.equal(total, null, 'un bien en devise sans taux doit rendre le total indisponible, pas 0');
+});

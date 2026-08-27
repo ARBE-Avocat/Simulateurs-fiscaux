@@ -31,6 +31,7 @@ const {
   urlBce,
   tauxDepuisReponseBce,
   tauxALaDate,
+  tauxALaDateMultiple,
 } = require('../../src/change');
 
 const echantillon = JSON.parse(
@@ -176,4 +177,85 @@ test('change — tauxALaDate rend toujours 1 pour l\'euro, sans appel réseau', 
   const resultat = await tauxALaDate('EUR', '2025-04-05', { fetch: fetchFactice });
   assert.equal(resultat.taux, 1);
   assert.equal(appele, false);
+});
+
+test('change — tauxALaDate rend aussi la date réellement retenue, quand elle diffère de celle demandée', async () => {
+  // Cas d'un samedi (fiche 3.5) : la date retenue doit être le vendredi.
+  const cotations = serie();
+  const fetchFactice = async (url) => {
+    if (url.startsWith('https://data-api.ecb.europa.eu/')) {
+      return { ok: true, json: async () => ({ dataSets: [{ series: {} }] }) };
+    }
+    const annee = Number(url.match(/(\d{4})\.json$/)[1]);
+    return { ok: true, json: async () => lireAnnee(annee) };
+  };
+
+  const resultat = await tauxALaDate('USD', '2025-04-05', { fetch: fetchFactice });
+
+  assert.equal(resultat.date, '2025-04-04');
+  assert.equal(resultat.taux, tauxPour(cotations, '2025-04-05', 'USD', 10));
+});
+
+test('change — tauxALaDateMultiple interroge la BCE une fois par devise, en parallèle', async () => {
+  const exemple = JSON.parse(
+    fs.readFileSync(chemin('tests', 'fixtures', 'reponse-bce-exemple.json'), 'utf8'),
+  );
+  const appels = [];
+  const fetchFactice = async (url) => {
+    appels.push(url);
+    return { ok: true, json: async () => exemple.reponse };
+  };
+
+  const resultats = await tauxALaDateMultiple(['USD', 'GBP', 'EUR'], '2026-01-02', { fetch: fetchFactice });
+
+  assert.equal(resultats.USD.source, 'bce');
+  assert.equal(resultats.USD.taux, exemple._tauxAttendu);
+  assert.equal(resultats.GBP.source, 'bce');
+  assert.deepEqual(resultats.EUR, { taux: 1, source: 'aucune', date: '2026-01-02' });
+  // L'euro ne doit déclencher aucun appel : deux devises, deux appels.
+  assert.equal(appels.length, 2);
+});
+
+test('change — tauxALaDateMultiple ne charge le dépôt qu’une fois pour toutes les devises en repli', async () => {
+  const cotations = serie();
+  let appelsDepot = 0;
+  const fetchFactice = async (url) => {
+    if (url.startsWith('https://data-api.ecb.europa.eu/')) {
+      return { ok: true, json: async () => ({ dataSets: [{ series: {} }] }) };
+    }
+    appelsDepot += 1;
+    const annee = Number(url.match(/(\d{4})\.json$/)[1]);
+    return { ok: true, json: async () => lireAnnee(annee) };
+  };
+
+  const resultats = await tauxALaDateMultiple(['USD', 'GBP', 'JPY'], '2025-04-05', { fetch: fetchFactice });
+
+  for (const devise of ['USD', 'GBP', 'JPY']) {
+    assert.equal(resultats[devise].source, 'depot');
+    assert.equal(resultats[devise].taux, tauxPour(cotations, '2025-04-05', devise, 10));
+  }
+  // Une seule année utile pour cette date : un seul appel au dépôt, quel que
+  // soit le nombre de devises en repli.
+  assert.equal(appelsDepot, 1);
+});
+
+test("change — tauxALaDateMultiple mélange les sources honnêtement quand certaines devises réussissent en ligne et d'autres non", async () => {
+  const fetchFactice = async (url) => {
+    if (url.includes('.USD.')) {
+      const exemple = JSON.parse(
+        fs.readFileSync(chemin('tests', 'fixtures', 'reponse-bce-exemple.json'), 'utf8'),
+      );
+      return { ok: true, json: async () => exemple.reponse };
+    }
+    if (url.startsWith('https://data-api.ecb.europa.eu/')) {
+      return { ok: true, json: async () => ({ dataSets: [{ series: {} }] }) };
+    }
+    const annee = Number(url.match(/(\d{4})\.json$/)[1]);
+    return { ok: true, json: async () => lireAnnee(annee) };
+  };
+
+  const resultats = await tauxALaDateMultiple(['USD', 'GBP'], '2026-01-02', { fetch: fetchFactice });
+
+  assert.equal(resultats.USD.source, 'bce');
+  assert.equal(resultats.GBP.source, 'depot');
 });

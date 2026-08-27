@@ -6,6 +6,22 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.12] - 2026-08-27
+
+### Modifié
+
+- **Le simulateur IFI ne fait plus appel à `exchangerate-api.com`, un service commercial tiers sans engagement de disponibilité.** Il partage désormais le même service de change que la plus-value immobilière : la BCE en ligne pour chacune des 25 devises, `data/change/` en repli. Le repli figé `FX_FALLBACK`, dont l'ancienneté n'était pas visible à l'écran, est retiré. #13 est terminée.
+- L'ordre historique de l'IFI (`exchangerate-api.com` avant la BCE) répondait à un vrai problème : la BCE ne publie son taux du jour qu'en fin d'après-midi, une requête avant cette heure pour la date du jour renvoie une réponse vide. Vérifié en interrogeant l'API réelle avant l'heure de publication. Mais interroger la BCE sur une fenêtre de plusieurs jours plutôt qu'un seul résout ce même problème sans service tiers : le jour manquant est simplement omis, la fenêtre rend le dernier jour disponible.
+- Conséquence visible : la conversion en devise n'est plus instantanée dans aucun des deux simulateurs. L'IFI affiche « Chargement des taux de change en cours… » pendant le court aller-retour réseau (moins d'une seconde en pratique) plutôt qu'un résultat construit avec des devises non converties.
+
+### Corrigé
+
+- **Un bien en devise étrangère dont le taux n'était pas encore résolu comptait pour 0 € dans le patrimoine taxable de l'IFI**, silencieusement, au lieu d'attendre le taux. Trouvé en construisant l'étape ci-dessus : `computePatrimoineBrut()` traite maintenant un taux manquant comme un calcul non encore possible, pas comme une valeur nulle. Une relecture équivalente sur la plus-value immobilière n'a rien trouvé d'atteignable : un contrôle déjà présent y empêche l'affichage tant qu'un taux manque.
+
+### Connu
+
+- Le repli sur `data/change/` ne couvre que les dates déjà extraites au moment de la génération des fichiers. Pour une date très récente si la BCE est aussi indisponible, aucune des deux sources ne répond, et l'écran l'indique plutôt que d'afficher un chiffre inventé.
+
 ## [0.5.0-beta.11] - 2026-08-27
 
 ### Modifié

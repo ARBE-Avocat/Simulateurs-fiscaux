@@ -405,6 +405,17 @@ Deux points leur restent propres, et relèvent de l'issue #13 :
   ne peut être honnête que s'il est **daté**. Le repli non daté actuel de l'IFI
   (`FX_FALLBACK`) est à corriger lors de cette même troisième étape.
 
+  **Étape 3 livrée dans `v0.5.0-beta.12`.** L'IFI et la plus-value immobilière
+  partagent désormais `src/change.js` : `exchangerate-api.com` et `FX_FALLBACK`
+  sont retirés. Une limite s'en dégage, vérifiée en navigateur réel BCE bloquée
+  intentionnellement : le repli sur `data/change/` ne couvre que les dates déjà
+  extraites au moment de la génération des fichiers. Pour une date très récente
+  — le jour même si la BCE est indisponible — ni la BCE ni le dépôt ne
+  répondent, et le taux reste affiché comme indisponible plutôt que d'inventer
+  un chiffre. Ce n'est pas un défaut à corriger : c'est la limite honnête d'un
+  repli figé, à garder en tête si `data/change/` doit un jour être régénéré
+  périodiquement pour rester utile aux dates récentes.
+
 ## 8. Ce que ce document ne tranche pas
 
 - **Le contenu du schéma des référentiels** : c'est #12. Ce document fixe

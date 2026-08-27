@@ -543,6 +543,10 @@ function toggleCollapsible(bodyId, toggleId) {
 
 const fmt = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n || 0);
 const fmtDevise = (n, dev) => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(n || 0) + ' ' + dev;
+// Un montant en devise converti en euros avec un taux pas encore résolu ne
+// doit jamais s'afficher tel quel comme s'il était déjà en euros : ce serait
+// un montant faux d'apparence normale (un million de yens affiché « 1 000 000 € »).
+const fmtFx = (montantDevise, taux) => (taux ? fmt(montantDevise / taux) : '—');
 const fmtPct = (n) => (n * 100).toFixed(2).replace(/\.00$/, '') + ' %';
 const val = (id) => { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; };
 const getDate = (id) => { const v = document.getElementById(id).value; return v ? new Date(v) : null; };
@@ -746,7 +750,7 @@ function compute() {
 
   if (cAcqBase) {
     el('prixAcqEurRow').style.display = 'block';
-    el('prixAcqEur').textContent = isFx ? (rateAcq ? fmt(cAcqBase / rateAcq) + ' (' + fmtDevise(cAcqBase, devise) + ')' : '—') : fmt(cAcqBase);
+    el('prixAcqEur').textContent = isFx ? (rateAcq ? fmtFx(cAcqBase, rateAcq) + ' (' + fmtDevise(cAcqBase, devise) + ')' : '—') : fmt(cAcqBase);
   } else { el('prixAcqEurRow').style.display = 'none'; }
 
   if (cNetAcq) {
@@ -815,16 +819,16 @@ function compute() {
       <div class="breakdown-row section-head"><span>Détail du calcul</span><span style="text-align:right">Montant (EUR)</span></div>
 
       <div class="breakdown-row section-head" style="background:#edf5f4"><span>Prix de cession${isFx ? ` <span style="font-size:11px;color:var(--mid-gray)">(1 EUR = ${rateCes ? rateCes.toFixed(4) : '—'} ${devise} au jour de cession)</span>` : ''}</span></div>
-      <div class="breakdown-row"><span class="label">Prix stipulé dans l'acte${isFx ? ` (${fmtDevise(cBase, devise)})` : ''}</span><span class="amount">${fmt(rateCes ? cBase / rateCes : cBase)}</span></div>
-      ${cMaj > 0 ? `<div class="breakdown-row"><span class="label">+ Majorations du prix de cession</span><span class="amount">${fmt(rateCes ? cMaj / rateCes : cMaj)}</span></div>` : ''}
-      ${cMin > 0 ? `<div class="breakdown-row"><span class="label">− Minorations du prix de cession</span><span class="amount" style="color:var(--danger)">− ${fmt(rateCes ? cMin / rateCes : cMin)}</span></div>` : ''}
+      <div class="breakdown-row"><span class="label">Prix stipulé dans l'acte${isFx ? ` (${fmtDevise(cBase, devise)})` : ''}</span><span class="amount">${fmtFx(cBase, rateCes)}</span></div>
+      ${cMaj > 0 ? `<div class="breakdown-row"><span class="label">+ Majorations du prix de cession</span><span class="amount">${fmtFx(cMaj, rateCes)}</span></div>` : ''}
+      ${cMin > 0 ? `<div class="breakdown-row"><span class="label">− Minorations du prix de cession</span><span class="amount" style="color:var(--danger)">− ${fmtFx(cMin, rateCes)}</span></div>` : ''}
       <div class="breakdown-row" style="background:var(--off-white)"><span class="label" style="font-weight:500;color:var(--text-dark)">= Prix net de cession</span><span class="amount" style="font-size:15px">${fmt(netCesEur)}</span></div>
 
       <div class="breakdown-row section-head" style="background:#edf5f4"><span>Prix d'acquisition${isFx ? ` <span style="font-size:11px;color:var(--mid-gray)">(1 EUR = ${rateAcq ? rateAcq.toFixed(4) : '—'} ${devise} au jour d'acquisition)</span>` : ''}</span></div>
-      <div class="breakdown-row"><span class="label">Prix d'acquisition retenu${isFx ? ` (${fmtDevise(cAcqBase, devise)})` : ''}</span><span class="amount">${fmt(rateAcq ? cAcqBase / rateAcq : cAcqBase)}</span></div>
-      <div class="breakdown-row"><span class="label">+ Charges d'acquisition retenues${val('fraisReel') > 0 ? '<span class="abat-pct">(frais réels)</span>' : '<span class="abat-pct">(forfait 7,5 %)</span>'}</span><span class="amount">${fmt(rateAcq ? chargesRetenues / rateAcq : chargesRetenues)}</span></div>
-      ${travauxRetenus > 0 ? `<div class="breakdown-row"><span class="label">+ Travaux retenus${val('travauxReel') > 0 ? '<span class="abat-pct">(frais réels)</span>' : '<span class="abat-pct">(forfait 15 %)</span>'}</span><span class="amount">${fmt(rateAcq ? travauxRetenus / rateAcq : travauxRetenus)}</span></div>` : ''}
-      ${(val('chargesHorsForfait') + val('casGratuitFrais') + val('autresMajAcq')) > 0 ? `<div class="breakdown-row"><span class="label">+ Autres majorations du prix d'acquisition</span><span class="amount">${fmt(rateAcq ? (val('chargesHorsForfait') + val('casGratuitFrais') + val('autresMajAcq')) / rateAcq : (val('chargesHorsForfait') + val('casGratuitFrais') + val('autresMajAcq')))}</span></div>` : ''}
+      <div class="breakdown-row"><span class="label">Prix d'acquisition retenu${isFx ? ` (${fmtDevise(cAcqBase, devise)})` : ''}</span><span class="amount">${fmtFx(cAcqBase, rateAcq)}</span></div>
+      <div class="breakdown-row"><span class="label">+ Charges d'acquisition retenues${val('fraisReel') > 0 ? '<span class="abat-pct">(frais réels)</span>' : '<span class="abat-pct">(forfait 7,5 %)</span>'}</span><span class="amount">${fmtFx(chargesRetenues, rateAcq)}</span></div>
+      ${travauxRetenus > 0 ? `<div class="breakdown-row"><span class="label">+ Travaux retenus${val('travauxReel') > 0 ? '<span class="abat-pct">(frais réels)</span>' : '<span class="abat-pct">(forfait 15 %)</span>'}</span><span class="amount">${fmtFx(travauxRetenus, rateAcq)}</span></div>` : ''}
+      ${(val('chargesHorsForfait') + val('casGratuitFrais') + val('autresMajAcq')) > 0 ? `<div class="breakdown-row"><span class="label">+ Autres majorations du prix d'acquisition</span><span class="amount">${fmtFx(val('chargesHorsForfait') + val('casGratuitFrais') + val('autresMajAcq'), rateAcq)}</span></div>` : ''}
       <div class="breakdown-row" style="background:var(--off-white)"><span class="label" style="font-weight:500;color:var(--text-dark)">= Prix net d'acquisition</span><span class="amount" style="font-size:15px">${fmt(netAcqEur)}</span></div>
 
       <div class="breakdown-row section-head" style="background:#edf5f4"><span>Calcul de l'imposition</span></div>
