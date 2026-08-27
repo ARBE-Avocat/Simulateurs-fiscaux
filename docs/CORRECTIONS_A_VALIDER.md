@@ -543,6 +543,53 @@ passer pour une continuité.
 ce ressaut de 500 €, ou la première bande doit-elle ramener la surtaxe à zéro au
 seuil, comme le font les autres raccordements ? Quelle source citer ?
 
+## 3.5 — Quel taux de change retenir lorsque la date tombe un jour non coté
+
+**Ce que voit l'utilisateur.** Les simulateurs de plus-value immobilière et
+d'IFI acceptent des montants en devises et les convertissent en euros. La série
+de taux dont ils disposent ne comporte que les jours de cotation : sur 10 034
+jours entre 1999 et 2026, **3 000 ne sont pas cotés** — week-ends et jours
+fériés.
+
+Une cession datée d'un samedi n'a donc pas de taux du jour.
+
+**La règle appliquée aujourd'hui.** Le simulateur retient **le dernier jour coté
+à la date demandée ou avant, en remontant au plus dix jours**. Au-delà, il
+n'affiche aucun résultat plutôt qu'un montant faux.
+
+Cette règle n'est écrite nulle part : elle a été **déduite du code**. Elle n'a
+pas été modifiée, et l'extraction des taux hors des fichiers HTML l'a conservée
+à l'identique.
+
+**Pourquoi cela demande votre avis.** Le choix du jour change le montant, et
+parfois nettement. Cession de 1 000 000 USD, un samedi :
+
+| Date de cession | Jour retenu | Taux | Prix converti |
+|---|---|---|---|
+| samedi 5 avril 2025 | vendredi 4 avril — règle actuelle | 1,1057 | 904 404,45 € |
+| samedi 5 avril 2025 | lundi 7 avril — si l'on retenait le jour suivant | 1,0967 | 911 826,39 € |
+
+Soit **7 421,94 € de prix de cession** d'écart, donc autant de plus-value
+imposable, pour un même acte.
+
+**Ce qui a été changé.** Rien. La règle est seulement devenue visible et
+vérifiable : elle est décrite dans `data/change/README.md` et un contrôle
+automatique la rejoue sur 3 375 taux.
+
+**Ce qui est attendu de vous.** Trois questions :
+
+1. lorsqu'une date tombe un jour non coté, quel taux s'applique — celui du
+   dernier jour coté **avant**, celui du premier jour coté **après**, ou une
+   autre règle ?
+2. la limite de dix jours de remontée est-elle acceptable ? Elle n'a d'effet
+   qu'en cas de fermeture prolongée ou de date antérieure à 1999 ;
+3. **d'où viennent ces taux ?** Aucune source n'était indiquée dans le fichier
+   d'origine. La série commence le 4 janvier 1999, premier jour de cotation de
+   l'euro, et porte les devises habituellement publiées comme taux de référence,
+   ce qui suggère une reprise des taux de la Banque centrale européenne relayés
+   par la Banque de France. **Ce n'est qu'une supposition** : tant qu'elle n'est
+   pas confirmée, la source reste inscrite comme « inconnue ».
+
 ---
 
 # Partie 4 — Corrections sans aucun effet sur les résultats

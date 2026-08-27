@@ -8,7 +8,8 @@
     "test": "node --test \"tests/**/*.test.js\"",
     "donnees:valider": "node scripts/valider-referentiels.js",
     "donnees:importer": "node scripts/importer-referentiel.js",
-    "donnees:generer": "node scripts/generer-referentiels.js"
+    "donnees:generer": "node scripts/generer-referentiels.js",
+    "change:valider": "node scripts/valider-change.js"
   },
   "engines": {
     "node": ">=22.0.0"

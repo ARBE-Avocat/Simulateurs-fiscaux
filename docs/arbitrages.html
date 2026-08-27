@@ -925,6 +925,34 @@ textarea::placeholder { color: var(--ink-faint); }
       libre: true
     },
     {
+      groupe: "arbitrage",
+      ref: "3.5",
+      titre: "Quel taux de change retenir lorsque la date tombe un jour non coté",
+      simulateur: "PV immobilière · IFI",
+      constat: "Les deux simulateurs convertissent des montants en devises. La série de taux dont ils disposent ne comporte que les jours de cotation : sur 10 034 jours entre 1999 et 2026, 3 000 ne le sont pas — week-ends et jours fériés. Une cession datée d'un samedi n'a donc pas de taux du jour.",
+      raison: "La règle appliquée aujourd'hui — retenir le dernier jour coté à la date demandée ou avant, en remontant au plus dix jours — n'est écrite nulle part : elle a été déduite du code. Le choix du jour change le montant converti, donc la plus-value imposable.",
+      change: "Rien n'a été changé. La règle est seulement devenue visible et vérifiable : elle est décrite dans data/change/README.md et un contrôle automatique la rejoue sur 3 375 taux.",
+      tableau: {
+        legende: "Cession de 1 000 000 USD datée du samedi 5 avril 2025",
+        colonnes: ["Jour retenu", "Taux", "Prix converti"],
+        lignes: [
+          { cells: ["Vendredi 4 avril — règle actuelle", "1,1057", "904 404,45 €"], marque: true },
+          { cells: ["Lundi 7 avril — si l'on retenait le jour suivant", "1,0967", "911 826,39 €"], ton: "avant" }
+        ]
+      },
+      encart: "Soit <strong>7 421,94 € de prix de cession</strong> d'écart, donc autant de plus-value imposable, pour un même acte.<br><br><strong>D'où viennent ces taux ?</strong> Aucune source n'était indiquée dans le fichier d'origine. La série commence le 4 janvier 1999, premier jour de cotation de l'euro, et porte les devises habituellement publiées comme taux de référence, ce qui suggère une reprise des taux de la Banque centrale européenne relayés par la Banque de France. Ce n'est qu'une supposition : tant qu'elle n'est pas confirmée, la source reste inscrite comme « inconnue ».",
+      question: "Lorsqu'une date tombe un jour non coté, quel taux s'applique ?",
+      options: [
+        { cle: "avant", libelle: "Le dernier jour coté avant", ton: "ok" },
+        { cle: "apres", libelle: "Le premier jour coté après", ton: "ok" },
+        { cle: "autre", libelle: "Une autre règle, précisée ci-dessous", ton: "neutre" }
+      ],
+      complements: [
+        "La limite de dix jours de remontée est-elle acceptable ? Elle n'a d'effet qu'en cas de fermeture prolongée, ou pour une date antérieure à 1999.",
+        "D'où viennent ces taux, et quelle source citer ?"
+      ]
+    },
+    {
       groupe: "information",
       ref: "4.1",
       titre: "Un nom de variable contenant des caractères invisibles à l'œil",

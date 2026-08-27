@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-beta.8`.
+Dernière mise à jour du plan : 27 août 2026 — synchronisé avec `v0.5.0-beta.9`.
 
 ## Objectifs de l’orchestration
 
@@ -38,7 +38,8 @@ Dernière mise à jour du plan : 26 août 2026 — synchronisé avec `v0.5.0-bet
 - #15 est traitée : le référentiel IFI est extrait vers `data/referentiels/ifi.json`, partagé par le simulateur IFI et la section IFI de l'IRPP. Aucun montant ne bouge sur 25 scénarios. La divergence de méthode de la fiche 2.4 n'est pas tranchée et est désormais figée par un test. La vague B est à moitié faite ; #17 reste à traiter.
 - #14 est traitée : les référentiels IR, CEHR, CDHR, PFU et prélèvements sociaux sont extraits vers `data/referentiels/ir.json` et `data/referentiels/prelevements-sociaux.json`. Aucun montant ne bouge : 37 scénarios relevés avant l'extraction donnent les mêmes résultats après. La divergence 17,2 % / 18,6 % est représentée par une entrée `conteste` sans valeur unique, chaque simulateur désignant sa variante. La **vague A est terminée**.
 - #16 est traitée : les référentiels DMTG, usufruit et assurance-vie sont extraits vers `data/referentiels/dmtg.json`, lus par les simulateurs Succession et Démembrement. Aucun montant ne bouge : 42 scénarios relevés avant l'extraction donnent les mêmes résultats après. La vague A est donc à moitié faite ; #14 reste à traiter.
-- Deux points supplémentaires ont été ajoutés au dossier d'arbitrage le 27 août 2026, découverts en revue de code : l'abattement pour durée de détention des plus-values mobilières de l'IRPP emploie deux conventions de bornes opposées dans la même expression, jusqu'à 112 500 € d'écart d'impôt (fiche 2.5) ; et le franchissement du seuil de 50 000 € de la surtaxe de plus-value immobilière n'est pas lissé, 500 € pour un euro de plus-value (fiche 3.4, signalé sans être présenté comme un défaut).
+- La première étape de #13 est livrée : `data/change/` contient la série de taux, un fichier par année. Extraction vérifiée exhaustivement, 301 044 comparaisons sans écart.
+- Trois points supplémentaires ont été ajoutés au dossier d'arbitrage le 27 août 2026, dont la règle de résolution des dates non cotées (fiche 3.5, issue #1). Deux points supplémentaires y ont été ajoutés le 27 août 2026, découverts en revue de code : l'abattement pour durée de détention des plus-values mobilières de l'IRPP emploie deux conventions de bornes opposées dans la même expression, jusqu'à 112 500 € d'écart d'impôt (fiche 2.5) ; et le franchissement du seuil de 50 000 € de la surtaxe de plus-value immobilière n'est pas lissé, 500 € pour un euro de plus-value (fiche 3.4, signalé sans être présenté comme un défaut).
 - Deux divergences supplémentaires ont été découvertes pendant l'inventaire et ajoutées aux fiches 2.3 et 2.4 de `docs/CORRECTIONS_A_VALIDER.md` : le plafonnement du quotient familial, appliqué par le simulateur IR et absent de l'IRPP, jusqu'à 19 985,10 € d'écart ; et la méthode de liquidation de l'IFI, différente entre le simulateur IFI et la section IFI de l'IRPP, 668,39 € d'écart sur l'exemple relevé. Aucune n'est tranchée.
 - `docs/arbitrages.html` porte désormais ces deux points. **La page publiée n'a pas encore été republiée** : elle doit l'être à la même adresse, par CLV, avant la prochaine sollicitation du référent juridique.
 
@@ -371,6 +372,10 @@ Vague C, après stabilisation des interfaces IFI et PV immobilière :
   - [#1 — Gérer les week-ends et jours fériés](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/1)
 
 Traiter d’abord le service de change commun de #13, puis sa sous-issue #1. Le service doit exister avant d’implémenter les règles de résolution des dates.
+
+**#13 est engagée, en trois étapes.** La première est livrée dans `v0.5.0-beta.9` : la série est sortie du HTML vers `data/change/`, un fichier par année, sans qu'aucun simulateur ne l'utilise encore depuis cet emplacement. Restent la seconde — le service de lecture et le câblage du simulateur de plus-value immobilière — et la troisième — l'unification avec le simulateur IFI, qui appelle aujourd'hui deux services tiers avec un repli non daté.
+
+**#1 n'est pas un travail technique mais une question fiscale, et elle est déjà posée.** Le code applique une règle qu'il n'annonce pas : retenir le dernier jour coté à la date demandée ou avant, en remontant au plus dix jours. Elle est conservée à l'identique, décrite dans `data/change/README.md`, vérifiée par un contrôle automatique, et soumise au référent en fiche 3.5. Ne rien implémenter avant sa réponse : le choix du jour change le prix converti de plusieurs milliers d'euros.
 
 Les interfaces IFI et plus-value immobilière sont stabilisées depuis #15 et #17 : la vague C peut commencer.
 

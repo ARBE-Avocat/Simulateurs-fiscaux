@@ -6,6 +6,18 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.9] - 2026-08-27
+
+### Ajouté
+
+- La série de taux de change — 1999 à 2026, 30 devises, 7 034 jours cotés — vit désormais dans `data/change/`, à raison d'un fichier par année. Elle était embarquée dans le simulateur de plus-value immobilière, qui la faisait télécharger en entier, près de 4 Mo, à qui ouvrait la page pour convertir deux dates. Le simulateur ne l'utilise pas encore depuis cet emplacement : cette étape ne fait que sortir la donnée, sans rien changer à l'écran.
+- `npm run change:valider` vérifie la cohérence de la série et que son manifeste décrit bien ce que contiennent les fichiers.
+
+### Connu
+
+- La règle qui décide du taux applicable lorsqu'une date tombe un week-end ou un jour férié — retenir le dernier jour coté avant, en remontant au plus dix jours — n'était écrite nulle part : elle a été déduite du code. Elle est conservée à l'identique, désormais décrite et vérifiée, mais **elle n'est pas confirmée**. Sur une cession d'un million de dollars un samedi, retenir le vendredi plutôt que le lundi change le prix converti de 7 421,94 €. Question posée en fiche 3.5 de `docs/CORRECTIONS_A_VALIDER.md`.
+- L'origine de ces taux n'est pas établie. Aucune source ne figurait dans le fichier d'origine ; la série commence au premier jour de cotation de l'euro et porte les devises habituellement publiées comme taux de référence, ce qui suggère une reprise des taux de la Banque centrale européenne relayés par la Banque de France. Tant que ce n'est pas confirmé, la source reste inscrite comme « inconnue ».
+
 ## [0.5.0-beta.8] - 2026-08-26
 
 ### Corrigé
