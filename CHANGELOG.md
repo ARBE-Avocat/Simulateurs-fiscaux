@@ -6,6 +6,26 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.13] - 2026-08-27
+
+### Ajouté
+
+- **Chaque simulateur affiche désormais le millésime fiscal qu'il emploie.** Un bandeau « Référentiel fiscal employé » indique, pour chaque domaine chargé, le millésime des barèmes utilisés, leur date d'effet, leur date de dernière révision et le statut de validation de leurs valeurs. Jusqu'ici, la seule indication de fraîcheur fiscale était le nom du fichier — « Simulation IFI - Avril 2026 » — et une simulation imprimée ne disait pas de quel référentiel elle provenait. Le bandeau est conservé à l'impression, et l'export PowerPoint de la succession le mentionne sur sa couverture.
+- **Le simulateur de plus-value immobilière choisit son référentiel d'après la date de cession saisie.** C'est le seul des six à demander une date fiscale. Une cession de 2019 affiche donc, en rouge, que le référentiel appliqué est postérieur à la situation simulée et que les montants ne reflètent pas le droit de 2019 — ce qui était déjà vrai avant, sans que rien ne le dise.
+- Un sélecteur de millésime apparaît dès qu'un domaine en porte plusieurs. Aucun n'en porte aujourd'hui : il ne s'affiche donc pas, plutôt que de proposer un choix unique. Un choix manuel est abandonné dès que l'année de cession change.
+
+### Modifié
+
+- Le lecteur de référentiels résout maintenant le millésime explicitement. Il indexait ses entrées par identifiant seul : deux millésimes d'une même règle dans un fichier, et la dernière entrée lue l'emportait sans que rien ne le signale. Trois issues sont désormais nommées — millésime exact, absence de date de rattachement, millésime hors couverture — et aucune n'est silencieuse.
+
+Aucun montant affiché ne change : les instantanés de non-régression des six simulateurs passent au centime.
+
+### Connu
+
+- **Cinq simulateurs sur six ne demandent aucune date fiscale** : ni année de revenus, ni date de décès, de donation, ni année de valorisation au 1er janvier. Ils appliquent donc leur unique millésime à toute situation, et le bandeau l'annonce désormais au lieu de le taire. Ajouter un champ de date suppose de décider quelle date commande quel millésime : question posée en fiche 3.6 de `docs/CORRECTIONS_A_VALIDER.md`.
+- Le nom des fichiers ne correspond pas toujours aux données : le simulateur « IR 2025 et CEHR/CDHR 2026 » porte des valeurs entièrement de millésime 2025, et le simulateur de démembrement « Juin 2026 » emploie un barème de mutations à titre gratuit de 2025. Même fiche.
+- La règle appliquée lorsque le millésime exact manque — retenir le dernier millésime antérieur, à défaut le plus ancien — n'a aujourd'hui aucun effet, puisqu'un seul millésime existe par domaine. Elle attend l'arbitrage du référent avant qu'un second n'apparaisse.
+
 ## [0.5.0-beta.12] - 2026-08-27
 
 ### Modifié
