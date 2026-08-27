@@ -376,10 +376,34 @@ Deux points leur restent propres, et relèvent de l'issue #13 :
 - **ce qui fait foi est arbitré.** Décision de CLV du 26 août 2026 : le taux
   retenu est celui **appelé en ligne auprès de la Banque de France**. Les taux
   versionnés dans le dépôt ne servent que de repli lorsque l'appel échoue, et
-  l'écran doit dire lequel des deux a été employé. Le simulateur IFI appelle
-  aujourd'hui deux services tiers avec un repli sur des taux figés **non datés** :
-  cette absence de date est à corriger, un repli non daté ne pouvant pas être
-  signalé honnêtement.
+  l'écran doit dire lequel des deux a été employé.
+
+  La Banque de France ne publie pas d'API interrogeable : seulement des pages
+  web destinées à un lecteur humain, à une adresse datée
+  (`taux-de-change-parites-quotidiennes-YYYY-MM-DD`) mais non structurée pour
+  un programme, et une page générique qui n'a pas répondu au moment du test
+  (27 août 2026). L'appel en ligne s'adresse donc en pratique à l'**API de
+  données de la Banque centrale européenne** (`data-api.ecb.europa.eu`), source
+  officielle dont la Banque de France elle-même relaie les taux de référence.
+  C'est un choix technique d'implémentation de la décision ci-dessus, pas une
+  interprétation différente : la BdF reste désignée comme référence, la BCE en
+  est l'accès programmatique. Un lien vers la page BdF datée reste affiché à
+  l'écran pour la vérification humaine.
+
+  Le simulateur IFI appelle aujourd'hui, pour son taux « du jour », un service
+  tiers commercial (`exchangerate-api.com`) avant la BCE. Ce n'est pas un choix
+  arbitraire : la BCE ne publie son taux de référence quotidien qu'en fin
+  d'après-midi (~16h heure de Paris) ; avant cette heure, une requête BCE pour
+  la date du jour renvoie une réponse vide, testé le 27 août 2026 à 11h. Le
+  simulateur de plus-value immobilière ne rencontre pas ce cas : il convertit
+  toujours une **date de cession passée**, jamais « aujourd'hui », et la BCE y
+  a donc toujours déjà publié. Le service tiers commercial n'y est pas
+  nécessaire et n'y est pas repris. Le cas de l'IFI, qui a besoin d'un taux
+  instantané, reste à traiter séparément — troisième étape de #13.
+
+  Reste, pour toute source en ligne : le repli sur les taux figés dans le dépôt
+  ne peut être honnête que s'il est **daté**. Le repli non daté actuel de l'IFI
+  (`FX_FALLBACK`) est à corriger lors de cette même troisième étape.
 
 ## 8. Ce que ce document ne tranche pas
 

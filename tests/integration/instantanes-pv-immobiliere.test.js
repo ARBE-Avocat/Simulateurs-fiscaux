@@ -22,6 +22,8 @@ const fs = require('node:fs');
 
 const { chargerSimulateur, chemin } = require('../helpers/simulateurs');
 const { assertProche } = require('../helpers/assertions');
+const { listerAnnees, lireAnnee } = require('../../scripts/lib/change');
+const { tauxPour } = require('../../src/change');
 
 const instantane = JSON.parse(
   fs.readFileSync(chemin('tests', 'fixtures', 'instantanes-pv-immobiliere.json'), 'utf8'),
@@ -80,6 +82,49 @@ test('Plus-value immobilière — aucun montant affiché ne bouge', async (t) =>
       for (const id of CHAMPS) {
         document.getElementById(id).value = String(cas.champs[id] ?? '');
       }
+      simulateur.evaluer('compute')();
+
+      const obtenu = relever(document);
+      assert.deepEqual(obtenu.montants, cas.attendu.montants, `${cas.nom} — montants affichés`);
+      assert.deepEqual(obtenu.pourcents, cas.attendu.pourcents, `${cas.nom} — pourcentages affichés`);
+    });
+  }
+});
+
+test("Plus-value immobilière — la conversion de devise n'a pas bougé avec l'étape 2 de #13", async (t) => {
+  // Ces scénarios ont été relevés depuis le code d'AVANT cette étape, quand le
+  // taux venait encore d'un bloc embarqué dans le HTML. `tauxCache` est
+  // pré-rempli ici avec le taux réel de `data/change/` pour la même date et la
+  // même devise, avant `compute()` : les tests ne font aucun appel réseau (voir
+  // tests/README.md), donc `assurerTaux` échouerait silencieusement sans ce
+  // remplissage, et resterait affiché « chargement… » au lieu d'un montant.
+  //
+  // Si les deux sources donnent le même taux, la sortie doit être identique au
+  // caractère près : c'est ce que ce test prouve, séparément de la valeur du
+  // taux lui-même, déjà vérifiée par 301 044 comparaisons dans
+  // tests/unit/change.test.js.
+  const cotations = {};
+  for (const annee of listerAnnees()) {
+    Object.assign(cotations, lireAnnee(annee).cotations);
+  }
+
+  for (const cas of instantane.scenariosDevise.cas) {
+    await t.test(cas.nom, () => {
+      const simulateur = chargerSimulateur('pv-immobiliere');
+      const { document } = simulateur.dom;
+
+      for (const id of CHAMPS) {
+        document.getElementById(id).value = String(cas.champs[id] ?? '');
+      }
+
+      const { devise, dateCes, dateAcq } = cas.champs;
+      const tauxCache = simulateur.evaluer('tauxCache');
+      for (const date of [dateCes, dateAcq]) {
+        const taux = tauxPour(cotations, date, devise, 10);
+        assert.notEqual(taux, null, `taux introuvable dans data/change/ pour ${date} ${devise}`);
+        tauxCache[`${date}|${devise}`] = { taux, source: 'depot' };
+      }
+
       simulateur.evaluer('compute')();
 
       const obtenu = relever(document);

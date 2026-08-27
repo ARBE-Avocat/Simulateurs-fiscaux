@@ -6,6 +6,17 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.11] - 2026-08-27
+
+### Modifié
+
+- **Le simulateur de plus-value immobilière ne télécharge plus la série complète des taux de change.** Il interroge désormais l'API de données de la Banque centrale européenne pour la date de cession et la date d'acquisition, et ne retombe sur les fichiers versionnés de `data/change/` que si la BCE ne répond rien. L'écran affiche laquelle des deux sources a servi. Le repli n'est pas la Banque de France elle-même, qui ne publie aucune API interrogeable : voir `docs/ARCHITECTURE_CIBLE.md` §7 bis pour le détail de cette décision technique.
+- **Conséquence visible pour l'utilisateur : la conversion d'un montant en devise n'est plus instantanée.** Le taux s'affichait jusqu'ici sans délai, lu dans un bloc embarqué dans la page. Il demande maintenant un aller-retour réseau ; le badge affiche « chargement… » le temps de la réponse, en général moins d'une seconde. Aucun montant final ne change : vérifié en rejouant quatre scénarios en devise capturés depuis le code d'avant ce changement, avec les vraies données de `data/change/`, puis confirmé dans un navigateur réel — y compris le cas où l'appel à la BCE échoue, et celui où la date tombe un week-end.
+
+### Connu
+
+- Le repli sur `data/change/` porte toujours la mention « source à confirmer » à l'écran : ces taux n'ont pas de source établie, voir fiche 3.5 de `docs/CORRECTIONS_A_VALIDER.md`.
+
 ## [0.5.0-beta.10] - 2026-08-27
 
 ### Ajouté

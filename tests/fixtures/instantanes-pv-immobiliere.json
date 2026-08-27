@@ -2,7 +2,7 @@
   "description": "Instantané du simulateur de plus-value immobilière, relevé AVANT l'extraction de son référentiel (issue #17).",
   "provenance": "Produit par exécution réelle du simulateur sur la branche clv/y-0.5-donnees, commit 6b1468d, avant toute modification du fichier HTML.",
   "statutValidation": "NON VALIDÉ — ces valeurs figent le comportement existant afin de prouver qu'une refactorisation ne déplace aucun montant. Elles ne certifient ni les taux d'abattement, ni les paliers de surtaxe.",
-  "tolerance": 0.000001,
+  "tolerance": 1e-06,
   "abattements": [
     {
       "annees": 0,
@@ -795,5 +795,206 @@
         "pourcents": []
       }
     }
-  ]
+  ],
+  "scenariosDevise": {
+    "_description": "Relevés le 27 août 2026 depuis le code d'avant l'étape 2 de #13 (FX encore embarqué dans le HTML), avec le cache de taux vidé, exactement comme la commande utilisée pour capturer 'scenarios'. Le test correspondant pré-remplit tauxCache avec le taux réel de data/change/ pour la même date et la même devise, avant d'appeler compute() : si les deux sources donnent le même taux, la sortie doit être identique au caractère près.",
+    "cas": [
+      {
+        "nom": "FX — cession en USD, date ordinaire (mardi)",
+        "champs": {
+          "devise": "USD",
+          "prixImmeuble": 1000000,
+          "prixAcquitte": 400000,
+          "quotePart": 100,
+          "nbCedants": 1,
+          "dateAcq": "2020-01-15",
+          "dateCes": "2025-04-08"
+        },
+        "attendu": {
+          "montants": [
+            "913 242 €",
+            "439 777 €",
+            "473 465 €",
+            "473 465 €",
+            "473 465 €",
+            "913 242 €",
+            "913 242 €",
+            "359 002 €",
+            "26 925 €",
+            "53 850 €",
+            "439 777 €",
+            "473 465 €",
+            "0 €",
+            "473 465 €",
+            "89 958 €",
+            "0 €",
+            "473 465 €",
+            "81 436 €",
+            "50 000 €",
+            "28 408 €",
+            "199 802 €"
+          ],
+          "pourcents": [
+            "0 %",
+            "0 %",
+            "7,5 %",
+            "15 %",
+            "0 %",
+            "19 %",
+            "0 %",
+            "17,2 %",
+            "17,2 %"
+          ]
+        }
+      },
+      {
+        "nom": "FX — cession en USD un samedi (fiche 3.5)",
+        "champs": {
+          "devise": "USD",
+          "prixImmeuble": 1000000,
+          "prixAcquitte": 400000,
+          "quotePart": 100,
+          "nbCedants": 1,
+          "dateAcq": "2020-01-15",
+          "dateCes": "2025-04-05"
+        },
+        "attendu": {
+          "montants": [
+            "904 404 €",
+            "439 777 €",
+            "464 627 €",
+            "464 627 €",
+            "464 627 €",
+            "904 404 €",
+            "904 404 €",
+            "359 002 €",
+            "26 925 €",
+            "53 850 €",
+            "439 777 €",
+            "464 627 €",
+            "0 €",
+            "464 627 €",
+            "88 279 €",
+            "0 €",
+            "464 627 €",
+            "79 916 €",
+            "50 000 €",
+            "27 878 €",
+            "196 073 €"
+          ],
+          "pourcents": [
+            "0 %",
+            "0 %",
+            "7,5 %",
+            "15 %",
+            "0 %",
+            "19 %",
+            "0 %",
+            "17,2 %",
+            "17,2 %"
+          ]
+        }
+      },
+      {
+        "nom": "FX — cession en GBP, debut janvier (chevauchement d'annee)",
+        "champs": {
+          "devise": "GBP",
+          "prixImmeuble": 500000,
+          "prixAcquitte": 250000,
+          "quotePart": 100,
+          "nbCedants": 1,
+          "dateAcq": "2018-06-01",
+          "dateCes": "2025-01-02"
+        },
+        "attendu": {
+          "montants": [
+            "601 554 €",
+            "349 281 €",
+            "252 273 €",
+            "237 137 €",
+            "248 110 €",
+            "601 554 €",
+            "601 554 €",
+            "285 128 €",
+            "21 385 €",
+            "42 769 €",
+            "349 281 €",
+            "252 273 €",
+            "15 136 €",
+            "237 137 €",
+            "45 056 €",
+            "4 163 €",
+            "248 110 €",
+            "42 675 €",
+            "50 000 €",
+            "11 857 €",
+            "99 588 €"
+          ],
+          "pourcents": [
+            "6 %",
+            "65 %",
+            "7,5 %",
+            "15 %",
+            "6 %",
+            "19 %",
+            "65 %",
+            "17,2 %",
+            "17,2 %"
+          ]
+        }
+      },
+      {
+        "nom": "FX — acquisition et cession en devises differentes de dates",
+        "champs": {
+          "devise": "JPY",
+          "prixImmeuble": 80000000,
+          "prixAcquitte": 40000000,
+          "quotePart": 50,
+          "nbCedants": 2,
+          "dateAcq": "2019-11-20",
+          "dateCes": "2026-06-24"
+        },
+        "attendu": {
+          "montants": [
+            "436 324 €",
+            "408 469 €",
+            "27 854 €",
+            "26 183 €",
+            "27 395 €",
+            "436 324 €",
+            "436 324 €",
+            "333 444 €",
+            "25 008 €",
+            "50 017 €",
+            "408 469 €",
+            "27 854 €",
+            "1 671 €",
+            "26 183 €",
+            "13 092 €",
+            "2 487 €",
+            "460 €",
+            "27 395 €",
+            "13 697 €",
+            "2 356 €",
+            "4 843 €",
+            "4 843 €",
+            "2 422 €"
+          ],
+          "pourcents": [
+            "6 %",
+            "65 %",
+            "7,5 %",
+            "15 %",
+            "6 %",
+            "50 %",
+            "19 %",
+            "65 %",
+            "50 %",
+            "17,2 %",
+            "17,2 %"
+          ]
+        }
+      }
+    ]
+  }
 }

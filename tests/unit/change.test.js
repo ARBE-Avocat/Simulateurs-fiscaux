@@ -24,6 +24,14 @@ const {
   validerAnnee,
   formaterRapport,
 } = require('../../scripts/lib/change');
+const {
+  tauxPour,
+  anneesUtiles,
+  urlAnnee,
+  urlBce,
+  tauxDepuisReponseBce,
+  tauxALaDate,
+} = require('../../src/change');
 
 const echantillon = JSON.parse(
   fs.readFileSync(chemin('tests', 'fixtures', 'change-echantillon.json'), 'utf8'),
@@ -38,22 +46,6 @@ function serie() {
     Object.assign(cotations, lireAnnee(annee).cotations);
   }
   return cotations;
-}
-
-/**
- * Taux retenu pour une date : le dernier jour coté à cette date ou avant, en
- * remontant au plus dix jours. Règle reprise telle quelle du simulateur.
- */
-function tauxPour(cotations, date, devise, remonteeMax) {
-  if (!date || devise === 'EUR') return 1;
-  const d = new Date(`${date}T00:00:00Z`);
-  for (let i = 0; i <= remonteeMax; i += 1) {
-    const jour = cotations[d.toISOString().slice(0, 10)];
-    const v = jour ? jour[devise] : undefined;
-    if (typeof v === 'number') return v;
-    d.setUTCDate(d.getUTCDate() - 1);
-  }
-  return null;
 }
 
 test('change — chaque année est cohérente', () => {
@@ -110,4 +102,78 @@ test('change — une date hors de la série ne rend aucun taux plutôt qu’un t
   const cotations = serie();
   assert.equal(tauxPour(cotations, '1990-06-15', 'USD', 10), null);
   assert.equal(tauxPour(cotations, manifeste.premiereCotation, 'USD', 10) > 0, true);
+});
+
+test("change — le taux le plus récent d'une réponse BCE à plusieurs observations est extrait", () => {
+  const exemple = JSON.parse(
+    fs.readFileSync(chemin('tests', 'fixtures', 'reponse-bce-exemple.json'), 'utf8'),
+  );
+  assert.equal(tauxDepuisReponseBce(exemple.reponse), exemple._tauxAttendu);
+});
+
+test('change — une réponse BCE sans observation ne rend aucun taux', () => {
+  // Cas réel : une requête pour le jour même avant l'heure de publication de la
+  // BCE (~16h) renvoie un corps vide, voir docs/ARCHITECTURE_CIBLE.md §7 bis.
+  assert.equal(tauxDepuisReponseBce({ dataSets: [{ series: {} }] }), null);
+  assert.equal(tauxDepuisReponseBce({}), null);
+});
+
+test('change — anneesUtiles couvre les deux années à cheval sur un 1er janvier', () => {
+  assert.deepEqual(anneesUtiles('2025-01-02', 10), [2024, 2025]);
+  assert.deepEqual(anneesUtiles('2025-06-15', 10), [2025]);
+});
+
+test('change — urlAnnee et urlBce pointent vers les emplacements attendus', () => {
+  assert.equal(urlAnnee(2025), 'data/change/2025.json');
+  assert.match(urlBce('USD', '2025-04-08'), /^https:\/\/data-api\.ecb\.europa\.eu\/.*D\.USD\.EUR\.SP00\.A\?startPeriod=2025-03-29&endPeriod=2025-04-08&format=jsondata$/);
+});
+
+test('change — tauxALaDate interroge la BCE en premier et ne retombe sur le dépôt que si elle échoue', async () => {
+  const exemple = JSON.parse(
+    fs.readFileSync(chemin('tests', 'fixtures', 'reponse-bce-exemple.json'), 'utf8'),
+  );
+  let appels = [];
+  const fetchFactice = async (url) => {
+    appels.push(url);
+    return { ok: true, json: async () => exemple.reponse };
+  };
+
+  const resultat = await tauxALaDate('USD', '2026-01-02', { fetch: fetchFactice });
+
+  assert.equal(resultat.source, 'bce');
+  assert.equal(resultat.taux, exemple._tauxAttendu);
+  assert.equal(appels.length, 1, 'le dépôt ne doit pas être interrogé si la BCE répond');
+  assert.match(appels[0], /^https:\/\/data-api\.ecb\.europa\.eu\//);
+});
+
+test('change — tauxALaDate retombe sur les fichiers du dépôt si la BCE ne répond rien', async () => {
+  const cotations = serie();
+  const fetchFactice = async (url) => {
+    if (url.startsWith('https://data-api.ecb.europa.eu/')) {
+      return { ok: true, json: async () => ({ dataSets: [{ series: {} }] }) };
+    }
+    // Sert les vrais fichiers de data/change/, comme le ferait le navigateur.
+    const annee = Number(url.match(/(\d{4})\.json$/)[1]);
+    return { ok: true, json: async () => lireAnnee(annee) };
+  };
+
+  const resultat = await tauxALaDate('USD', '2025-04-05', { fetch: fetchFactice });
+
+  assert.equal(resultat.source, 'depot');
+  assert.equal(resultat.taux, tauxPour(cotations, '2025-04-05', 'USD', 10));
+});
+
+test('change — tauxALaDate ne rend aucun taux si ni la BCE ni le dépôt ne répondent', async () => {
+  const fetchFactice = async () => ({ ok: false });
+  const resultat = await tauxALaDate('USD', '2025-04-05', { fetch: fetchFactice });
+  assert.equal(resultat.taux, null);
+  assert.equal(resultat.source, 'aucune');
+});
+
+test('change — tauxALaDate rend toujours 1 pour l\'euro, sans appel réseau', async () => {
+  let appele = false;
+  const fetchFactice = async () => { appele = true; return { ok: false }; };
+  const resultat = await tauxALaDate('EUR', '2025-04-05', { fetch: fetchFactice });
+  assert.equal(resultat.taux, 1);
+  assert.equal(appele, false);
 });

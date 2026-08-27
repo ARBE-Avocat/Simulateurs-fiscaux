@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 27 août 2026 — synchronisé avec `v0.5.0-beta.9`.
+Dernière mise à jour du plan : 27 août 2026 — synchronisé avec `v0.5.0-beta.11`.
 
 ## Objectifs de l’orchestration
 
@@ -39,6 +39,7 @@ Dernière mise à jour du plan : 27 août 2026 — synchronisé avec `v0.5.0-bet
 - #14 est traitée : les référentiels IR, CEHR, CDHR, PFU et prélèvements sociaux sont extraits vers `data/referentiels/ir.json` et `data/referentiels/prelevements-sociaux.json`. Aucun montant ne bouge : 37 scénarios relevés avant l'extraction donnent les mêmes résultats après. La divergence 17,2 % / 18,6 % est représentée par une entrée `conteste` sans valeur unique, chaque simulateur désignant sa variante. La **vague A est terminée**.
 - #16 est traitée : les référentiels DMTG, usufruit et assurance-vie sont extraits vers `data/referentiels/dmtg.json`, lus par les simulateurs Succession et Démembrement. Aucun montant ne bouge : 42 scénarios relevés avant l'extraction donnent les mêmes résultats après. La vague A est donc à moitié faite ; #14 reste à traiter.
 - La première étape de #13 est livrée : `data/change/` contient la série de taux, un fichier par année. Extraction vérifiée exhaustivement, 301 044 comparaisons sans écart.
+- La deuxième étape de #13 est livrée : le simulateur de plus-value immobilière lit désormais le taux à la date depuis `src/change.js` — BCE en ligne d'abord, `data/change/` en repli, source affichée à l'écran. Rejoué sur quatre scénarios en devise capturés avant ce changement et confirmé en navigateur réel, réseau réel, y compris le cas de repli forcé. Reste la troisième étape : l'unification avec l'IFI.
 - Trois points supplémentaires ont été ajoutés au dossier d'arbitrage le 27 août 2026, dont la règle de résolution des dates non cotées (fiche 3.5, issue #1). Deux points supplémentaires y ont été ajoutés le 27 août 2026, découverts en revue de code : l'abattement pour durée de détention des plus-values mobilières de l'IRPP emploie deux conventions de bornes opposées dans la même expression, jusqu'à 112 500 € d'écart d'impôt (fiche 2.5) ; et le franchissement du seuil de 50 000 € de la surtaxe de plus-value immobilière n'est pas lissé, 500 € pour un euro de plus-value (fiche 3.4, signalé sans être présenté comme un défaut).
 - Deux divergences supplémentaires ont été découvertes pendant l'inventaire et ajoutées aux fiches 2.3 et 2.4 de `docs/CORRECTIONS_A_VALIDER.md` : le plafonnement du quotient familial, appliqué par le simulateur IR et absent de l'IRPP, jusqu'à 19 985,10 € d'écart ; et la méthode de liquidation de l'IFI, différente entre le simulateur IFI et la section IFI de l'IRPP, 668,39 € d'écart sur l'exemple relevé. Aucune n'est tranchée.
 - `docs/arbitrages.html` porte désormais ces deux points. **La page publiée n'a pas encore été republiée** : elle doit l'être à la même adresse, par CLV, avant la prochaine sollicitation du référent juridique.
@@ -375,7 +376,13 @@ Vague C, après stabilisation des interfaces IFI et PV immobilière :
 
 Traiter d’abord le service de change commun de #13, puis sa sous-issue #1. Le service doit exister avant d’implémenter les règles de résolution des dates.
 
-**#13 est engagée, en trois étapes.** La première est livrée dans `v0.5.0-beta.9` : la série est sortie du HTML vers `data/change/`, un fichier par année, sans qu'aucun simulateur ne l'utilise encore depuis cet emplacement. Restent la seconde — le service de lecture et le câblage du simulateur de plus-value immobilière — et la troisième — l'unification avec le simulateur IFI, qui appelle aujourd'hui deux services tiers avec un repli non daté.
+**#13 est engagée, en trois étapes.**
+
+1. Livrée dans `v0.5.0-beta.9` : la série est sortie du HTML vers `data/change/`, un fichier par année.
+2. Livrée dans `v0.5.0-beta.11` : `src/change.js` fournit le taux à une date — la BCE en ligne d'abord, `data/change/` en repli si elle ne répond rien — et le simulateur de plus-value immobilière l'utilise. L'écran indique laquelle des deux sources a servi. Le repli n'est pas la Banque de France elle-même : elle ne publie aucune API interrogeable, seulement des pages web pour un lecteur humain. Voir §7 bis pour cette décision.
+3. Reste à faire : l'unification avec le simulateur IFI, qui appelle aujourd'hui `exchangerate-api.com` avant la BCE pour son taux « du jour », avec un repli non daté (`FX_FALLBACK`). Cet ordre n'est pas arbitraire — la BCE ne publie son taux quotidien qu'en fin d'après-midi, une requête pour la date du jour avant cette heure renvoie une réponse vide — mais l'IFI n'a pas encore été revu à la lumière de cette même logique. Son repli non daté reste, lui, à corriger dans tous les cas.
+
+Conséquence visible de l'étape 2 : la conversion en devise n'est plus instantanée, elle demande un aller-retour réseau (moins d'une seconde en pratique). Aucun montant final ne change — preuve par quatre scénarios rejoués avec la vraie donnée de `data/change/`, puis en navigateur réel avec un vrai appel à la BCE, y compris le cas où l'appel échoue et celui d'une date tombant un jour non coté.
 
 **#1 n'est pas un travail technique mais une question fiscale, et elle est déjà posée.** Le code applique une règle qu'il n'annonce pas : retenir le dernier jour coté à la date demandée ou avant, en remontant au plus dix jours. Elle est conservée à l'identique, décrite dans `data/change/README.md`, vérifiée par un contrôle automatique, et soumise au référent en fiche 3.5. Ne rien implémenter avant sa réponse : le choix du jour change le prix converti de plusieurs milliers d'euros.
 
