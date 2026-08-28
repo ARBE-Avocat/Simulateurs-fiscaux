@@ -6,6 +6,29 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.15] - 2026-08-28
+
+Première moitié de l'issue #11 : les conventions communes de lecture et d'affichage. `docs/INVENTAIRE_CONVENTIONS.md` avait relevé sept divergences entre les six simulateurs et indiqué, pour chacune, qui devait trancher. Les quatre qui relevaient de la technique sont appliquées ici ; les trois qui commandent un montant ou sa présentation sont posées au référent, fiches 3.7 à 3.10.
+
+### Corrigé
+
+- **Un calcul qui n'aboutit pas ne s'affiche plus comme un montant.** Trois comportements coexistaient : `—`, `NaN €` et `0 €`. Ce dernier, employé par la plus-value immobilière, était le plus dangereux : il présentait une erreur de calcul comme un résultat valide, un utilisateur ne pouvant pas distinguer « le simulateur n'a pas pu calculer » de « vous ne devez rien ». Les six simulateurs affichent désormais `—`. Un vrai zéro continue de s'afficher « 0 € ».
+- **Une case à cocher introuvable vaut désormais « décochée » dans l'IRPP**, au lieu de « cochée » : une faute de frappe dans un identifiant activait silencieusement une option, et avec elle un prélèvement. Les treize identifiants lus existent bien aujourd'hui — aucun montant ne change, la panne future est supprimée.
+
+### Ajouté
+
+- `src/conventions.js`, chargé par les six simulateurs : lecture d'une saisie, lecture d'une case, mise en forme d'un montant et d'un taux. La règle de l'issue #8 — un zéro saisi est respecté, seul un champ vide ou illisible prend la valeur par défaut — était copiée dans trois simulateurs et absente des trois autres ; elle est désormais unique et s'applique aux six.
+- `docs/CONVENTIONS.md` : ce qui est tranché, ce qui ne l'est pas, et ce qu'un contributeur doit employer.
+- Quatre fiches soumises au référent fiscal : représentation des tranches de barème (3.7, objet de l'issue #7), décimales affichées (3.8), étapes d'arrondi (3.9), champs obligatoires et messages d'erreur (3.10).
+
+### Connu
+
+- **Deux simulateurs ne donnent toujours pas le même impôt pour le même revenu** : jusqu'à 1,27 €, parce que l'IRPP fait commencer chaque tranche un euro au-dessus de la borne précédente là où le simulateur « IR, CEHR et CDHR » les rend jointives. L'IFI a le même défaut, pour 0,05 €. Rien n'a été modifié : la convention exacte est une question fiscale, posée en fiche 3.7.
+- Les montants restent affichés à l'euro dans quatre simulateurs et au centime dans deux autres, faute de règle tranchée (fiche 3.8).
+- `fmtPct()` du simulateur « IR, CEHR et CDHR » reçoit encore un pourcentage déjà multiplié là où les cinq autres reçoivent un décimal. L'aligner supposerait de reprendre chacun de ses appelants ; l'écart est signalé sur place.
+
+Aucun montant valide n'est modifié : les 390 contrôles automatiques, instantanés compris, donnent les mêmes résultats avant et après.
+
 ## [0.5.0-beta.14] - 2026-08-28
 
 Le référent fiscal a répondu à `docs/CORRECTIONS_A_VALIDER.md` : les corrections suivantes appliquent ses décisions. Le détail de chaque question et de chaque réponse reste dans ce document, fiche par fiche.

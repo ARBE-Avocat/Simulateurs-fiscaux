@@ -538,6 +538,7 @@
 
 <script src="src/genere/referentiels/prelevements-sociaux.js"></script>
 <script src="src/genere/referentiels/pv-immobiliere.js"></script>
+<script src="src/conventions.js"></script>
 <script src="src/lecture-referentiels.js"></script>
 <script src="src/millesime.js"></script>
 <script src="src/change.js"></script>
@@ -549,14 +550,22 @@ function toggleCollapsible(bodyId, toggleId) {
   document.getElementById(toggleId).classList.toggle('open');
 }
 
-const fmt = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n || 0);
-const fmtDevise = (n, dev) => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(n || 0) + ' ' + dev;
+// `n || 0` affichait « 0 € » pour un calcul impossible : une erreur prenait
+// l'apparence d'un résultat nul valide, le pire des trois comportements
+// relevés par docs/INVENTAIRE_CONVENTIONS.md. Un vrai zéro reste « 0 € » (#11).
+const fmt = (n) => (Conventions.estNombreAffichable(n)
+  ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
+  : Conventions.INDISPONIBLE);
+const fmtDevise = (n, dev) => (Conventions.estNombreAffichable(n)
+  ? new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(n) + ' ' + dev
+  : Conventions.INDISPONIBLE);
 // Un montant en devise converti en euros avec un taux pas encore résolu ne
 // doit jamais s'afficher tel quel comme s'il était déjà en euros : ce serait
 // un montant faux d'apparence normale (un million de yens affiché « 1 000 000 € »).
 const fmtFx = (montantDevise, taux) => (taux ? fmt(montantDevise / taux) : '—');
 const fmtPct = (n) => (n * 100).toFixed(2).replace(/\.00$/, '') + ' %';
-const val = (id) => { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; };
+// Même lecture que les cinq autres simulateurs depuis l'issue #11.
+const val = (id) => Conventions.nombreSaisi(document.getElementById(id).value, 0);
 const getDate = (id) => { const v = document.getElementById(id).value; return v ? new Date(v) : null; };
 const el = (id) => document.getElementById(id);
 

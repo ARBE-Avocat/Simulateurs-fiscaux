@@ -439,6 +439,7 @@
 
 <script src="src/genere/referentiels/ir.js"></script>
 <script src="src/genere/referentiels/prelevements-sociaux.js"></script>
+<script src="src/conventions.js"></script>
 <script src="src/lecture-referentiels.js"></script>
 <script src="src/millesime.js"></script>
 <script>
@@ -549,9 +550,19 @@ function cehrBareme(rfr, tranches){
 }
 
 function fmt(n){
-  return Math.round(n).toLocaleString('fr-FR') + ' €';
+  // Un calcul qui n'aboutit pas s'affiche « — » plutôt que « NaN € » (#11).
+  return Conventions.formaterMontant(n, 0);
 }
+/**
+ * Attention : ce simulateur est le seul à passer un pourcentage déjà multiplié
+ * — `fmtPct(17.2)` pour 17,2 %. Les cinq autres passent un décimal. La
+ * convention commune retenue par l'issue #11 est le décimal ; cet appel n'est
+ * pas encore aligné car il faudrait revoir chacun de ses appelants, ce qui
+ * dépasse le périmètre. Le comportement d'affichage est inchangé ; seul le cas
+ * invalide cesse d'écrire « NaN % ».
+ */
 function fmtPct(n){
+  if (!Conventions.estNombreAffichable(n)) return Conventions.INDISPONIBLE;
   return n.toFixed(2).replace('.', ',') + ' %';
 }
 

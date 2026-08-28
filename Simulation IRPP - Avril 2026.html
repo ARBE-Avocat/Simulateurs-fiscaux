@@ -1448,12 +1448,19 @@ footer strong { color: var(--gold); font-weight: 400; }
 <script src="src/genere/referentiels/ifi.js"></script>
 <script src="src/genere/referentiels/ir.js"></script>
 <script src="src/genere/referentiels/prelevements-sociaux.js"></script>
+<script src="src/conventions.js"></script>
 <script src="src/lecture-referentiels.js"></script>
 <script src="src/millesime.js"></script>
 <script>
 const $ = id => document.getElementById(id);
-const v  = id => parseFloat($(id)?.value) || 0;
-const cb = id => $(id)?.checked ?? true;
+// `|| 0` ne se voyait pas ici car la valeur par défaut est déjà zéro. Passer
+// par le helper commun évite que le défaut de l'issue #8 réapparaisse le jour
+// où l'un de ces champs recevra une valeur par défaut non nulle (#11).
+const v  = id => Conventions.nombreSaisi($(id)?.value, 0);
+// Une case introuvable vaut « décochée ». Elle valait « cochée » : une faute de
+// frappe dans un identifiant activait donc un prélèvement en silence (#11).
+// Les treize identifiants lus existent, aucun montant ne change aujourd'hui.
+const cb = id => Conventions.caseCochee($(id));
 
 // ── Référentiels fiscaux ────────────────────────────────────────────────────
 // Sources de vérité : data/referentiels/ir.json et
@@ -1560,7 +1567,8 @@ const PLAFOND_DEMI_PART = IR.valeur('ir.quotient.plafond-demi-part');
 // changerait ce que la page fait au chargement, ce qui n'a pas sa place dans
 // une refactorisation. Un contrôle automatique interdit en revanche qu'elles
 // divergent des données : voir tests/unit/coherence-referentiels.test.js.
-const fmt = (n, d=0) => n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}) + ' €';
+// Un calcul qui n'aboutit pas s'affiche « — » plutôt que « NaN € » (#11).
+const fmt = (n, d=0) => Conventions.formaterMontant(n, d);
 
 function set(id, val, cls='') {
   const e = $(id); if (!e) return;

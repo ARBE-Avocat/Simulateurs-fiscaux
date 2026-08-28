@@ -989,6 +989,83 @@ textarea::placeholder { color: var(--ink-faint); }
       ]
     },
     {
+      groupe: "arbitrage",
+      ref: "3.7",
+      titre: "Deux simulateurs ne donnent pas le même impôt pour le même revenu",
+      simulateur: "IR, CEHR et CDHR · IRPP · IFI",
+      constat: "Le barème de l'impôt sur le revenu est écrit de deux façons. Le simulateur « IR, CEHR et CDHR » fait aller une tranche jusqu'à sa borne, et la suivante reprend exactement là. L'IRPP fait commencer chaque tranche à la borne précédente plus un euro. Cet euro n'est taxé nulle part.",
+      raison: "Le même défaut existe dans l'IFI, en plus petit : cinq euros sans taux, 0,05 € d'écart au total.",
+      change: "Rien n'a été modifié : c'est à vous de dire lequel des deux chiffres est le bon.",
+      tableau: {
+        legende: "Même barème, mêmes revenus, deux résultats",
+        colonnes: ["Revenu imposable", "« IR, CEHR et CDHR »", "IRPP", "Écart"],
+        lignes: [
+          { cells: ["11 601 €", "0,11 €", "0,00 €", "0,11 €"], ton: "avant" },
+          { cells: ["84 577 €", "18 477,09 €", "18 476,68 €", "0,41 €"], ton: "avant" },
+          { cells: ["200 000 € et plus", "66 523,84 €", "66 522,57 €", "1,27 €"], ton: "avant" }
+        ]
+      },
+      encart: "Les montants en jeu sont dérisoires. Le problème est ailleurs : <strong>deux simulateurs du même site donnent deux impôts différents pour le même revenu.</strong>",
+      question: "Une tranche s'arrête-t-elle à sa borne haute incluse, la suivante reprenant au premier euro au-dessus ?",
+      options: [
+        { cle: "jointives", libelle: "Oui — les tranches sont jointives, aucun euro n'est sauté", ton: "ok" },
+        { cle: "plus-un", libelle: "Non — la tranche suivante commence bien un euro plus haut", ton: "ok" },
+        { cle: "autre", libelle: "Une autre règle, précisée ci-dessous", ton: "neutre" }
+      ],
+      complements: [
+        "La même écriture doit-elle s'appliquer aux cinq barèmes du dépôt — impôt sur le revenu, IFI, mutations à titre gratuit, usufruit, surtaxe de plus-value ?"
+      ]
+    },
+    {
+      groupe: "arbitrage",
+      ref: "3.8",
+      titre: "Les montants s'affichent tantôt à l'euro, tantôt au centime",
+      simulateur: "Les six simulateurs",
+      constat: "Le calcul est le même partout ; seul l'affichage diffère. Un même montant s'écrit « 1 235 € » dans quatre simulateurs et « 1 234,56 € » dans les deux autres.",
+      raison: "Aucune règle commune n'a jamais été posée : chaque simulateur a gardé la présentation de son auteur.",
+      change: "Rien n'a été modifié. Chaque simulateur conserve sa présentation actuelle tant que la règle n'est pas fixée.",
+      tableau: {
+        legende: "Ce qui s'affiche aujourd'hui pour 1 234,56 €",
+        colonnes: ["Simulateur", "Affichage"],
+        lignes: [
+          { cells: ["IR, CEHR et CDHR · IFI · Plus-value immobilière · Succession", "1 235 €"], ton: "avant" },
+          { cells: ["IRPP · Démembrement", "1 234,56 €"], ton: "avant" }
+        ]
+      },
+      question: "Les résultats doivent-ils être présentés à l'euro ou au centime ?",
+      options: [
+        { cle: "euro", libelle: "À l'euro partout", ton: "ok" },
+        { cle: "centime", libelle: "Au centime partout", ton: "ok" },
+        { cle: "mixte", libelle: "À l'euro pour l'impôt dû, au centime pour le détail", ton: "neutre" }
+      ]
+    },
+    {
+      groupe: "arbitrage",
+      ref: "3.9",
+      titre: "À quel moment faut-il arrondir",
+      simulateur: "IFI, et règle commune aux six",
+      constat: "Les arrondis sont aujourd'hui réservés à l'affichage, ce qui est sain. Une exception : dans l'IFI, l'exonération des fermages est arrondie à l'euro pour l'affichage, mais le calcul de l'impôt réutilise la valeur non arrondie.",
+      raison: "Le détail montré à l'utilisateur peut donc différer de quelques centimes de ce qui est réellement retenu dans le calcul.",
+      change: "Rien n'a été modifié, faute de savoir quelle est la règle fiscale correcte.",
+      question: "L'arrondi fiscal s'applique-t-il à la base taxable, au montant d'impôt, ou à chaque tranche — et à l'euro le plus proche ou à l'inférieur ?",
+      libre: true
+    },
+    {
+      groupe: "arbitrage",
+      ref: "3.10",
+      titre: "Aucun champ n'affiche de message d'erreur",
+      simulateur: "Les six simulateurs",
+      constat: "Aucun simulateur ne signale une saisie invalide. Elle est soit remplacée par une valeur par défaut, soit acceptée telle quelle.",
+      raison: "Deux cas du démembrement ont été traités en fiches 3.1 et 3.2, avec vos bornes. La question reste entière pour tous les autres champs.",
+      change: "Rien n'a été ajouté hors des deux cas déjà tranchés.",
+      question: "Quels champs sont obligatoires, et que doit voir l'utilisateur lorsqu'une valeur est manifestement impossible ?",
+      options: [
+        { cle: "avertir", libelle: "Un avertissement à côté du résultat, comme pour l'âge du donateur", ton: "ok" },
+        { cle: "bloquer", libelle: "Un blocage du calcul tant que la saisie est invalide", ton: "ok" },
+        { cle: "selon", libelle: "Selon le champ, à préciser", ton: "neutre" }
+      ]
+    },
+    {
       groupe: "information",
       ref: "4.1",
       titre: "Un nom de variable contenant des caractères invisibles à l'œil",

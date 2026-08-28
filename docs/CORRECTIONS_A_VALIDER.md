@@ -756,6 +756,70 @@ doit-elle commander ? Puis : que doit-il se passer lorsque le millésime exact
 manque, et une valeur sans date de fin doit-elle être présumée toujours en
 vigueur ?
 
+## 3.7 — Deux simulateurs ne donnent pas le même impôt pour le même revenu
+
+Le barème de l'impôt sur le revenu est écrit de deux façons différentes.
+
+Le simulateur « IR, CEHR et CDHR » fait aller une tranche jusqu'à sa borne, et
+la suivante reprend exactement là. L'IRPP fait commencer chaque tranche à la
+borne précédente **plus un euro**. Cet euro n'est donc taxé nulle part.
+
+Pour un même revenu :
+
+| Revenu imposable | « IR, CEHR et CDHR » | IRPP | Écart |
+|---|---|---|---|
+| 11 601 € | 0,11 € | 0,00 € | 0,11 € |
+| 84 577 € | 18 477,09 € | 18 476,68 € | 0,41 € |
+| 200 000 € et plus | 66 523,84 € | 66 522,57 € | 1,27 € |
+
+L'IFI a le même défaut, en plus petit : cinq euros sans taux, 0,05 € d'écart au
+total.
+
+Les montants en jeu sont dérisoires. Le problème est ailleurs : deux
+simulateurs du même site donnent deux impôts différents pour le même revenu.
+
+**Ce qui est attendu de vous.** Une tranche s'arrête-t-elle à sa borne haute
+incluse, la suivante reprenant au premier euro au-dessus ? Autrement dit :
+lequel des deux chiffres ci-dessus est le bon ?
+
+## 3.8 — Les montants s'affichent tantôt à l'euro, tantôt au centime
+
+| Simulateur | Ce qui s'affiche pour 1 234,56 € |
+|---|---|
+| IR, CEHR et CDHR, IFI, plus-value immobilière, succession | 1 235 € |
+| IRPP, démembrement | 1 234,56 € |
+
+Le calcul est le même ; seul l'affichage diffère.
+
+**Ce qui est attendu de vous.** Les résultats doivent-ils être présentés à
+l'euro ou au centime ? La réponse peut différer entre le montant d'impôt final
+et les lignes de détail.
+
+## 3.9 — À quel moment arrondir
+
+Les arrondis sont aujourd'hui réservés à l'affichage, ce qui est sain. Une
+exception : dans l'IFI, l'exonération des fermages est arrondie à l'euro pour
+l'affichage, mais le calcul de l'impôt réutilise la valeur non arrondie. Le
+détail montré peut donc différer de quelques centimes de ce qui est réellement
+retenu.
+
+**Ce qui est attendu de vous.** L'arrondi fiscal s'applique-t-il à la base
+taxable, au montant d'impôt, ou à chaque tranche ? Et à l'euro le plus proche,
+ou à l'inférieur ?
+
+## 3.10 — Aucun champ n'affiche de message d'erreur
+
+Aucun des six simulateurs ne signale une saisie invalide. Elle est soit
+remplacée par une valeur par défaut, soit acceptée telle quelle.
+
+Deux cas du démembrement ont été traités en fiches 3.1 et 3.2. La question
+reste ouverte pour les autres champs des six simulateurs.
+
+**Ce qui est attendu de vous.** Une règle générale suffirait : quels champs
+sont obligatoires, et que doit voir l'utilisateur lorsqu'une valeur est
+manifestement impossible — un blocage du calcul, ou un avertissement à côté du
+résultat comme pour l'âge du donateur ?
+
 
 ---
 

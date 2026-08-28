@@ -635,6 +635,7 @@ footer a { color: var(--gold-light); text-decoration: none; }
 </div>
 
 <script src="src/genere/referentiels/dmtg.js"></script>
+<script src="src/conventions.js"></script>
 <script src="src/lecture-referentiels.js"></script>
 <script src="src/millesime.js"></script>
 <script>
@@ -904,13 +905,9 @@ function renderAV1() {
  * @param {number} valeurParDefaut valeur retenue si le champ est vide ou illisible
  * @returns {number}
  */
+// Implémentation commune : src/conventions.js (#8, généralisée par #11).
 function nombreSaisi(valeurBrute, valeurParDefaut = 0) {
-  if (valeurBrute === null || valeurBrute === undefined) return valeurParDefaut;
-  const texte = String(valeurBrute).trim();
-  if (texte === '') return valeurParDefaut;
-  const nombre = parseFloat(texte);
-  if (!isFinite(nombre)) return valeurParDefaut;
-  return nombre;
+  return Conventions.nombreSaisi(valeurBrute, valeurParDefaut);
 }
 
 // ══════════════════════════════════════════════════════

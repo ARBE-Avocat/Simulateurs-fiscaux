@@ -721,6 +721,7 @@
 </div>
 
 <script src="src/genere/referentiels/dmtg.js"></script>
+<script src="src/conventions.js"></script>
 <script src="src/lecture-referentiels.js"></script>
 <script src="src/millesime.js"></script>
 <script>
@@ -808,13 +809,9 @@ function getAbattement(lien) {
  * @param {number} valeurParDefaut valeur retenue si le champ est vide ou illisible
  * @returns {number}
  */
+// Implémentation commune : src/conventions.js (#8, généralisée par #11).
 function nombreSaisi(valeurBrute, valeurParDefaut = 0) {
-  if (valeurBrute === null || valeurBrute === undefined) return valeurParDefaut;
-  const texte = String(valeurBrute).trim();
-  if (texte === '') return valeurParDefaut;
-  const nombre = parseFloat(texte);
-  if (!isFinite(nombre)) return valeurParDefaut;
-  return nombre;
+  return Conventions.nombreSaisi(valeurBrute, valeurParDefaut);
 }
 
 // ============================================================
@@ -865,10 +862,15 @@ function calcDroits(base, tranches) {
 // FORMATAGE
 // ============================================================
 function fmt(n) {
+  // Un calcul qui n'aboutit pas s'affiche « — » plutôt que « NaN € » (#11).
+  if (!Conventions.estNombreAffichable(n)) return Conventions.INDISPONIBLE;
   if (n === 0) return '0 €';
   return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n) + ' €';
 }
-function fmtPct(n) { return (n * 100).toFixed(2).replace('.', ',') + ' %'; }
+function fmtPct(n) {
+  if (!Conventions.estNombreAffichable(n)) return Conventions.INDISPONIBLE;
+  return (n * 100).toFixed(2).replace('.', ',') + ' %';
+}
 
 // ============================================================
 // MISE À JOUR DU BARÈME USUFRUIT (surbrillance)

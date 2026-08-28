@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 28 août 2026 — synchronisé avec `v0.5.0-beta.14`.
+Dernière mise à jour du plan : 28 août 2026 — synchronisé avec `v0.5.0-beta.15`.
 
 ## Objectifs de l’orchestration
 
@@ -48,7 +48,9 @@ Dernière mise à jour du plan : 28 août 2026 — synchronisé avec `v0.5.0-bet
 - **Le référent fiscal a répondu à `docs/CORRECTIONS_A_VALIDER.md` le 28 août 2026**, sur toutes les fiches sauf 3.6 (délibérément traitée à part). #4 (décote CDHR) est donc tranchée et corrigée, de même que le taux des PS (fiche 2.2, rendu modifiable plutôt qu'unifié), le plafonnement du quotient familial et la méthode de liquidation de l'IFI dans l'IRPP (fiches 2.3 et 2.4, découvertes pendant l'inventaire), l'abattement pour durée de détention (fiche 2.5) et la règle de remontée aux jours non cotés (fiche 3.5, issue #1). Détail en `v0.5.0-beta.14` de `CHANGELOG.md`. La page d'arbitrage a été republiée avec les réponses reçues.
 - Point de contrôle humain A : items 1 et 2 (décote CDHR, taux des PS) sont désormais levés. Restent ouverts : #9 (cas de référence pour valider les fixtures) et #11 (champs obligatoires, bornes, messages d'erreur) — ce dernier n'a été traité que ponctuellement pour le démembrement (fiches 3.1 et 3.2), pas comme politique commune aux six simulateurs.
 - Outillage pour #9 : `docs/sources-fiscales.html`, publiée en artifact claude.ai le 28 août 2026, liste les 65 valeurs des cinq référentiels sans source confirmée (ou avec une référence à valider) et laisse le référent renseigner texte, lien et date de vérification, entrée par entrée. Rien n'est encore rempli à ce jour ; la page n'a pas encore été soumise au référent.
-- **Le jalon `0.5` n'est pas terminé.** Restent, dans l'ordre : #11 (validation, unités, arrondis — non commencée), #7 qui en dépend, #9 (soumettre `docs/sources-fiscales.html` au référent et récupérer les sources), et la partie de #19 volontairement mise de côté au début de ce chantier (fiche 3.6 : date de rattachement des cinq simulateurs qui n'en ont aucune). Tout le reste du jalon — #20, #12, #18, #14 à #17, #13, #1 — est terminé.
+- **#11 est traitée à moitié, et cette moitié est celle qui ne demandait aucune décision fiscale.** `src/conventions.js` et `docs/CONVENTIONS.md` posent les quatre conventions techniques : taux en décimal, lecture unique des saisies, case introuvable valant « décochée », et surtout un calcul impossible affiché `—` au lieu de `NaN €` ou de `0 €`. Livré en `v0.5.0-beta.15`, sans modifier un seul montant valide.
+- **Le jalon `0.5` n'est pas terminé, et ce qui reste dépend entièrement du référent.** Quatre questions lui sont posées, fiches 3.7 à 3.10 : représentation des tranches de barème (c'est l'issue #7 entière), décimales affichées, étapes d'arrondi, champs obligatoires et messages d'erreur. S'y ajoutent #9 — `docs/sources-fiscales.html` est prête mais ne lui a pas encore été soumise — et la fiche 3.6 de #19, chantier séparé. Tout le reste du jalon — #20, #12, #18, #14 à #17, #13, #1, et la moitié technique de #11 — est terminé.
+- Aucun travail technique du jalon `0.5` n'est donc en attente d'un agent : il est en attente d'une réponse humaine.
 
 ## Décisions d'architecture déjà arbitrées
 
@@ -227,7 +229,9 @@ Décisions métier attendues, par ordre d'urgence :
 1. ~~#4 — formule, intervalle et point d'application de la décote CDHR.~~ Tranché le 28 août 2026, corrigé en `v0.5.0-beta.14`.
 2. ~~Le taux des prélèvements sociaux, 17,2 % ou 18,6 %, et son champ d'application.~~ Tranché le 28 août 2026 : les deux sont justes selon le cas, le taux est désormais modifiable partout plutôt qu'unifié.
 3. #9 — cas fiscaux de référence, qui permettront de faire passer les fixtures actuelles de « non validé » à « validé ». **Toujours ouvert** : le référent a tranché des formules et des méthodes, pas les sources officielles des montants.
-4. #11 — champs obligatoires, bornes acceptées et messages d'erreur, reliquat de #8. **Toujours ouvert** comme politique commune ; seul le cas du démembrement (âge, nombre de donataires) a été traité ponctuellement, fiches 3.1 et 3.2.
+4. #11 — champs obligatoires, bornes acceptées et messages d'erreur, reliquat de #8. **Toujours ouvert** comme politique commune, désormais posé en fiche 3.10 ; seul le cas du démembrement (âge, nombre de donataires) a été traité ponctuellement, fiches 3.1 et 3.2. La moitié technique de #11 est livrée et ne dépendait pas de cette réponse.
+5. #7 — convention de bornes des barèmes, fiche 3.7. **Nouvelle demande.** Deux simulateurs donnent deux impôts différents pour le même revenu, jusqu'à 1,27 €. L'enjeu n'est pas le montant mais la cohérence : il faut savoir lequel des deux fait foi avant de mutualiser les barèmes.
+6. Décimales affichées (fiche 3.8) et étapes d'arrondi (fiche 3.9). **Nouvelles demandes**, sans enjeu de montant mais nécessaires pour clore #11.
 
 Avant de poursuivre :
 
@@ -244,8 +248,8 @@ Cette branche porte aussi les deux premières étapes de #28, la CI, décrites d
 
 ### Étape 2.0 — Fixer les conventions, puis les bornes
 
-1. [#11 — Définir validation, unités et arrondis](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/11) — reprend aussi le reliquat de #8 : quels champs sont obligatoires, quelles bornes sont acceptées et quel message d'erreur s'affiche
-2. [#7 — Uniformiser et corriger les bornes des barèmes](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/7)
+1. [#11 — Définir validation, unités et arrondis](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/11) — **moitié technique livrée** en `v0.5.0-beta.15` : `docs/CONVENTIONS.md` et `src/conventions.js`. Restent les trois points qui commandent un montant ou sa présentation, posés en fiches 3.8, 3.9 et 3.10 — dont le reliquat de #8, quels champs sont obligatoires et quel message s'affiche
+2. [#7 — Uniformiser et corriger les bornes des barèmes](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/7) — **en attente de la fiche 3.7.** L'écart est mesuré et documenté, le correctif est mécanique une fois la convention connue ; il n'a pas été appliqué car choisir entre 0,11 € et 0,00 € pour un revenu de 11 601 € est une décision fiscale, pas technique
 
 Déplacées depuis le jalon `0.4`. #7 ne commence qu'après la décision de #11 sur la représentation des tranches et les arrondis, et doit intégrer les correctifs déjà livrés dans les fichiers IRPP et IFI.
 
