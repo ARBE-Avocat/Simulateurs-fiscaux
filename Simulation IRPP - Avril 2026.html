@@ -583,7 +583,7 @@ footer strong { color: var(--gold); font-weight: 400; }
           <th>Type de revenu</th><th>Montant brut</th><th>Moins-value</th>
           <th>IR (12,8%)</th>
           <th class="psx-cell"><span class="psx-label">PSx</span></th>
-          <th>PS (17,2%)</th>
+          <th>PS (<span id="ps_lbl_pfu">17,2%</span>)</th>
           <th>Imposition totale</th><th>Gain net</th>
         </tr></thead>
         <tbody>
@@ -892,7 +892,7 @@ footer strong { color: var(--gold); font-weight: 400; }
           <th>Charges réelles</th>
           <th>Imposable barème</th>
           <th class="psx-cell"><span class="psx-label">PSx</span></th>
-          <th>PS (17,2%)</th>
+          <th>PS (<span id="ps_lbl_reel">17,2%</span>)</th>
         </tr></thead>
         <tbody>
           <tr>
@@ -1107,9 +1107,9 @@ footer strong { color: var(--gold); font-weight: 400; }
       <tr class="st-sec"><td colspan="2">Prélèvements sociaux</td></tr>
       <tr><td>PS sur pensions françaises (taux saisi)</td><td id="s_ps_pen">0 €</td></tr>
       <tr><td>PS sur pensions étrangères (9,2%)</td><td id="s_ps_etr">0 €</td></tr>
-      <tr><td>PS sur revenus fonciers / locatifs / BNC / BIC (17,2%)</td><td id="s_ps_fon">0 €</td></tr>
-      <tr><td>PS sur revenus PFU (17,2%)</td><td id="s_ps_pfu">0 €</td></tr>
-      <tr><td>PS sur plus-values mobilières (17,2%)</td><td id="s_ps_pv">0 €</td></tr>
+      <tr><td>PS sur revenus fonciers / locatifs / BNC / BIC (<span id="ps_lbl_fon">17,2%</span>)</td><td id="s_ps_fon">0 €</td></tr>
+      <tr><td>PS sur revenus PFU (<span id="ps_lbl_pfu2">17,2%</span>)</td><td id="s_ps_pfu">0 €</td></tr>
+      <tr><td>PS sur plus-values mobilières (<span id="ps_lbl_pv">17,2%</span>)</td><td id="s_ps_pv">0 €</td></tr>
       <tr class="st-sec"><td colspan="2">Contributions sur hauts revenus</td></tr>
       <tr><td>CEHR — Art. 223 sexies CGI</td><td id="s_cehr">0 €</td></tr>
       <tr><td>CDHR — Art. 224 CGI (avec décote)</td><td id="s_cdhr">0 €</td></tr>
@@ -1129,7 +1129,7 @@ footer strong { color: var(--gold); font-weight: 400; }
   <div class="info-note">
     <strong>Abattement normal :</strong> &gt;2 ans : 50% &nbsp;·&nbsp; &gt;8 ans : 65% &emsp;|&emsp;
     <strong>Abattement renforcé (BSPCE, PME &lt;10 ans…) :</strong> ≥2 ans : 50% · ≥4 ans : 65% · ≥8 ans : 85%.<br>
-    PS sur PV mobilières : <strong>17,2%</strong> sur la PV brute (avant abattement pour durée). La case <strong>PSx</strong> permet d'exclure une ligne des PS (ex : convention fiscale).<br>
+    PS sur PV mobilières : <strong id="ps_lbl_note">17,2%</strong> sur la PV brute (avant abattement pour durée). La case <strong>PSx</strong> permet d'exclure une ligne des PS (ex : convention fiscale).<br>
     <strong>Moins-values antérieures reportables :</strong> saisissez ci-dessous le stock de MV en report pour imputation sur les PV de l'année.
   </div>
 
@@ -1153,7 +1153,7 @@ footer strong { color: var(--gold); font-weight: 400; }
     <div class="pt-item"><div class="lbl">PV / MV brute totale</div><div class="val" id="pv_tot_pvmv">—</div></div>
     <div class="pt-item"><div class="lbl">MV en report imputée</div><div class="val" id="pv_tot_mv_report" style="color:#ff9980">—</div></div>
     <div class="pt-item"><div class="lbl">PV nette d'abattement (→ IR)</div><div class="val gold" id="pv_tot_net">—</div></div>
-    <div class="pt-item"><div class="lbl">PS (17,2% sur PV brute)</div><div class="val" id="pv_tot_ps" style="color:rgba(255,255,255,0.6)">—</div></div>
+    <div class="pt-item"><div class="lbl">PS (<span id="ps_lbl_totbar">17,2%</span> sur PV brute)</div><div class="val" id="pv_tot_ps" style="color:rgba(255,255,255,0.6)">—</div></div>
     <div class="pt-item"><div class="lbl">IR au barème (estimé)</div><div class="val gold" id="pv_tot_ir_estime">—</div></div>
   </div>
 </div>
@@ -1433,6 +1433,7 @@ footer strong { color: var(--gold); font-weight: 400; }
           <tr><td>CDHR — abattement imposition commune</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="cdhr_aba_ic" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
           <tr><td>CDHR — abattement par personne à charge</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="cdhr_aba_pac" oninput="calc()" style="max-width:90px"><span class="unit">€</span></div></td></tr>
           <tr><td>CSG déductible (taux)</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="csg_ded" value="6.8" oninput="calc()" step="0.1" style="max-width:55px"><span class="unit">%</span></div></td></tr>
+          <tr><td>Prélèvements sociaux (taux)</td><td><div class="input-row" style="justify-content:flex-end"><input type="number" id="ps_taux" oninput="calc()" step="0.1" style="max-width:55px"><span class="unit">%</span></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -1463,10 +1464,14 @@ const IR = LectureReferentiels.lecteur('ir');
 const PS = LectureReferentiels.lecteur('prelevements-sociaux');
 
 // Le taux des prélèvements sociaux est contesté : deux simulateurs du dépôt en
-// appliquent un différent. Ce simulateur désigne donc explicitement la variante
-// qu'il emploie aujourd'hui, plutôt que de lire une valeur unique qui n'existe
-// pas. Arbitrage attendu : fiche 2.2 de docs/CORRECTIONS_A_VALIDER.md.
-const PS_TAUX = PS.variante('ps.taux.global', '17-2');
+// appliquent un différent. Fiche 2.2 de docs/CORRECTIONS_A_VALIDER.md : le
+// référent fiscal a répondu que les deux taux sont justes selon le revenu
+// concerné (LF2026, art. non précisé), et a demandé de conserver ce taux par
+// défaut tout en rendant le champ modifiable, comme il l'est déjà dans le
+// simulateur « IR, CEHR et CDHR ». La variante par défaut reste celle
+// employée jusqu'ici par ce simulateur.
+const PS_TAUX_DEFAUT = PS.variante('ps.taux.global', '17-2');
+let PS_TAUX = PS_TAUX_DEFAUT;
 
 const BAREME_IR = IR.bareme('ir.bareme.progressif');
 const PFU_TAUX_IR = IR.valeur('pfu.taux.impot-revenu');
@@ -1533,9 +1538,21 @@ const CDHR = {
   coefficientDecote: IR.valeur('cdhr.decote.coefficient'),
   seuilCelibataire: IR.valeur('cdhr.seuil.celibataire'),
   seuilCouple: IR.valeur('cdhr.seuil.couple'),
+  borneHauteDecoteCelibataire: IR.valeur('cdhr.decote.borne-haute.celibataire'),
+  borneHauteDecoteCouple: IR.valeur('cdhr.decote.borne-haute.couple'),
   abattementImpositionCommune: IR.valeur('cdhr.abattement.imposition-commune'),
   abattementParPersonneACharge: IR.valeur('cdhr.abattement.personne-a-charge'),
 };
+
+// Plafonnement du quotient familial (art. 197, I, 2 CGI). Ajouté à la suite de
+// la fiche 2.3 de docs/CORRECTIONS_A_VALIDER.md : le référent fiscal a demandé
+// son ajout et laissé le calcul à la charge du développement. La méthode et le
+// plafond par demi-part reprennent ceux déjà appliqués par le simulateur
+// « IR, CEHR et CDHR » (fonction irAvecQuotientFamilial). Réserve non tranchée :
+// ce simulateur ne demande qu'un nombre de parts, pas une situation familiale ;
+// la part de référence est donc déduite de la case « second déclarant », comme
+// le fait déjà la décote plus bas.
+const PLAFOND_DEMI_PART = IR.valeur('ir.quotient.plafond-demi-part');
 
 // Les paramètres modifiables du formulaire — bornes du barème, plafonds
 // d'abattement, décote, abattements CDHR — restent lus dans les champs, avec
@@ -1674,6 +1691,23 @@ function impot(rev) {
   return getBareme().reduce((s,t) => s + Math.max(0, Math.min(rev, t.a) - t.de) * t.tx, 0);
 }
 
+/**
+ * Impôt du foyer après plafonnement de l'avantage du quotient familial.
+ * Compare l'impôt avec le nombre de parts déclaré à celui calculé avec la
+ * part de référence (1 ou 2) ; si l'économie dépasse le plafond par demi-part,
+ * elle est ramenée à ce plafond.
+ */
+function irAvecPlafonnementQuotient(revenu, parts, partsRef) {
+  if (revenu <= 0) return 0;
+  const taxN = impot(revenu / parts) * parts;
+  const taxRef = impot(revenu / partsRef) * partsRef;
+  const avantage = taxRef - taxN;
+  const demiPartsSup = Math.max(0, parts - partsRef) * 2;
+  const plafond = demiPartsSup * PLAFOND_DEMI_PART;
+  if (avantage > plafond) return taxRef - plafond;
+  return taxN;
+}
+
 // ── CEHR ──
 function calcCEHR(rfr, couple) {
   // Même résultat qu'auparavant : chaque tranche n'est imposée que sur la part
@@ -1690,41 +1724,42 @@ function calcCEHR(rfr, couple) {
 /**
  * Calcule la CDHR à partir d'entrées explicites, sans lire le formulaire.
  *
- * ATTENTION — décote non corrigée (issue #4).
- * La condition ci-dessous rend la décote systématiquement nulle : sous le
- * seuil, `rfrr - seuil` est négatif et ramené à zéro ; au-dessus du seuil, la
- * condition ne s'applique pas. Le détail retourné expose donc une décote
- * toujours à 0.
- *
- * Le fichier `Simulateur_IR 2025 et CEHR_CDHR 2026.html` implémente une décote
- * différente, applicable dans une bande située AU-DESSUS du seuil. Les deux
- * implémentations du dépôt divergent, avec un écart pouvant dépasser 45 000 €.
- * La formule et l'intervalle exacts doivent être confirmés par le référent
- * fiscal avant toute correction : ils ne sont volontairement pas devinés ici.
+ * Corrigé selon la fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md (issue #4) :
+ * le référent fiscal a désigné la formule du simulateur
+ * `Simulateur_IR 2025 et CEHR_CDHR 2026.html` comme celle qui fait foi. La
+ * décote s'y applique dans la bande située entre le seuil d'assujettissement
+ * et une borne haute, et se retranche de la cible de 20 % avant l'imputation
+ * de l'impôt et de la CEHR déjà retenus — non de la contribution brute.
  *
  * @param {object} entrees
  * @param {number} entrees.rfrr revenu fiscal de référence retraité
  * @param {number} entrees.irCehr impôt et CEHR déjà retenus
  * @param {number} entrees.seuil seuil d'assujettissement applicable au foyer
+ * @param {number} entrees.borneHaute borne haute de la bande de décote
  * @param {number} entrees.abattementTotal abattements applicables au foyer
  * @returns {{brut: number, decote: number, net: number, seuil: number}}
  */
-function calculerCDHR({ rfrr, irCehr, seuil, abattementTotal }) {
-  const brut = Math.max(0, rfrr * CDHR.tauxCible - irCehr - abattementTotal);
-  const decote = rfrr < seuil ? Math.max(0, (rfrr - seuil) * CDHR.coefficientDecote) : 0;
-  const net = Math.max(0, brut - decote);
-  return { brut, decote, net, seuil };
+function calculerCDHR({ rfrr, irCehr, seuil, borneHaute, abattementTotal }) {
+  const cible = rfrr * CDHR.tauxCible;
+  const decote = (rfrr > seuil && rfrr <= borneHaute)
+    ? Math.max(0, cible - CDHR.coefficientDecote * (rfrr - seuil))
+    : 0;
+  const cibleApresDecote = Math.max(0, cible - decote);
+  const net = Math.max(0, cibleApresDecote - irCehr - abattementTotal);
+  return { brut: Math.max(0, cible - irCehr - abattementTotal), decote, net, seuil };
 }
 
 /** Lit le formulaire puis délègue le calcul de la CDHR. */
 function calcCDHR(rfrr, ir_cehr, couple, pac) {
-  const seuil   = couple ? CDHR.seuilCouple : CDHR.seuilCelibataire;
+  const seuil      = couple ? CDHR.seuilCouple : CDHR.seuilCelibataire;
+  const borneHaute = couple ? CDHR.borneHauteDecoteCouple : CDHR.borneHauteDecoteCelibataire;
   const aba_ic  = couple ? v('cdhr_aba_ic') : 0;
   const aba_pac = pac * v('cdhr_aba_pac');
   return calculerCDHR({
     rfrr,
     irCehr: ir_cehr,
     seuil,
+    borneHaute,
     abattementTotal: aba_ic + aba_pac,
   });
 }
@@ -1859,6 +1894,13 @@ function calc() {
     calcMajoration();
     calcMajoration._running = false;
   }
+
+  // Fiche 2.2 : taux des PS modifiable, par défaut celui déjà employé ici.
+  const ps_taux_champ = $('ps_taux');
+  PS_TAUX = ps_taux_champ && ps_taux_champ.value !== '' ? v('ps_taux') / 100 : PS_TAUX_DEFAUT;
+  const ps_taux_lbl = (PS_TAUX*100).toLocaleString('fr-FR') + '%';
+  ['ps_lbl_pfu','ps_lbl_reel','ps_lbl_pfu2','ps_lbl_fon','ps_lbl_pv','ps_lbl_note','ps_lbl_totbar']
+    .forEach(id => set(id, ps_taux_lbl));
 
   const has_d2 = cb('has_d2');
   const aba_sal_val = v('aba_sal');
@@ -2047,8 +2089,8 @@ function calc() {
   set('res_quotient', fmt(quotient,2));
   set('res_parts_label', 'pour ' + nb + ' part' + (nb>1?'s':''));
 
-  const imp_pp  = impot(quotient);
-  const imp_foy = imp_pp * nb;
+  const partsRef = couple ? 2 : 1;
+  const imp_foy = irAvecPlafonnementQuotient(total_bar, nb, partsRef);
 
   // Décote
   const dec_cel_seuil = v('dec_cel_seuil'), dec_cel_mt = v('dec_cel_mt');
@@ -2193,13 +2235,13 @@ function renderPV() {
           <div class="pv-field"><label>Abattement durée (déduit de l'IR)</label><div class="calc-val" id="mtab_${r.id}" style="color:var(--muted)">—</div></div>
           <div class="pv-field" style="border-top:1px solid var(--border);padding-top:10px;margin-top:4px"><label style="font-weight:600;color:var(--forest)">PV nette → IR barème</label><div class="calc-val" id="pvn_${r.id}" style="font-size:16px">—</div></div>
           <div class="pv-field">
-            <label>PS (17,2% sur PV brute) — PSx</label>
+            <label>PS (${(PS_TAUX*100).toLocaleString('fr-FR')}% sur PV brute) — PSx</label>
             <div style="display:flex;align-items:center;gap:8px;padding:4px 0">
               <input type="checkbox" ${r.psx?'checked':''} id="psx_pv_${r.id}" onchange="pr(${r.id},'psx',this.checked)">
               <label for="psx_pv_${r.id}" style="font-size:12px;color:var(--text);text-transform:none;letter-spacing:0;cursor:pointer">Soumis aux PS — décocher si convention fiscale</label>
             </div>
           </div>
-          <div class="pv-field"><label>PS dû (17,2%)</label><div class="calc-val" id="pvps_${r.id}" style="color:var(--muted)">—</div></div>
+          <div class="pv-field"><label>PS dû (${(PS_TAUX*100).toLocaleString('fr-FR')}%)</label><div class="calc-val" id="pvps_${r.id}" style="color:var(--muted)">—</div></div>
         </div>
       </div>`;
     container.appendChild(card);
@@ -2224,9 +2266,13 @@ function dy(d1, d2) {
   if(b.getMonth()<a.getMonth() || (b.getMonth()===a.getMonth()&&b.getDate()<a.getDate())) y--;
   return Math.max(0,y);
 }
+// Fiche 2.5 de docs/CORRECTIONS_A_VALIDER.md : le référent fiscal a confirmé
+// que l'abattement de droit commun s'ouvre dès la durée de détention révolue
+// (deux ans, puis huit ans), et non seulement au-delà — comme le régime
+// renforcé l'appliquait déjà.
 function abTx(y, r) {
   if(y===null) return 0;
-  return r ? (y>=8?.85 : y>=4?.65 : y>=2?.5 : 0) : (y>8?.65 : y>2?.5 : 0);
+  return r ? (y>=8?.85 : y>=4?.65 : y>=2?.5 : 0) : (y>=8?.65 : y>=2?.5 : 0);
 }
 function pvCalc(r) {
   const ba=r.pu_a*r.qte, na=(ba+r.fr_a)/(r.fx_a||1);
@@ -2389,23 +2435,33 @@ function calcIFI() {
   // du référentiel et n'est pas corrigé ici : il relève de l'issue #7.
   const bareme=IFI.bareme.map(t=>({de:t.min, a:t.max, tx:t.taux}));
   const ids=['ifi_t1','ifi_t2','ifi_t3','ifi_t4','ifi_t5','ifi_t6'];
-  let ifi_theorique=0;
-  bareme.forEach((t,i)=>{
-    const montant=Math.max(0,Math.min(pat_net_avant,t.a)-t.de)*t.tx;
-    ifi_theorique+=montant; set(ids[i],fmt(montant,2));
-  });
-  const pat_net_apres=Math.max(0,pat_net_avant-ifi_theorique);
-  set('ifi_s_theorique', fmt(ifi_theorique,2)); set('ifi_s_net_apres',fmt(pat_net_apres,2));
+  function baremeIFI(base){
+    let total=0; const montants=bareme.map(t=>{
+      const m=Math.max(0,Math.min(base,t.a)-t.de)*t.tx; total+=m; return m;
+    });
+    return { total, montants };
+  }
+  function decoteIFI(patrimoineNet){
+    if (patrimoineNet>=SEUIL_DECOTE_MAX) return 0;
+    return Math.max(0, IFI.decoteMontant - IFI.decoteTaux*patrimoineNet);
+  }
 
-  let decote=0;
-  if(pat_brut>=SEUIL_IFI && pat_brut<SEUIL_DECOTE_MAX){
-    // Condition et base inchangées, différentes de celles du simulateur IFI :
-    // divergence de méthode soumise au référent fiscal, fiche 2.4.
-    decote=Math.max(0,IFI.decoteMontant-IFI.decoteTaux*pat_net_avant);
-    set('ifi_s_decote',fmt(decote,2));
-  } else { set('ifi_s_decote', pat_brut<SEUIL_IFI?'—':'0 €'); }
+  // Méthode « en deux temps » du simulateur IFI, retenue par le référent
+  // fiscal (fiche 2.4 de docs/CORRECTIONS_A_VALIDER.md) : l'IFI théorique est
+  // d'abord calculé et retranché du patrimoine net, puis l'impôt définitif et
+  // sa décote se recalculent sur ce patrimoine réduit.
+  const decoteTheo = decoteIFI(pat_net_avant);
+  const ifiTheoriqueApresDecote = Math.max(0, baremeIFI(pat_net_avant).total - decoteTheo);
+  const ifiTheoriqueNet = Math.max(0, ifiTheoriqueApresDecote - red_dons);
+  const pat_net_apres = Math.max(0, pat_net_avant - ifiTheoriqueNet);
+  set('ifi_s_theorique', fmt(ifiTheoriqueApresDecote,2)); set('ifi_s_net_apres',fmt(pat_net_apres,2));
 
-  const ifi_final=Math.max(0,ifi_theorique-decote-red_dons);
+  const { total: ifi_calcule, montants } = baremeIFI(pat_net_apres);
+  montants.forEach((m,i)=> set(ids[i], fmt(m,2)));
+  const decote = decoteIFI(pat_net_apres);
+  set('ifi_s_decote', fmt(decote,2));
+
+  const ifi_final=Math.max(0,ifi_calcule-decote-red_dons);
   const ifi_du=pat_net_avant>=SEUIL_IFI?ifi_final:0;
   set('ifi_s_red_dons',fmt(red_dons,2)); set('ifi_s_final',fmt(ifi_du,2)); set('ifi_res_final',fmt(ifi_du,2));
 
@@ -2448,6 +2504,8 @@ function appliquerReferentielAuFormulaire() {
 
   ecrire('cdhr_aba_ic', CDHR.abattementImpositionCommune);
   ecrire('cdhr_aba_pac', CDHR.abattementParPersonneACharge);
+
+  ecrire('ps_taux', PS_TAUX_DEFAUT * 100);
 }
 
 // Init

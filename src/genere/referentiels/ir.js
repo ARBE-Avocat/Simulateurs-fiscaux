@@ -62,10 +62,11 @@
       "statutValidation": "non-valide",
       "valeur": 330000,
       "utilisePar": [
-        "ir-cehr-cdhr"
+        "ir-cehr-cdhr",
+        "irpp"
       ],
       "source": "inconnue",
-      "notes": "Présente dans le seul simulateur « IR, CEHR et CDHR ». Le simulateur IRPP n’a pas de bande de décote. Bornes à confirmer, fiche 2.1."
+      "notes": "Fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md : le référent fiscal a désigné la formule du simulateur « IR, CEHR et CDHR » comme celle qui fait foi. Le simulateur IRPP applique désormais la même bande de décote."
     },
     {
       "id": "cdhr.decote.borne-haute.couple",
@@ -78,9 +79,11 @@
       "statutValidation": "non-valide",
       "valeur": 660000,
       "utilisePar": [
-        "ir-cehr-cdhr"
+        "ir-cehr-cdhr",
+        "irpp"
       ],
-      "source": "inconnue"
+      "source": "inconnue",
+      "notes": "Fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md : même origine que cdhr.decote.borne-haute.celibataire."
     },
     {
       "id": "cdhr.decote.coefficient",
@@ -97,7 +100,7 @@
         "irpp"
       ],
       "source": "inconnue",
-      "notes": "Les deux simulateurs emploient ce coefficient, mais pas dans la même formule ni au même endroit du calcul. La divergence porte sur la formule, non sur cette valeur : voir la fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md et l’issue #4."
+      "notes": "Les deux simulateurs emploient désormais ce coefficient dans la même formule, celle du simulateur « IR, CEHR et CDHR », choisie par le référent fiscal (fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md, issue #4)."
     },
     {
       "id": "cdhr.seuil.celibataire",
@@ -456,10 +459,11 @@
       "statutValidation": "non-valide",
       "valeur": 1807,
       "utilisePar": [
-        "ir-cehr-cdhr"
+        "ir-cehr-cdhr",
+        "irpp"
       ],
       "source": "inconnue",
-      "notes": "Le simulateur IRPP n’applique aucun plafonnement du quotient familial : il divise par le nombre de parts sans limiter l’avantage. Divergence soumise au référent fiscal, fiche 2.3 de docs/CORRECTIONS_A_VALIDER.md, jusqu’à 19 985,10 € d’écart mesuré. Aucune valeur n’est ajoutée à l’IRPP ici : ce serait trancher."
+      "notes": "Fiche 2.3 de docs/CORRECTIONS_A_VALIDER.md : le référent fiscal a demandé l’ajout du plafonnement dans le simulateur IRPP, avec la même méthode et le même plafond que le simulateur « IR, CEHR et CDHR ». Réserve non tranchée : l’IRPP déduit la part de référence de la case « second déclarant », faute de demander la situation familiale exacte."
     },
     {
       "id": "pfu.taux.impot-revenu",

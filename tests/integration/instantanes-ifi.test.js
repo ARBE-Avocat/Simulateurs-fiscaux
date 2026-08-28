@@ -4,12 +4,15 @@
  * Relevé **avant** l'extraction du référentiel IFI, par exécution réelle. Il
  * prouve qu'une refactorisation ne déplace aucun montant, au centime près.
  *
- * Il fige aussi la divergence de la fiche 2.4 : les deux pages calculent l'IFI
- * selon deux méthodes différentes, et le même patrimoine y donne deux impôts.
- * La figer est la seule façon de garantir qu'une extraction ne la modifie pas
- * au passage — la trancher appartient au référent fiscal.
+ * Il figeait aussi la divergence de la fiche 2.4 : les deux pages calculaient
+ * l'IFI selon deux méthodes différentes, pour deux impôts différents sur un
+ * même patrimoine. Le référent fiscal a tranché le 28 août 2026 en faveur de
+ * la méthode du simulateur IFI ; la section IFI de l'IRPP l'applique
+ * désormais aussi, et les onze scénarios `irppIfi` ont été régénérés en
+ * conséquence.
  *
- * Ne jamais régénérer ce fichier de référence après une modification.
+ * Ne régénérer ce fichier qu'à la suite d'une correction validée par le
+ * référent fiscal, jamais au fil d'une refactorisation.
  */
 
 const test = require('node:test');
@@ -97,12 +100,13 @@ test("IRPP — la section IFI n'affiche aucun montant différent", async (t) => 
   }
 });
 
-test("IFI — les deux simulateurs continuent de diverger, sans que l'extraction ne tranche", () => {
+test('IFI — les deux simulateurs sont désormais alignés (fiche 2.4)', () => {
   // Fiche 2.4 : pour un patrimoine brut de 1 450 000 € grevé de 100 000 € de
-  // passif, le simulateur IFI retranche l'IFI théorique de l'assiette et accorde
-  // la décote ; la section IFI de l'IRPP fait ni l'un ni l'autre. L'écart est de
-  // 668,39 €. Ce test existe pour que la divergence reste visible et qu'aucune
-  // extraction ne la fasse disparaître par inadvertance.
+  // passif, le simulateur IFI retranchait l'IFI théorique de l'assiette et
+  // accordait la décote ; la section IFI de l'IRPP ne faisait ni l'un ni
+  // l'autre, pour un écart de 668,39 €. Le référent fiscal a tranché en
+  // faveur de la méthode du simulateur IFI : ce test vérifie que l'écart a
+  // disparu plutôt que de le figer.
   const casIfi = instantane.ifi.find((c) => c.nom.startsWith('décote — brut au-dessus'));
   const casIrpp = instantane.irppIfi.find((c) => c.nom.startsWith('décote — brut au-dessus'));
 
@@ -111,7 +115,7 @@ test("IFI — les deux simulateurs continuent de diverger, sans que l'extraction
   const cote = (texte) => Number(texte.replace(/[^0-9,]/g, '').replace(',', '.'));
   const ecart = cote(casIrpp.attendu.ifi_s_final) - casIfi.attendu.ifiFinal;
 
-  assertProche(ecart, 668.39, 0.01, 'écart entre les deux méthodes de liquidation');
+  assertProche(ecart, 0, 0.01, 'écart entre les deux méthodes de liquidation, désormais identiques');
 });
 
 test("IFI — la conversion de devise n'a pas bougé avec l'étape 3 de #13", async (t) => {

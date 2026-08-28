@@ -265,13 +265,15 @@
       <div class="grid-3">
         <div class="field">
           <label>Âge du donateur <span class="ref">CGI art. 669</span></label>
-          <input type="number" id="age" min="18" max="100" value="68" oninput="recalculate()">
-          <span class="hint">Âge au jour de l'acte de donation</span>
+          <input type="number" id="age" min="0" max="123" value="68" oninput="recalculate()">
+          <span class="hint">Âge au jour de l'acte de donation — 0 est une saisie valide (barème CGI art. 669 : moins de 21 ans révolus)</span>
+          <span class="hint" id="ageWarning" style="display:none;color:var(--warning);font-weight:600">Âge hors des bornes plausibles (1 jour à 123 ans) — vérifiez la saisie.</span>
         </div>
         <div class="field">
           <label>Nombre de donataires <span class="ref">CGI art. 779</span></label>
           <input type="number" id="nbDonataires" min="1" max="10" value="2" oninput="recalculate()">
           <span class="hint">Enfants en ligne directe</span>
+          <span class="hint" id="donatairesWarning" style="display:none;color:var(--warning);font-weight:600">Au moins un donataire est nécessaire pour partager la nue-propriété — la valeur par défaut a été rétablie.</span>
         </div>
         <div class="field">
           <label>Lien de parenté</label>
@@ -917,15 +919,29 @@ function updateBaremeProgressif(base, tranches) {
 // CALCUL PRINCIPAL
 // ============================================================
 function recalculate() {
-  // Ces deux champs n'acceptent pas la valeur zéro : aucun âge de 0 an ne
-  // correspond à une tranche du barème de l'usufruit, et un nombre de
-  // donataires nul rendrait le partage impossible (division par zéro plus bas).
-  // Le comportement actuel est donc conservé tel quel : toute saisie vide,
-  // illisible ou nulle retombe sur la valeur par défaut. La validation
-  // explicite attendue — bornes acceptées et message d'erreur affiché — reste
-  // à définir avec l'issue #11, et n'est volontairement pas inventée ici.
-  const age = parseInt(document.getElementById('age').value) || 68;
-  const nb  = parseInt(document.getElementById('nbDonataires').value) || 1;
+  // Fiches 3.1 et 3.2 de docs/CORRECTIONS_A_VALIDER.md, tranchées par le
+  // référent fiscal :
+  // — l'âge accepte désormais un 0 volontaire comme n'importe quel autre
+  //   champ (issue #8) : la tranche « moins de 21 ans révolus » du barème
+  //   CGI art. 669 le couvre, contrairement à ce que redoutait la fiche 3.1 ;
+  // — les bornes plausibles retenues sont 1 jour à 123 ans (fiche 3.2). Un
+  //   âge hors bornes reste calculé — la tranche extrême du barème continue
+  //   de s'appliquer — mais un avertissement visible signale l'anomalie
+  //   plutôt que de la laisser passer pour un résultat ordinaire.
+  // — le nombre de donataires ne peut pas être nul, sous peine de division
+  //   par zéro : ce champ retombe sur sa valeur par défaut en cas de saisie
+  //   nulle ou invalide, avec un avertissement visible plutôt que silencieux.
+  const ageChamp = document.getElementById('age');
+  const age = nombreSaisi(ageChamp.value, 68);
+  const ageWarning = document.getElementById('ageWarning');
+  if (ageWarning) ageWarning.style.display = (age < 0 || age > 123) ? '' : 'none';
+
+  const nbChamp = document.getElementById('nbDonataires');
+  const nbSaisi = nombreSaisi(nbChamp.value, 1);
+  const nb = nbSaisi > 0 ? nbSaisi : 1;
+  const donatairesWarning = document.getElementById('donatairesWarning');
+  if (donatairesWarning) donatairesWarning.style.display = nbSaisi <= 0 ? '' : 'none';
+
   const vpp = nombreSaisi(document.getElementById('valeurPP').value, 0);
   const lien = document.getElementById('lienParente').value;
   const nature = document.getElementById('natureOp').value;

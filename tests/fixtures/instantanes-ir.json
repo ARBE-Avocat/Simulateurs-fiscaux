@@ -1,7 +1,7 @@
 {
   "description": "Instantané des résultats des simulateurs « IR, CEHR et CDHR » et IRPP. Les scénarios d'origine ont été relevés AVANT l'extraction des référentiels (issue #14). Les scénarios « célibataire » ont été ajoutés le 26 août 2026 et relevés eux aussi sur le code d'avant l'extraction : le simulateur IR conserve la situation du foyer dans une variable de son script, que le harnais ne renseignait pas, si bien que tous les scénarios d'origine tournaient en imposition commune.",
-  "provenance": "Produit par exécution réelle des simulateurs sur la branche clv/y-0.5-donnees, commit 8c8fcb4, avant toute modification des fichiers HTML. Le scénario « pensions et abattement foyer » a été relevé de nouveau le 26 août 2026, toujours sur le code d'avant l'extraction, après que le harnais a été corrigé pour appliquer les valeurs pré-remplies du HTML : le taux de retenue sur pensions valait alors zéro dans les tests alors qu'il vaut 9,1 % à l'écran.",
-  "statutValidation": "NON VALIDÉ — ces valeurs figent le comportement existant afin de prouver qu'une refactorisation ne déplace aucun montant. Elles ne certifient aucun barème, et reproduisent notamment la décote CDHR défectueuse de l'issue #4.",
+  "provenance": "Produit par exécution réelle des simulateurs sur la branche clv/y-0.5-donnees, commit 8c8fcb4, avant toute modification des fichiers HTML. Le scénario « pensions et abattement foyer » a été relevé de nouveau le 26 août 2026, toujours sur le code d'avant l'extraction, après que le harnais a été corrigé pour appliquer les valeurs pré-remplies du HTML : le taux de retenue sur pensions valait alors zéro dans les tests alors qu'il vaut 9,1 % à l'écran. Les scénarios « salaires 150 000 €, 1.5 / 2.5 / 3 part(s) » ont été regénérés le 28 août 2026 sur le simulateur corrigé, à la suite de la validation de la fiche 2.3 de docs/CORRECTIONS_A_VALIDER.md (plafonnement du quotient familial) par le référent fiscal.",
+  "statutValidation": "NON VALIDÉ — ces valeurs figent le comportement existant afin de prouver qu'une refactorisation ne déplace aucun montant. Elles ne certifient aucun barème. La décote CDHR (issue #4, fiche 2.1) et le plafonnement du quotient familial (fiche 2.3) ont été tranchés par le référent fiscal le 28 août 2026 et corrigés ; les scénarios irpp qu'ils affectent ont été régénérés en conséquence.",
   "tolerance": 0.01,
   "irCehrCdhr": [
     {
@@ -1435,10 +1435,10 @@
       "attendu": {
         "res_rfr": "135 445,00 €",
         "res_quotient": "90 296,67 €",
-        "s_impot_foyer": "31 232,00 €",
+        "s_impot_foyer": "37 525,15 €",
         "s_decote": "0,00 €",
         "s_red_dons": "0,00 €",
-        "s_impot_net": "31 232,00 €",
+        "s_impot_net": "37 525,15 €",
         "s_ir_pfu": "0,00 €",
         "s_ps_pen": "0,00 €",
         "s_ps_fon": "23 296,54 €",
@@ -1446,8 +1446,8 @@
         "s_ps_pv": "0,00 €",
         "s_cehr": "0,00 €",
         "s_cdhr": "0,00 €",
-        "s_final": "54 528,54 €",
-        "res_final": "54 528,54 €",
+        "s_final": "60 821,69 €",
+        "res_final": "60 821,69 €",
         "s_csg_ded": "− 0,00 €",
         "s_ps_etr": "0,00 €"
       }
@@ -1487,10 +1487,10 @@
       "attendu": {
         "res_rfr": "135 445,00 €",
         "res_quotient": "54 178,00 €",
-        "s_impot_foyer": "23 392,45 €",
+        "s_impot_foyer": "25 033,66 €",
         "s_decote": "0,00 €",
         "s_red_dons": "0,00 €",
-        "s_impot_net": "23 392,45 €",
+        "s_impot_net": "25 033,66 €",
         "s_ir_pfu": "0,00 €",
         "s_ps_pen": "0,00 €",
         "s_ps_fon": "23 296,54 €",
@@ -1498,8 +1498,8 @@
         "s_ps_pv": "0,00 €",
         "s_cehr": "0,00 €",
         "s_cdhr": "0,00 €",
-        "s_final": "46 688,99 €",
-        "res_final": "46 688,99 €",
+        "s_final": "48 330,20 €",
+        "res_final": "48 330,20 €",
         "s_csg_ded": "− 0,00 €",
         "s_ps_etr": "0,00 €"
       }
@@ -1513,10 +1513,10 @@
       "attendu": {
         "res_rfr": "135 445,00 €",
         "res_quotient": "45 148,33 €",
-        "s_impot_foyer": "19 944,24 €",
+        "s_impot_foyer": "23 226,66 €",
         "s_decote": "0,00 €",
         "s_red_dons": "0,00 €",
-        "s_impot_net": "19 944,24 €",
+        "s_impot_net": "23 226,66 €",
         "s_ir_pfu": "0,00 €",
         "s_ps_pen": "0,00 €",
         "s_ps_fon": "23 296,54 €",
@@ -1524,8 +1524,8 @@
         "s_ps_pv": "0,00 €",
         "s_cehr": "0,00 €",
         "s_cdhr": "0,00 €",
-        "s_final": "43 240,78 €",
-        "res_final": "43 240,78 €",
+        "s_final": "46 523,20 €",
+        "res_final": "46 523,20 €",
         "s_csg_ded": "− 0,00 €",
         "s_ps_etr": "0,00 €"
       }

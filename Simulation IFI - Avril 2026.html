@@ -975,9 +975,9 @@ function calcIFI(base) {
 }
 
 function calcDecote(patrimoineNet) {
-  // Condition et base inchangées. Elles diffèrent de celles de la section IFI
-  // du simulateur IRPP : divergence de méthode soumise au référent fiscal,
-  // fiche 2.4 de docs/CORRECTIONS_A_VALIDER.md. L'extraction ne la tranche pas.
+  // Méthode retenue par le référent fiscal comme référence commune aux deux
+  // simulateurs (fiche 2.4 de docs/CORRECTIONS_A_VALIDER.md) : la section IFI
+  // du simulateur IRPP applique désormais la même méthode en deux temps.
   if (patrimoineNet >= DECOTE.plafond) return 0;
   const decote = DECOTE.montant - DECOTE.taux * patrimoineNet;
   return Math.max(0, decote);

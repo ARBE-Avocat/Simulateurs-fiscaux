@@ -84,12 +84,13 @@ test('Démembrement — un abattement à 0 € est appliqué', () => {
   assertProche(lireAbattement({ p_aba_directe: 50000 }), 50000, 0.01, 'valeur saisie');
 });
 
-test("Démembrement — l'âge et le nombre de donataires refusent encore le zéro", () => {
-  // Comportement volontairement conservé : un âge de 0 an ne correspond à
-  // aucune tranche du barème de l'usufruit et un nombre de donataires nul
-  // provoquerait une division par zéro. La validation explicite attendue par
-  // l'issue #8 reste à définir avec #11 ; ce test documente l'état actuel pour
-  // qu'un changement futur soit un choix visible et non un effet de bord.
+test("Démembrement — un âge de 0 an est désormais accepté, le nombre de donataires reste refusé (fiche 3.1)", () => {
+  // Fiche 3.1 de docs/CORRECTIONS_A_VALIDER.md, tranchée par le référent
+  // fiscal : un âge de 0 an correspond bien à la tranche « moins de 21 ans
+  // révolus » du barème de l'usufruit (art. 669 CGI) et est désormais accepté
+  // comme n'importe quel autre zéro volontaire (issue #8). Le nombre de
+  // donataires, lui, reste mathématiquement contraint à un minimum de 1 :
+  // un nombre nul provoquerait une division par zéro.
   const simulateur = chargerSimulateur('demembrement');
   const document = simulateur.dom.document;
   document.getElementById('valeurPP').value = '600000';
@@ -101,6 +102,9 @@ test("Démembrement — l'âge et le nombre de donataires refusent encore le zé
 
   const nbAffiche = String(document.getElementById('nbDonatairesDisplay').textContent);
   assert.equal(nbAffiche, '1', 'un nombre de donataires nul retombe sur 1');
+
+  const getTauxNP = simulateur.evaluer('getTauxNP');
+  assert.equal(getTauxNP(0), 0.1, 'un âge de 0 an relève de la tranche « moins de 21 ans révolus »');
 
   const droits = String(document.getElementById('droitsTotaux').textContent);
   assert.ok(!/NaN|Infinity/.test(droits), `les droits restent calculables (obtenu ${droits})`);

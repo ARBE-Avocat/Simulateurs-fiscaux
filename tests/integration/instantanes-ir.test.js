@@ -5,13 +5,16 @@
  * exécution réelle des deux simulateurs. Il prouve qu'une refactorisation ne
  * déplace aucun montant, au centime près.
  *
- * Il fige aussi, volontairement, des comportements réputés fautifs mais non
- * corrigés : la décote CDHR de l'issue #4 et l'absence de plafonnement du
- * quotient familial dans l'IRPP, fiche 2.3. Les figer est la seule façon de
- * garantir qu'une extraction ne les modifie pas au passage — leur correction
- * relève d'une décision du référent fiscal, pas d'un déplacement de données.
+ * Il figeait aussi, volontairement, deux comportements réputés fautifs mais
+ * alors non corrigés : la décote CDHR de l'issue #4 et l'absence de
+ * plafonnement du quotient familial dans l'IRPP. Le référent fiscal a
+ * tranché les deux (fiches 2.1 et 2.3 de docs/CORRECTIONS_A_VALIDER.md, le
+ * 28 août 2026) ; les trois scénarios de `irpp` que ces corrections
+ * déplacent ont été régénérés en conséquence — les autres, non concernés,
+ * restent inchangés.
  *
- * Ne jamais régénérer ce fichier de référence après une modification.
+ * Ne régénérer ce fichier qu'à la suite d'une correction validée par le
+ * référent fiscal, jamais au fil d'une refactorisation.
  */
 
 const test = require('node:test');

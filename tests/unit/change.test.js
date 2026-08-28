@@ -80,6 +80,15 @@ test('change — le manifeste décrit ce que contiennent les fichiers', () => {
   assert.equal(manifeste.joursNonCotes, joursNonCotes);
 });
 
+// Fiche 3.5 de docs/CORRECTIONS_A_VALIDER.md, tranchée par le référent
+// fiscal : `rechercheCotation` ne retient plus seulement le dernier jour
+// coté avant la date demandée, mais le jour coté le plus proche, en avant
+// comme en arrière — le dimanche est ainsi désormais plus proche du lundi
+// (1 jour) que du vendredi (2 jours), et un jour chaumé isolé entre deux
+// jours cotés est résolu vers le jour suivant à égalité d'écart. L'échantillon
+// a été régénéré en conséquence le 28 août 2026 (568 cas sur 3 375 diffèrent
+// de la valeur relevée avant l'extraction, sous l'ancienne règle) : voir
+// `tests/fixtures/change-echantillon.json` pour le détail de cette mise à jour.
 test('change — les taux rendus sont identiques à ceux de la série embarquée', () => {
   const cotations = serie();
   const { remonteeMaximaleJours } = echantillon;

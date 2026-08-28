@@ -309,6 +309,11 @@
             <input type="number" id="quotePart" placeholder="ex. 100" min="0" max="100" step="1" onchange="compute()" oninput="compute()">
             <span class="hint">100 = totalité imposable · 75 = 75 % · Laisser vide si 100 %</span>
           </div>
+          <div class="field">
+            <label>Taux des prélèvements sociaux <span class="ref">(%)</span></label>
+            <input type="number" id="tauxPSManuel" placeholder="17,2" min="0" max="100" step="0.1" onchange="compute()" oninput="compute()">
+            <span class="hint">Laisser vide pour conserver le taux par défaut (17,2 %). LF2026 fait varier ce taux selon la nature du gain — fiche 2.2 de docs/CORRECTIONS_A_VALIDER.md.</span>
+          </div>
         </div>
       </div>
     </div>
@@ -662,9 +667,10 @@ function appliquerMillesime(annee) {
   SURTAXE_PALIERS = PVI.valeur('pv-immobiliere.surtaxe.paliers');
 
   // Le taux des prélèvements sociaux est contesté : deux simulateurs du dépôt en
-  // appliquent un différent. Ce simulateur désigne donc explicitement la variante
-  // qu'il emploie aujourd'hui. Arbitrage attendu : fiche 2.2 de
-  // docs/CORRECTIONS_A_VALIDER.md.
+  // appliquent un différent. Fiche 2.2 de docs/CORRECTIONS_A_VALIDER.md : le
+  // référent fiscal a confirmé que les deux taux sont justes selon le revenu
+  // concerné (LF2026) et a demandé de conserver ce taux par défaut, tout en le
+  // rendant modifiable. Voir le champ « tauxPSManuel », lu dans compute().
   TAUX_PS = REF_PS.variante('ps.taux.global', '17-2');
 
   millesimeCharge = annee;
@@ -756,6 +762,10 @@ function compute() {
   }
   appliquerMillesime(millesimeManuel !== null ? millesimeManuel : anneeCession);
   afficherMillesime();
+
+  // Fiche 2.2 : taux des PS modifiable, par défaut celui du référentiel.
+  const psTauxManuel = document.getElementById('tauxPSManuel').value;
+  if (psTauxManuel !== '') TAUX_PS = parseFloat(psTauxManuel) / 100;
 
   const dAcq = getDate('dateAcq');
   const dCes = getDate('dateCes');
@@ -938,7 +948,7 @@ function compute() {
       <div class="breakdown-row"><span class="label">Abattement PS (${fmtPct(pctPS)}) — ${years} an${years > 1 ? 's' : ''}</span><span class="amount" style="color:var(--success)">− ${fmt(pvBrute * pctPS)}</span></div>
       <div class="breakdown-row"><span class="label">PV nette imposable aux PS</span><span class="amount">${fmt(pvNetPS)}</span></div>
       ${showQP ? `<div class="breakdown-row"><span class="label">Quote-part imposable en France (${fmtPct(qp)})</span><span class="amount">${fmt(pvImposPS)}</span></div>` : ''}
-      <div class="breakdown-row"><span class="label">Prélèvements sociaux (17,2 %)</span><span class="amount">${fmt(ps)}</span></div>
+      <div class="breakdown-row"><span class="label">Prélèvements sociaux (${(TAUX_PS * 100).toLocaleString('fr-FR')} %)</span><span class="amount">${fmt(ps)}</span></div>
       ` : `<div class="breakdown-row"><span class="label" style="color:var(--success)">PS — Exonérée (détention ≥ 30 ans)</span><span class="amount" style="color:var(--success)">0 €</span></div>`}
 
       ${surt > 0 ? `<div class="breakdown-row"><span class="label">Surtaxe (PV > 50 000 €) — art. 1609 nonies G CGI</span><span class="amount">${fmt(surt)}</span></div>` : ''}
@@ -955,7 +965,7 @@ function compute() {
     </div>` : ''}
 
     <p style="font-family:Arial,sans-serif;font-size:12px;color:var(--text-light);margin-top:0.5rem;line-height:1.6;">
-      Calcul réalisé en application des articles 150 U à 150 VH du CGI. Abattements : art. 150 VC CGI. Surtaxe : art. 1609 nonies G CGI (BOI-RFPI-TPVIE-20). Taux de prélèvements sociaux retenu : 17,2 %. Les taux de change sont issus de la base de la Banque de France intégrée au présent outil. Ce résultat ne prend pas en compte les exonérations particulières (résidence principale, primo-accédants, personnes invalides, etc.).
+      Calcul réalisé en application des articles 150 U à 150 VH du CGI. Abattements : art. 150 VC CGI. Surtaxe : art. 1609 nonies G CGI (BOI-RFPI-TPVIE-20). Taux de prélèvements sociaux retenu : ${(TAUX_PS * 100).toLocaleString('fr-FR')} %. Les taux de change sont issus de la base de la Banque de France intégrée au présent outil. Ce résultat ne prend pas en compte les exonérations particulières (résidence principale, primo-accédants, personnes invalides, etc.).
     </p>
   `;
 }

@@ -32,25 +32,35 @@
   const REMONTEE_MAX_DEFAUT = 10;
 
   /**
-   * Cherche le dernier jour coté à `date` ou avant, au plus `remonteeMax`
-   * jours en arrière, dans une série `{ "AAAA-MM-JJ": { DEV: taux } }`.
-   * Retourne `{ taux, date }` — `date` étant celle réellement retenue, qui
-   * peut différer de celle demandée — ou `null` si rien n'est trouvé.
+   * Cherche le jour coté le plus proche de `date`, en avant comme en
+   * arrière, au plus `remonteeMax` jours d'écart, dans une série
+   * `{ "AAAA-MM-JJ": { DEV: taux } }`. Retourne `{ taux, date }` — `date`
+   * étant celle réellement retenue, qui peut différer de celle demandée —
+   * ou `null` si rien n'est trouvé.
    *
-   * Règle reprise à l'identique de l'ancien `getRate` du simulateur de
-   * plus-value immobilière : elle n'a jamais été écrite ailleurs que dans le
-   * code, voir fiche 3.5 de `docs/CORRECTIONS_A_VALIDER.md`.
+   * Règle tranchée par le référent fiscal, fiche 3.5 de
+   * `docs/CORRECTIONS_A_VALIDER.md` : le jour le plus proche, et à écart égal
+   * — un jour chaumé isolé, entouré de deux jours cotés — le jour suivant
+   * l'emporte sur le jour précédent. Pour un week-end ou une fermeture
+   * prolongée, le jour précédent reste le plus proche et continue d'être
+   * retenu, comme le faisait l'ancienne règle « dernier jour coté avant ».
    */
   function rechercheCotation(cotations, date, devise, remonteeMax) {
     if (typeof remonteeMax !== 'number') remonteeMax = REMONTEE_MAX_DEFAUT;
     if (!date || devise === 'EUR') return { taux: 1, date };
-    const d = new Date(`${date}T00:00:00Z`);
-    for (let i = 0; i <= remonteeMax; i += 1) {
-      const ds = d.toISOString().slice(0, 10);
-      const jour = cotations[ds];
-      const v = jour ? jour[devise] : undefined;
-      if (typeof v === 'number') return { taux: v, date: ds };
-      d.setUTCDate(d.getUTCDate() - 1);
+    const base = new Date(`${date}T00:00:00Z`);
+    for (let ecart = 0; ecart <= remonteeMax; ecart += 1) {
+      const avant = new Date(base);
+      avant.setUTCDate(avant.getUTCDate() - ecart);
+      const apres = new Date(base);
+      apres.setUTCDate(apres.getUTCDate() + ecart);
+      const candidats = ecart === 0 ? [avant] : [apres, avant];
+      for (const d of candidats) {
+        const ds = d.toISOString().slice(0, 10);
+        const jour = cotations[ds];
+        const v = jour ? jour[devise] : undefined;
+        if (typeof v === 'number') return { taux: v, date: ds };
+      }
     }
     return null;
   }

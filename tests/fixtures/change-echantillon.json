@@ -1,26 +1,26 @@
 {
-  "description": "Échantillon de taux de change relevés AVANT l'extraction de la série hors du simulateur de plus-value immobilière (issue #13).",
-  "provenance": "Produit en interrogeant la fonction getRate du simulateur, sur la série alors embarquée dans « Simulateur_PV_Immobilière Juillet 2026.html », commit 5c07bfc. C'est la seule trace exploitable une fois la série retirée du fichier : elle prouve que data/change/ rend exactement les mêmes taux, remontée aux jours non cotés comprise.",
-  "statutValidation": "NON VALIDÉ — ces taux figent la série existante. Leur exactitude au regard des publications officielles n'est pas vérifiée : voir la fiche 3.5 de docs/CORRECTIONS_A_VALIDER.md.",
-  "regleDeRemontee": "Le simulateur retient le dernier jour coté à la date demandée ou avant, en remontant au plus dix jours. Au-delà, aucun taux n'est retenu.",
+  "description": "Échantillon de taux de change, régénéré après la fiche 3.5 de docs/CORRECTIONS_A_VALIDER.md (issue #1) : le référent fiscal a tranché la règle de remontée aux jours non cotés. Régénéré en rejouant `tauxPour` sur la série de data/change/ avec la nouvelle règle, à partir de l'échantillon relevé avant l'extraction (issue #13).",
+  "provenance": "Initialement produit en interrogeant la fonction getRate du simulateur, sur la série alors embarquée dans « Simulateur_PV_Immobilière Juillet 2026.html », commit 5c07bfc — c'était la seule trace exploitable une fois la série retirée du fichier. Les 568 cas où la nouvelle règle de remontée diverge de l'ancienne ont été recalculés avec `src/change.js` (rechercheCotation) le 28 août 2026, à la suite de la fiche 3.5. Les cas non affectés par le changement de règle restent la valeur d'origine.",
+  "statutValidation": "NON VALIDÉ — ces taux figent la série existante. Leur exactitude au regard des publications officielles n'est pas vérifiée : voir la fiche 3.5 de docs/CORRECTIONS_A_VALIDER.md. La règle de remontée, elle, a été validée par le référent fiscal.",
+  "regleDeRemontee": "Le simulateur retient le jour coté le plus proche de la date demandée, en avant comme en arrière, à égalité d'écart le jour suivant l'emportant sur le jour précédent (jour chaumé isolé) — dans la limite de dix jours d'écart. Au-delà, aucun taux n'est retenu.",
   "remonteeMaximaleJours": 10,
   "cas": [
     {
       "date": "1998-12-31",
       "devise": "USD",
-      "taux": null,
+      "taux": 1.1789,
       "motif": "borne de série"
     },
     {
       "date": "1998-12-31",
       "devise": "GBP",
-      "taux": null,
+      "taux": 0.7111,
       "motif": "borne de série"
     },
     {
       "date": "1998-12-31",
       "devise": "JPY",
-      "taux": null,
+      "taux": 133.73,
       "motif": "borne de série"
     },
     {
@@ -32,25 +32,25 @@
     {
       "date": "1998-12-31",
       "devise": "RUB",
-      "taux": null,
+      "taux": 25.2875,
       "motif": "borne de série"
     },
     {
       "date": "1999-01-01",
       "devise": "USD",
-      "taux": null,
+      "taux": 1.1789,
       "motif": "borne de série"
     },
     {
       "date": "1999-01-01",
       "devise": "GBP",
-      "taux": null,
+      "taux": 0.7111,
       "motif": "borne de série"
     },
     {
       "date": "1999-01-01",
       "devise": "JPY",
-      "taux": null,
+      "taux": 133.73,
       "motif": "borne de série"
     },
     {
@@ -62,25 +62,25 @@
     {
       "date": "1999-01-01",
       "devise": "RUB",
-      "taux": null,
+      "taux": 25.2875,
       "motif": "borne de série"
     },
     {
       "date": "1999-01-03",
       "devise": "USD",
-      "taux": null,
+      "taux": 1.1789,
       "motif": "borne de série"
     },
     {
       "date": "1999-01-03",
       "devise": "GBP",
-      "taux": null,
+      "taux": 0.7111,
       "motif": "borne de série"
     },
     {
       "date": "1999-01-03",
       "devise": "JPY",
-      "taux": null,
+      "taux": 133.73,
       "motif": "borne de série"
     },
     {
@@ -92,7 +92,7 @@
     {
       "date": "1999-01-03",
       "devise": "RUB",
-      "taux": null,
+      "taux": 25.2875,
       "motif": "borne de série"
     },
     {
@@ -230,13 +230,13 @@
     {
       "date": "1999-01-10",
       "devise": "USD",
-      "taux": 1.1659,
+      "taux": 1.1569,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-01-10",
       "devise": "CHF",
-      "taux": 1.6138,
+      "taux": 1.6104,
       "motif": "jour non coté, remontée"
     },
     {
@@ -254,13 +254,13 @@
     {
       "date": "1999-01-17",
       "devise": "USD",
-      "taux": 1.1626,
+      "taux": 1.1612,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-01-17",
       "devise": "CHF",
-      "taux": 1.5984,
+      "taux": 1.6004,
       "motif": "jour non coté, remontée"
     },
     {
@@ -278,13 +278,13 @@
     {
       "date": "1999-01-24",
       "devise": "USD",
-      "taux": 1.1567,
+      "taux": 1.1584,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-01-24",
       "devise": "CHF",
-      "taux": 1.5983,
+      "taux": 1.5966,
       "motif": "jour non coté, remontée"
     },
     {
@@ -302,13 +302,13 @@
     {
       "date": "1999-01-31",
       "devise": "USD",
-      "taux": 1.1384,
+      "taux": 1.1338,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-01-31",
       "devise": "CHF",
-      "taux": 1.6123,
+      "taux": 1.6089,
       "motif": "jour non coté, remontée"
     },
     {
@@ -326,13 +326,13 @@
     {
       "date": "1999-02-07",
       "devise": "USD",
-      "taux": 1.1292,
+      "taux": 1.1246,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-02-07",
       "devise": "CHF",
-      "taux": 1.6012,
+      "taux": 1.6018,
       "motif": "jour non coté, remontée"
     },
     {
@@ -350,13 +350,13 @@
     {
       "date": "1999-02-14",
       "devise": "USD",
-      "taux": 1.1244,
+      "taux": 1.1238,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-02-14",
       "devise": "CHF",
-      "taux": 1.5992,
+      "taux": 1.595,
       "motif": "jour non coté, remontée"
     },
     {
@@ -374,13 +374,13 @@
     {
       "date": "1999-02-21",
       "devise": "USD",
-      "taux": 1.1163,
+      "taux": 1.0992,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-02-21",
       "devise": "CHF",
-      "taux": 1.5982,
+      "taux": 1.5986,
       "motif": "jour non coté, remontée"
     },
     {
@@ -398,13 +398,13 @@
     {
       "date": "1999-02-28",
       "devise": "USD",
-      "taux": 1.1018,
+      "taux": 1.0986,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-02-28",
       "devise": "CHF",
-      "taux": 1.589,
+      "taux": 1.593,
       "motif": "jour non coté, remontée"
     },
     {
@@ -422,13 +422,13 @@
     {
       "date": "1999-03-07",
       "devise": "USD",
-      "taux": 1.0834,
+      "taux": 1.0908,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-03-07",
       "devise": "CHF",
-      "taux": 1.5912,
+      "taux": 1.5933,
       "motif": "jour non coté, remontée"
     },
     {
@@ -446,13 +446,13 @@
     {
       "date": "1999-03-14",
       "devise": "USD",
-      "taux": 1.0932,
+      "taux": 1.0949,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-03-14",
       "devise": "CHF",
-      "taux": 1.5975,
+      "taux": 1.601,
       "motif": "jour non coté, remontée"
     },
     {
@@ -470,13 +470,13 @@
     {
       "date": "1999-03-21",
       "devise": "USD",
-      "taux": 1.0915,
+      "taux": 1.0864,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-03-21",
       "devise": "CHF",
-      "taux": 1.5986,
+      "taux": 1.5966,
       "motif": "jour non coté, remontée"
     },
     {
@@ -494,13 +494,13 @@
     {
       "date": "1999-03-28",
       "devise": "USD",
-      "taux": 1.0815,
+      "taux": 1.0692,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-03-28",
       "devise": "CHF",
-      "taux": 1.5965,
+      "taux": 1.5943,
       "motif": "jour non coté, remontée"
     },
     {
@@ -518,13 +518,13 @@
     {
       "date": "1999-04-04",
       "devise": "USD",
-      "taux": 1.0772,
+      "taux": 1.0752,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-04-04",
       "devise": "CHF",
-      "taux": 1.5973,
+      "taux": 1.5968,
       "motif": "jour non coté, remontée"
     },
     {
@@ -542,13 +542,13 @@
     {
       "date": "1999-04-11",
       "devise": "USD",
-      "taux": 1.0778,
+      "taux": 1.0867,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-04-11",
       "devise": "CHF",
-      "taux": 1.5968,
+      "taux": 1.603,
       "motif": "jour non coté, remontée"
     },
     {
@@ -566,40 +566,40 @@
     {
       "date": "1999-04-18",
       "devise": "USD",
-      "taux": 1.0668,
+      "taux": 1.0636,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-04-18",
       "devise": "CHF",
+      "taux": 1.6015,
+      "motif": "jour non coté, remontée"
+    },
+    {
+      "date": "1999-04-24",
+      "devise": "USD",
+      "taux": 1.0634,
+      "motif": "jour non coté, remontée"
+    },
+    {
+      "date": "1999-04-24",
+      "devise": "CHF",
+      "taux": 1.6023,
+      "motif": "jour non coté, remontée"
+    },
+    {
+      "date": "1999-04-25",
+      "devise": "USD",
+      "taux": 1.0614,
+      "motif": "jour non coté, remontée"
+    },
+    {
+      "date": "1999-04-25",
+      "devise": "CHF",
       "taux": 1.6027,
       "motif": "jour non coté, remontée"
     },
     {
-      "date": "1999-04-24",
-      "devise": "USD",
-      "taux": 1.0634,
-      "motif": "jour non coté, remontée"
-    },
-    {
-      "date": "1999-04-24",
-      "devise": "CHF",
-      "taux": 1.6023,
-      "motif": "jour non coté, remontée"
-    },
-    {
-      "date": "1999-04-25",
-      "devise": "USD",
-      "taux": 1.0634,
-      "motif": "jour non coté, remontée"
-    },
-    {
-      "date": "1999-04-25",
-      "devise": "CHF",
-      "taux": 1.6023,
-      "motif": "jour non coté, remontée"
-    },
-    {
       "date": "1999-05-01",
       "devise": "USD",
       "taux": 1.0597,
@@ -614,13 +614,13 @@
     {
       "date": "1999-05-02",
       "devise": "USD",
-      "taux": 1.0597,
+      "taux": 1.0589,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-05-02",
       "devise": "CHF",
-      "taux": 1.6113,
+      "taux": 1.6111,
       "motif": "jour non coté, remontée"
     },
     {
@@ -638,13 +638,13 @@
     {
       "date": "1999-05-09",
       "devise": "USD",
-      "taux": 1.0786,
+      "taux": 1.0735,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-05-09",
       "devise": "CHF",
-      "taux": 1.6078,
+      "taux": 1.6075,
       "motif": "jour non coté, remontée"
     },
     {
@@ -662,13 +662,13 @@
     {
       "date": "1999-05-16",
       "devise": "USD",
-      "taux": 1.0676,
+      "taux": 1.0685,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-05-16",
       "devise": "CHF",
-      "taux": 1.602,
+      "taux": 1.6023,
       "motif": "jour non coté, remontée"
     },
     {
@@ -686,25 +686,25 @@
     {
       "date": "1999-05-23",
       "devise": "USD",
-      "taux": 1.0572,
+      "taux": 1.0585,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "1999-05-23",
       "devise": "CHF",
-      "taux": 1.6034,
+      "taux": 1.6023,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-02-15",
       "devise": "USD",
-      "taux": 1.1862,
+      "taux": 1.1855,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-02-15",
       "devise": "CHF",
-      "taux": 0.9121,
+      "taux": 0.9129,
       "motif": "jour non coté, remontée"
     },
     {
@@ -722,13 +722,13 @@
     {
       "date": "2026-02-22",
       "devise": "USD",
-      "taux": 1.1767,
+      "taux": 1.1784,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-02-22",
       "devise": "CHF",
-      "taux": 0.9132,
+      "taux": 0.9145,
       "motif": "jour non coté, remontée"
     },
     {
@@ -746,13 +746,13 @@
     {
       "date": "2026-03-01",
       "devise": "USD",
-      "taux": 1.1805,
+      "taux": 1.1698,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-03-01",
       "devise": "CHF",
-      "taux": 0.9104,
+      "taux": 0.9117,
       "motif": "jour non coté, remontée"
     },
     {
@@ -770,13 +770,13 @@
     {
       "date": "2026-03-08",
       "devise": "USD",
-      "taux": 1.1561,
+      "taux": 1.1555,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-03-08",
       "devise": "CHF",
-      "taux": 0.9045,
+      "taux": 0.9008,
       "motif": "jour non coté, remontée"
     },
     {
@@ -794,13 +794,13 @@
     {
       "date": "2026-03-15",
       "devise": "USD",
-      "taux": 1.1476,
+      "taux": 1.1478,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-03-15",
       "devise": "CHF",
-      "taux": 0.9034,
+      "taux": 0.9041,
       "motif": "jour non coté, remontée"
     },
     {
@@ -818,13 +818,13 @@
     {
       "date": "2026-03-22",
       "devise": "USD",
-      "taux": 1.1555,
+      "taux": 1.1596,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-03-22",
       "devise": "CHF",
-      "taux": 0.9096,
+      "taux": 0.9124,
       "motif": "jour non coté, remontée"
     },
     {
@@ -842,13 +842,13 @@
     {
       "date": "2026-03-29",
       "devise": "USD",
-      "taux": 1.1517,
+      "taux": 1.1484,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-03-29",
       "devise": "CHF",
-      "taux": 0.9178,
+      "taux": 0.9187,
       "motif": "jour non coté, remontée"
     },
     {
@@ -878,25 +878,25 @@
     {
       "date": "2026-04-05",
       "devise": "USD",
-      "taux": 1.1525,
+      "taux": 1.1557,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-04-05",
       "devise": "CHF",
-      "taux": 0.9213,
+      "taux": 0.9242,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-04-06",
       "devise": "USD",
-      "taux": 1.1525,
+      "taux": 1.1557,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-04-06",
       "devise": "CHF",
-      "taux": 0.9213,
+      "taux": 0.9242,
       "motif": "jour non coté, remontée"
     },
     {
@@ -914,13 +914,13 @@
     {
       "date": "2026-04-12",
       "devise": "USD",
-      "taux": 1.1711,
+      "taux": 1.1684,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-04-12",
       "devise": "CHF",
-      "taux": 0.9241,
+      "taux": 0.9242,
       "motif": "jour non coté, remontée"
     },
     {
@@ -938,13 +938,13 @@
     {
       "date": "2026-04-19",
       "devise": "USD",
-      "taux": 1.1797,
+      "taux": 1.176,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-04-19",
       "devise": "CHF",
-      "taux": 0.9231,
+      "taux": 0.9189,
       "motif": "jour non coté, remontée"
     },
     {
@@ -962,13 +962,13 @@
     {
       "date": "2026-04-26",
       "devise": "USD",
-      "taux": 1.1712,
+      "taux": 1.1749,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-04-26",
       "devise": "CHF",
-      "taux": 0.9199,
+      "taux": 0.921,
       "motif": "jour non coté, remontée"
     },
     {
@@ -986,25 +986,25 @@
     {
       "date": "2026-05-02",
       "devise": "USD",
-      "taux": 1.1702,
+      "taux": 1.17,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-05-02",
       "devise": "CHF",
-      "taux": 0.919,
+      "taux": 0.9173,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-05-03",
       "devise": "USD",
-      "taux": 1.1702,
+      "taux": 1.17,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-05-03",
       "devise": "CHF",
-      "taux": 0.919,
+      "taux": 0.9173,
       "motif": "jour non coté, remontée"
     },
     {
@@ -1022,13 +1022,13 @@
     {
       "date": "2026-05-10",
       "devise": "USD",
-      "taux": 1.1761,
+      "taux": 1.1765,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-05-10",
       "devise": "CHF",
-      "taux": 0.9156,
+      "taux": 0.9163,
       "motif": "jour non coté, remontée"
     },
     {
@@ -1046,7 +1046,7 @@
     {
       "date": "2026-05-17",
       "devise": "USD",
-      "taux": 1.1628,
+      "taux": 1.1648,
       "motif": "jour non coté, remontée"
     },
     {
@@ -1070,13 +1070,13 @@
     {
       "date": "2026-05-24",
       "devise": "USD",
-      "taux": 1.1595,
+      "taux": 1.1643,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-05-24",
       "devise": "CHF",
-      "taux": 0.9119,
+      "taux": 0.9099,
       "motif": "jour non coté, remontée"
     },
     {
@@ -1094,13 +1094,13 @@
     {
       "date": "2026-05-31",
       "devise": "USD",
-      "taux": 1.1644,
+      "taux": 1.1646,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-05-31",
       "devise": "CHF",
-      "taux": 0.9111,
+      "taux": 0.9128,
       "motif": "jour non coté, remontée"
     },
     {
@@ -1118,13 +1118,13 @@
     {
       "date": "2026-06-07",
       "devise": "USD",
-      "taux": 1.164,
+      "taux": 1.154,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-06-07",
       "devise": "CHF",
-      "taux": 0.9175,
+      "taux": 0.9187,
       "motif": "jour non coté, remontée"
     },
     {
@@ -1142,13 +1142,13 @@
     {
       "date": "2026-06-14",
       "devise": "USD",
-      "taux": 1.1567,
+      "taux": 1.1607,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-06-14",
       "devise": "CHF",
-      "taux": 0.9217,
+      "taux": 0.9212,
       "motif": "jour non coté, remontée"
     },
     {
@@ -1166,13 +1166,13 @@
     {
       "date": "2026-06-21",
       "devise": "USD",
-      "taux": 1.1467,
+      "taux": 1.1456,
       "motif": "jour non coté, remontée"
     },
     {
       "date": "2026-06-21",
       "devise": "CHF",
-      "taux": 0.9248,
+      "taux": 0.9257,
       "motif": "jour non coté, remontée"
     },
     {
@@ -1190,61 +1190,61 @@
     {
       "date": "2000-01-01",
       "devise": "USD",
-      "taux": 1.0046,
+      "taux": 1.009,
       "motif": "début d’année"
     },
     {
       "date": "2000-01-01",
       "devise": "GBP",
-      "taux": 0.6217,
+      "taux": 0.6246,
       "motif": "début d’année"
     },
     {
       "date": "2001-01-01",
       "devise": "USD",
-      "taux": 0.9305,
+      "taux": 0.9423,
       "motif": "début d’année"
     },
     {
       "date": "2001-01-01",
       "devise": "GBP",
-      "taux": 0.6241,
+      "taux": 0.6315,
       "motif": "début d’année"
     },
     {
       "date": "2002-01-01",
       "devise": "USD",
-      "taux": 0.8813,
+      "taux": 0.9038,
       "motif": "début d’année"
     },
     {
       "date": "2002-01-01",
       "devise": "GBP",
-      "taux": 0.6085,
+      "taux": 0.6262,
       "motif": "début d’année"
     },
     {
       "date": "2003-01-01",
       "devise": "USD",
-      "taux": 1.0487,
+      "taux": 1.0446,
       "motif": "début d’année"
     },
     {
       "date": "2003-01-01",
       "devise": "GBP",
-      "taux": 0.6505,
+      "taux": 0.652,
       "motif": "début d’année"
     },
     {
       "date": "2004-01-01",
       "devise": "USD",
-      "taux": 1.263,
+      "taux": 1.2592,
       "motif": "début d’année"
     },
     {
       "date": "2004-01-01",
       "devise": "GBP",
-      "taux": 0.7048,
+      "taux": 0.70545,
       "motif": "début d’année"
     },
     {
@@ -1262,49 +1262,49 @@
     {
       "date": "2006-01-01",
       "devise": "USD",
-      "taux": 1.1797,
+      "taux": 1.1826,
       "motif": "début d’année"
     },
     {
       "date": "2006-01-01",
       "devise": "GBP",
-      "taux": 0.6853,
+      "taux": 0.6865,
       "motif": "début d’année"
     },
     {
       "date": "2007-01-01",
       "devise": "USD",
-      "taux": 1.317,
+      "taux": 1.327,
       "motif": "début d’année"
     },
     {
       "date": "2007-01-01",
       "devise": "GBP",
-      "taux": 0.6715,
+      "taux": 0.6735,
       "motif": "début d’année"
     },
     {
       "date": "2008-01-01",
       "devise": "USD",
-      "taux": 1.4721,
+      "taux": 1.4688,
       "motif": "début d’année"
     },
     {
       "date": "2008-01-01",
       "devise": "GBP",
-      "taux": 0.73335,
+      "taux": 0.7413,
       "motif": "début d’année"
     },
     {
       "date": "2009-01-01",
       "devise": "USD",
-      "taux": 1.3917,
+      "taux": 1.3866,
       "motif": "début d’année"
     },
     {
       "date": "2009-01-01",
       "devise": "GBP",
-      "taux": 0.9525,
+      "taux": 0.961,
       "motif": "début d’année"
     },
     {
@@ -1334,49 +1334,49 @@
     {
       "date": "2012-01-01",
       "devise": "USD",
-      "taux": 1.2939,
+      "taux": 1.2935,
       "motif": "début d’année"
     },
     {
       "date": "2012-01-01",
       "devise": "GBP",
-      "taux": 0.8353,
+      "taux": 0.83514,
       "motif": "début d’année"
     },
     {
       "date": "2013-01-01",
       "devise": "USD",
-      "taux": 1.3194,
+      "taux": 1.3262,
       "motif": "début d’année"
     },
     {
       "date": "2013-01-01",
       "devise": "GBP",
-      "taux": 0.8161,
+      "taux": 0.814,
       "motif": "début d’année"
     },
     {
       "date": "2014-01-01",
       "devise": "USD",
-      "taux": 1.3791,
+      "taux": 1.3658,
       "motif": "début d’année"
     },
     {
       "date": "2014-01-01",
       "devise": "GBP",
-      "taux": 0.8337,
+      "taux": 0.8282,
       "motif": "début d’année"
     },
     {
       "date": "2015-01-01",
       "devise": "USD",
-      "taux": 1.2141,
+      "taux": 1.2043,
       "motif": "début d’année"
     },
     {
       "date": "2015-01-01",
       "devise": "GBP",
-      "taux": 0.7789,
+      "taux": 0.78,
       "motif": "début d’année"
     },
     {
@@ -1394,49 +1394,49 @@
     {
       "date": "2017-01-01",
       "devise": "USD",
-      "taux": 1.0541,
+      "taux": 1.0465,
       "motif": "début d’année"
     },
     {
       "date": "2017-01-01",
       "devise": "GBP",
-      "taux": 0.85618,
+      "taux": 0.8514,
       "motif": "début d’année"
     },
     {
       "date": "2018-01-01",
       "devise": "USD",
-      "taux": 1.1993,
+      "taux": 1.2065,
       "motif": "début d’année"
     },
     {
       "date": "2018-01-01",
       "devise": "GBP",
-      "taux": 0.88723,
+      "taux": 0.88953,
       "motif": "début d’année"
     },
     {
       "date": "2019-01-01",
       "devise": "USD",
-      "taux": 1.145,
+      "taux": 1.1397,
       "motif": "début d’année"
     },
     {
       "date": "2019-01-01",
       "devise": "GBP",
-      "taux": 0.89453,
+      "taux": 0.90165,
       "motif": "début d’année"
     },
     {
       "date": "2020-01-01",
       "devise": "USD",
-      "taux": 1.1234,
+      "taux": 1.1193,
       "motif": "début d’année"
     },
     {
       "date": "2020-01-01",
       "devise": "GBP",
-      "taux": 0.8508,
+      "taux": 0.84828,
       "motif": "début d’année"
     },
     {
@@ -1466,49 +1466,49 @@
     {
       "date": "2023-01-01",
       "devise": "USD",
-      "taux": 1.0666,
+      "taux": 1.0683,
       "motif": "début d’année"
     },
     {
       "date": "2023-01-01",
       "devise": "GBP",
-      "taux": 0.88693,
+      "taux": 0.8863,
       "motif": "début d’année"
     },
     {
       "date": "2024-01-01",
       "devise": "USD",
-      "taux": 1.105,
+      "taux": 1.0956,
       "motif": "début d’année"
     },
     {
       "date": "2024-01-01",
       "devise": "GBP",
-      "taux": 0.86905,
+      "taux": 0.86645,
       "motif": "début d’année"
     },
     {
       "date": "2025-01-01",
       "devise": "USD",
-      "taux": 1.0389,
+      "taux": 1.0321,
       "motif": "début d’année"
     },
     {
       "date": "2025-01-01",
       "devise": "GBP",
-      "taux": 0.82918,
+      "taux": 0.83118,
       "motif": "début d’année"
     },
     {
       "date": "2026-01-01",
       "devise": "USD",
-      "taux": 1.175,
+      "taux": 1.1721,
       "motif": "début d’année"
     },
     {
       "date": "2026-01-01",
       "devise": "GBP",
-      "taux": 0.8726,
+      "taux": 0.8719,
       "motif": "début d’année"
     },
     {
@@ -1718,7 +1718,7 @@
     {
       "date": "1999-04-11",
       "devise": "AUD",
-      "taux": 1.7162,
+      "taux": 1.7106,
       "motif": "échantillon régulier"
     },
     {
@@ -1730,13 +1730,13 @@
     {
       "date": "1999-04-11",
       "devise": "CAD",
-      "taux": 1.6202,
+      "taux": 1.6281,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "CHF",
-      "taux": 1.5968,
+      "taux": 1.603,
       "motif": "échantillon régulier"
     },
     {
@@ -1748,37 +1748,37 @@
     {
       "date": "1999-04-11",
       "devise": "CZK",
-      "taux": 38.036,
+      "taux": 38.132,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "DKK",
-      "taux": 7.4323,
+      "taux": 7.4336,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "GBP",
-      "taux": 0.6724,
+      "taux": 0.6723,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "HKD",
-      "taux": 8.3495,
+      "taux": 8.4257,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "HUF",
-      "taux": 253.33,
+      "taux": 254.82,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "IDR",
-      "taux": 9428.59,
+      "taux": 9488.01,
       "motif": "échantillon régulier"
     },
     {
@@ -1796,103 +1796,103 @@
     {
       "date": "1999-04-11",
       "devise": "ISK",
-      "taux": 78.74,
+      "taux": 79.08,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "JPY",
-      "taux": 130.75,
+      "taux": 130.27,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "KRW",
-      "taux": 1317.96,
+      "taux": 1329.35,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "MXN",
-      "taux": 10.2475,
+      "taux": 10.4195,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "MYR",
-      "taux": 4.0947,
+      "taux": 4.1321,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "NOK",
-      "taux": 8.412,
+      "taux": 8.4048,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "NZD",
-      "taux": 2.0212,
+      "taux": 2.0041,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "PHP",
-      "taux": 41.513,
+      "taux": 41.789,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "PLN",
-      "taux": 4.2918,
+      "taux": 4.3078,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "RON",
-      "taux": 1.5386,
+      "taux": 1.5521,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "RUB",
-      "taux": 28.2049,
+      "taux": 28.2139,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "SEK",
-      "taux": 8.944,
+      "taux": 9.02,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "SGD",
-      "taux": 1.8685,
+      "taux": 1.872,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "THB",
-      "taux": 41.0008,
+      "taux": 41.2144,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "TRY",
-      "taux": 0.4059,
+      "taux": 0.4099,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "USD",
-      "taux": 1.0778,
+      "taux": 1.0867,
       "motif": "échantillon régulier"
     },
     {
       "date": "1999-04-11",
       "devise": "ZAR",
-      "taux": 6.6692,
+      "taux": 6.7059,
       "motif": "échantillon régulier"
     },
     {
@@ -2978,55 +2978,55 @@
     {
       "date": "2001-02-18",
       "devise": "AUD",
-      "taux": 1.7263,
+      "taux": 1.7405,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "BRL",
-      "taux": 1.8149,
+      "taux": 1.8468,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "CAD",
-      "taux": 1.3991,
+      "taux": 1.4202,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "CHF",
-      "taux": 1.537,
+      "taux": 1.5362,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "CNY",
-      "taux": 7.5428,
+      "taux": 7.6256,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "CZK",
-      "taux": 34.45,
+      "taux": 34.647,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "DKK",
-      "taux": 7.464,
+      "taux": 7.4634,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "GBP",
-      "taux": 0.6284,
+      "taux": 0.6344,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "HKD",
-      "taux": 7.1078,
+      "taux": 7.186,
       "motif": "échantillon régulier"
     },
     {
@@ -3038,121 +3038,121 @@
     {
       "date": "2001-02-18",
       "devise": "IDR",
-      "taux": 8766.86,
+      "taux": 8858.98,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "ILS",
-      "taux": 3.7436,
+      "taux": 3.7932,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "INR",
-      "taux": 42.384,
+      "taux": 42.896,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "ISK",
-      "taux": 78.76,
+      "taux": 79.34,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "JPY",
-      "taux": 104.88,
+      "taux": 106.71,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "KRW",
-      "taux": 1131.79,
+      "taux": 1148.77,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "MXN",
-      "taux": 8.8437,
+      "taux": 8.9572,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "MYR",
-      "taux": 3.4628,
+      "taux": 3.5027,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "NOK",
-      "taux": 8.195,
+      "taux": 8.206,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "NZD",
-      "taux": 2.126,
+      "taux": 2.1355,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "PHP",
-      "taux": 43.33,
+      "taux": 44.152,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "PLN",
-      "taux": 3.7328,
+      "taux": 3.77,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "RON",
-      "taux": 2.4472,
+      "taux": 2.475,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "RUB",
-      "taux": 26.1493,
+      "taux": 26.4645,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "SEK",
-      "taux": 8.9615,
+      "taux": 8.993,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "SGD",
-      "taux": 1.5832,
+      "taux": 1.6009,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "THB",
-      "taux": 38.743,
+      "taux": 39.2939,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "TRY",
-      "taux": 0.6265,
+      "taux": 0.6305,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "USD",
-      "taux": 0.9113,
+      "taux": 0.9213,
       "motif": "échantillon régulier"
     },
     {
       "date": "2001-02-18",
       "devise": "ZAR",
-      "taux": 7.195,
+      "taux": 7.1222,
       "motif": "échantillon régulier"
     },
     {
@@ -4238,115 +4238,115 @@
     {
       "date": "2002-12-29",
       "devise": "AUD",
-      "taux": 1.8446,
+      "taux": 1.8515,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "BRL",
-      "taux": 3.6876,
+      "taux": 3.6769,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "CAD",
-      "taux": 1.6274,
+      "taux": 1.6381,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "CHF",
-      "taux": 1.4567,
+      "taux": 1.4548,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "CNY",
-      "taux": 8.5882,
+      "taux": 8.6263,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "CZK",
-      "taux": 31.34,
+      "taux": 31.489,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "DKK",
-      "taux": 7.4267,
+      "taux": 7.4281,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "GBP",
-      "taux": 0.648,
+      "taux": 0.65,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "HKD",
-      "taux": 8.092,
+      "taux": 8.128,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "HUF",
-      "taux": 235.73,
+      "taux": 235.95,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "IDR",
-      "taux": 9255.03,
+      "taux": 9329.93,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "ILS",
-      "taux": 4.9722,
+      "taux": 4.9654,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "INR",
-      "taux": 49.775,
+      "taux": 49.944,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "ISK",
-      "taux": 84.8,
+      "taux": 84.24,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "JPY",
-      "taux": 124.45,
+      "taux": 124.27,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "KRW",
-      "taux": 1242.79,
+      "taux": 1247.51,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "MXN",
-      "taux": 10.6587,
+      "taux": 10.7477,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "MYR",
-      "taux": 3.9438,
+      "taux": 3.9613,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "NOK",
-      "taux": 7.306,
+      "taux": 7.2725,
       "motif": "échantillon régulier"
     },
     {
@@ -4358,61 +4358,61 @@
     {
       "date": "2002-12-29",
       "devise": "PHP",
-      "taux": 55.344,
+      "taux": 55.589,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "PLN",
-      "taux": 3.992,
+      "taux": 4.0005,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "RON",
-      "taux": 3.4785,
+      "taux": 3.4925,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "RUB",
-      "taux": 33.0348,
+      "taux": 33.2854,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "SEK",
-      "taux": 9.155,
+      "taux": 9.1558,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "SGD",
-      "taux": 1.8049,
+      "taux": 1.8093,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "THB",
-      "taux": 44.9701,
+      "taux": 45.159,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "TRY",
-      "taux": 1.719,
+      "taux": 1.713,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "USD",
-      "taux": 1.0376,
+      "taux": 1.0422,
       "motif": "échantillon régulier"
     },
     {
       "date": "2002-12-29",
       "devise": "ZAR",
-      "taux": 9.1231,
+      "taux": 8.9791,
       "motif": "échantillon régulier"
     },
     {
@@ -5498,181 +5498,181 @@
     {
       "date": "2004-11-07",
       "devise": "AUD",
-      "taux": 1.6967,
+      "taux": 1.7031,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "BRL",
-      "taux": 3.6291,
+      "taux": 3.6478,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "CAD",
-      "taux": 1.5507,
+      "taux": 1.544,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "CHF",
-      "taux": 1.5316,
+      "taux": 1.5286,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "CNY",
-      "taux": 10.6442,
+      "taux": 10.6914,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "CZK",
-      "taux": 31.455,
+      "taux": 31.421,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "DKK",
-      "taux": 7.4334,
+      "taux": 7.4326,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "GBP",
-      "taux": 0.69775,
+      "taux": 0.69695,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "HKD",
-      "taux": 9.9956,
+      "taux": 10.0447,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "HUF",
-      "taux": 245.65,
+      "taux": 245.27,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "IDR",
-      "taux": 11662.28,
+      "taux": 11564.59,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "ILS",
-      "taux": 5.7023,
+      "taux": 5.7184,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "INR",
-      "taux": 58.087,
+      "taux": 58.256,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "ISK",
-      "taux": 87.13,
+      "taux": 87.24,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "JPY",
-      "taux": 136.51,
+      "taux": 136.56,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "KRW",
-      "taux": 1427.79,
+      "taux": 1427.72,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "MXN",
-      "taux": 14.7067,
+      "taux": 14.6715,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "MYR",
-      "taux": 4.8866,
+      "taux": 4.9085,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "NOK",
-      "taux": 8.179,
+      "taux": 8.191,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "NZD",
-      "taux": 1.8614,
+      "taux": 1.8595,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "PHP",
-      "taux": 72.493,
+      "taux": 72.652,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "PLN",
-      "taux": 4.2904,
+      "taux": 4.2574,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "RON",
-      "taux": 3.9983,
+      "taux": 4.0669,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "RUB",
-      "taux": 36.8457,
+      "taux": 37.024,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "SEK",
-      "taux": 9.108,
+      "taux": 9.0886,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "SGD",
-      "taux": 2.1331,
+      "taux": 2.135,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "THB",
-      "taux": 52.6339,
+      "taux": 52.5593,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "TRY",
-      "taux": 1.8762,
+      "taux": 1.8801,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "USD",
-      "taux": 1.2856,
+      "taux": 1.2917,
       "motif": "échantillon régulier"
     },
     {
       "date": "2004-11-07",
       "devise": "ZAR",
-      "taux": 7.9126,
+      "taux": 7.9915,
       "motif": "échantillon régulier"
     },
     {
@@ -6758,181 +6758,181 @@
     {
       "date": "2006-09-17",
       "devise": "AUD",
-      "taux": 1.6853,
+      "taux": 1.6821,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "BRL",
-      "taux": 2.7376,
+      "taux": 2.7138,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "CAD",
-      "taux": 1.4203,
+      "taux": 1.42,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "CHF",
-      "taux": 1.5946,
+      "taux": 1.5887,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "CNY",
-      "taux": 10.0678,
+      "taux": 10.0646,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "CZK",
-      "taux": 28.485,
+      "taux": 28.423,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "DKK",
-      "taux": 7.4606,
+      "taux": 7.4607,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "GBP",
-      "taux": 0.6739,
+      "taux": 0.6748,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "HKD",
-      "taux": 9.8642,
+      "taux": 9.8588,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "HUF",
-      "taux": 272.53,
+      "taux": 270.73,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "IDR",
-      "taux": 11559.6,
+      "taux": 11587.84,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "ILS",
-      "taux": 5.5418,
+      "taux": 5.5116,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "INR",
-      "taux": 58.323,
+      "taux": 58.441,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "ISK",
-      "taux": 89.28,
+      "taux": 88.79,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "JPY",
-      "taux": 149.09,
+      "taux": 149.47,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "KRW",
-      "taux": 1211.98,
+      "taux": 1211.34,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "MXN",
-      "taux": 13.8991,
+      "taux": 13.8105,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "MYR",
-      "taux": 4.653,
+      "taux": 4.6607,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "NOK",
-      "taux": 8.2775,
+      "taux": 8.283,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "NZD",
-      "taux": 1.9248,
+      "taux": 1.909,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "PHP",
-      "taux": 63.654,
+      "taux": 63.604,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "PLN",
-      "taux": 3.9504,
+      "taux": 3.9283,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "RON",
-      "taux": 3.5062,
+      "taux": 3.5272,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "RUB",
-      "taux": 33.947,
+      "taux": 33.955,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "SEK",
-      "taux": 9.225,
+      "taux": 9.1928,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "SGD",
-      "taux": 2.0046,
+      "taux": 2.0124,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "THB",
-      "taux": 47.225,
+      "taux": 47.297,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "TRY",
-      "taux": 1.8666,
+      "taux": 1.8503,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "USD",
-      "taux": 1.2675,
+      "taux": 1.2665,
       "motif": "échantillon régulier"
     },
     {
       "date": "2006-09-17",
       "devise": "ZAR",
-      "taux": 9.391,
+      "taux": 9.223,
       "motif": "échantillon régulier"
     },
     {
@@ -8018,181 +8018,181 @@
     {
       "date": "2008-07-27",
       "devise": "AUD",
-      "taux": 1.6438,
+      "taux": 1.6466,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "BRL",
-      "taux": 2.4808,
+      "taux": 2.4735,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "CAD",
-      "taux": 1.5968,
+      "taux": 1.6087,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "CHF",
-      "taux": 1.6268,
+      "taux": 1.6285,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "CNY",
-      "taux": 10.7275,
+      "taux": 10.765,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "CZK",
-      "taux": 23.595,
+      "taux": 23.695,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "DKK",
-      "taux": 7.4619,
+      "taux": 7.4617,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "GBP",
-      "taux": 0.7888,
+      "taux": 0.7925,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "HKD",
-      "taux": 12.2698,
+      "taux": 12.2839,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "HUF",
-      "taux": 231.35,
+      "taux": 230.87,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "IDR",
-      "taux": 14352.55,
+      "taux": 14357.99,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "ILS",
-      "taux": 5.4734,
+      "taux": 5.4721,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "INR",
-      "taux": 66.498,
+      "taux": 66.989,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "ISK",
-      "taux": 127.51,
+      "taux": 129.58,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "JPY",
-      "taux": 168.77,
+      "taux": 169.63,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "KRW",
-      "taux": 1584.41,
+      "taux": 1584.99,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "MXN",
-      "taux": 15.7525,
+      "taux": 15.8846,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "MYR",
-      "taux": 5.1129,
+      "taux": 5.145,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "NOK",
-      "taux": 8.0815,
+      "taux": 8.075,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "NZD",
-      "taux": 2.1159,
+      "taux": 2.1163,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "PHP",
-      "taux": 69.143,
+      "taux": 69.125,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "PLN",
-      "taux": 3.208,
+      "taux": 3.2053,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "RON",
-      "taux": 3.5675,
+      "taux": 3.5455,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "RUB",
-      "taux": 36.7435,
+      "taux": 36.75,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "SEK",
-      "taux": 9.461,
+      "taux": 9.4538,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "SGD",
-      "taux": 2.1407,
+      "taux": 2.1453,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "THB",
-      "taux": 52.608,
+      "taux": 52.666,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "TRY",
-      "taux": 1.8966,
+      "taux": 1.8963,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "USD",
-      "taux": 1.5734,
+      "taux": 1.5746,
       "motif": "échantillon régulier"
     },
     {
       "date": "2008-07-27",
       "devise": "ZAR",
-      "taux": 11.9481,
+      "taux": 11.8339,
       "motif": "échantillon régulier"
     },
     {
@@ -9278,79 +9278,79 @@
     {
       "date": "2010-06-06",
       "devise": "AUD",
-      "taux": 1.4364,
+      "taux": 1.4607,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "BRL",
-      "taux": 2.2087,
+      "taux": 2.2232,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "CAD",
-      "taux": 1.2595,
+      "taux": 1.2672,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "CHF",
-      "taux": 1.3951,
+      "taux": 1.3911,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "CNY",
-      "taux": 8.2355,
+      "taux": 8.1706,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "CZK",
-      "taux": 26.055,
+      "taux": 25.898,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "DKK",
-      "taux": 7.4398,
+      "taux": 7.4377,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "GBP",
-      "taux": 0.82745,
+      "taux": 0.8246,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "HKD",
-      "taux": 9.3984,
+      "taux": 9.3325,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "HUF",
-      "taux": 288.8,
+      "taux": 285.7,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "IDR",
-      "taux": 11075.21,
+      "taux": 11126.46,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "ILS",
-      "taux": 4.6747,
+      "taux": 4.6391,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "INR",
-      "taux": 56.501,
+      "taux": 56.321,
       "motif": "échantillon régulier"
     },
     {
@@ -9362,97 +9362,97 @@
     {
       "date": "2010-06-06",
       "devise": "JPY",
-      "taux": 111.73,
+      "taux": 109.86,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "KRW",
-      "taux": 1449.55,
+      "taux": 1477.54,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "MXN",
-      "taux": 15.4645,
+      "taux": 15.4749,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "MYR",
-      "taux": 3.9503,
+      "taux": 3.9853,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "NOK",
-      "taux": 7.851,
+      "taux": 7.937,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "NZD",
-      "taux": 1.7737,
+      "taux": 1.7917,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "PHP",
-      "taux": 55.84,
+      "taux": 56.01,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "PLN",
-      "taux": 4.195,
+      "taux": 4.1503,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "RON",
-      "taux": 4.2135,
+      "taux": 4.2359,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "RUB",
-      "taux": 37.745,
+      "taux": 37.969,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "SEK",
-      "taux": 9.5495,
+      "taux": 9.6449,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "SGD",
-      "taux": 1.6995,
+      "taux": 1.6945,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "THB",
-      "taux": 39.328,
+      "taux": 39.046,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "TRY",
-      "taux": 1.9228,
+      "taux": 1.911,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "USD",
-      "taux": 1.206,
+      "taux": 1.1959,
       "motif": "échantillon régulier"
     },
     {
       "date": "2010-06-06",
       "devise": "ZAR",
-      "taux": 9.3395,
+      "taux": 9.3031,
       "motif": "échantillon régulier"
     },
     {
@@ -10538,79 +10538,79 @@
     {
       "date": "2012-04-15",
       "devise": "AUD",
-      "taux": 1.264,
+      "taux": 1.259,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "BRL",
-      "taux": 2.4066,
+      "taux": 2.3965,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "CAD",
-      "taux": 1.3068,
+      "taux": 1.3029,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "CHF",
-      "taux": 1.2017,
+      "taux": 1.2025,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "CNY",
-      "taux": 8.2869,
+      "taux": 8.225,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "CZK",
-      "taux": 24.75,
+      "taux": 24.789,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "DKK",
-      "taux": 7.4386,
+      "taux": 7.4389,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "GBP",
-      "taux": 0.8248,
+      "taux": 0.8227,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "HKD",
-      "taux": 10.2046,
+      "taux": 10.1062,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "HUF",
-      "taux": 297.05,
+      "taux": 298.88,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "IDR",
-      "taux": 12015.39,
+      "taux": 11947.71,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "ILS",
-      "taux": 4.9239,
+      "taux": 4.9004,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "INR",
-      "taux": 67.453,
+      "taux": 67.28,
       "motif": "échantillon régulier"
     },
     {
@@ -10622,97 +10622,97 @@
     {
       "date": "2012-04-15",
       "devise": "JPY",
-      "taux": 106.49,
+      "taux": 105.18,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "KRW",
-      "taux": 1490.69,
+      "taux": 1482.75,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "MXN",
-      "taux": 17.1913,
+      "taux": 17.2429,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "MYR",
-      "taux": 4.0197,
+      "taux": 3.9899,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "NOK",
-      "taux": 7.599,
+      "taux": 7.553,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "NZD",
-      "taux": 1.5848,
+      "taux": 1.5925,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "PHP",
-      "taux": 56.048,
+      "taux": 55.694,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "PLN",
-      "taux": 4.1808,
+      "taux": 4.194,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "RON",
-      "taux": 4.376,
+      "taux": 4.373,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "RUB",
-      "taux": 38.806,
+      "taux": 38.674,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "SEK",
-      "taux": 8.8945,
+      "taux": 8.8822,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "SGD",
-      "taux": 1.6382,
+      "taux": 1.6301,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "THB",
-      "taux": 40.404,
+      "taux": 40.126,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "TRY",
-      "taux": 2.3536,
+      "taux": 2.3453,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "USD",
-      "taux": 1.3148,
+      "taux": 1.3024,
       "motif": "échantillon régulier"
     },
     {
       "date": "2012-04-15",
       "devise": "ZAR",
-      "taux": 10.385,
+      "taux": 10.4033,
       "motif": "échantillon régulier"
     },
     {
@@ -11798,79 +11798,79 @@
     {
       "date": "2014-02-23",
       "devise": "AUD",
-      "taux": 1.5283,
+      "taux": 1.5271,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "BRL",
-      "taux": 3.2577,
+      "taux": 3.2183,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "CAD",
-      "taux": 1.5304,
+      "taux": 1.5243,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "CHF",
-      "taux": 1.2195,
+      "taux": 1.2209,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "CNY",
-      "taux": 8.3495,
+      "taux": 8.3751,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "CZK",
-      "taux": 27.368,
+      "taux": 27.362,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "DKK",
-      "taux": 7.4625,
+      "taux": 7.4624,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "GBP",
-      "taux": 0.82183,
+      "taux": 0.82465,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "HKD",
-      "taux": 10.6313,
+      "taux": 10.653,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "HUF",
-      "taux": 311.89,
+      "taux": 310.24,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "IDR",
-      "taux": 16097.5,
+      "taux": 15994.06,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "ILS",
-      "taux": 4.8062,
+      "taux": 4.8128,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "INR",
-      "taux": 85.158,
+      "taux": 85.2446,
       "motif": "échantillon régulier"
     },
     {
@@ -11882,31 +11882,31 @@
     {
       "date": "2014-02-23",
       "devise": "JPY",
-      "taux": 140.5,
+      "taux": 140.69,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "KRW",
-      "taux": 1469.53,
+      "taux": 1475.58,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "MXN",
-      "taux": 18.2348,
+      "taux": 18.2126,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "MYR",
-      "taux": 4.5158,
+      "taux": 4.5104,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "NOK",
-      "taux": 8.367,
+      "taux": 8.278,
       "motif": "échantillon régulier"
     },
     {
@@ -11918,61 +11918,61 @@
     {
       "date": "2014-02-23",
       "devise": "PHP",
-      "taux": 61.092,
+      "taux": 61.336,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "PLN",
-      "taux": 4.1661,
+      "taux": 4.1578,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "RON",
-      "taux": 4.5222,
+      "taux": 4.5098,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "RUB",
-      "taux": 49.0415,
+      "taux": 48.8393,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "SEK",
-      "taux": 8.9953,
+      "taux": 8.9372,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "SGD",
-      "taux": 1.7376,
+      "taux": 1.7413,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "THB",
-      "taux": 44.603,
+      "taux": 44.711,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "TRY",
-      "taux": 3.0097,
+      "taux": 2.9945,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "USD",
-      "taux": 1.3707,
+      "taux": 1.3735,
       "motif": "échantillon régulier"
     },
     {
       "date": "2014-02-23",
       "devise": "ZAR",
-      "taux": 15.1355,
+      "taux": 14.998,
       "motif": "échantillon régulier"
     },
     {
@@ -13058,31 +13058,31 @@
     {
       "date": "2016-01-03",
       "devise": "AUD",
-      "taux": 1.4897,
+      "taux": 1.5153,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "BRL",
-      "taux": 4.3117,
+      "taux": 4.4023,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "CAD",
-      "taux": 1.5116,
+      "taux": 1.5172,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "CHF",
-      "taux": 1.0835,
+      "taux": 1.0891,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "CNY",
-      "taux": 7.0608,
+      "taux": 7.1208,
       "motif": "échantillon régulier"
     },
     {
@@ -13094,43 +13094,43 @@
     {
       "date": "2016-01-03",
       "devise": "DKK",
-      "taux": 7.4626,
+      "taux": 7.462,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "GBP",
-      "taux": 0.73395,
+      "taux": 0.7381,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "HKD",
-      "taux": 8.4376,
+      "taux": 8.4464,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "HUF",
-      "taux": 315.98,
+      "taux": 315.39,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "IDR",
-      "taux": 15039.99,
+      "taux": 15194.63,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "ILS",
-      "taux": 4.2481,
+      "taux": 4.2659,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "INR",
-      "taux": 72.0215,
+      "taux": 72.617,
       "motif": "échantillon régulier"
     },
     {
@@ -13142,97 +13142,97 @@
     {
       "date": "2016-01-03",
       "devise": "JPY",
-      "taux": 131.07,
+      "taux": 129.78,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "KRW",
-      "taux": 1280.78,
+      "taux": 1297.87,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "MXN",
-      "taux": 18.9145,
+      "taux": 18.9353,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "MYR",
-      "taux": 4.6959,
+      "taux": 4.7363,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "NOK",
-      "taux": 9.603,
+      "taux": 9.6475,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "NZD",
-      "taux": 1.5923,
+      "taux": 1.6146,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "PHP",
-      "taux": 50.999,
+      "taux": 51.393,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "PLN",
-      "taux": 4.2639,
+      "taux": 4.2955,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "RON",
-      "taux": 4.524,
+      "taux": 4.517,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "RUB",
-      "taux": 80.6736,
+      "taux": 79.6738,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "SEK",
-      "taux": 9.1895,
+      "taux": 9.1696,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "SGD",
-      "taux": 1.5417,
+      "taux": 1.5533,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "THB",
-      "taux": 39.248,
+      "taux": 39.407,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "TRY",
-      "taux": 3.1765,
+      "taux": 3.2193,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "USD",
-      "taux": 1.0887,
+      "taux": 1.0898,
       "motif": "échantillon régulier"
     },
     {
       "date": "2016-01-03",
       "devise": "ZAR",
-      "taux": 16.953,
+      "taux": 16.9558,
       "motif": "échantillon régulier"
     },
     {
@@ -14318,19 +14318,19 @@
     {
       "date": "2017-11-12",
       "devise": "AUD",
-      "taux": 1.5197,
+      "taux": 1.5256,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "BRL",
-      "taux": 3.8084,
+      "taux": 3.8362,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "CAD",
-      "taux": 1.4766,
+      "taux": 1.4809,
       "motif": "échantillon régulier"
     },
     {
@@ -14342,55 +14342,55 @@
     {
       "date": "2017-11-12",
       "devise": "CNY",
-      "taux": 7.7412,
+      "taux": 7.741,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "CZK",
-      "taux": 25.543,
+      "taux": 25.567,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "DKK",
-      "taux": 7.442,
+      "taux": 7.4416,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "GBP",
-      "taux": 0.8837,
+      "taux": 0.89018,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "HKD",
-      "taux": 9.093,
+      "taux": 9.0906,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "HUF",
-      "taux": 312,
+      "taux": 312.04,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "IDR",
-      "taux": 15785.34,
+      "taux": 15810.86,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "ILS",
-      "taux": 4.123,
+      "taux": 4.1297,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "INR",
-      "taux": 75.94,
+      "taux": 76.291,
       "motif": "échantillon régulier"
     },
     {
@@ -14402,97 +14402,97 @@
     {
       "date": "2017-11-12",
       "devise": "JPY",
-      "taux": 132.08,
+      "taux": 132.07,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "KRW",
-      "taux": 1304.46,
+      "taux": 1305.01,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "MXN",
-      "taux": 22.2242,
+      "taux": 22.3482,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "MYR",
-      "taux": 4.8848,
+      "taux": 4.8856,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "NOK",
-      "taux": 9.456,
+      "taux": 9.4913,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "NZD",
-      "taux": 1.678,
+      "taux": 1.6877,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "PHP",
-      "taux": 59.713,
+      "taux": 59.724,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "PLN",
-      "taux": 4.2308,
+      "taux": 4.2349,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "RON",
-      "taux": 4.6533,
+      "taux": 4.6562,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "RUB",
-      "taux": 69.0375,
+      "taux": 69.3309,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "SEK",
-      "taux": 9.743,
+      "taux": 9.7705,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "SGD",
-      "taux": 1.5854,
+      "taux": 1.5867,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "THB",
-      "taux": 38.61,
+      "taux": 38.535,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "TRY",
-      "taux": 4.5097,
+      "taux": 4.5318,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "USD",
-      "taux": 1.1654,
+      "taux": 1.1656,
       "motif": "échantillon régulier"
     },
     {
       "date": "2017-11-12",
       "devise": "ZAR",
-      "taux": 16.7585,
+      "taux": 16.9688,
       "motif": "échantillon régulier"
     },
     {
@@ -15578,181 +15578,181 @@
     {
       "date": "2019-09-22",
       "devise": "AUD",
-      "taux": 1.6243,
+      "taux": 1.6224,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "BRL",
-      "taux": 4.5956,
+      "taux": 4.5665,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "CAD",
-      "taux": 1.4636,
+      "taux": 1.4586,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "CHF",
-      "taux": 1.0942,
+      "taux": 1.0891,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "CNY",
-      "taux": 7.8207,
+      "taux": 7.8279,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "CZK",
-      "taux": 25.913,
+      "taux": 25.89,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "DKK",
-      "taux": 7.4668,
+      "taux": 7.4664,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "GBP",
-      "taux": 0.8823,
+      "taux": 0.88343,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "HKD",
-      "taux": 8.6413,
+      "taux": 8.6116,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "HUF",
-      "taux": 332.89,
+      "taux": 334.62,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "IDR",
-      "taux": 15502.67,
+      "taux": 15472.37,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "ILS",
-      "taux": 3.8837,
+      "taux": 3.8617,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "INR",
-      "taux": 78.2925,
+      "taux": 77.9405,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "ISK",
-      "taux": 137,
+      "taux": 137.2,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "JPY",
-      "taux": 119.11,
+      "taux": 118.07,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "KRW",
-      "taux": 1311.24,
+      "taux": 1315.27,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "MXN",
-      "taux": 21.4558,
+      "taux": 21.3353,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "MYR",
-      "taux": 4.5995,
+      "taux": 4.5976,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "NOK",
-      "taux": 9.9423,
+      "taux": 9.9723,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "NZD",
-      "taux": 1.7579,
+      "taux": 1.7514,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "PHP",
-      "taux": 57.375,
+      "taux": 57.272,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "PLN",
-      "taux": 4.3575,
+      "taux": 4.382,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "RON",
-      "taux": 4.7456,
+      "taux": 4.7498,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "RUB",
-      "taux": 70.3933,
+      "taux": 70.2637,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "SEK",
-      "taux": 10.7113,
+      "taux": 10.7143,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "SGD",
-      "taux": 1.5176,
+      "taux": 1.514,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "THB",
-      "taux": 33.636,
+      "taux": 33.499,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "TRY",
-      "taux": 6.2894,
+      "taux": 6.2829,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "USD",
-      "taux": 1.103,
+      "taux": 1.0985,
       "motif": "échantillon régulier"
     },
     {
       "date": "2019-09-22",
       "devise": "ZAR",
-      "taux": 16.3991,
+      "taux": 16.3465,
       "motif": "échantillon régulier"
     },
     {
@@ -16838,181 +16838,181 @@
     {
       "date": "2021-08-01",
       "devise": "AUD",
-      "taux": 1.6133,
+      "taux": 1.6141,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "BRL",
-      "taux": 6.0716,
+      "taux": 6.1459,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "CAD",
-      "taux": 1.4791,
+      "taux": 1.4816,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "CHF",
-      "taux": 1.0771,
+      "taux": 1.0761,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "CNY",
-      "taux": 7.6838,
+      "taux": 7.6807,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "CZK",
-      "taux": 25.501,
+      "taux": 25.476,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "DKK",
-      "taux": 7.4379,
+      "taux": 7.4381,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "GBP",
-      "taux": 0.8514,
+      "taux": 0.85568,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "HKD",
-      "taux": 9.2451,
+      "taux": 9.2398,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "HUF",
-      "taux": 357.2,
+      "taux": 356.01,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "IDR",
-      "taux": 17184.46,
+      "taux": 17089.57,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "ILS",
-      "taux": 3.8403,
+      "taux": 3.8321,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "INR",
-      "taux": 88.3941,
+      "taux": 88.396,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "ISK",
-      "taux": 146.6,
+      "taux": 146.8,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "JPY",
-      "taux": 130.39,
+      "taux": 130.17,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "KRW",
-      "taux": 1368.74,
+      "taux": 1367.67,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "MXN",
-      "taux": 23.6277,
+      "taux": 23.5605,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "MYR",
-      "taux": 5.018,
+      "taux": 5.0218,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "NOK",
-      "taux": 10.4405,
+      "taux": 10.4515,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "NZD",
-      "taux": 1.699,
+      "taux": 1.7041,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "PHP",
-      "taux": 59.479,
+      "taux": 59.211,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "PLN",
-      "taux": 4.5636,
+      "taux": 4.5562,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "RON",
-      "taux": 4.9203,
+      "taux": 4.918,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "RUB",
-      "taux": 86.7116,
+      "taux": 86.4182,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "SEK",
-      "taux": 10.1868,
+      "taux": 10.191,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "SGD",
-      "taux": 1.609,
+      "taux": 1.6069,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "THB",
-      "taux": 39.098,
+      "taux": 39.152,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "TRY",
-      "taux": 9.9985,
+      "taux": 9.9181,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "USD",
-      "taux": 1.1891,
+      "taux": 1.1886,
       "motif": "échantillon régulier"
     },
     {
       "date": "2021-08-01",
       "devise": "ZAR",
-      "taux": 17.3283,
+      "taux": 17.0993,
       "motif": "échantillon régulier"
     },
     {
@@ -18098,79 +18098,79 @@
     {
       "date": "2023-06-11",
       "devise": "AUD",
-      "taux": 1.6023,
+      "taux": 1.592,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "BRL",
-      "taux": 5.2965,
+      "taux": 5.2549,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "CAD",
-      "taux": 1.4362,
+      "taux": 1.4357,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "CHF",
-      "taux": 0.9716,
+      "taux": 0.9751,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "CNY",
-      "taux": 7.6839,
+      "taux": 7.6888,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "CZK",
-      "taux": 23.666,
+      "taux": 23.759,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "DKK",
-      "taux": 7.4505,
+      "taux": 7.452,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "GBP",
-      "taux": 0.85795,
+      "taux": 0.85678,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "HKD",
-      "taux": 8.4493,
+      "taux": 8.4326,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "HUF",
-      "taux": 368.73,
+      "taux": 368.15,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "IDR",
-      "taux": 15996.72,
+      "taux": 15996.85,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "ILS",
-      "taux": 3.8816,
+      "taux": 3.8627,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "INR",
-      "taux": 88.89,
+      "taux": 88.733,
       "motif": "échantillon régulier"
     },
     {
@@ -18182,55 +18182,55 @@
     {
       "date": "2023-06-11",
       "devise": "JPY",
-      "taux": 150.24,
+      "taux": 150.03,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "KRW",
-      "taux": 1391.11,
+      "taux": 1385.76,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "MXN",
-      "taux": 18.7356,
+      "taux": 18.5997,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "MYR",
-      "taux": 4.9739,
+      "taux": 4.9734,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "NOK",
-      "taux": 11.612,
+      "taux": 11.634,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "NZD",
-      "taux": 1.7627,
+      "taux": 1.754,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "PHP",
-      "taux": 60.426,
+      "taux": 60.326,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "PLN",
-      "taux": 4.4605,
+      "taux": 4.4395,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "RON",
-      "taux": 4.9566,
+      "taux": 4.9568,
       "motif": "échantillon régulier"
     },
     {
@@ -18242,37 +18242,37 @@
     {
       "date": "2023-06-11",
       "devise": "SEK",
-      "taux": 11.673,
+      "taux": 11.6185,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "SGD",
-      "taux": 1.448,
+      "taux": 1.4457,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "THB",
-      "taux": 37.277,
+      "taux": 37.236,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "TRY",
-      "taux": 25.1244,
+      "taux": 25.3874,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "USD",
-      "taux": 1.078,
+      "taux": 1.0765,
       "motif": "échantillon régulier"
     },
     {
       "date": "2023-06-11",
       "devise": "ZAR",
-      "taux": 20.1806,
+      "taux": 19.983,
       "motif": "échantillon régulier"
     },
     {
@@ -19358,139 +19358,139 @@
     {
       "date": "2025-04-20",
       "devise": "AUD",
-      "taux": 1.7845,
+      "taux": 1.7945,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "BRL",
-      "taux": 6.681,
+      "taux": 6.6516,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "CAD",
-      "taux": 1.5773,
+      "taux": 1.5891,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "CHF",
-      "taux": 0.9291,
+      "taux": 0.9318,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "CNY",
-      "taux": 8.29,
+      "taux": 8.3929,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "CZK",
-      "taux": 25.009,
+      "taux": 25.081,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "DKK",
-      "taux": 7.4672,
+      "taux": 7.4656,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "GBP",
-      "taux": 0.85873,
+      "taux": 0.85858,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "HKD",
-      "taux": 8.8195,
+      "taux": 8.9027,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "HUF",
-      "taux": 407.6,
+      "taux": 409.38,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "IDR",
-      "taux": 19162.33,
+      "taux": 19328.11,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "ILS",
-      "taux": 4.1852,
+      "taux": 4.2682,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "INR",
-      "taux": 97.0185,
+      "taux": 97.785,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "ISK",
-      "taux": 145.1,
+      "taux": 144.9,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "JPY",
-      "taux": 161.98,
+      "taux": 161.05,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "KRW",
-      "taux": 1609.12,
+      "taux": 1635.54,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "MXN",
-      "taux": 22.6247,
+      "taux": 22.559,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "MYR",
-      "taux": 5.0069,
+      "taux": 5.0397,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "NOK",
-      "taux": 11.9655,
+      "taux": 11.8885,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "NZD",
-      "taux": 1.9118,
+      "taux": 1.9141,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "PHP",
-      "taux": 64.387,
+      "taux": 64.963,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "PLN",
-      "taux": 4.2743,
+      "taux": 4.28,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "RON",
-      "taux": 4.9776,
+      "taux": 4.9773,
       "motif": "échantillon régulier"
     },
     {
@@ -19502,37 +19502,37 @@
     {
       "date": "2025-04-20",
       "devise": "SEK",
-      "taux": 11.0278,
+      "taux": 10.9153,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "SGD",
-      "taux": 1.4905,
+      "taux": 1.5011,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "THB",
-      "taux": 37.8,
+      "taux": 38.14,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "TRY",
-      "taux": 43.2604,
+      "taux": 43.9069,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "USD",
-      "taux": 1.136,
+      "taux": 1.1476,
       "motif": "échantillon régulier"
     },
     {
       "date": "2025-04-20",
       "devise": "ZAR",
-      "taux": 21.3927,
+      "taux": 21.3719,
       "motif": "échantillon régulier"
     },
     {
