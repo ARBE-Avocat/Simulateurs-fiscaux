@@ -25,6 +25,7 @@ Une instruction locale non versionnée peut compléter ce socle, mais jamais aut
 - `docs/ARCHITECTURE_CIBLE.md` : architecture cible, URL stables, livrables et ordre de migration. Décision de l'issue #20. Fixe où vivent les données, les styles et les fichiers générés ; ne tranche aucune valeur fiscale.
 - `docs/INVENTAIRE_CONVENTIONS.md` : constat des conventions d'unités, de taux, d'arrondis et de bornes réellement employées. Document préparatoire à #11, sans valeur normative.
 - `docs/arbitrages.html` : source de la page d'arbitrage soumise au référent juridique. Elle est publiée en artifact claude.ai, partagée nominativement, et **jamais servie par GitHub Pages ni liée depuis `index.html`** : c'est un outil de travail interne, pas un livrable du produit. La republier suppose de conserver la même adresse, sous peine de perdre les arbitrages déjà saisis.
+- `docs/sources-fiscales.html` : même principe que `docs/arbitrages.html`, pour l'issue #9. Liste chaque valeur fiscale sans source confirmée (ou avec une source à valider) dans `data/referentiels/`, pour que le référent y renseigne la référence légale, un lien et la date de vérification. Publiée en artifact claude.ai, jamais servie par GitHub Pages ni liée depuis `index.html`. Republier à la même adresse sous peine de perdre les sources déjà saisies.
 - `AGENTS.md` : règles communes canoniques.
 - `CLAUDE.md` : import de ces règles par Claude Code ; ne pas y recopier ce contenu.
 
@@ -170,7 +171,7 @@ Relèvent du cas sans bump :
 
 - les consignes destinées aux agents : `AGENTS.md`, `CLAUDE.md`, instructions locales ;
 - le pilotage interne : `docs/PLAN_ACTIONS_AGENTS_IA.md`, mise à jour d'état, d'ordre ou de jalon ;
-- les supports de travail servant à préparer une décision, y compris lorsqu'ils sont destinés au propriétaire ou au référent juridique : `docs/CORRECTIONS_A_VALIDER.md`, `docs/INVENTAIRE_CONVENTIONS.md`, `docs/arbitrages.html` et la page publiée correspondante ;
+- les supports de travail servant à préparer une décision, y compris lorsqu'ils sont destinés au propriétaire ou au référent juridique : `docs/CORRECTIONS_A_VALIDER.md`, `docs/INVENTAIRE_CONVENTIONS.md`, `docs/arbitrages.html`, `docs/sources-fiscales.html` et les pages publiées correspondantes ;
 - les corrections de forme sans changement de fond : orthographe, reformulation, mise en page ;
 - les commentaires de code et les renommages internes sans effet sur le comportement ;
 - les fichiers de travail non livrés.

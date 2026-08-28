@@ -1,0 +1,796 @@
+<title>Sources fiscales à renseigner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style id="css">
+:root {
+  --ground: #f3f1ea;
+  --surface: #ffffff;
+  --surface-2: #f8f6ef;
+  --ink: #221f1a;
+  --ink-soft: #5b564a;
+  --ink-faint: #938c7a;
+  --rule: #e3ddce;
+  --rule-strong: #cdc4ac;
+  --accent: #2f5233;
+  --accent-ink: #ffffff;
+  --accent-soft: #e6ece5;
+  --ok: #2c6a4e;
+  --ok-soft: #e4efe9;
+  --warn: #8a5a12;
+  --warn-soft: #f7eeda;
+  --stop: #93332f;
+  --stop-soft: #f7e6e4;
+  --shadow: 0 1px 2px rgba(34, 31, 26, .06), 0 8px 24px -16px rgba(34, 31, 26, .3);
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Spectral", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #14180f;
+    --surface: #1b2016;
+    --surface-2: #21271b;
+    --ink: #ecebe2;
+    --ink-soft: #aeac9c;
+    --ink-faint: #77745f;
+    --rule: #313825;
+    --rule-strong: #444c33;
+    --accent: #8fbf8f;
+    --accent-ink: #0f1a0f;
+    --accent-soft: #22301f;
+    --ok: #7fbf9a;
+    --ok-soft: #1a2b21;
+    --warn: #d9ab5a;
+    --warn-soft: #2c2414;
+    --stop: #e28a85;
+    --stop-soft: #2d1c1b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #14180f;
+  --surface: #1b2016;
+  --surface-2: #21271b;
+  --ink: #ecebe2;
+  --ink-soft: #aeac9c;
+  --ink-faint: #77745f;
+  --rule: #313825;
+  --rule-strong: #444c33;
+  --accent: #8fbf8f;
+  --accent-ink: #0f1a0f;
+  --accent-soft: #22301f;
+  --ok: #7fbf9a;
+  --ok-soft: #1a2b21;
+  --warn: #d9ab5a;
+  --warn-soft: #2c2414;
+  --stop: #e28a85;
+  --stop-soft: #2d1c1b;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15.5px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+
+.bandeau {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.bandeau-corps {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.marque {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  margin-right: auto;
+}
+
+.marque span { color: var(--ink-faint); font-weight: 400; }
+
+.jauge { display: flex; align-items: center; gap: 12px; }
+
+.jauge-piste {
+  width: 132px;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--rule);
+  overflow: hidden;
+}
+
+.jauge-part { height: 100%; background: var(--accent); width: 0; transition: width .35s ease; }
+
+.jauge-txt {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.btn {
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 8px 15px;
+  border-radius: 7px;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.btn:hover { background: var(--surface-2); border-color: var(--ink-faint); }
+.btn-fort { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn-fort:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: .45; cursor: default; }
+
+:where(button, a, input, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 34px 28px 96px;
+}
+
+.intro {
+  max-width: 70ch;
+  margin-bottom: 30px;
+}
+
+.intro h1 {
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -.015em;
+  margin-bottom: 10px;
+}
+
+.intro p { margin: 0 0 8px; color: var(--ink-soft); }
+.intro p:last-child { margin-bottom: 0; }
+
+.legende {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.legende span { display: inline-flex; align-items: center; gap: 6px; }
+
+.pastille {
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+  flex: 0 0 auto;
+}
+
+.pastille[data-etat="inconnue"] { background: var(--rule-strong); }
+.pastille[data-etat="cite"] { background: var(--warn); }
+.pastille[data-etat="confirmee"] { background: var(--ok); }
+
+.sommaire {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.som-lien {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.som-lien:hover { border-color: var(--accent); color: var(--ink); }
+.som-lien .compte { font-family: var(--mono); color: var(--ink-faint); }
+
+.domaine {
+  margin-bottom: 34px;
+  scroll-margin-top: 78px;
+}
+
+.domaine-tete {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.domaine-tete h2 {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.domaine-compte {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+.entree {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.entree[data-etat="confirmee"] { border-color: var(--ok); background: var(--ok-soft); }
+
+.entree-tete {
+  padding: 13px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.entree-id {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-bottom: 3px;
+}
+
+.entree-libelle { font-weight: 500; margin-bottom: 3px; }
+
+.entree-valeur {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  word-break: break-word;
+}
+
+.entree-badge {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.entree-badge[data-etat="inconnue"] { background: var(--surface-2); color: var(--ink-faint); }
+.entree-badge[data-etat="cite"] { background: var(--warn-soft); color: var(--warn); }
+.entree-badge[data-etat="confirmee"] { background: var(--ok-soft); color: var(--ok); }
+
+.entree-corps {
+  border-top: 1px solid var(--rule);
+  background: var(--surface-2);
+  padding: 14px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.champs {
+  display: grid;
+  grid-template-columns: 1.4fr 1.4fr .8fr;
+  gap: 9px;
+}
+
+@media (max-width: 720px) {
+  .champs { grid-template-columns: 1fr; }
+}
+
+.champ label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+
+.champ input, .champ textarea {
+  font: inherit;
+  font-size: 13.5px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.champ textarea { resize: vertical; min-height: 44px; }
+
+.entree-note {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px dashed var(--rule-strong);
+  border-radius: 7px;
+  padding: 9px 11px;
+}
+
+.entree-utilise {
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+
+.confirme-ligne {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.confirme-ligne input[type="checkbox"] { width: 16px; height: 16px; }
+
+.barre {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 22px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 14px 11px 20px;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  max-width: calc(100vw - 32px);
+}
+
+.barre[hidden] { display: none; }
+.barre-txt { font-size: 13.5px; color: var(--ink-soft); }
+
+.pied {
+  margin-top: 40px;
+  padding-top: 22px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-faint);
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mot {
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding: 4px 0;
+  min-height: 18px;
+}
+
+.mot[data-ton="ok"] { color: var(--ok); }
+.mot[data-ton="stop"] { color: var(--stop); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+<div id="app"></div>
+
+<script id="etat" type="application/json">{"reponses":{},"maj":null}</script>
+
+<script id="data-sources" type="application/json">[{"domaine": "dmtg", "libelleDomaine": "Mutations à titre gratuit, usufruit et assurance-vie", "entrees": [{"id": "dmtg.abattement.arriere-petit-enfant", "libelle": "Abattement — arrière-petit-enfant", "millesime": 2025, "valeur": "1594", "utilisePar": ["succession"], "notes": "", "statut": "cite", "reference": "CGI art. 779", "url": "", "dateConsultation": "2026-08-26"}, {"id": "dmtg.abattement.ascendant", "libelle": "Abattement — père ou mère", "millesime": 2025, "valeur": "100000", "utilisePar": ["succession"], "notes": "", "statut": "cite", "reference": "CGI art. 779", "url": "", "dateConsultation": "2026-08-26"}, {"id": "dmtg.abattement.autre", "libelle": "Abattement — non-parent", "millesime": 2025, "valeur": "1594", "utilisePar": ["succession", "demembrement"], "notes": "", "statut": "cite", "reference": "CGI art. 779", "url": "", "dateConsultation": "2026-08-26"}, {"id": "dmtg.abattement.enfant", "libelle": "Abattement — enfant", "millesime": 2025, "valeur": "100000", "utilisePar": ["succession", "demembrement"], "notes": "Le simulateur de démembrement pré-remplit cette valeur dans un champ modifiable.", "statut": "cite", "reference": "CGI art. 779", "url": "", "dateConsultation": "2026-08-26"}, {"id": "dmtg.abattement.frere-soeur", "libelle": "Abattement — frère ou sœur", "millesime": 2025, "valeur": "15932", "utilisePar": ["succession", "demembrement"], "notes": "", "statut": "cite", "reference": "CGI art. 779", "url": "", "dateConsultation": "2026-08-26"}, {"id": "dmtg.abattement.handicape", "libelle": "Abattement — personne handicapée", "millesime": 2025, "valeur": "159325", "utilisePar": ["succession"], "notes": "", "statut": "cite", "reference": "CGI art. 779, II", "url": "", "dateConsultation": "2026-08-26"}, {"id": "dmtg.abattement.neveu-niece", "libelle": "Abattement — neveu ou nièce", "millesime": 2025, "valeur": "7967", "utilisePar": ["succession", "demembrement"], "notes": "", "statut": "cite", "reference": "CGI art. 779", "url": "", "dateConsultation": "2026-08-26"}, {"id": "dmtg.abattement.petit-enfant", "libelle": "Abattement — petit-enfant", "millesime": 2025, "valeur": "1594", "utilisePar": ["succession"], "notes": "", "statut": "cite", "reference": "CGI art. 779", "url": "", "dateConsultation": "2026-08-26"}, {"id": "dmtg.assurance-vie.apres-70.abattement", "libelle": "Assurance-vie, primes versées après 70 ans — abattement global", "millesime": 2025, "valeur": "30500", "utilisePar": ["succession"], "notes": "Abattement global tous bénéficiaires confondus. Aucune source ne figure dans le code.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "dmtg.assurance-vie.avant-70.abattement", "libelle": "Assurance-vie, primes versées avant 70 ans — abattement par bénéficiaire", "millesime": 2025, "valeur": "152500", "utilisePar": ["succession"], "notes": "Aucune source ne figure dans le code.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "dmtg.assurance-vie.avant-70.bareme", "libelle": "Assurance-vie, primes versées avant 70 ans — prélèvement", "millesime": 2025, "valeur": "0-700000 @ 0.2; 700000-infini @ 0.3125", "utilisePar": ["succession"], "notes": "Aucune source ne figure dans le code.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "dmtg.bareme.frere-soeur", "libelle": "Barème des droits de mutation entre frères et sœurs", "millesime": 2025, "valeur": "0-24430 @ 0.35; 24430-infini @ 0.45", "utilisePar": ["succession"], "notes": "Aucune source ne figure dans le code.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "dmtg.bareme.ligne-directe", "libelle": "Barème des droits de mutation en ligne directe", "millesime": 2025, "valeur": "0-8072 @ 0.05; 8072-12109 @ 0.1; 12109-15932 @ 0.15; 15932-552324 @ 0.2; 552324-902838 @ 0.3; 902838-1805677 @ 0.4; 1805677-infini @ 0.45", "utilisePar": ["succession", "demembrement"], "notes": "Tranches jointives : la borne haute appartient à la tranche, la borne basse à la précédente. Référence citée par le simulateur de démembrement ; le rattachement des montants à cet article reste à confirmer.", "statut": "cite", "reference": "CGI art. 777", "url": "", "dateConsultation": "2026-08-26"}, {"id": "dmtg.bareme.neveu-niece", "libelle": "Barème des droits de mutation entre neveux et nièces", "millesime": 2025, "valeur": "0-infini @ 0.55", "utilisePar": ["succession"], "notes": "Aucune source ne figure dans le code.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "dmtg.bareme.tiers", "libelle": "Barème des droits de mutation entre non-parents", "millesime": 2025, "valeur": "0-infini @ 0.6", "utilisePar": ["succession"], "notes": "Aucune source ne figure dans le code.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "dmtg.conjoint.exonere", "libelle": "Exonération du conjoint survivant et du partenaire de PACS", "millesime": 2025, "valeur": "True", "utilisePar": ["succession"], "notes": "Le code représentait cette exonération par un abattement infini. Un booléen l'exprime sans recourir à une valeur qui n'existe pas en JSON.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "dmtg.usufruit.taux-nue-propriete", "libelle": "Barème de l’usufruit — taux de la nue-propriété selon l’âge de l’usufruitier", "millesime": 2025, "valeur": "0-20 @ 0.1; 20-30 @ 0.2; 30-40 @ 0.3; 40-50 @ 0.4; 50-60 @ 0.5; 60-70 @ 0.6; 70-80 @ 0.7; 80-90 @ 0.8; 90-infini @ 0.9", "utilisePar": ["demembrement"], "notes": "Les bornes sont des âges en années révolues, non des euros. Le code retient la tranche dès que l’âge est inférieur ou égal à la borne haute : un âge négatif relève donc de la première tranche et un âge de 200 ans de la dernière, sans avertissement. Point soumis au référent fiscal, fiche 3.2.", "statut": "cite", "reference": "CGI art. 669", "url": "", "dateConsultation": "2026-08-26"}]}, {"domaine": "ifi", "libelleDomaine": "Impôt sur la fortune immobilière", "entrees": [{"id": "ifi.bareme.progressif", "libelle": "Barème progressif de l’impôt sur la fortune immobilière", "millesime": 2026, "valeur": "0-800000 @ 0; 800001-1300000 @ 0.005; 1300001-2570000 @ 0.007; 2570001-5000000 @ 0.01; 5000001-10000000 @ 0.0125; 10000001-infini @ 0.015", "utilisePar": ["ifi", "irpp"], "notes": "Écriture reprise telle quelle des deux simulateurs : chaque tranche commence à la borne haute précédente augmentée d’un euro, ce qui laisse cinq intervalles d’un euro sans taux. Écart cumulé mesuré : 0,05 €. La validation le signale ; la correction relève de l’issue #7.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ifi.decote.montant", "libelle": "Décote — montant fixe", "millesime": 2026, "valeur": "17500", "utilisePar": ["ifi", "irpp"], "notes": "Les deux simulateurs emploient cette formule mais ne l’appliquent ni au même patrimoine ni sous la même condition, et l’un retranche l’IFI théorique de l’assiette avant de recalculer. Divergence de méthode soumise au référent fiscal, fiche 2.4 de docs/CORRECTIONS_A_VALIDER.md : 668,39 € d’écart mesuré. Ces valeurs, elles, sont identiques des deux côtés.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ifi.decote.plafond", "libelle": "Décote — patrimoine au-delà duquel elle ne s’applique plus", "millesime": 2026, "valeur": "1400000", "utilisePar": ["ifi", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ifi.decote.taux", "libelle": "Décote — taux appliqué au patrimoine", "millesime": 2026, "valeur": "0.0125", "utilisePar": ["ifi", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ifi.exoneration.biens-ruraux.taux-plein", "libelle": "Exonération des biens ruraux loués à long terme — taux plein", "millesime": 2026, "valeur": "0.75", "utilisePar": ["ifi"], "notes": "", "statut": "cite", "reference": "CGI art. 975, II", "url": "", "dateConsultation": "2026-08-26"}, {"id": "ifi.exoneration.biens-ruraux.taux-reduit", "libelle": "Exonération des biens ruraux loués à long terme — taux réduit au-delà du seuil", "millesime": 2026, "valeur": "0.5", "utilisePar": ["ifi"], "notes": "", "statut": "cite", "reference": "CGI art. 975, II", "url": "", "dateConsultation": "2026-08-26"}, {"id": "ifi.plafonnement.taux", "libelle": "Plafonnement — part maximale des revenus que peuvent représenter IFI et impôts sur les revenus", "millesime": 2026, "valeur": "0.75", "utilisePar": ["ifi"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ifi.reduction.dons.taux", "libelle": "Réduction d’impôt pour dons", "millesime": 2026, "valeur": "0.75", "utilisePar": ["ifi", "irpp"], "notes": "", "statut": "cite", "reference": "CGI art. 978", "url": "", "dateConsultation": "2026-08-26"}, {"id": "ifi.residence-principale.abattement", "libelle": "Abattement sur la résidence principale", "millesime": 2026, "valeur": "0.3", "utilisePar": ["ifi", "irpp"], "notes": "Écrit dans le code sous la forme d’un coefficient de 0,70 appliqué à la valeur du bien.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ifi.seuil.assujettissement", "libelle": "Seuil d’assujettissement à l’IFI", "millesime": 2026, "valeur": "1300000", "utilisePar": ["ifi", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}]}, {"domaine": "ir", "libelleDomaine": "Impôt sur le revenu, CEHR, CDHR et PFU", "entrees": [{"id": "cdhr.abattement.imposition-commune", "libelle": "Contribution différentielle — abattement pour imposition commune", "millesime": 2025, "valeur": "12500", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "cdhr.abattement.personne-a-charge", "libelle": "Contribution différentielle — abattement par personne à charge", "millesime": 2025, "valeur": "1500", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "cdhr.decote.borne-haute.celibataire", "libelle": "Contribution différentielle — borne haute de la bande de décote, personne seule", "millesime": 2025, "valeur": "330000", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "Fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md : le référent fiscal a désigné la formule du simulateur « IR, CEHR et CDHR » comme celle qui fait foi. Le simulateur IRPP applique désormais la même bande de décote.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "cdhr.decote.borne-haute.couple", "libelle": "Contribution différentielle — borne haute de la bande de décote, imposition commune", "millesime": 2025, "valeur": "660000", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "Fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md : même origine que cdhr.decote.borne-haute.celibataire.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "cdhr.decote.coefficient", "libelle": "Contribution différentielle — coefficient de la décote", "millesime": 2025, "valeur": "0.825", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "Les deux simulateurs emploient désormais ce coefficient dans la même formule, celle du simulateur « IR, CEHR et CDHR », choisie par le référent fiscal (fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md, issue #4).", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "cdhr.seuil.celibataire", "libelle": "Contribution différentielle — seuil d’assujettissement, personne seule", "millesime": 2025, "valeur": "250000", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "cdhr.seuil.couple", "libelle": "Contribution différentielle — seuil d’assujettissement, imposition commune", "millesime": 2025, "valeur": "500000", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "cdhr.taux.cible", "libelle": "Contribution différentielle sur les hauts revenus — taux d’imposition minimal visé", "millesime": 2025, "valeur": "0.2", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "cehr.bareme.celibataire", "libelle": "Contribution exceptionnelle sur les hauts revenus — personne seule", "millesime": 2025, "valeur": "250000-500000 @ 0.03; 500000-infini @ 0.04", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "Le simulateur IRPP écrivait une tranche intermédiaire de 500 000 € à 1 000 000 € au même taux de 4 % que celle qui suit ; les deux se confondent et donnent le même impôt.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "cehr.bareme.couple", "libelle": "Contribution exceptionnelle sur les hauts revenus — imposition commune", "millesime": 2025, "valeur": "500000-1000000 @ 0.03; 1000000-infini @ 0.04", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.abattement.pensions.plafond", "libelle": "Abattement forfaitaire sur les pensions — plafond par foyer", "millesime": 2025, "valeur": "4439", "utilisePar": ["irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.abattement.pensions.plancher", "libelle": "Abattement forfaitaire sur les pensions — plancher par foyer", "millesime": 2025, "valeur": "442", "utilisePar": ["irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.abattement.pensions.taux", "libelle": "Abattement forfaitaire sur les pensions — taux", "millesime": 2025, "valeur": "0.1", "utilisePar": ["irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.abattement.salaires.plafond", "libelle": "Abattement forfaitaire sur les salaires — plafond par déclarant", "millesime": 2025, "valeur": "14555", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.abattement.salaires.taux", "libelle": "Abattement forfaitaire sur les salaires — taux", "millesime": 2025, "valeur": "0.1", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.bareme.progressif", "libelle": "Barème progressif de l’impôt sur le revenu, par part", "millesime": 2025, "valeur": "0-11600 @ 0; 11600-29579 @ 0.11; 29579-84577 @ 0.3; 84577-181917 @ 0.41; 181917-infini @ 0.45", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "Bornes et taux identiques dans les deux simulateurs. Ils ne les appliquent pas de la même façon : le simulateur IR traite les tranches comme jointives, l’IRPP fait commencer chaque tranche à la borne précédente augmentée d’un euro. L’écart atteint 1,27 € d’impôt et relève de l’issue #7 ; il tient au code, non à ces valeurs.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.credit.garde-enfants.plafond", "libelle": "Crédit d’impôt pour frais de garde — plafond de dépenses par enfant", "millesime": 2025, "valeur": "3500", "utilisePar": ["ir-cehr-cdhr"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.credit.garde-enfants.taux", "libelle": "Crédit d’impôt pour frais de garde — taux", "millesime": 2025, "valeur": "0.5", "utilisePar": ["ir-cehr-cdhr"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.decote.celibataire.montant", "libelle": "Décote de l’impôt sur le revenu — montant fixe, personne seule", "millesime": 2025, "valeur": "889", "utilisePar": ["irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.decote.celibataire.seuil", "libelle": "Décote de l’impôt sur le revenu — seuil, personne seule", "millesime": 2025, "valeur": "1965", "utilisePar": ["irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.decote.couple.montant", "libelle": "Décote de l’impôt sur le revenu — montant fixe, imposition commune", "millesime": 2025, "valeur": "1470", "utilisePar": ["irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.decote.couple.seuil", "libelle": "Décote de l’impôt sur le revenu — seuil, imposition commune", "millesime": 2025, "valeur": "3249", "utilisePar": ["irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.decote.taux", "libelle": "Décote de l’impôt sur le revenu — taux appliqué à l’impôt", "millesime": 2025, "valeur": "0.4525", "utilisePar": ["irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "ir.quotient.plafond-demi-part", "libelle": "Plafonnement de l’avantage en impôt procuré par une demi-part supplémentaire", "millesime": 2025, "valeur": "1807", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "Fiche 2.3 de docs/CORRECTIONS_A_VALIDER.md : le référent fiscal a demandé l’ajout du plafonnement dans le simulateur IRPP, avec la même méthode et le même plafond que le simulateur « IR, CEHR et CDHR ». Réserve non tranchée : l’IRPP déduit la part de référence de la case « second déclarant », faute de demander la situation familiale exacte.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "pfu.taux.impot-revenu", "libelle": "Prélèvement forfaitaire unique — part d’impôt sur le revenu", "millesime": 2025, "valeur": "0.128", "utilisePar": ["ir-cehr-cdhr", "irpp"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}]}, {"domaine": "prelevements-sociaux", "libelleDomaine": "Prélèvements sociaux", "entrees": [{"id": "ps.taux.global", "libelle": "Taux global des prélèvements sociaux", "millesime": 2025, "valeur": "17-2: 0.172 / 18-6: 0.186", "utilisePar": [], "notes": "17,2 % est inscrit en dur, à seize endroits du simulateur IRPP et à plusieurs endroits de la plus-value immobilière. 18,6 % est un champ modifiable, pré-rempli, dans le simulateur « IR, CEHR et CDHR ». Écart mesuré entre les deux : 14 000 € par million de plus-value. Aucun des deux n’est retenu comme valeur unique : chaque simulateur désigne explicitement la variante qu’il emploie aujourd’hui.", "statut": "conteste", "reference": "", "url": "", "dateConsultation": ""}]}, {"domaine": "pv-immobiliere", "libelleDomaine": "Plus-value immobilière", "entrees": [{"id": "pv-immobiliere.abattement.ir.annee-debut", "libelle": "Abattement impôt sur le revenu — dernière année sans abattement", "millesime": 2026, "valeur": "5", "utilisePar": ["pv-immobiliere"], "notes": "L’abattement commence à la sixième année : le code compare la durée à cette valeur.", "statut": "cite", "reference": "CGI art. 150 VC", "url": "", "dateConsultation": "2026-08-26"}, {"id": "pv-immobiliere.abattement.ir.annee-exoneration", "libelle": "Abattement impôt sur le revenu — année à partir de laquelle la plus-value est exonérée", "millesime": 2026, "valeur": "22", "utilisePar": ["pv-immobiliere"], "notes": "", "statut": "cite", "reference": "CGI art. 150 VC", "url": "", "dateConsultation": "2026-08-26"}, {"id": "pv-immobiliere.abattement.ir.taux-annuel", "libelle": "Abattement pour durée de détention, impôt sur le revenu — taux par année", "millesime": 2026, "valeur": "0.06", "utilisePar": ["pv-immobiliere"], "notes": "", "statut": "cite", "reference": "CGI art. 150 VC", "url": "", "dateConsultation": "2026-08-26"}, {"id": "pv-immobiliere.abattement.ps.annee-exoneration", "libelle": "Abattement prélèvements sociaux — année à partir de laquelle la plus-value est exonérée", "millesime": 2026, "valeur": "30", "utilisePar": ["pv-immobiliere"], "notes": "", "statut": "cite", "reference": "CGI art. 150 VC", "url": "", "dateConsultation": "2026-08-26"}, {"id": "pv-immobiliere.abattement.ps.taux-annee-22", "libelle": "Abattement prélèvements sociaux — taux de la 22ᵉ année", "millesime": 2026, "valeur": "0.016", "utilisePar": ["pv-immobiliere"], "notes": "", "statut": "cite", "reference": "CGI art. 150 VC", "url": "", "dateConsultation": "2026-08-26"}, {"id": "pv-immobiliere.abattement.ps.taux-annuel", "libelle": "Abattement pour durée de détention, prélèvements sociaux — taux par année jusqu’à la 21ᵉ", "millesime": 2026, "valeur": "0.0165", "utilisePar": ["pv-immobiliere"], "notes": "", "statut": "cite", "reference": "CGI art. 150 VC", "url": "", "dateConsultation": "2026-08-26"}, {"id": "pv-immobiliere.abattement.ps.taux-annuel-apres-22", "libelle": "Abattement prélèvements sociaux — taux par année au-delà de la 22ᵉ", "millesime": 2026, "valeur": "0.09", "utilisePar": ["pv-immobiliere"], "notes": "", "statut": "cite", "reference": "CGI art. 150 VC", "url": "", "dateConsultation": "2026-08-26"}, {"id": "pv-immobiliere.forfait.frais-acquisition", "libelle": "Forfait de frais d’acquisition, retenu à défaut de frais réels", "millesime": 2026, "valeur": "0.075", "utilisePar": ["pv-immobiliere"], "notes": "Appliqué au prix d’acquisition. Les frais réels, s’ils sont renseignés, sont retenus à sa place.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "pv-immobiliere.forfait.travaux", "libelle": "Forfait de travaux, retenu à défaut de travaux réels", "millesime": 2026, "valeur": "0.15", "utilisePar": ["pv-immobiliere"], "notes": "Réservé aux immeubles bâtis détenus depuis plus de cinq ans. Le simulateur affiche un avertissement en deçà mais applique tout de même le forfait ; ce comportement n’est pas modifié par l’extraction.", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "pv-immobiliere.forfait.travaux.duree-minimale", "libelle": "Durée de détention minimale pour le forfait de travaux", "millesime": 2026, "valeur": "5", "utilisePar": ["pv-immobiliere"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}, {"id": "pv-immobiliere.surtaxe.paliers", "libelle": "Surtaxe sur les plus-values imposables supérieures à 50 000 € — paliers", "millesime": 2026, "valeur": "[{\"plafond\": 50000, \"taux\": 0, \"lissage\": 0}, {\"plafond\": 60000, \"taux\": 0.02, \"lissage\": 0.05}, {\"plafond\": 100000, \"taux\": 0.02, \"lissage\": 0}, {\"plafond\": 110000, \"taux\": 0.03, \"lissage\": 0.1}, {\"plafond\": 150000, \"taux\": 0.03, \"lissage\": 0}, {\"plafond\": 160000, \"taux\": 0.04, \"lissage\": 0.15}, {\"plafond\": 200000, \"taux\": 0.04, \"lissage\": 0}, {\"plafond\": 210000, \"taux\": 0.05, \"lissage\": 0.2}, {\"plafond\": 250000, \"taux\": 0.05, \"lissage\": 0}, {\"plafond\": 260000, \"taux\": 0.06, \"lissage\": 0.25}, {\"plafond\": null, \"taux\": 0.06, \"lissage\": 0}]", "utilisePar": ["pv-immobiliere"], "notes": "Chaque palier s’applique tant que la plus-value ne dépasse pas son plafond ; le dernier n’en a pas. La surtaxe vaut le taux appliqué à la plus-value, diminué du lissage multiplié par ce qui manque pour atteindre le plafond. Un lissage nul signifie un palier plat.", "statut": "cite", "reference": "CGI art. 1609 nonies G · BOI-RFPI-TPVIE-20", "url": "", "dateConsultation": "2026-08-26"}, {"id": "pv-immobiliere.taux.impot-revenu", "libelle": "Taux d’imposition à l’impôt sur le revenu de la plus-value immobilière", "millesime": 2026, "valeur": "0.19", "utilisePar": ["pv-immobiliere"], "notes": "", "statut": "inconnue", "reference": "", "url": "", "dateConsultation": ""}]}]</script>
+
+<script id="app-js">
+(function () {
+  "use strict";
+
+  var DOMAINES = JSON.parse(document.getElementById("data-sources").textContent);
+  var CLE_BROUILLON = "sources-fiscales-brouillon";
+
+  var etat = lireEtat();
+  var artifact = null;
+  var capacite = "attente";
+  var enAttente = false;
+
+  function toutesEntrees() {
+    var l = [];
+    DOMAINES.forEach(function (d) { d.entrees.forEach(function (e) { l.push(e); }); });
+    return l;
+  }
+
+  function ech(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function reponseDe(id) { return etat.reponses[id] || {}; }
+
+  function estConfirmee(id) { return !!reponseDe(id).confirme; }
+
+  function etatEntree(entree) {
+    if (estConfirmee(entree.id)) return "confirmee";
+    var r = reponseDe(entree.id);
+    var ref = (r.reference !== undefined ? r.reference : entree.reference) || "";
+    if (ref.trim()) return "cite";
+    return "inconnue";
+  }
+
+  function nbConfirmees() { return toutesEntrees().filter(function (e) { return estConfirmee(e.id); }).length; }
+
+  function ecrireBrouillon() {
+    try { localStorage.setItem(CLE_BROUILLON, JSON.stringify(etat.reponses)); } catch (e) {}
+  }
+  function effacerBrouillon() {
+    try { localStorage.removeItem(CLE_BROUILLON); } catch (e) {}
+  }
+  function appliquerBrouillon() {
+    var brut;
+    try { brut = localStorage.getItem(CLE_BROUILLON); } catch (e) { return false; }
+    if (!brut) return false;
+    var local;
+    try { local = JSON.parse(brut); } catch (e) { return false; }
+    var change = false;
+    Object.keys(local || {}).forEach(function (id) {
+      var a = JSON.stringify(etat.reponses[id] || null);
+      var b = JSON.stringify(local[id]);
+      if (a !== b) { etat.reponses[id] = local[id]; change = true; }
+    });
+    return change;
+  }
+
+  function lireEtat() {
+    try {
+      var brut = document.getElementById("etat").textContent;
+      var lu = JSON.parse(brut);
+      return { reponses: lu.reponses || {}, maj: lu.maj || null };
+    } catch (e) {
+      return { reponses: {}, maj: null };
+    }
+  }
+
+  function entreeHtml(entree) {
+    var r = reponseDe(entree.id);
+    var etatE = etatEntree(entree);
+    var ref = r.reference !== undefined ? r.reference : entree.reference;
+    var url = r.url !== undefined ? r.url : entree.url;
+    var date = r.dateConsultation !== undefined ? r.dateConsultation : entree.dateConsultation;
+    var note = r.note !== undefined ? r.note : "";
+
+    var libelleBadge = etatE === "confirmee" ? "Confirmée" : etatE === "cite" ? "Référence citée, à confirmer" : "Source inconnue";
+
+    var h = '<div class="entree" id="e-' + ech(entree.id) + '" data-etat="' + etatE + '">';
+    h += '<div class="entree-tete">';
+    h += '<div style="flex:1;min-width:0">';
+    h += '<div class="entree-id">' + ech(entree.id) + " · millésime " + ech(entree.millesime) + "</div>";
+    h += '<div class="entree-libelle">' + ech(entree.libelle) + "</div>";
+    h += '<div class="entree-valeur">' + ech(entree.valeur) + "</div>";
+    if (entree.utilisePar && entree.utilisePar.length) {
+      h += '<div class="entree-utilise">Employé par : ' + ech(entree.utilisePar.join(", ")) + "</div>";
+    }
+    h += "</div>";
+    h += '<span class="entree-badge" data-etat="' + etatE + '">' + libelleBadge + "</span>";
+    h += "</div>";
+
+    h += '<div class="entree-corps">';
+    if (entree.notes) h += '<div class="entree-note">' + ech(entree.notes) + "</div>";
+
+    h += '<div class="champs">';
+    h += '<div class="champ"><label>Référence légale</label><input type="text" data-id="' + ech(entree.id) + '" data-champ="reference" placeholder="ex. CGI art. 197, I, 4" value="' + ech(ref) + '"></div>';
+    h += '<div class="champ"><label>Lien (si disponible)</label><input type="text" data-id="' + ech(entree.id) + '" data-champ="url" placeholder="legifrance.gouv.fr/…" value="' + ech(url) + '"></div>';
+    h += '<div class="champ"><label>Vérifié le</label><input type="date" data-id="' + ech(entree.id) + '" data-champ="dateConsultation" value="' + ech(date) + '"></div>';
+    h += "</div>";
+
+    h += '<div class="champ"><label>Remarque (montant à corriger, doute, etc.)</label><textarea data-id="' + ech(entree.id) + '" data-champ="note" placeholder="Laisser vide si rien à signaler">' + ech(note) + "</textarea></div>";
+
+    h += '<label class="confirme-ligne"><input type="checkbox" data-id="' + ech(entree.id) + '" data-champ="confirme"' + (estConfirmee(entree.id) ? " checked" : "") + '> Je confirme que la référence et le montant ci-dessus sont exacts</label>';
+
+    h += "</div></div>";
+    return h;
+  }
+
+  function domaineHtml(d) {
+    var h = '<section class="domaine" id="d-' + ech(d.domaine) + '">';
+    h += '<div class="domaine-tete"><h2>' + ech(d.libelleDomaine) + "</h2>";
+    h += '<span class="domaine-compte">' + d.entrees.filter(function (e) { return estConfirmee(e.id); }).length + " / " + d.entrees.length + " confirmées</span></div>";
+    d.entrees.forEach(function (e) { h += entreeHtml(e); });
+    h += "</section>";
+    return h;
+  }
+
+  function rendre() {
+    var h = "";
+
+    h += '<header class="bandeau"><div class="bandeau-corps">';
+    h += '<h1 class="marque">Sources fiscales <span>· simulateurs Arthur Beldi</span></h1>';
+    h += '<div class="jauge"><div class="jauge-piste"><div class="jauge-part" id="jauge"></div></div>';
+    h += '<div class="jauge-txt" id="jauge-txt"></div></div>';
+    h += "</div></header>";
+
+    h += '<div class="page">';
+
+    h += '<div class="intro">';
+    h += "<h1>D'où viennent ces chiffres ?</h1>";
+    h += "<p>Chaque simulateur applique des barèmes, seuils et abattements. Le code ne dit pas toujours d'où ils viennent. Cette page les liste tous : pour chacun, indiquez l'article de loi ou le texte qui le fixe, un lien si vous en avez un, et la date où vous l'avez vérifié.</p>";
+    h += "<p>Certains ont déjà une référence trouvée dans le code — cochez la case si elle est juste, ou corrigez-la. Les autres n'ont rien : à vous de les trouver.</p>";
+    h += '<div class="legende">';
+    h += '<span><span class="pastille" data-etat="inconnue"></span>Source inconnue</span>';
+    h += '<span><span class="pastille" data-etat="cite"></span>Référence trouvée, à confirmer</span>';
+    h += '<span><span class="pastille" data-etat="confirmee"></span>Confirmée</span>';
+    h += "</div></div>";
+
+    h += '<nav class="sommaire">';
+    DOMAINES.forEach(function (d) {
+      var n = d.entrees.filter(function (e) { return estConfirmee(e.id); }).length;
+      h += '<button class="som-lien" type="button" data-vers="' + ech(d.domaine) + '">' + ech(d.libelleDomaine) + ' <span class="compte">' + n + "/" + d.entrees.length + "</span></button>";
+    });
+    h += "</nav>";
+
+    DOMAINES.forEach(function (d) { h += domaineHtml(d); });
+
+    h += '<footer class="pied">';
+    h += "<div>Cette page ne certifie rien toute seule : c'est votre confirmation, entrée par entrée, qui fait passer une valeur de « non validée » à « validée » dans les données du dépôt.</div>";
+    h += '<div class="mot" id="mot-pied"></div>';
+    h += "</footer>";
+
+    h += "</div>";
+
+    h += '<div class="barre" id="barre" hidden>';
+    h += '<span class="barre-txt" id="barre-txt"></span>';
+    h += '<button class="btn btn-fort" type="button" id="enregistrer">Enregistrer</button>';
+    h += "</div>";
+
+    document.getElementById("app").innerHTML = h;
+    majJauge();
+    brancher();
+  }
+
+  function majJauge() {
+    var total = toutesEntrees().length;
+    var faits = nbConfirmees();
+    var j = document.getElementById("jauge");
+    if (j) j.style.width = (total ? (faits / total) * 100 : 0) + "%";
+    var t = document.getElementById("jauge-txt");
+    if (t) t.textContent = faits + " / " + total + " confirmée" + (faits > 1 ? "s" : "");
+  }
+
+  function majEntree(id) {
+    var entree = null;
+    DOMAINES.forEach(function (d) { d.entrees.forEach(function (e) { if (e.id === id) entree = e; }); });
+    if (!entree) return;
+    var ancien = document.getElementById("e-" + id);
+    if (!ancien) return;
+    var enveloppe = document.createElement("div");
+    enveloppe.innerHTML = entreeHtml(entree);
+    var nouveau = enveloppe.firstChild;
+    ancien.parentNode.replaceChild(nouveau, ancien);
+    brancherEntree(nouveau);
+  }
+
+  function majCompteDomaine(domaineId) {
+    var d = null;
+    DOMAINES.forEach(function (dd) { if (dd.domaine === domaineId) d = dd; });
+    if (!d) return;
+    var el = document.querySelector('#d-' + domaineId + ' .domaine-compte');
+    if (el) el.textContent = d.entrees.filter(function (e) { return estConfirmee(e.id); }).length + " / " + d.entrees.length + " confirmées";
+    var lien = document.querySelector('.som-lien[data-vers="' + domaineId + '"] .compte');
+    if (lien) lien.textContent = d.entrees.filter(function (e) { return estConfirmee(e.id); }).length + "/" + d.entrees.length;
+  }
+
+  function domaineDe(id) {
+    var trouve = null;
+    DOMAINES.forEach(function (d) { d.entrees.forEach(function (e) { if (e.id === id) trouve = d.domaine; }); });
+    return trouve;
+  }
+
+  function marquerModifie() {
+    enAttente = true;
+    ecrireBrouillon();
+    rafraichirBarre();
+  }
+
+  function rafraichirBarre() {
+    var barre = document.getElementById("barre");
+    if (!barre || !enAttente) return;
+    var txt = document.getElementById("barre-txt");
+    var bouton = document.getElementById("enregistrer");
+    bouton.disabled = false;
+    if (capacite === "oui") {
+      txt.textContent = "Modifications non enregistrées";
+      bouton.textContent = "Enregistrer";
+    } else if (capacite === "non") {
+      txt.textContent = "Vos réponses restent sur cet appareil";
+      bouton.textContent = "Copier mes réponses";
+    } else {
+      txt.textContent = "Vérification en cours";
+      bouton.textContent = "Enregistrer";
+      bouton.disabled = true;
+    }
+    barre.hidden = false;
+  }
+
+  function brancherEntree(racine) {
+    racine.querySelectorAll("input[data-champ], textarea[data-champ]").forEach(function (el) {
+      var evt = el.type === "checkbox" ? "change" : "input";
+      el.addEventListener(evt, function () {
+        var id = el.dataset.id;
+        var r = etat.reponses[id] || {};
+        if (el.dataset.champ === "confirme") r.confirme = el.checked;
+        else r[el.dataset.champ] = el.value;
+        etat.reponses[id] = r;
+        majEntree(id);
+        majCompteDomaine(domaineDe(id));
+        majJauge();
+        marquerModifie();
+      });
+    });
+  }
+
+  function brancher() {
+    document.querySelectorAll(".entree").forEach(function (el) { brancherEntree(el); });
+
+    document.querySelectorAll(".som-lien").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var cible = document.getElementById("d-" + b.dataset.vers);
+        if (cible) cible.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    var enr = document.getElementById("enregistrer");
+    if (enr) enr.addEventListener("click", function () {
+      if (capacite === "oui") enregistrer(); else copierReponses();
+    });
+  }
+
+  function dire(message, ton) {
+    var m = document.getElementById("mot-pied");
+    if (!m) return;
+    m.textContent = message;
+    if (ton) m.setAttribute("data-ton", ton); else m.removeAttribute("data-ton");
+  }
+
+  function synthese() {
+    var l = ["# Sources fiscales renseignées", ""];
+    if (etat.maj) l.push("Dernier enregistrement : " + etat.maj, "");
+    DOMAINES.forEach(function (d) {
+      var faites = d.entrees.filter(function (e) { return estConfirmee(e.id) || (reponseDe(e.id).reference || "").trim(); });
+      if (!faites.length) return;
+      l.push("## " + d.libelleDomaine, "");
+      faites.forEach(function (e) {
+        var r = reponseDe(e.id);
+        var ref = r.reference !== undefined ? r.reference : e.reference;
+        var url = r.url !== undefined ? r.url : e.url;
+        var date = r.dateConsultation !== undefined ? r.dateConsultation : e.dateConsultation;
+        l.push("### " + e.id + " — " + e.libelle);
+        l.push("Confirmée : " + (estConfirmee(e.id) ? "oui" : "non"));
+        if (ref) l.push("Référence : " + ref);
+        if (url) l.push("Lien : " + url);
+        if (date) l.push("Vérifié le : " + date);
+        if (r.note && r.note.trim()) l.push("Remarque : " + r.note.trim());
+        l.push("");
+      });
+    });
+    return l.join("\n");
+  }
+
+  function copierReponses() {
+    var texte = synthese();
+    var txt = document.getElementById("barre-txt");
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      txt.textContent = "Copie indisponible dans ce navigateur";
+      return;
+    }
+    navigator.clipboard.writeText(texte).then(function () {
+      txt.textContent = "Réponses copiées, collez-les dans votre message";
+    }, function () {
+      txt.textContent = "La copie a échoué";
+    });
+  }
+
+  function documentPublie() {
+    var css = document.getElementById("css").textContent;
+    var js = document.getElementById("app-js").textContent;
+    var data = document.getElementById("data-sources").textContent;
+    etat.maj = new Date().toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" });
+    var json = JSON.stringify({ reponses: etat.reponses, maj: etat.maj });
+    return [
+      "<!doctype html>",
+      '<html lang="fr"><head><meta charset="utf-8">',
+      '<meta name="viewport" content="width=device-width, initial-scale=1">',
+      "<title>Sources fiscales à renseigner</title>",
+      '<link rel="preconnect" href="https://fonts.googleapis.com">',
+      '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">',
+      "<style id=\"css\">" + css + "</style>",
+      "</head><body>",
+      '<div id="app"></div>',
+      '<script id="etat" type="application/json">' + json + "<\/script>",
+      '<script id="data-sources" type="application/json">' + data + "<\/script>",
+      '<script id="app-js">' + js + "<\/script>",
+      "</body></html>"
+    ].join("\n");
+  }
+
+  function enregistrer() {
+    if (!artifact) { dire("Cette vue ne permet pas d'enregistrer.", "stop"); return; }
+    var bouton = document.getElementById("enregistrer");
+    bouton.disabled = true;
+    document.getElementById("barre-txt").textContent = "Enregistrement…";
+    artifact.publish(documentPublie()).then(function () {
+      enAttente = false;
+      effacerBrouillon();
+      document.getElementById("barre").hidden = true;
+    }, function (err) {
+      var code = err && err.code;
+      if (code === "conflict") {
+        document.getElementById("barre-txt").textContent = "Quelqu'un a enregistré avant vous, la page se recharge";
+      } else if (code === "not_granted" || code === "not_writer") {
+        document.getElementById("barre-txt").textContent = "Vous consultez cette page en lecture seule";
+      } else {
+        document.getElementById("barre-txt").textContent = "Enregistrement impossible, réessayez";
+        bouton.disabled = false;
+      }
+    });
+  }
+
+  var brouillonRestaure = appliquerBrouillon();
+
+  rendre();
+
+  if (brouillonRestaure) {
+    enAttente = true;
+    rafraichirBarre();
+  }
+
+  window.addEventListener("beforeunload", function (e) {
+    if (enAttente && capacite === "oui") { e.preventDefault(); e.returnValue = ""; }
+  });
+
+  if (!window.claude || !window.claude.use) {
+    capacite = "non";
+    rafraichirBarre();
+  }
+
+  if (window.claude && window.claude.use) {
+    claude.use("artifact").then(function (a) {
+      artifact = a;
+      capacite = a ? "oui" : "non";
+      rafraichirBarre();
+    });
+  }
+})();
+</script>
