@@ -481,6 +481,41 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
   padding: 9px 11px;
 }
 
+.tranches-zone { overflow-x: auto; }
+
+.tranches {
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.tranches th, .tranches td {
+  padding: 6px 12px;
+  text-align: right;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+.tranches tr:last-child td { border-bottom: none; }
+
+.tranches th {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: right;
+  background: var(--surface-2);
+}
+
+.tranches th:first-child, .tranches td:first-child { text-align: left; }
+.tranches td.taux { color: var(--ink); font-weight: 500; }
+
 .confirme-ligne {
   display: flex;
   align-items: center;
@@ -567,6 +602,73 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
+  function fmtNombre(n) { return Number(n).toLocaleString("fr-FR"); }
+
+  function fmtTaux(n) {
+    var pct = Math.round(Number(n) * 100 * 1000) / 1000;
+    return pct.toLocaleString("fr-FR", { maximumFractionDigits: 3 }) + " %";
+  }
+
+  function estTranches(v) {
+    return /^\d+-(\d+|infini)\s*@\s*-?[\d.]+(\s*;\s*\d+-(\d+|infini)\s*@\s*-?[\d.]+)*$/.test(v);
+  }
+
+  function trancheHtml(v) {
+    var lignes = v.split(";").map(function (seg) {
+      var m = seg.trim().match(/^(\d+)-(\d+|infini)\s*@\s*(-?[\d.]+)$/);
+      if (!m) return null;
+      var min = fmtNombre(m[1]);
+      var max = m[2] === "infini" ? "∞" : fmtNombre(m[2]);
+      return "<tr><td>" + ech(min) + "</td><td>" + ech(max) + "</td><td class=\"taux\">" + ech(fmtTaux(m[3])) + "</td></tr>";
+    });
+    if (lignes.indexOf(null) !== -1) return null;
+    return '<div class="tranches-zone"><table class="tranches"><thead><tr><th>De</th><th>à</th><th>Taux</th></tr></thead><tbody>' + lignes.join("") + "</tbody></table></div>";
+  }
+
+  function paliersHtml(v) {
+    var arr;
+    try { arr = JSON.parse(v); } catch (e) { return null; }
+    if (!Array.isArray(arr) || !arr.length) return null;
+    var lignes = arr.map(function (p) {
+      if (!p || typeof p !== "object" || p.taux === undefined) return null;
+      var plafond = (p.plafond === null || p.plafond === undefined) ? "∞" : fmtNombre(p.plafond);
+      var lissage = p.lissage !== undefined ? fmtTaux(p.lissage) : "—";
+      return "<tr><td>" + ech(plafond) + "</td><td class=\"taux\">" + ech(fmtTaux(p.taux)) + "</td><td>" + ech(lissage) + "</td></tr>";
+    });
+    if (lignes.indexOf(null) !== -1) return null;
+    return '<div class="tranches-zone"><table class="tranches"><thead><tr><th>Jusqu’à</th><th>Taux</th><th>Lissage</th></tr></thead><tbody>' + lignes.join("") + "</tbody></table></div>";
+  }
+
+  function resumeValeur(entree) {
+    var v = String(entree.valeur).trim();
+    if (v === "True") return "Oui";
+    if (v === "False") return "Non";
+    if (/^\[.*\]$/.test(v)) {
+      try {
+        var arr = JSON.parse(v);
+        if (Array.isArray(arr)) return arr.length + " palier" + (arr.length > 1 ? "s" : "");
+      } catch (e) {}
+    }
+    if (estTranches(v)) {
+      var segments = v.split(";");
+      if (segments.length === 1) {
+        var mUnique = segments[0].trim().match(/@\s*(-?[\d.]+)$/);
+        if (mUnique) return fmtTaux(mUnique[1]);
+      }
+      return segments.length + " tranches";
+    }
+    if (/^\d+\.\d+$/.test(v) && parseFloat(v) < 1) return fmtTaux(v);
+    if (/^\d+$/.test(v)) return fmtNombre(v);
+    return entree.valeur;
+  }
+
+  function detailValeurHtml(entree) {
+    var v = String(entree.valeur).trim();
+    if (/^\[.*\]$/.test(v)) return paliersHtml(v);
+    if (estTranches(v)) return trancheHtml(v);
+    return null;
+  }
+
   function reponseDe(id) { return etat.reponses[id] || {}; }
 
   function estConfirmee(id) { return !!reponseDe(id).confirme; }
@@ -637,7 +739,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
     h += '<div class="entree-info">';
     h += '<div class="entree-id">' + ech(entree.id) + " · millésime " + ech(entree.millesime) + "</div>";
     h += '<div class="entree-libelle">' + ech(entree.libelle) + "</div>";
-    h += '<div class="entree-valeur">' + ech(entree.valeur) + "</div>";
+    h += '<div class="entree-valeur">' + ech(resumeValeur(entree)) + "</div>";
     if (entree.utilisePar && entree.utilisePar.length) {
       h += '<div class="entree-utilise">Employé par : ' + ech(entree.utilisePar.join(", ")) + "</div>";
     }
@@ -649,6 +751,8 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
     h += "</button>";
 
     h += '<div class="entree-corps">';
+    var detailValeur = detailValeurHtml(entree);
+    if (detailValeur) h += detailValeur;
     if (entree.notes) h += '<div class="entree-note">' + ech(entree.notes) + "</div>";
 
     h += '<div class="champs">';
