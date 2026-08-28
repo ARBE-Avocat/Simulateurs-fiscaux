@@ -50,8 +50,10 @@ Dernière mise à jour du plan : 28 août 2026 — synchronisé avec `v0.5.0-bet
 - Outillage pour #9 : `docs/sources-fiscales.html`, publiée en artifact claude.ai le 28 août 2026, liste les 65 valeurs des cinq référentiels sans source confirmée (ou avec une référence à valider) et laisse le référent renseigner texte, lien et date de vérification, entrée par entrée. Rien n'est encore rempli à ce jour ; la page n'a pas encore été soumise au référent.
 - **#11 est traitée à moitié, et cette moitié est celle qui ne demandait aucune décision fiscale.** `src/conventions.js` et `docs/CONVENTIONS.md` posent les quatre conventions techniques : taux en décimal, lecture unique des saisies, case introuvable valant « décochée », et surtout un calcul impossible affiché `—` au lieu de `NaN €` ou de `0 €`. Livré en `v0.5.0-beta.15`, sans modifier un seul montant valide.
 - **#7 est traitée** en `v0.5.0-beta.16` : les tranches de barème sont jointives partout. Les deux simulateurs d'impôt sur le revenu concordent désormais à chaque seuil — ils divergeaient de 1,27 € — et le barème IFI ne laisse plus cinq euros sans taux. Le point a été tranché en interne, non soumis au référent : un euro taxé dans aucune tranche est une erreur d'écriture, pas une interprétation fiscale. Il est porté en fiche 3.7 pour confirmation, comme toute modification d'un montant affiché.
-- **Ce qui reste du jalon `0.5`.** #11 pour sa dernière part : appliquer champ par champ la politique de messages d'erreur, dont la règle est arrêtée — avertir sans bloquer, reprise du précédent validé sur l'âge du donateur (`docs/CONVENTIONS.md` §2.3). Deux points internes y sont rattachés : l'hétérogénéité des décimales affichées (§2.1) et l'arrondi de l'exonération des fermages de l'IFI (§2.2). Aucun ne demande de décision du référent.
-- **Ce qui dépend du référent.** #9, dont l'outil `docs/sources-fiscales.html` est prêt mais n'a pas encore été soumis, et la fiche 3.6 de #19, chantier séparé. La confirmation de la fiche 3.7 n'est pas bloquante : la correction est déjà appliquée.
+- **Le développement du jalon `0.5` est arrêté au 28 août 2026, sur décision de CLV.** Dernière préversion : `0.5.0-beta.16`. Le jalon a livré l'architecture cible (#20), le schéma et la chaîne de données (#12, #18), les cinq extractions de référentiels (#14 à #17), les taux de change et les jours non cotés (#13, #1), la sélection de millésime pour sa part réalisable (#19), les conventions de calcul (#11 pour sa part technique) et les bornes de barèmes (#7).
+- **#11 est reportée au jalon suivant**, avec son reliquat identifié et sans décision en attente : appliquer champ par champ la politique de messages d'erreur, dont la règle est déjà arrêtée — avertir sans bloquer, reprise du précédent validé sur l'âge du donateur (`docs/CONVENTIONS.md` §2.3). Deux points internes y sont rattachés : l'hétérogénéité des décimales affichées (§2.1) et l'arrondi de l'exonération des fermages de l'IFI (§2.2).
+- **Ce qui dépend du référent, et ne bloque pas la clôture.** #9, dont l'outil `docs/sources-fiscales.html` est prêt mais n'a pas encore été soumis, et la fiche 3.6 de #19, chantier séparé. La confirmation de la fiche 3.7 n'est pas bloquante non plus : la correction est déjà appliquée.
+- **Reste à faire pour clore matériellement le jalon :** les préversions `0.5.0-beta.14`, `.15` et `.16` ne sont pas encore taguées — le dernier tag publié est `v0.5.0-beta.13`. Décision et publication appartiennent à CLV.
 - Leçon de méthode du 28 août 2026 : toute question n'est pas une question de droit. Décimales affichées, messages d'erreur et cohérence d'arrondi relèvent du produit et se tranchent en interne. Solliciter le référent sur ces points l'encombre et retarde le jalon sans rien sécuriser.
 
 ## Décisions d'architecture déjà arbitrées
@@ -134,7 +136,8 @@ Phase 0 Gouvernance ✓ ─> #10 Socle de tests ✓
  ├─> #5 ✓        puis #4 (bloquée : décote CDHR)
  └─> #6 ✓ -> #8 ✓  voie IFI / valeurs par défaut
 
-Jalon 0.5 : #11 -> #7           bornes, unités et arrondis
+Jalon 0.5 : #11 (part technique) -> #7 ✓   bornes, unités et arrondis
+Jalon 0.6 : reliquat de #11               messages d'erreur, champ par champ
 
 #20 Architecture cible ───────────────────> #12 Schéma des référentiels
 #9 et #11 alimentent les statuts,             │
@@ -250,7 +253,7 @@ Cette branche porte aussi les deux premières étapes de #28, la CI, décrites d
 
 ### Étape 2.0 — Fixer les conventions, puis les bornes
 
-1. [#11 — Définir validation, unités et arrondis](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/11) — **moitié technique livrée** en `v0.5.0-beta.15` : `docs/CONVENTIONS.md` et `src/conventions.js`. Restent les trois points qui commandent un montant ou sa présentation, posés en fiches 3.8, 3.9 et 3.10 — dont le reliquat de #8, quels champs sont obligatoires et quel message s'affiche
+1. [#11 — Définir validation, unités et arrondis](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/11) — **moitié technique livrée** en `v0.5.0-beta.15` : `docs/CONVENTIONS.md` et `src/conventions.js`. **Le reste est reporté au jalon `0.6`** : appliquer la politique de messages d'erreur champ par champ, reliquat de #8. La règle est arrêtée et n'attend aucune décision du référent ; voir `docs/CONVENTIONS.md` §2.1 à §2.3 pour les trois points restants
 2. [#7 — Uniformiser et corriger les bornes des barèmes](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/7) — **traitée** en `v0.5.0-beta.16`. Les tranches sont jointives partout ; les deux simulateurs d'impôt sur le revenu concordent désormais à chaque seuil, et le barème IFI ne laisse plus cinq euros sans taux. Tranchée en interne : un euro taxé dans aucune tranche est une erreur d'écriture, pas une règle fiscale. Portée en fiche 3.7 pour confirmation
 
 Déplacées depuis le jalon `0.4`. #7 ne commence qu'après la décision de #11 sur la représentation des tranches et les arrondis, et doit intégrer les correctifs déjà livrés dans les fichiers IRPP et IFI.
@@ -613,8 +616,8 @@ Chaque nouvelle version mineure `Y` reste soumise à une validation explicite de
 |---|---|---|---|
 | Gouvernance initiale | `clv/preprod` | Phase 0, consignes, plan, changelog et préprod | `v0.3.0` — actuellement en beta |
 | Fiabilité | `clv/y-0.4-fiabilite` | #10, #6, #8, #5 et #4, tests de base et validation métier suffisante | `v0.4.0` indicatif |
-| Données | `clv/y-0.5-donnees` | #11 et #7, #2 terminé, #20 et CI données/build | `v0.5.0` indicatif |
-| Architecture | `clv/y-0.6-architecture` | #21 terminé, six moteurs découplés et #31 engagé | `v0.6.0` indicatif |
+| Données | `clv/y-0.5-donnees` | #7, #2 terminé, #20 et CI données/build. #11 pour sa part technique ; son reliquat est reporté | `v0.5.0` indicatif |
+| Architecture | `clv/y-0.6-architecture` | #21 terminé, six moteurs découplés, #31 engagé et le reliquat de #11 | `v0.6.0` indicatif |
 | Qualité | `clv/y-0.7-qualite` | #28, #29 et #31 terminés | `v0.7.0` indicatif |
 
 Chaque `beta.N` ou correctif stable `Z` possède son tag annoté immuable. Il n'existe toutefois qu'une seule GitHub Release par série `X.Y`.
