@@ -1,28 +1,28 @@
 <title>Sources fiscales à renseigner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 
 <style id="css">
 :root {
-  --ground: #f3f1ea;
-  --surface: #ffffff;
-  --surface-2: #f8f6ef;
-  --ink: #221f1a;
-  --ink-soft: #5b564a;
-  --ink-faint: #938c7a;
-  --rule: #e3ddce;
-  --rule-strong: #cdc4ac;
-  --accent: #2f5233;
+  --ground: #f2ede0;
+  --surface: #fffdf8;
+  --surface-2: #ece5d2;
+  --ink: #23262d;
+  --ink-soft: #565b6b;
+  --ink-faint: #8b8c7c;
+  --rule: #ddd6c1;
+  --rule-strong: #c4bb9f;
+  --accent: #33436e;
   --accent-ink: #ffffff;
-  --accent-soft: #e6ece5;
-  --ok: #2c6a4e;
-  --ok-soft: #e4efe9;
-  --warn: #8a5a12;
-  --warn-soft: #f7eeda;
-  --stop: #93332f;
-  --stop-soft: #f7e6e4;
-  --shadow: 0 1px 2px rgba(34, 31, 26, .06), 0 8px 24px -16px rgba(34, 31, 26, .3);
+  --accent-soft: #e2e6ef;
+  --ok: #2f7a52;
+  --ok-soft: #e2efe6;
+  --warn: #9c6b12;
+  --warn-soft: #f6ecd4;
+  --stop: #a33f34;
+  --stop-soft: #f5e2de;
+  --shadow: 0 1px 2px rgba(35, 38, 45, .07), 0 10px 28px -18px rgba(35, 38, 45, .35);
   --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --serif: "Spectral", Georgia, "Times New Roman", serif;
   --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -30,46 +30,46 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ground: #14180f;
-    --surface: #1b2016;
-    --surface-2: #21271b;
-    --ink: #ecebe2;
-    --ink-soft: #aeac9c;
-    --ink-faint: #77745f;
-    --rule: #313825;
-    --rule-strong: #444c33;
-    --accent: #8fbf8f;
-    --accent-ink: #0f1a0f;
-    --accent-soft: #22301f;
-    --ok: #7fbf9a;
-    --ok-soft: #1a2b21;
-    --warn: #d9ab5a;
+    --ground: #14161c;
+    --surface: #1a1d25;
+    --surface-2: #20232c;
+    --ink: #e9e8e0;
+    --ink-soft: #a7a89c;
+    --ink-faint: #74766b;
+    --rule: #2b2e38;
+    --rule-strong: #3c4051;
+    --accent: #9fb0dd;
+    --accent-ink: #10131c;
+    --accent-soft: #232a3d;
+    --ok: #7fc39d;
+    --ok-soft: #1b2b23;
+    --warn: #dbab5c;
     --warn-soft: #2c2414;
-    --stop: #e28a85;
-    --stop-soft: #2d1c1b;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+    --stop: #e2938a;
+    --stop-soft: #2f1d1b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 10px 28px -18px rgba(0, 0, 0, .85);
   }
 }
 
 :root[data-theme="dark"] {
-  --ground: #14180f;
-  --surface: #1b2016;
-  --surface-2: #21271b;
-  --ink: #ecebe2;
-  --ink-soft: #aeac9c;
-  --ink-faint: #77745f;
-  --rule: #313825;
-  --rule-strong: #444c33;
-  --accent: #8fbf8f;
-  --accent-ink: #0f1a0f;
-  --accent-soft: #22301f;
-  --ok: #7fbf9a;
-  --ok-soft: #1a2b21;
-  --warn: #d9ab5a;
+  --ground: #14161c;
+  --surface: #1a1d25;
+  --surface-2: #20232c;
+  --ink: #e9e8e0;
+  --ink-soft: #a7a89c;
+  --ink-faint: #74766b;
+  --rule: #2b2e38;
+  --rule-strong: #3c4051;
+  --accent: #9fb0dd;
+  --accent-ink: #10131c;
+  --accent-soft: #232a3d;
+  --ok: #7fc39d;
+  --ok-soft: #1b2b23;
+  --warn: #dbab5c;
   --warn-soft: #2c2414;
-  --stop: #e28a85;
-  --stop-soft: #2d1c1b;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+  --stop: #e2938a;
+  --stop-soft: #2f1d1b;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 10px 28px -18px rgba(0, 0, 0, .85);
 }
 
 * { box-sizing: border-box; }
@@ -79,56 +79,76 @@ body {
   background: var(--ground);
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 15.5px;
+  font-size: 15px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3 { text-wrap: balance; margin: 0; }
 
+:where(button, a, input, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* bandeau */
+
 .bandeau {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 30;
   background: var(--surface);
   border-bottom: 1px solid var(--rule);
 }
 
 .bandeau-corps {
-  max-width: 1180px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 14px 28px;
+  padding: 13px 28px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 22px;
   flex-wrap: wrap;
 }
 
 .marque {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin-right: auto;
+}
+
+.marque-nom {
   font-family: var(--serif);
   font-size: 19px;
   font-weight: 600;
   letter-spacing: -.01em;
-  margin-right: auto;
 }
 
-.marque span { color: var(--ink-faint); font-weight: 400; }
+.marque-sous { font-size: 12.5px; color: var(--ink-faint); }
 
-.jauge { display: flex; align-items: center; gap: 12px; }
+.jauge { display: flex; align-items: center; gap: 11px; }
 
 .jauge-piste {
-  width: 132px;
-  height: 6px;
+  width: 148px;
+  height: 7px;
   border-radius: 99px;
   background: var(--rule);
   overflow: hidden;
+  display: flex;
 }
 
-.jauge-part { height: 100%; background: var(--accent); width: 0; transition: width .35s ease; }
+.jauge-seg {
+  height: 100%;
+  background: var(--rule-strong);
+}
+
+.jauge-seg[data-etat="cite"] { background: var(--warn); }
+.jauge-seg[data-etat="confirmee"] { background: var(--ok); }
 
 .jauge-txt {
   font-family: var(--mono);
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -136,9 +156,9 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 
 .btn {
   font: inherit;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 500;
-  padding: 8px 15px;
+  padding: 7px 13px;
   border-radius: 7px;
   border: 1px solid var(--rule-strong);
   background: var(--surface);
@@ -152,25 +172,103 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .btn-fort:hover { filter: brightness(1.08); }
 .btn:disabled { opacity: .45; cursor: default; }
 
-:where(button, a, input, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* mise en page générale */
+
+.corps {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 30px 28px 100px;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
 }
 
-.page {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 34px 28px 96px;
+@media (max-width: 900px) {
+  .corps { grid-template-columns: 1fr; }
 }
+
+/* sidebar */
+
+.rail {
+  position: sticky;
+  top: 68px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: calc(100vh - 90px);
+  overflow-y: auto;
+  padding-bottom: 8px;
+}
+
+@media (max-width: 900px) {
+  .rail {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    max-height: none;
+    gap: 8px;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+  }
+}
+
+.rail-lien {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+  padding: 9px 11px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font: inherit;
+}
+
+@media (max-width: 900px) {
+  .rail-lien {
+    flex: 0 0 auto;
+    min-width: 190px;
+    border-color: var(--rule);
+    background: var(--surface);
+  }
+}
+
+.rail-lien:hover { background: var(--surface-2); }
+.rail-lien[data-actif="1"] { background: var(--accent-soft); color: var(--ink); }
+
+.rail-titre {
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.rail-titre b { font-weight: 500; }
+.rail-compte { font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); flex: 0 0 auto; }
+
+.rail-piste {
+  height: 4px;
+  border-radius: 99px;
+  background: var(--rule);
+  overflow: hidden;
+}
+
+.rail-part { height: 100%; background: var(--ok); }
+
+/* colonne principale */
 
 .intro {
-  max-width: 70ch;
-  margin-bottom: 30px;
+  max-width: 68ch;
+  margin-bottom: 26px;
 }
 
 .intro h1 {
   font-family: var(--serif);
-  font-size: 27px;
+  font-size: 26px;
   font-weight: 600;
   letter-spacing: -.015em;
   margin-bottom: 10px;
@@ -181,10 +279,10 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 
 .legende {
   display: flex;
-  gap: 18px;
+  gap: 16px;
   flex-wrap: wrap;
-  margin-top: 16px;
-  font-size: 13px;
+  margin-top: 14px;
+  font-size: 12.5px;
   color: var(--ink-soft);
 }
 
@@ -201,33 +299,14 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .pastille[data-etat="cite"] { background: var(--warn); }
 .pastille[data-etat="confirmee"] { background: var(--ok); }
 
-.sommaire {
+.commandes {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
+  margin: 18px 0 26px;
 }
-
-.som-lien {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 12px;
-  border-radius: 99px;
-  border: 1px solid var(--rule-strong);
-  background: var(--surface);
-  color: var(--ink-soft);
-  font-size: 13px;
-  text-decoration: none;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.som-lien:hover { border-color: var(--accent); color: var(--ink); }
-.som-lien .compte { font-family: var(--mono); color: var(--ink-faint); }
 
 .domaine {
-  margin-bottom: 34px;
+  margin-bottom: 30px;
   scroll-margin-top: 78px;
 }
 
@@ -235,13 +314,15 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
   display: flex;
   align-items: baseline;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
 }
 
 .domaine-tete h2 {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 600;
 }
 
@@ -251,46 +332,74 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
   color: var(--ink-faint);
 }
 
+/* entrées */
+
 .entree {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: 10px;
-  margin-bottom: 10px;
+  border-left: 3px solid var(--rule-strong);
+  border-radius: 8px;
+  margin-bottom: 8px;
   overflow: hidden;
 }
 
-.entree[data-etat="confirmee"] { border-color: var(--ok); background: var(--ok-soft); }
+.entree[data-etat="cite"] { border-left-color: var(--warn); }
+.entree[data-etat="confirmee"] { border-left-color: var(--ok); background: var(--ok-soft); }
 
 .entree-tete {
-  padding: 13px 18px;
+  width: 100%;
+  appearance: none;
+  font: inherit;
+  text-align: left;
+  padding: 12px 14px;
   display: flex;
   align-items: flex-start;
   gap: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
 }
+
+.entree-tete:hover { background: var(--surface-2); }
+
+.entree-info { flex: 1; min-width: 0; }
 
 .entree-id {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--ink-faint);
   margin-bottom: 3px;
 }
 
-.entree-libelle { font-weight: 500; margin-bottom: 3px; }
+.entree-libelle { font-weight: 500; margin-bottom: 4px; }
 
 .entree-valeur {
+  display: inline-block;
   font-family: var(--mono);
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--ink-soft);
+  background: var(--surface-2);
+  border-radius: 4px;
+  padding: 1px 6px;
   word-break: break-word;
+  max-width: 100%;
+}
+
+.entree-droite {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 2px;
 }
 
 .entree-badge {
-  flex: 0 0 auto;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: .06em;
+  letter-spacing: .05em;
   text-transform: uppercase;
-  padding: 4px 9px;
+  padding: 4px 8px;
   border-radius: 5px;
   white-space: nowrap;
 }
@@ -299,13 +408,33 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .entree-badge[data-etat="cite"] { background: var(--warn-soft); color: var(--warn); }
 .entree-badge[data-etat="confirmee"] { background: var(--ok-soft); color: var(--ok); }
 
+.chevron {
+  width: 9px;
+  height: 9px;
+  border-right: 1.5px solid var(--ink-faint);
+  border-bottom: 1.5px solid var(--ink-faint);
+  transform: rotate(-45deg);
+  transition: transform .15s ease;
+  flex: 0 0 auto;
+}
+
+.entree[data-ouverte="1"] .chevron { transform: rotate(45deg); }
+
 .entree-corps {
   border-top: 1px solid var(--rule);
   background: var(--surface-2);
-  padding: 14px 18px 16px;
+  padding: 14px 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.entree[data-ouverte="0"] .entree-corps { display: none; }
+
+.entree-utilise {
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  margin-top: 2px;
 }
 
 .champs {
@@ -314,15 +443,15 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
   gap: 9px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 640px) {
   .champs { grid-template-columns: 1fr; }
 }
 
 .champ label {
   display: block;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: .06em;
+  letter-spacing: .05em;
   text-transform: uppercase;
   color: var(--ink-faint);
   margin-bottom: 4px;
@@ -339,6 +468,8 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
   color: var(--ink);
 }
 
+.champ input:focus, .champ textarea:focus { border-color: var(--accent); }
+
 .champ textarea { resize: vertical; min-height: 44px; }
 
 .entree-note {
@@ -350,11 +481,6 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
   padding: 9px 11px;
 }
 
-.entree-utilise {
-  font-size: 11.5px;
-  color: var(--ink-faint);
-}
-
 .confirme-ligne {
   display: flex;
   align-items: center;
@@ -363,6 +489,8 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 }
 
 .confirme-ligne input[type="checkbox"] { width: 16px; height: 16px; }
+
+/* barre flottante */
 
 .barre {
   position: fixed;
@@ -385,11 +513,11 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .barre-txt { font-size: 13.5px; color: var(--ink-soft); }
 
 .pied {
-  margin-top: 40px;
-  padding-top: 22px;
+  margin-top: 36px;
+  padding-top: 20px;
   border-top: 1px solid var(--rule);
   color: var(--ink-faint);
-  font-size: 13px;
+  font-size: 12.5px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -427,6 +555,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
   var artifact = null;
   var capacite = "attente";
   var enAttente = false;
+  var ouvertes = {};
 
   function toutesEntrees() {
     var l = [];
@@ -442,6 +571,12 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 
   function estConfirmee(id) { return !!reponseDe(id).confirme; }
 
+  function entreeParId(id) {
+    var trouve = null;
+    DOMAINES.forEach(function (d) { d.entrees.forEach(function (e) { if (e.id === id) trouve = e; }); });
+    return trouve;
+  }
+
   function etatEntree(entree) {
     if (estConfirmee(entree.id)) return "confirmee";
     var r = reponseDe(entree.id);
@@ -451,6 +586,8 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
   }
 
   function nbConfirmees() { return toutesEntrees().filter(function (e) { return estConfirmee(e.id); }).length; }
+  function nbParEtat(etatCherche) { return toutesEntrees().filter(function (e) { return etatEntree(e) === etatCherche; }).length; }
+  function nbConfirmeesDomaine(d) { return d.entrees.filter(function (e) { return estConfirmee(e.id); }).length; }
 
   function ecrireBrouillon() {
     try { localStorage.setItem(CLE_BROUILLON, JSON.stringify(etat.reponses)); } catch (e) {}
@@ -490,12 +627,14 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
     var url = r.url !== undefined ? r.url : entree.url;
     var date = r.dateConsultation !== undefined ? r.dateConsultation : entree.dateConsultation;
     var note = r.note !== undefined ? r.note : "";
+    var ouverte = !!ouvertes[entree.id];
 
-    var libelleBadge = etatE === "confirmee" ? "Confirmée" : etatE === "cite" ? "Référence citée, à confirmer" : "Source inconnue";
+    var libelleBadge = etatE === "confirmee" ? "Confirmée" : etatE === "cite" ? "À confirmer" : "Inconnue";
 
-    var h = '<div class="entree" id="e-' + ech(entree.id) + '" data-etat="' + etatE + '">';
-    h += '<div class="entree-tete">';
-    h += '<div style="flex:1;min-width:0">';
+    var h = '<div class="entree" id="e-' + ech(entree.id) + '" data-etat="' + etatE + '" data-ouverte="' + (ouverte ? "1" : "0") + '">';
+
+    h += '<button type="button" class="entree-tete" data-toggle="' + ech(entree.id) + '" aria-expanded="' + (ouverte ? "true" : "false") + '">';
+    h += '<div class="entree-info">';
     h += '<div class="entree-id">' + ech(entree.id) + " · millésime " + ech(entree.millesime) + "</div>";
     h += '<div class="entree-libelle">' + ech(entree.libelle) + "</div>";
     h += '<div class="entree-valeur">' + ech(entree.valeur) + "</div>";
@@ -503,8 +642,11 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
       h += '<div class="entree-utilise">Employé par : ' + ech(entree.utilisePar.join(", ")) + "</div>";
     }
     h += "</div>";
+    h += '<div class="entree-droite">';
     h += '<span class="entree-badge" data-etat="' + etatE + '">' + libelleBadge + "</span>";
+    h += '<span class="chevron" aria-hidden="true"></span>';
     h += "</div>";
+    h += "</button>";
 
     h += '<div class="entree-corps">';
     if (entree.notes) h += '<div class="entree-note">' + ech(entree.notes) + "</div>";
@@ -526,9 +668,22 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
   function domaineHtml(d) {
     var h = '<section class="domaine" id="d-' + ech(d.domaine) + '">';
     h += '<div class="domaine-tete"><h2>' + ech(d.libelleDomaine) + "</h2>";
-    h += '<span class="domaine-compte">' + d.entrees.filter(function (e) { return estConfirmee(e.id); }).length + " / " + d.entrees.length + " confirmées</span></div>";
+    h += '<span class="domaine-compte">' + nbConfirmeesDomaine(d) + " / " + d.entrees.length + " confirmées</span></div>";
     d.entrees.forEach(function (e) { h += entreeHtml(e); });
     h += "</section>";
+    return h;
+  }
+
+  function railHtml() {
+    var h = "";
+    DOMAINES.forEach(function (d, i) {
+      var n = nbConfirmeesDomaine(d);
+      var part = d.entrees.length ? Math.round((n / d.entrees.length) * 100) : 0;
+      h += '<button class="rail-lien" type="button" data-vers="' + ech(d.domaine) + '" data-actif="' + (i === 0 ? "1" : "0") + '">';
+      h += '<span class="rail-titre"><b>' + ech(d.libelleDomaine) + '</b><span class="rail-compte">' + n + "/" + d.entrees.length + "</span></span>";
+      h += '<span class="rail-piste"><span class="rail-part" style="width:' + part + '%"></span></span>';
+      h += "</button>";
+    });
     return h;
   }
 
@@ -536,29 +691,31 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
     var h = "";
 
     h += '<header class="bandeau"><div class="bandeau-corps">';
-    h += '<h1 class="marque">Sources fiscales <span>· simulateurs Arthur Beldi</span></h1>';
-    h += '<div class="jauge"><div class="jauge-piste"><div class="jauge-part" id="jauge"></div></div>';
+    h += '<div class="marque"><span class="marque-nom">Sources fiscales</span><span class="marque-sous">simulateurs Arthur Beldi</span></div>';
+    h += '<div class="jauge"><div class="jauge-piste" id="jauge"></div>';
     h += '<div class="jauge-txt" id="jauge-txt"></div></div>';
     h += "</div></header>";
 
-    h += '<div class="page">';
+    h += '<div class="corps">';
+
+    h += '<nav class="rail" id="rail">' + railHtml() + "</nav>";
+
+    h += '<main class="colonne">';
 
     h += '<div class="intro">';
     h += "<h1>D'où viennent ces chiffres ?</h1>";
     h += "<p>Chaque simulateur applique des barèmes, seuils et abattements. Le code ne dit pas toujours d'où ils viennent. Cette page les liste tous : pour chacun, indiquez l'article de loi ou le texte qui le fixe, un lien si vous en avez un, et la date où vous l'avez vérifié.</p>";
-    h += "<p>Certains ont déjà une référence trouvée dans le code — cochez la case si elle est juste, ou corrigez-la. Les autres n'ont rien : à vous de les trouver.</p>";
+    h += "<p>Certains ont déjà une référence trouvée dans le code — ouvrez la fiche, cochez la case si elle est juste ou corrigez-la. Les autres n'ont rien : à vous de les trouver. Cliquez sur une ligne pour l'ouvrir.</p>";
     h += '<div class="legende">';
     h += '<span><span class="pastille" data-etat="inconnue"></span>Source inconnue</span>';
     h += '<span><span class="pastille" data-etat="cite"></span>Référence trouvée, à confirmer</span>';
     h += '<span><span class="pastille" data-etat="confirmee"></span>Confirmée</span>';
     h += "</div></div>";
 
-    h += '<nav class="sommaire">';
-    DOMAINES.forEach(function (d) {
-      var n = d.entrees.filter(function (e) { return estConfirmee(e.id); }).length;
-      h += '<button class="som-lien" type="button" data-vers="' + ech(d.domaine) + '">' + ech(d.libelleDomaine) + ' <span class="compte">' + n + "/" + d.entrees.length + "</span></button>";
-    });
-    h += "</nav>";
+    h += '<div class="commandes">';
+    h += '<button class="btn" type="button" id="tout-deplier">Tout déplier</button>';
+    h += '<button class="btn" type="button" id="tout-replier">Tout replier</button>';
+    h += "</div>";
 
     DOMAINES.forEach(function (d) { h += domaineHtml(d); });
 
@@ -567,7 +724,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
     h += '<div class="mot" id="mot-pied"></div>';
     h += "</footer>";
 
-    h += "</div>";
+    h += "</main></div>";
 
     h += '<div class="barre" id="barre" hidden>';
     h += '<span class="barre-txt" id="barre-txt"></span>';
@@ -577,38 +734,66 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
     document.getElementById("app").innerHTML = h;
     majJauge();
     brancher();
+    brancherScrollSpy();
   }
 
   function majJauge() {
     var total = toutesEntrees().length;
-    var faits = nbConfirmees();
+    var confirmees = nbConfirmees();
+    var citees = nbParEtat("cite");
     var j = document.getElementById("jauge");
-    if (j) j.style.width = (total ? (faits / total) * 100 : 0) + "%";
+    if (j) {
+      j.innerHTML = "";
+      if (citees) {
+        var seg1 = document.createElement("div");
+        seg1.className = "jauge-seg";
+        seg1.dataset.etat = "cite";
+        seg1.style.width = (total ? (citees / total) * 100 : 0) + "%";
+        j.appendChild(seg1);
+      }
+      if (confirmees) {
+        var seg2 = document.createElement("div");
+        seg2.className = "jauge-seg";
+        seg2.dataset.etat = "confirmee";
+        seg2.style.width = (total ? (confirmees / total) * 100 : 0) + "%";
+        j.appendChild(seg2);
+      }
+    }
     var t = document.getElementById("jauge-txt");
-    if (t) t.textContent = faits + " / " + total + " confirmée" + (faits > 1 ? "s" : "");
+    if (t) t.textContent = confirmees + " / " + total + " confirmée" + (confirmees > 1 ? "s" : "");
   }
 
-  function majEntree(id) {
-    var entree = null;
-    DOMAINES.forEach(function (d) { d.entrees.forEach(function (e) { if (e.id === id) entree = e; }); });
+  function majEtatVisuel(id) {
+    var entree = entreeParId(id);
     if (!entree) return;
-    var ancien = document.getElementById("e-" + id);
-    if (!ancien) return;
-    var enveloppe = document.createElement("div");
-    enveloppe.innerHTML = entreeHtml(entree);
-    var nouveau = enveloppe.firstChild;
-    ancien.parentNode.replaceChild(nouveau, ancien);
-    brancherEntree(nouveau);
+    var etatE = etatEntree(entree);
+    var noeud = document.getElementById("e-" + id);
+    if (noeud) {
+      noeud.dataset.etat = etatE;
+      var badge = noeud.querySelector(".entree-badge");
+      if (badge) {
+        badge.dataset.etat = etatE;
+        badge.textContent = etatE === "confirmee" ? "Confirmée" : etatE === "cite" ? "À confirmer" : "Inconnue";
+      }
+    }
+    majCompteDomaine(domaineDe(id));
+    majJauge();
   }
 
   function majCompteDomaine(domaineId) {
     var d = null;
     DOMAINES.forEach(function (dd) { if (dd.domaine === domaineId) d = dd; });
     if (!d) return;
+    var n = nbConfirmeesDomaine(d);
     var el = document.querySelector('#d-' + domaineId + ' .domaine-compte');
-    if (el) el.textContent = d.entrees.filter(function (e) { return estConfirmee(e.id); }).length + " / " + d.entrees.length + " confirmées";
-    var lien = document.querySelector('.som-lien[data-vers="' + domaineId + '"] .compte');
-    if (lien) lien.textContent = d.entrees.filter(function (e) { return estConfirmee(e.id); }).length + "/" + d.entrees.length;
+    if (el) el.textContent = n + " / " + d.entrees.length + " confirmées";
+    var railBtn = document.querySelector('.rail-lien[data-vers="' + domaineId + '"]');
+    if (railBtn) {
+      var compte = railBtn.querySelector(".rail-compte");
+      if (compte) compte.textContent = n + "/" + d.entrees.length;
+      var part = railBtn.querySelector(".rail-part");
+      if (part) part.style.width = (d.entrees.length ? (n / d.entrees.length) * 100 : 0) + "%";
+    }
   }
 
   function domaineDe(id) {
@@ -652,28 +837,67 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
         if (el.dataset.champ === "confirme") r.confirme = el.checked;
         else r[el.dataset.champ] = el.value;
         etat.reponses[id] = r;
-        majEntree(id);
-        majCompteDomaine(domaineDe(id));
-        majJauge();
+        majEtatVisuel(id);
         marquerModifie();
       });
     });
   }
 
+  function ouvrir(id, ouverte) {
+    ouvertes[id] = ouverte;
+    var noeud = document.getElementById("e-" + id);
+    if (!noeud) return;
+    noeud.dataset.ouverte = ouverte ? "1" : "0";
+    var bouton = noeud.querySelector(".entree-tete");
+    if (bouton) bouton.setAttribute("aria-expanded", ouverte ? "true" : "false");
+  }
+
   function brancher() {
     document.querySelectorAll(".entree").forEach(function (el) { brancherEntree(el); });
 
-    document.querySelectorAll(".som-lien").forEach(function (b) {
+    document.querySelectorAll("[data-toggle]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var id = b.dataset.toggle;
+        ouvrir(id, !ouvertes[id]);
+      });
+    });
+
+    document.querySelectorAll(".rail-lien").forEach(function (b) {
       b.addEventListener("click", function () {
         var cible = document.getElementById("d-" + b.dataset.vers);
         if (cible) cible.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
 
+    var deplier = document.getElementById("tout-deplier");
+    if (deplier) deplier.addEventListener("click", function () {
+      toutesEntrees().forEach(function (e) { ouvrir(e.id, true); });
+    });
+    var replier = document.getElementById("tout-replier");
+    if (replier) replier.addEventListener("click", function () {
+      toutesEntrees().forEach(function (e) { ouvrir(e.id, false); });
+    });
+
     var enr = document.getElementById("enregistrer");
     if (enr) enr.addEventListener("click", function () {
       if (capacite === "oui") enregistrer(); else copierReponses();
     });
+  }
+
+  function brancherScrollSpy() {
+    if (!("IntersectionObserver" in window)) return;
+    var sections = DOMAINES.map(function (d) { return document.getElementById("d-" + d.domaine); }).filter(Boolean);
+    if (!sections.length) return;
+    var obs = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (entree) {
+        if (!entree.isIntersecting) return;
+        var domaineId = entree.target.id.replace(/^d-/, "");
+        document.querySelectorAll(".rail-lien").forEach(function (b) {
+          b.dataset.actif = b.dataset.vers === domaineId ? "1" : "0";
+        });
+      });
+    }, { rootMargin: "-15% 0px -75% 0px" });
+    sections.forEach(function (s) { obs.observe(s); });
   }
 
   function dire(message, ton) {
@@ -734,7 +958,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
       "<title>Sources fiscales à renseigner</title>",
       '<link rel="preconnect" href="https://fonts.googleapis.com">',
       '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
-      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">',
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">',
       "<style id=\"css\">" + css + "</style>",
       "</head><body>",
       '<div id="app"></div>',
