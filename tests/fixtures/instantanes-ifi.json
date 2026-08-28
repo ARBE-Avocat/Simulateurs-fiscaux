@@ -79,7 +79,7 @@
         "ifiTheoriqueNet": 0,
         "decote": 6250,
         "patrimoineNetApresIFITheo": 900000,
-        "ifiAvantDecote": 499.995,
+        "ifiAvantDecote": 500,
         "ifiApresDecote": 0,
         "donsReduction": 0,
         "ifiApresReduction": 0,
@@ -97,8 +97,8 @@
             "taux": 0
           },
           {
-            "assiette": 99999,
-            "impot": 499.995,
+            "assiette": 100000,
+            "impot": 500,
             "taux": 0.005
           },
           {
@@ -135,20 +135,20 @@
         "patrimoineBrut": 1350000,
         "totalDed": 0,
         "patrimoineNet": 1350000,
-        "ifiTheorique": 2224.988,
-        "ifiTheoriqueNet": 2224.988,
-        "decote": 652.8123499999965,
-        "patrimoineNetApresIFITheo": 1347775.012,
-        "ifiAvantDecote": 2834.4130840000007,
-        "ifiApresDecote": 2181.600734000004,
+        "ifiTheorique": 2225,
+        "ifiTheoriqueNet": 2225,
+        "decote": 652.8125,
+        "patrimoineNetApresIFITheo": 1347775,
+        "ifiAvantDecote": 2834.425,
+        "ifiApresDecote": 2181.6125,
         "donsReduction": 0,
-        "ifiApresReduction": 2181.600734000004,
+        "ifiApresReduction": 2181.6125,
         "revenus": 0,
         "ir": 0,
         "autresImpots": 0,
         "plafond": 0,
         "reductionPlafond": 0,
-        "ifiFinal": 2181.600734000004,
+        "ifiFinal": 2181.6125,
         "fermageExo": 0,
         "detailFinal": [
           {
@@ -157,13 +157,13 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 47774.012000000104,
-            "impot": 334.41808400000076,
+            "assiette": 47775,
+            "impot": 334.425,
             "taux": 0.007
           },
           {
@@ -195,20 +195,20 @@
         "patrimoineBrut": 2600000,
         "totalDed": 0,
         "patrimoineNet": 2600000,
-        "ifiTheorique": 11689.978000000001,
-        "ifiTheoriqueNet": 11689.978000000001,
+        "ifiTheorique": 11690,
+        "ifiTheoriqueNet": 11690,
         "decote": 0,
-        "patrimoineNetApresIFITheo": 2588310.022,
-        "ifiAvantDecote": 11573.07822,
-        "ifiApresDecote": 11573.07822,
+        "patrimoineNetApresIFITheo": 2588310,
+        "ifiAvantDecote": 11573.1,
+        "ifiApresDecote": 11573.1,
         "donsReduction": 0,
-        "ifiApresReduction": 11573.07822,
+        "ifiApresReduction": 11573.1,
         "revenus": 0,
         "ir": 0,
         "autresImpots": 0,
         "plafond": 0,
         "reductionPlafond": 0,
-        "ifiFinal": 11573.07822,
+        "ifiFinal": 11573.1,
         "fermageExo": 0,
         "detailFinal": [
           {
@@ -217,18 +217,18 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 1269999,
-            "impot": 8889.993,
+            "assiette": 1270000,
+            "impot": 8890,
             "taux": 0.007
           },
           {
-            "assiette": 18309.02199999988,
-            "impot": 183.09021999999882,
+            "assiette": 18310,
+            "impot": 183.1,
             "taux": 0.01
           },
           {
@@ -255,20 +255,20 @@
         "patrimoineBrut": 5200000,
         "totalDed": 0,
         "patrimoineNet": 5200000,
-        "ifiTheorique": 38189.965500000006,
-        "ifiTheoriqueNet": 38189.965500000006,
+        "ifiTheorique": 38190,
+        "ifiTheoriqueNet": 38190,
         "decote": 0,
-        "patrimoineNetApresIFITheo": 5161810.0345,
-        "ifiAvantDecote": 37712.59093125,
-        "ifiApresDecote": 37712.59093125,
+        "patrimoineNetApresIFITheo": 5161810,
+        "ifiAvantDecote": 37712.625,
+        "ifiApresDecote": 37712.625,
         "donsReduction": 0,
-        "ifiApresReduction": 37712.59093125,
+        "ifiApresReduction": 37712.625,
         "revenus": 0,
         "ir": 0,
         "autresImpots": 0,
         "plafond": 0,
         "reductionPlafond": 0,
-        "ifiFinal": 37712.59093125,
+        "ifiFinal": 37712.625,
         "fermageExo": 0,
         "detailFinal": [
           {
@@ -277,23 +277,23 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 1269999,
-            "impot": 8889.993,
+            "assiette": 1270000,
+            "impot": 8890,
             "taux": 0.007
           },
           {
-            "assiette": 2429999,
-            "impot": 24299.99,
+            "assiette": 2430000,
+            "impot": 24300,
             "taux": 0.01
           },
           {
-            "assiette": 161809.03450000007,
-            "impot": 2022.6129312500009,
+            "assiette": 161810,
+            "impot": 2022.625,
             "taux": 0.0125
           },
           {
@@ -315,20 +315,20 @@
         "patrimoineBrut": 12000000,
         "totalDed": 0,
         "patrimoineNet": 12000000,
-        "ifiTheorique": 128189.9505,
-        "ifiTheoriqueNet": 128189.9505,
+        "ifiTheorique": 128190,
+        "ifiTheoriqueNet": 128190,
         "decote": 0,
-        "patrimoineNetApresIFITheo": 11871810.0495,
-        "ifiAvantDecote": 126267.10124250001,
-        "ifiApresDecote": 126267.10124250001,
+        "patrimoineNetApresIFITheo": 11871810,
+        "ifiAvantDecote": 126267.15,
+        "ifiApresDecote": 126267.15,
         "donsReduction": 0,
-        "ifiApresReduction": 126267.10124250001,
+        "ifiApresReduction": 126267.15,
         "revenus": 0,
         "ir": 0,
         "autresImpots": 0,
         "plafond": 0,
         "reductionPlafond": 0,
-        "ifiFinal": 126267.10124250001,
+        "ifiFinal": 126267.15,
         "fermageExo": 0,
         "detailFinal": [
           {
@@ -337,28 +337,28 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 1269999,
-            "impot": 8889.993,
+            "assiette": 1270000,
+            "impot": 8890,
             "taux": 0.007
           },
           {
-            "assiette": 2429999,
-            "impot": 24299.99,
+            "assiette": 2430000,
+            "impot": 24300,
             "taux": 0.01
           },
           {
-            "assiette": 4999999,
-            "impot": 62499.9875,
+            "assiette": 5000000,
+            "impot": 62500,
             "taux": 0.0125
           },
           {
-            "assiette": 1871809.0494999997,
-            "impot": 28077.135742499995,
+            "assiette": 1871810,
+            "impot": 28077.149999999998,
             "taux": 0.015
           }
         ]
@@ -379,20 +379,20 @@
         "patrimoineBrut": 2160000,
         "totalDed": 0,
         "patrimoineNet": 2160000,
-        "ifiTheorique": 8519.988000000001,
-        "ifiTheoriqueNet": 8519.988000000001,
+        "ifiTheorique": 8520,
+        "ifiTheoriqueNet": 8520,
         "decote": 0,
-        "patrimoineNetApresIFITheo": 2151480.012,
-        "ifiAvantDecote": 8460.348084000001,
-        "ifiApresDecote": 8460.348084000001,
+        "patrimoineNetApresIFITheo": 2151480,
+        "ifiAvantDecote": 8460.36,
+        "ifiApresDecote": 8460.36,
         "donsReduction": 0,
-        "ifiApresReduction": 8460.348084000001,
+        "ifiApresReduction": 8460.36,
         "revenus": 0,
         "ir": 0,
         "autresImpots": 0,
         "plafond": 0,
         "reductionPlafond": 0,
-        "ifiFinal": 8460.348084000001,
+        "ifiFinal": 8460.36,
         "fermageExo": 0,
         "detailFinal": [
           {
@@ -401,13 +401,13 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 851479.0120000001,
-            "impot": 5960.353084000001,
+            "assiette": 851480,
+            "impot": 5960.36,
             "taux": 0.007
           },
           {
@@ -444,7 +444,7 @@
         "ifiTheoriqueNet": 0,
         "decote": 2500,
         "patrimoineNetApresIFITheo": 1200000,
-        "ifiAvantDecote": 1999.9950000000001,
+        "ifiAvantDecote": 2000,
         "ifiApresDecote": 0,
         "donsReduction": 0,
         "ifiApresReduction": 0,
@@ -462,8 +462,8 @@
             "taux": 0
           },
           {
-            "assiette": 399999,
-            "impot": 1999.9950000000001,
+            "assiette": 400000,
+            "impot": 2000,
             "taux": 0.005
           },
           {
@@ -503,20 +503,20 @@
         "patrimoineBrut": 1450000,
         "totalDed": 100000,
         "patrimoineNet": 1350000,
-        "ifiTheorique": 2224.988,
-        "ifiTheoriqueNet": 2224.988,
-        "decote": 652.8123499999965,
-        "patrimoineNetApresIFITheo": 1347775.012,
-        "ifiAvantDecote": 2834.4130840000007,
-        "ifiApresDecote": 2181.600734000004,
+        "ifiTheorique": 2225,
+        "ifiTheoriqueNet": 2225,
+        "decote": 652.8125,
+        "patrimoineNetApresIFITheo": 1347775,
+        "ifiAvantDecote": 2834.425,
+        "ifiApresDecote": 2181.6125,
         "donsReduction": 0,
-        "ifiApresReduction": 2181.600734000004,
+        "ifiApresReduction": 2181.6125,
         "revenus": 0,
         "ir": 0,
         "autresImpots": 0,
         "plafond": 0,
         "reductionPlafond": 0,
-        "ifiFinal": 2181.600734000004,
+        "ifiFinal": 2181.6125,
         "fermageExo": 0,
         "detailFinal": [
           {
@@ -525,13 +525,13 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 47774.012000000104,
-            "impot": 334.41808400000076,
+            "assiette": 47775,
+            "impot": 334.425,
             "taux": 0.007
           },
           {
@@ -563,20 +563,20 @@
         "patrimoineBrut": 1380000,
         "totalDed": 0,
         "patrimoineNet": 1380000,
-        "ifiTheorique": 2809.988,
-        "ifiTheoriqueNet": 2809.988,
-        "decote": 285.1248499999965,
-        "patrimoineNetApresIFITheo": 1377190.012,
-        "ifiAvantDecote": 3040.3180840000005,
-        "ifiApresDecote": 2755.193234000004,
+        "ifiTheorique": 2810,
+        "ifiTheoriqueNet": 2810,
+        "decote": 285.125,
+        "patrimoineNetApresIFITheo": 1377190,
+        "ifiAvantDecote": 3040.33,
+        "ifiApresDecote": 2755.205,
         "donsReduction": 0,
-        "ifiApresReduction": 2755.193234000004,
+        "ifiApresReduction": 2755.205,
         "revenus": 0,
         "ir": 0,
         "autresImpots": 0,
         "plafond": 0,
         "reductionPlafond": 0,
-        "ifiFinal": 2755.193234000004,
+        "ifiFinal": 2755.205,
         "fermageExo": 0,
         "detailFinal": [
           {
@@ -585,13 +585,13 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 77189.0120000001,
-            "impot": 540.3230840000008,
+            "assiette": 77190,
+            "impot": 540.33,
             "taux": 0.007
           },
           {
@@ -627,20 +627,20 @@
         "patrimoineBrut": 2500000,
         "totalDed": 400000,
         "patrimoineNet": 2100000,
-        "ifiTheorique": 8099.988,
-        "ifiTheoriqueNet": 8099.988,
+        "ifiTheorique": 8100,
+        "ifiTheoriqueNet": 8100,
         "decote": 0,
-        "patrimoineNetApresIFITheo": 2091900.012,
-        "ifiAvantDecote": 8043.288084000001,
-        "ifiApresDecote": 8043.288084000001,
+        "patrimoineNetApresIFITheo": 2091900,
+        "ifiAvantDecote": 8043.3,
+        "ifiApresDecote": 8043.3,
         "donsReduction": 0,
-        "ifiApresReduction": 8043.288084000001,
+        "ifiApresReduction": 8043.3,
         "revenus": 0,
         "ir": 0,
         "autresImpots": 0,
         "plafond": 0,
         "reductionPlafond": 0,
-        "ifiFinal": 8043.288084000001,
+        "ifiFinal": 8043.3,
         "fermageExo": 400000,
         "detailFinal": [
           {
@@ -649,13 +649,13 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 791899.0120000001,
-            "impot": 5543.293084000001,
+            "assiette": 791900,
+            "impot": 5543.3,
             "taux": 0.007
           },
           {
@@ -690,20 +690,20 @@
         "patrimoineBrut": 3000000,
         "totalDed": 0,
         "patrimoineNet": 3000000,
-        "ifiTheorique": 15689.978000000001,
-        "ifiTheoriqueNet": 689.978000000001,
+        "ifiTheorique": 15690,
+        "ifiTheoriqueNet": 690,
         "decote": 0,
-        "patrimoineNetApresIFITheo": 2999310.022,
-        "ifiAvantDecote": 15683.07822,
-        "ifiApresDecote": 15683.07822,
+        "patrimoineNetApresIFITheo": 2999310,
+        "ifiAvantDecote": 15683.1,
+        "ifiApresDecote": 15683.1,
         "donsReduction": 15000,
-        "ifiApresReduction": 683.0782199999994,
+        "ifiApresReduction": 683.1000000000004,
         "revenus": 0,
         "ir": 0,
         "autresImpots": 0,
         "plafond": 0,
         "reductionPlafond": 0,
-        "ifiFinal": 683.0782199999994,
+        "ifiFinal": 683.1000000000004,
         "fermageExo": 0,
         "detailFinal": [
           {
@@ -712,18 +712,18 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 1269999,
-            "impot": 8889.993,
+            "assiette": 1270000,
+            "impot": 8890,
             "taux": 0.007
           },
           {
-            "assiette": 429309.0219999999,
-            "impot": 4293.090219999999,
+            "assiette": 429310,
+            "impot": 4293.1,
             "taux": 0.01
           },
           {
@@ -755,19 +755,19 @@
         "patrimoineBrut": 8000000,
         "totalDed": 0,
         "patrimoineNet": 8000000,
-        "ifiTheorique": 73189.9655,
-        "ifiTheoriqueNet": 73189.9655,
+        "ifiTheorique": 73190,
+        "ifiTheoriqueNet": 73190,
         "decote": 0,
-        "patrimoineNetApresIFITheo": 7926810.0345,
-        "ifiAvantDecote": 72275.09093125002,
-        "ifiApresDecote": 72275.09093125002,
+        "patrimoineNetApresIFITheo": 7926810,
+        "ifiAvantDecote": 72275.125,
+        "ifiApresDecote": 72275.125,
         "donsReduction": 0,
-        "ifiApresReduction": 72275.09093125002,
+        "ifiApresReduction": 72275.125,
         "revenus": 200000,
         "ir": 80000,
         "autresImpots": 10000,
         "plafond": 150000,
-        "reductionPlafond": 12275.090931250015,
+        "reductionPlafond": 12275.125,
         "ifiFinal": 60000,
         "fermageExo": 0,
         "detailFinal": [
@@ -777,23 +777,23 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 1269999,
-            "impot": 8889.993,
+            "assiette": 1270000,
+            "impot": 8890,
             "taux": 0.007
           },
           {
-            "assiette": 2429999,
-            "impot": 24299.99,
+            "assiette": 2430000,
+            "impot": 24300,
             "taux": 0.01
           },
           {
-            "assiette": 2926809.0345,
-            "impot": 36585.112931250005,
+            "assiette": 2926810,
+            "impot": 36585.125,
             "taux": 0.0125
           },
           {
@@ -821,20 +821,20 @@
         "patrimoineBrut": 4000000,
         "totalDed": 140000,
         "patrimoineNet": 3860000,
-        "ifiTheorique": 24289.978000000003,
-        "ifiTheoriqueNet": 24289.978000000003,
+        "ifiTheorique": 24290,
+        "ifiTheoriqueNet": 24290,
         "decote": 0,
-        "patrimoineNetApresIFITheo": 3835710.022,
-        "ifiAvantDecote": 24047.07822,
-        "ifiApresDecote": 24047.07822,
+        "patrimoineNetApresIFITheo": 3835710,
+        "ifiAvantDecote": 24047.1,
+        "ifiApresDecote": 24047.1,
         "donsReduction": 0,
-        "ifiApresReduction": 24047.07822,
+        "ifiApresReduction": 24047.1,
         "revenus": 0,
         "ir": 0,
         "autresImpots": 0,
         "plafond": 0,
         "reductionPlafond": 0,
-        "ifiFinal": 24047.07822,
+        "ifiFinal": 24047.1,
         "fermageExo": 0,
         "detailFinal": [
           {
@@ -843,18 +843,18 @@
             "taux": 0
           },
           {
-            "assiette": 499999,
-            "impot": 2499.995,
+            "assiette": 500000,
+            "impot": 2500,
             "taux": 0.005
           },
           {
-            "assiette": 1269999,
-            "impot": 8889.993,
+            "assiette": 1270000,
+            "impot": 8890,
             "taux": 0.007
           },
           {
-            "assiette": 1265709.0219999999,
-            "impot": 12657.090219999998,
+            "assiette": 1265710,
+            "impot": 12657.1,
             "taux": 0.01
           },
           {
@@ -943,12 +943,12 @@
         "ifi_s_brut": "1 350 000,00 €",
         "ifi_s_deductions": "0,00 €",
         "ifi_s_net_avant": "1 350 000,00 €",
-        "ifi_s_theorique": "2 224,99 €",
-        "ifi_s_net_apres": "1 347 775,01 €",
+        "ifi_s_theorique": "2 225,00 €",
+        "ifi_s_net_apres": "1 347 775,00 €",
         "ifi_s_decote": "652,81 €",
         "ifi_s_red_dons": "0,00 €",
-        "ifi_s_final": "2 181,60 €",
-        "ifi_res_final": "2 181,60 €",
+        "ifi_s_final": "2 181,61 €",
+        "ifi_res_final": "2 181,61 €",
         "ifi_res_net": "1 350 000,00 €",
         "ifi_tot_venale": "1 350 000,00 €",
         "ifi_tot_ifi": "1 350 000,00 €",
@@ -956,7 +956,7 @@
         "ifi_tot_net": "1 350 000,00 €",
         "ifi_t1": "0,00 €",
         "ifi_t2": "2 500,00 €",
-        "ifi_t3": "334,42 €",
+        "ifi_t3": "334,43 €",
         "ifi_t4": "0,00 €",
         "ifi_t5": "0,00 €",
         "ifi_t6": "0,00 €"
@@ -973,12 +973,12 @@
         "ifi_s_brut": "2 600 000,00 €",
         "ifi_s_deductions": "0,00 €",
         "ifi_s_net_avant": "2 600 000,00 €",
-        "ifi_s_theorique": "11 689,98 €",
-        "ifi_s_net_apres": "2 588 310,02 €",
+        "ifi_s_theorique": "11 690,00 €",
+        "ifi_s_net_apres": "2 588 310,00 €",
         "ifi_s_decote": "0,00 €",
         "ifi_s_red_dons": "0,00 €",
-        "ifi_s_final": "11 573,08 €",
-        "ifi_res_final": "11 573,08 €",
+        "ifi_s_final": "11 573,10 €",
+        "ifi_res_final": "11 573,10 €",
         "ifi_res_net": "2 600 000,00 €",
         "ifi_tot_venale": "2 600 000,00 €",
         "ifi_tot_ifi": "2 600 000,00 €",
@@ -986,8 +986,8 @@
         "ifi_tot_net": "2 600 000,00 €",
         "ifi_t1": "0,00 €",
         "ifi_t2": "2 500,00 €",
-        "ifi_t3": "8 889,99 €",
-        "ifi_t4": "183,09 €",
+        "ifi_t3": "8 890,00 €",
+        "ifi_t4": "183,10 €",
         "ifi_t5": "0,00 €",
         "ifi_t6": "0,00 €"
       }
@@ -1003,12 +1003,12 @@
         "ifi_s_brut": "5 200 000,00 €",
         "ifi_s_deductions": "0,00 €",
         "ifi_s_net_avant": "5 200 000,00 €",
-        "ifi_s_theorique": "38 189,97 €",
-        "ifi_s_net_apres": "5 161 810,03 €",
+        "ifi_s_theorique": "38 190,00 €",
+        "ifi_s_net_apres": "5 161 810,00 €",
         "ifi_s_decote": "0,00 €",
         "ifi_s_red_dons": "0,00 €",
-        "ifi_s_final": "37 712,59 €",
-        "ifi_res_final": "37 712,59 €",
+        "ifi_s_final": "37 712,63 €",
+        "ifi_res_final": "37 712,63 €",
         "ifi_res_net": "5 200 000,00 €",
         "ifi_tot_venale": "5 200 000,00 €",
         "ifi_tot_ifi": "5 200 000,00 €",
@@ -1016,9 +1016,9 @@
         "ifi_tot_net": "5 200 000,00 €",
         "ifi_t1": "0,00 €",
         "ifi_t2": "2 500,00 €",
-        "ifi_t3": "8 889,99 €",
-        "ifi_t4": "24 299,99 €",
-        "ifi_t5": "2 022,61 €",
+        "ifi_t3": "8 890,00 €",
+        "ifi_t4": "24 300,00 €",
+        "ifi_t5": "2 022,63 €",
         "ifi_t6": "0,00 €"
       }
     },
@@ -1033,12 +1033,12 @@
         "ifi_s_brut": "12 000 000,00 €",
         "ifi_s_deductions": "0,00 €",
         "ifi_s_net_avant": "12 000 000,00 €",
-        "ifi_s_theorique": "128 189,95 €",
-        "ifi_s_net_apres": "11 871 810,05 €",
+        "ifi_s_theorique": "128 190,00 €",
+        "ifi_s_net_apres": "11 871 810,00 €",
         "ifi_s_decote": "0,00 €",
         "ifi_s_red_dons": "0,00 €",
-        "ifi_s_final": "126 267,10 €",
-        "ifi_res_final": "126 267,10 €",
+        "ifi_s_final": "126 267,15 €",
+        "ifi_res_final": "126 267,15 €",
         "ifi_res_net": "12 000 000,00 €",
         "ifi_tot_venale": "12 000 000,00 €",
         "ifi_tot_ifi": "12 000 000,00 €",
@@ -1046,10 +1046,10 @@
         "ifi_tot_net": "12 000 000,00 €",
         "ifi_t1": "0,00 €",
         "ifi_t2": "2 500,00 €",
-        "ifi_t3": "8 889,99 €",
-        "ifi_t4": "24 299,99 €",
-        "ifi_t5": "62 499,99 €",
-        "ifi_t6": "28 077,14 €"
+        "ifi_t3": "8 890,00 €",
+        "ifi_t4": "24 300,00 €",
+        "ifi_t5": "62 500,00 €",
+        "ifi_t6": "28 077,15 €"
       }
     },
     {
@@ -1067,12 +1067,12 @@
         "ifi_s_brut": "2 160 000,00 €",
         "ifi_s_deductions": "0,00 €",
         "ifi_s_net_avant": "2 160 000,00 €",
-        "ifi_s_theorique": "8 519,99 €",
-        "ifi_s_net_apres": "2 151 480,01 €",
+        "ifi_s_theorique": "8 520,00 €",
+        "ifi_s_net_apres": "2 151 480,00 €",
         "ifi_s_decote": "0,00 €",
         "ifi_s_red_dons": "0,00 €",
-        "ifi_s_final": "8 460,35 €",
-        "ifi_res_final": "8 460,35 €",
+        "ifi_s_final": "8 460,36 €",
+        "ifi_res_final": "8 460,36 €",
         "ifi_res_net": "2 160 000,00 €",
         "ifi_tot_venale": "2 700 000,00 €",
         "ifi_tot_ifi": "2 160 000,00 €",
@@ -1080,7 +1080,7 @@
         "ifi_tot_net": "2 160 000,00 €",
         "ifi_t1": "0,00 €",
         "ifi_t2": "2 500,00 €",
-        "ifi_t3": "5 960,35 €",
+        "ifi_t3": "5 960,36 €",
         "ifi_t4": "0,00 €",
         "ifi_t5": "0,00 €",
         "ifi_t6": "0,00 €"
@@ -1098,12 +1098,12 @@
         "ifi_s_brut": "3 000 000,00 €",
         "ifi_s_deductions": "400 000,00 €",
         "ifi_s_net_avant": "2 600 000,00 €",
-        "ifi_s_theorique": "11 689,98 €",
-        "ifi_s_net_apres": "2 588 310,02 €",
+        "ifi_s_theorique": "11 690,00 €",
+        "ifi_s_net_apres": "2 588 310,00 €",
         "ifi_s_decote": "0,00 €",
         "ifi_s_red_dons": "0,00 €",
-        "ifi_s_final": "11 573,08 €",
-        "ifi_res_final": "11 573,08 €",
+        "ifi_s_final": "11 573,10 €",
+        "ifi_res_final": "11 573,10 €",
         "ifi_res_net": "2 600 000,00 €",
         "ifi_tot_venale": "3 000 000,00 €",
         "ifi_tot_ifi": "3 000 000,00 €",
@@ -1111,8 +1111,8 @@
         "ifi_tot_net": "2 600 000,00 €",
         "ifi_t1": "0,00 €",
         "ifi_t2": "2 500,00 €",
-        "ifi_t3": "8 889,99 €",
-        "ifi_t4": "183,09 €",
+        "ifi_t3": "8 890,00 €",
+        "ifi_t4": "183,10 €",
         "ifi_t5": "0,00 €",
         "ifi_t6": "0,00 €"
       }
@@ -1129,12 +1129,12 @@
         "ifi_s_brut": "1 450 000,00 €",
         "ifi_s_deductions": "100 000,00 €",
         "ifi_s_net_avant": "1 350 000,00 €",
-        "ifi_s_theorique": "2 224,99 €",
-        "ifi_s_net_apres": "1 347 775,01 €",
+        "ifi_s_theorique": "2 225,00 €",
+        "ifi_s_net_apres": "1 347 775,00 €",
         "ifi_s_decote": "652,81 €",
         "ifi_s_red_dons": "0,00 €",
-        "ifi_s_final": "2 181,60 €",
-        "ifi_res_final": "2 181,60 €",
+        "ifi_s_final": "2 181,61 €",
+        "ifi_res_final": "2 181,61 €",
         "ifi_res_net": "1 350 000,00 €",
         "ifi_tot_venale": "1 450 000,00 €",
         "ifi_tot_ifi": "1 450 000,00 €",
@@ -1142,7 +1142,7 @@
         "ifi_tot_net": "1 350 000,00 €",
         "ifi_t1": "0,00 €",
         "ifi_t2": "2 500,00 €",
-        "ifi_t3": "334,42 €",
+        "ifi_t3": "334,43 €",
         "ifi_t4": "0,00 €",
         "ifi_t5": "0,00 €",
         "ifi_t6": "0,00 €"
@@ -1159,12 +1159,12 @@
         "ifi_s_brut": "1 380 000,00 €",
         "ifi_s_deductions": "0,00 €",
         "ifi_s_net_avant": "1 380 000,00 €",
-        "ifi_s_theorique": "2 809,99 €",
-        "ifi_s_net_apres": "1 377 190,01 €",
-        "ifi_s_decote": "285,12 €",
+        "ifi_s_theorique": "2 810,00 €",
+        "ifi_s_net_apres": "1 377 190,00 €",
+        "ifi_s_decote": "285,13 €",
         "ifi_s_red_dons": "0,00 €",
-        "ifi_s_final": "2 755,19 €",
-        "ifi_res_final": "2 755,19 €",
+        "ifi_s_final": "2 755,21 €",
+        "ifi_res_final": "2 755,21 €",
         "ifi_res_net": "1 380 000,00 €",
         "ifi_tot_venale": "1 380 000,00 €",
         "ifi_tot_ifi": "1 380 000,00 €",
@@ -1172,7 +1172,7 @@
         "ifi_tot_net": "1 380 000,00 €",
         "ifi_t1": "0,00 €",
         "ifi_t2": "2 500,00 €",
-        "ifi_t3": "540,32 €",
+        "ifi_t3": "540,33 €",
         "ifi_t4": "0,00 €",
         "ifi_t5": "0,00 €",
         "ifi_t6": "0,00 €"
@@ -1195,12 +1195,12 @@
         "ifi_s_brut": "4 000 000,00 €",
         "ifi_s_deductions": "115 000,00 €",
         "ifi_s_net_avant": "3 885 000,00 €",
-        "ifi_s_theorique": "24 539,98 €",
-        "ifi_s_net_apres": "3 875 460,02 €",
+        "ifi_s_theorique": "24 540,00 €",
+        "ifi_s_net_apres": "3 875 460,00 €",
         "ifi_s_decote": "0,00 €",
         "ifi_s_red_dons": "15 000,00 €",
-        "ifi_s_final": "9 444,58 €",
-        "ifi_res_final": "9 444,58 €",
+        "ifi_s_final": "9 444,60 €",
+        "ifi_res_final": "9 444,60 €",
         "ifi_res_net": "3 885 000,00 €",
         "ifi_tot_venale": "4 000 000,00 €",
         "ifi_tot_ifi": "4 000 000,00 €",
@@ -1208,8 +1208,8 @@
         "ifi_tot_net": "4 000 000,00 €",
         "ifi_t1": "0,00 €",
         "ifi_t2": "2 500,00 €",
-        "ifi_t3": "8 889,99 €",
-        "ifi_t4": "13 054,59 €",
+        "ifi_t3": "8 890,00 €",
+        "ifi_t4": "13 054,60 €",
         "ifi_t5": "0,00 €",
         "ifi_t6": "0,00 €"
       }

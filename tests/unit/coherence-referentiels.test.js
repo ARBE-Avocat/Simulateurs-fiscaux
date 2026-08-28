@@ -288,19 +288,23 @@ test('IFI — les deux simulateurs lisent le même barème, il n’en existe plu
   assert.deepEqual(recopier(depuisIrpp), attendu, 'barème de la section IFI de l’IRPP');
 });
 
-test('IFI — le barème du référentiel signale ses intervalles non couverts', () => {
-  // Le barème réellement employé fait commencer chaque tranche un euro au-dessus
-  // de la précédente. L'extraction conserve ce comportement — le corriger
-  // changerait un résultat — mais la validation doit continuer de le dire.
+test('IFI — le barème du référentiel ne laisse plus aucun intervalle sans taux', () => {
+  // Ce test figeait auparavant le défaut : le barème faisait commencer chaque
+  // tranche un euro au-dessus de la précédente, et il vérifiait que la
+  // validation signalait bien les cinq intervalles d'un euro ainsi laissés
+  // sans taux. L'issue #7 les a supprimés en rendant les tranches jointives,
+  // comme celles de l'impôt sur le revenu et des mutations à titre gratuit.
+  // Le test vérifie donc désormais que le trou a disparu, au lieu de le
+  // décrire.
   const { validerReferentiel } = require('../../scripts/lib/schema-referentiel');
   const referentiel = require('../../data/referentiels/ifi.json');
   const rapport = validerReferentiel(referentiel);
 
   assert.deepEqual(rapport.erreurs, []);
-  assert.equal(
-    rapport.avertissements.filter((a) => /intervalle non couvert/.test(a.message)).length,
-    5,
-    'cinq intervalles d’un euro restent sans taux (issue #7)',
+  assert.deepEqual(
+    rapport.avertissements.filter((a) => /intervalle non couvert/.test(a.message)),
+    [],
+    'aucun euro ne doit rester sans taux (issue #7)',
   );
 });
 

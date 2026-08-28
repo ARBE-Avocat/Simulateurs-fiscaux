@@ -15,42 +15,42 @@
       "valeur": [
         {
           "borneInf": 0,
-          "borneInfIncluse": true,
+          "borneInfIncluse": false,
           "borneSup": 800000,
           "borneSupIncluse": true,
           "taux": 0
         },
         {
-          "borneInf": 800001,
-          "borneInfIncluse": true,
+          "borneInf": 800000,
+          "borneInfIncluse": false,
           "borneSup": 1300000,
           "borneSupIncluse": true,
           "taux": 0.005
         },
         {
-          "borneInf": 1300001,
-          "borneInfIncluse": true,
+          "borneInf": 1300000,
+          "borneInfIncluse": false,
           "borneSup": 2570000,
           "borneSupIncluse": true,
           "taux": 0.007
         },
         {
-          "borneInf": 2570001,
-          "borneInfIncluse": true,
+          "borneInf": 2570000,
+          "borneInfIncluse": false,
           "borneSup": 5000000,
           "borneSupIncluse": true,
           "taux": 0.01
         },
         {
-          "borneInf": 5000001,
-          "borneInfIncluse": true,
+          "borneInf": 5000000,
+          "borneInfIncluse": false,
           "borneSup": 10000000,
           "borneSupIncluse": true,
           "taux": 0.0125
         },
         {
-          "borneInf": 10000001,
-          "borneInfIncluse": true,
+          "borneInf": 10000000,
+          "borneInfIncluse": false,
           "borneSup": null,
           "borneSupIncluse": false,
           "taux": 0.015
@@ -61,7 +61,7 @@
         "irpp"
       ],
       "source": "inconnue",
-      "notes": "Écriture reprise telle quelle des deux simulateurs : chaque tranche commence à la borne haute précédente augmentée d’un euro, ce qui laisse cinq intervalles d’un euro sans taux. Écart cumulé mesuré : 0,05 €. La validation le signale ; la correction relève de l’issue #7."
+      "notes": "Tranches jointives : la borne haute appartient à la tranche, la borne basse à la précédente. Même écriture que le barème de l’impôt sur le revenu et que celui des mutations à titre gratuit. Les deux simulateurs faisaient auparavant commencer chaque tranche un euro au-dessus de la borne précédente, laissant cinq euros sans taux et 0,05 € d’écart cumulé (issue #7)."
     },
     {
       "id": "ifi.decote.montant",

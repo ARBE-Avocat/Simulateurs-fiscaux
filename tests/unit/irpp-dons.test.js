@@ -129,7 +129,9 @@ test("IRPP — changer le revenu actualise immédiatement la réduction pour don
   assertTexteAffiche(lire(simulateur, 'dons_plafond_20p'), '10 800,00 €', 'plafond actualisé');
   assertTexteAffiche(lire(simulateur, 'dons_red_totale'), '7 128,00 €', 'réduction actualisée');
   assertTexteAffiche(lire(simulateur, 'dons_excedent'), '9 200,00 €', 'excédent actualisé');
-  assertTexteAffiche(lire(simulateur, 's_impot_net'), '2 175,58 €', 'impôt net actualisé');
+  // 2 175,58 € avant l'issue #7 : les tranches jointives taxent désormais
+  // l'euro de chacun des deux seuils franchis, à 11 % puis à 30 %.
+  assertTexteAffiche(lire(simulateur, 's_impot_net'), '2 175,99 €', 'impôt net actualisé');
 });
 
 test("IRPP — le résultat ne dépend pas de l'ordre de saisie", () => {

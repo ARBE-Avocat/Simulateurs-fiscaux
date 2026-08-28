@@ -341,7 +341,7 @@
         "irpp"
       ],
       "source": "inconnue",
-      "notes": "Bornes et taux identiques dans les deux simulateurs. Ils ne les appliquent pas de la même façon : le simulateur IR traite les tranches comme jointives, l’IRPP fait commencer chaque tranche à la borne précédente augmentée d’un euro. L’écart atteint 1,27 € d’impôt et relève de l’issue #7 ; il tient au code, non à ces valeurs."
+      "notes": "Tranches jointives : la borne haute appartient à la tranche, la borne basse à la précédente. Les deux simulateurs appliquent désormais cette écriture. L’IRPP faisait auparavant commencer chaque tranche un euro au-dessus de la borne précédente et rendait, pour un même revenu, un impôt inférieur de 1,27 € à celui du simulateur « IR, CEHR et CDHR » (issue #7)."
     },
     {
       "id": "ir.credit.garde-enfants.plafond",

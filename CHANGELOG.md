@@ -6,6 +6,27 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.16] - 2026-08-28
+
+Issue #7 : les tranches de barème sont désormais jointives partout. Le point n'a pas été soumis au référent fiscal, contrairement aux corrections de la beta.14 : un euro qui n'est taxé dans aucune tranche n'est pas une règle fiscale, c'est une erreur d'écriture. La correction est portée en fiche 3.7 de `docs/CORRECTIONS_A_VALIDER.md` pour confirmation, comme toute modification d'un montant affiché.
+
+### Corrigé
+
+- **Les deux simulateurs d'impôt sur le revenu donnent enfin le même impôt pour le même revenu.** L'IRPP faisait commencer chaque tranche un euro au-dessus de la borne précédente ; cet euro n'était taxé nulle part. Pour 200 000 € de revenu imposable, il affichait 66 522,57 € là où le simulateur « IR, CEHR et CDHR » affichait 66 523,84 €. **L'impôt de l'IRPP augmente donc de 1,27 € au maximum**, et rejoint celui de l'autre simulateur à tous les seuils.
+- **Le barème de l'IFI ne laisse plus cinq euros sans taux.** Ses tranches commençaient à 800 001 €, 1 300 001 €, etc. Corrigé dans `data/referentiels/ifi.json`, donc pour le simulateur IFI comme pour la section IFI de l'IRPP. **L'IFI augmente de 0,05 € au maximum.** La validation des référentiels ne remonte plus aucun avertissement, contre cinq auparavant.
+
+### Ajouté
+
+- `tests/unit/bornes-baremes.test.js` : les deux simulateurs sont comparés à chaque seuil du barème, à −1, à l'euro près et à +1 ; franchir un seuil d'un euro doit coûter exactement le taux de la tranche ; et les quatre barèmes du dépôt sont vérifiés comme se suivant sans trou.
+
+### Connu
+
+- Les décimales affichées restent hétérogènes — l'euro dans quatre simulateurs, le centime dans deux autres. Ce n'est pas une question de droit et le point n'a pas été soumis au référent ; il est décrit dans `docs/CONVENTIONS.md` §2.1 en attendant une décision interne.
+- L'exonération des fermages de l'IFI est toujours arrondie pour l'affichage alors que le calcul emploie la valeur non arrondie (`docs/CONVENTIONS.md` §2.2).
+- La politique de messages d'erreur est arrêtée — avertir sans bloquer, comme pour l'âge du donateur — mais reste à appliquer champ par champ (`docs/CONVENTIONS.md` §2.3).
+
+Les instantanés de non-régression des simulateurs IR, IRPP et IFI ont été régénérés : c'est une correction délibérée, pas une dérive. Le test qui figeait les cinq intervalles non couverts de l'IFI vérifie désormais qu'ils ont disparu.
+
 ## [0.5.0-beta.15] - 2026-08-28
 
 Première moitié de l'issue #11 : les conventions communes de lecture et d'affichage. `docs/INVENTAIRE_CONVENTIONS.md` avait relevé sept divergences entre les six simulateurs et indiqué, pour chacune, qui devait trancher. Les quatre qui relevaient de la technique sont appliquées ici ; les trois qui commandent un montant ou sa présentation sont posées au référent, fiches 3.7 à 3.10.

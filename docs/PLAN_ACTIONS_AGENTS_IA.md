@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 28 août 2026 — synchronisé avec `v0.5.0-beta.15`.
+Dernière mise à jour du plan : 28 août 2026 — synchronisé avec `v0.5.0-beta.16`.
 
 ## Objectifs de l’orchestration
 
@@ -49,8 +49,10 @@ Dernière mise à jour du plan : 28 août 2026 — synchronisé avec `v0.5.0-bet
 - Point de contrôle humain A : items 1 et 2 (décote CDHR, taux des PS) sont désormais levés. Restent ouverts : #9 (cas de référence pour valider les fixtures) et #11 (champs obligatoires, bornes, messages d'erreur) — ce dernier n'a été traité que ponctuellement pour le démembrement (fiches 3.1 et 3.2), pas comme politique commune aux six simulateurs.
 - Outillage pour #9 : `docs/sources-fiscales.html`, publiée en artifact claude.ai le 28 août 2026, liste les 65 valeurs des cinq référentiels sans source confirmée (ou avec une référence à valider) et laisse le référent renseigner texte, lien et date de vérification, entrée par entrée. Rien n'est encore rempli à ce jour ; la page n'a pas encore été soumise au référent.
 - **#11 est traitée à moitié, et cette moitié est celle qui ne demandait aucune décision fiscale.** `src/conventions.js` et `docs/CONVENTIONS.md` posent les quatre conventions techniques : taux en décimal, lecture unique des saisies, case introuvable valant « décochée », et surtout un calcul impossible affiché `—` au lieu de `NaN €` ou de `0 €`. Livré en `v0.5.0-beta.15`, sans modifier un seul montant valide.
-- **Le jalon `0.5` n'est pas terminé, et ce qui reste dépend entièrement du référent.** Quatre questions lui sont posées, fiches 3.7 à 3.10 : représentation des tranches de barème (c'est l'issue #7 entière), décimales affichées, étapes d'arrondi, champs obligatoires et messages d'erreur. S'y ajoutent #9 — `docs/sources-fiscales.html` est prête mais ne lui a pas encore été soumise — et la fiche 3.6 de #19, chantier séparé. Tout le reste du jalon — #20, #12, #18, #14 à #17, #13, #1, et la moitié technique de #11 — est terminé.
-- Aucun travail technique du jalon `0.5` n'est donc en attente d'un agent : il est en attente d'une réponse humaine.
+- **#7 est traitée** en `v0.5.0-beta.16` : les tranches de barème sont jointives partout. Les deux simulateurs d'impôt sur le revenu concordent désormais à chaque seuil — ils divergeaient de 1,27 € — et le barème IFI ne laisse plus cinq euros sans taux. Le point a été tranché en interne, non soumis au référent : un euro taxé dans aucune tranche est une erreur d'écriture, pas une interprétation fiscale. Il est porté en fiche 3.7 pour confirmation, comme toute modification d'un montant affiché.
+- **Ce qui reste du jalon `0.5`.** #11 pour sa dernière part : appliquer champ par champ la politique de messages d'erreur, dont la règle est arrêtée — avertir sans bloquer, reprise du précédent validé sur l'âge du donateur (`docs/CONVENTIONS.md` §2.3). Deux points internes y sont rattachés : l'hétérogénéité des décimales affichées (§2.1) et l'arrondi de l'exonération des fermages de l'IFI (§2.2). Aucun ne demande de décision du référent.
+- **Ce qui dépend du référent.** #9, dont l'outil `docs/sources-fiscales.html` est prêt mais n'a pas encore été soumis, et la fiche 3.6 de #19, chantier séparé. La confirmation de la fiche 3.7 n'est pas bloquante : la correction est déjà appliquée.
+- Leçon de méthode du 28 août 2026 : toute question n'est pas une question de droit. Décimales affichées, messages d'erreur et cohérence d'arrondi relèvent du produit et se tranchent en interne. Solliciter le référent sur ces points l'encombre et retarde le jalon sans rien sécuriser.
 
 ## Décisions d'architecture déjà arbitrées
 
@@ -249,7 +251,7 @@ Cette branche porte aussi les deux premières étapes de #28, la CI, décrites d
 ### Étape 2.0 — Fixer les conventions, puis les bornes
 
 1. [#11 — Définir validation, unités et arrondis](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/11) — **moitié technique livrée** en `v0.5.0-beta.15` : `docs/CONVENTIONS.md` et `src/conventions.js`. Restent les trois points qui commandent un montant ou sa présentation, posés en fiches 3.8, 3.9 et 3.10 — dont le reliquat de #8, quels champs sont obligatoires et quel message s'affiche
-2. [#7 — Uniformiser et corriger les bornes des barèmes](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/7) — **en attente de la fiche 3.7.** L'écart est mesuré et documenté, le correctif est mécanique une fois la convention connue ; il n'a pas été appliqué car choisir entre 0,11 € et 0,00 € pour un revenu de 11 601 € est une décision fiscale, pas technique
+2. [#7 — Uniformiser et corriger les bornes des barèmes](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/7) — **traitée** en `v0.5.0-beta.16`. Les tranches sont jointives partout ; les deux simulateurs d'impôt sur le revenu concordent désormais à chaque seuil, et le barème IFI ne laisse plus cinq euros sans taux. Tranchée en interne : un euro taxé dans aucune tranche est une erreur d'écriture, pas une règle fiscale. Portée en fiche 3.7 pour confirmation
 
 Déplacées depuis le jalon `0.4`. #7 ne commence qu'après la décision de #11 sur la représentation des tranches et les arrondis, et doit intégrer les correctifs déjà livrés dans les fichiers IRPP et IFI.
 

@@ -14,9 +14,14 @@ Tests : `tests/unit/conventions.test.js`.
 
 ## 1. Ce qui est tranché
 
-Ces quatre points étaient des choix techniques. Aucun ne modifie un montant
-d'impôt ; ils ont été appliqués sans validation métier, conformément à
-`AGENTS.md` §11.
+Les quatre premiers points étaient des choix purement techniques : aucun ne
+modifie un montant d'impôt, et ils ont été appliqués sans validation métier,
+conformément à `AGENTS.md` §11.
+
+Le cinquième, la convention de bornes des barèmes, modifie des montants. Il a
+été tranché en interne parce qu'il ne s'agit pas d'une interprétation fiscale
+mais d'une erreur d'écriture, et il est porté en fiche 3.7 de
+`docs/CORRECTIONS_A_VALIDER.md` pour confirmation.
 
 ### 1.1 Les taux sont stockés en décimal
 
@@ -68,32 +73,69 @@ l'affichage précédent était déjà faux ou incompréhensible. Aucun montant
 valide n'est modifié : les 390 contrôles automatiques, instantanés compris,
 donnent les mêmes résultats avant et après.
 
+### 1.5 Les tranches de barème sont jointives
+
+Une tranche s'arrête à sa borne haute **incluse**, et la suivante reprend
+exactement là. Aucun euro n'échappe à une tranche.
+
+Deux écritures coexistaient. Le simulateur « IR, CEHR et CDHR » et les barèmes
+de mutations à titre gratuit étaient jointifs ; l'IRPP et l'IFI faisaient
+commencer chaque tranche un euro au-dessus de la borne précédente. Cet euro
+n'était taxé nulle part, et les deux simulateurs d'impôt sur le revenu
+donnaient **deux impôts différents pour le même revenu**, jusqu'à 1,27 €
+d'écart. L'IFI perdait 0,05 €.
+
+C'est l'objet de l'issue #7. Le point a été tranché en interne plutôt que
+soumis au référent : un euro qui n'est taxé dans aucune tranche n'est pas une
+règle fiscale, c'est une erreur d'écriture du barème. La correction est
+néanmoins portée en fiche 3.7 de `docs/CORRECTIONS_A_VALIDER.md`, comme toute
+modification d'un montant affiché, pour confirmation.
+
+Contrôles : `tests/unit/bornes-baremes.test.js` compare les deux simulateurs à
+chaque seuil, à −1, à l'euro près et à +1, et vérifie que les quatre barèmes du
+dépôt se suivent sans trou.
+
 ---
 
-## 2. Ce qui reste à trancher par le référent fiscal
+## 2. Ce qui reste ouvert
 
-Ces trois points commandent des montants ou leur présentation. Ils ne sont pas
-décidés, et aucun agent ne doit les décider seul.
+### 2.1 Nombre de décimales affichées — non tranché, décision interne
 
-| Sujet | Où en est la question |
+| Simulateur | Ce qui s'affiche pour 1 234,56 € |
 |---|---|
-| Représentation des tranches de barème | Fiche 3.7, en attente. C'est l'objet de l'issue #7. |
-| Nombre de décimales affichées | Fiche 3.8, en attente. |
-| Étapes auxquelles s'applique un arrondi | Fiche 3.9, en attente. |
-| Champs obligatoires, bornes et messages d'erreur | Fiche 3.10, en attente. |
+| IR, CEHR et CDHR, IFI, plus-value immobilière, succession | 1 235 € |
+| IRPP, démembrement | 1 234,56 € |
 
-Ces fiches sont dans `docs/CORRECTIONS_A_VALIDER.md` et sur la page
-d'arbitrage. Tant qu'elles n'ont pas de réponse :
+Le calcul est identique ; seul l'affichage diffère. Le point **n'a pas été posé
+au référent** : ce n'est pas une question de droit mais de présentation.
 
-- chaque simulateur conserve son propre nombre de décimales ;
-- les barèmes conservent leurs bornes actuelles, y compris celles qui laissent
-  un euro sans taux ;
-- aucun message d'erreur de saisie n'est ajouté, hors les deux cas du
-  démembrement déjà tranchés en fiches 3.1 et 3.2.
+Aucune décision n'est prise pour l'instant, et chaque simulateur conserve donc
+sa présentation. `Conventions.formaterMontant()` prend le nombre de décimales
+en paramètre plutôt que de l'imposer : le jour où le choix sera fait, il se
+posera à un seul endroit.
 
-`Conventions.formaterMontant()` prend donc le nombre de décimales en paramètre
-plutôt que de l'imposer : le jour où la réponse arrive, elle se pose à un seul
-endroit.
+### 2.2 Arrondis intermédiaires — un cas isolé à corriger
+
+Les arrondis sont partout réservés à l'affichage, ce qui est sain. Une
+exception : dans l'IFI, l'exonération des fermages est arrondie à l'euro pour
+l'affichage alors que le calcul réutilise la valeur non arrondie. Le détail
+montré peut donc différer de quelques centimes du montant réellement retenu.
+
+C'est une incohérence interne, pas une question de droit : l'affichage doit
+montrer ce que le calcul emploie. Reste à corriger.
+
+### 2.3 Champs obligatoires et messages d'erreur — politique à appliquer
+
+Aucun simulateur ne signale une saisie invalide, hors les deux cas du
+démembrement tranchés en fiches 3.1 et 3.2.
+
+La politique retenue reprend le précédent que le référent a validé sur l'âge du
+donateur : **avertir sans bloquer**. Une valeur hors des bornes plausibles
+continue d'être calculée, et un avertissement visible signale l'anomalie à côté
+du résultat plutôt que de la laisser passer pour un résultat ordinaire.
+
+Reste à appliquer champ par champ aux six simulateurs. C'est le reliquat de
+l'issue #8 et la part la plus longue de #11.
 
 ---
 

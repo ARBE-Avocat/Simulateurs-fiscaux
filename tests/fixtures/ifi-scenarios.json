@@ -8,69 +8,99 @@
     {
       "nom": "résidence principale abattue et bien en quote-part, avec déductions",
       "biens": [
-        { "valeur": 2000000, "rp": true },
-        { "valeur": 800000, "quotePart": 50 }
+        {
+          "valeur": 2000000,
+          "rp": true
+        },
+        {
+          "valeur": 800000,
+          "quotePart": 50
+        }
       ],
-      "champs": { "dedTaxes": 10000, "dedInterets": 250000 },
+      "champs": {
+        "dedTaxes": 10000,
+        "dedInterets": 250000
+      },
       "attendu": {
         "patrimoineBrut": 1800000,
         "totalDed": 260000,
         "patrimoineNet": 1540000,
         "decote": 0,
-        "ifiApresDecote": 4150.728084,
-        "ifiFinal": 4150.728084
+        "ifiApresDecote": 4150.74,
+        "ifiFinal": 4150.74
       }
     },
     {
       "nom": "patrimoine dans la zone de décote",
-      "biens": [{ "valeur": 1400000 }],
+      "biens": [
+        {
+          "valeur": 1400000
+        }
+      ],
       "champs": {},
       "attendu": {
         "patrimoineBrut": 1400000,
         "totalDed": 0,
         "patrimoineNet": 1400000,
-        "decote": 39.99985,
-        "ifiApresDecote": 3137.588234,
-        "ifiFinal": 3137.588234
+        "decote": 40,
+        "ifiApresDecote": 3137.6,
+        "ifiFinal": 3137.6
       }
     },
     {
       "nom": "patrimoine sous le seuil d'imposition",
-      "biens": [{ "valeur": 1000000 }],
+      "biens": [
+        {
+          "valeur": 1000000
+        }
+      ],
       "champs": {},
       "attendu": {
         "patrimoineBrut": 1000000,
         "totalDed": 0,
         "patrimoineNet": 1000000,
         "decote": 5000,
-        "ifiAvantDecote": 999.995,
+        "ifiAvantDecote": 1000,
         "ifiApresDecote": 0,
         "ifiFinal": 0
       }
     },
     {
       "nom": "réduction pour dons",
-      "biens": [{ "valeur": 3000000 }],
-      "champs": { "donsVerses": 5000 },
+      "biens": [
+        {
+          "valeur": 3000000
+        }
+      ],
+      "champs": {
+        "donsVerses": 5000
+      },
       "attendu": {
         "patrimoineBrut": 3000000,
         "totalDed": 0,
         "patrimoineNet": 3000000,
         "donsReduction": 3750,
-        "ifiApresDecote": 15570.57822,
-        "ifiFinal": 11820.57822
+        "ifiApresDecote": 15570.6,
+        "ifiFinal": 11820.6
       }
     },
     {
       "nom": "plafonnement des impôts qui réduit l'IFI",
-      "biens": [{ "valeur": 5000000 }],
-      "champs": { "plafRevenus": 40000, "plafIR": 10000 },
+      "biens": [
+        {
+          "valeur": 5000000
+        }
+      ],
+      "champs": {
+        "plafRevenus": 40000,
+        "plafIR": 10000
+      },
       "attendu": {
         "patrimoineBrut": 5000000,
         "patrimoineNet": 5000000,
-        "ifiApresDecote": 35333.07822,
+        "ifiApresDecote": 35333.100000000006,
         "plafond": 30000,
-        "reductionPlafond": 15333.07822,
+        "reductionPlafond": 15333.100000000006,
         "ifiFinal": 20000
       }
     }

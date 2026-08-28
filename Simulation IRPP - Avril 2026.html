@@ -1683,16 +1683,22 @@ function toggleAcc(hdr) {
 function getBareme() {
   // Le taux de la première tranche vient du référentiel ; les bornes et les
   // autres taux restent lus dans le formulaire, où l'utilisateur peut les
-  // ajuster. La convention « la tranche suivante commence un euro plus haut »
-  // est celle du code existant et n'est pas modifiée ici : elle diffère de
-  // celle du simulateur « IR, CEHR et CDHR », pour un écart d'au plus 1,27 €
-  // relevant de l'issue #7.
+  // ajuster.
+  //
+  // Les tranches sont jointives (issue #7) : chacune s'arrête à sa borne haute
+  // incluse, et la suivante reprend exactement là. Le code faisait auparavant
+  // commencer chaque tranche un euro plus haut, si bien qu'un euro par seuil
+  // n'était taxé nulle part et que ce simulateur rendait un impôt inférieur de
+  // 1,27 € à celui du simulateur « IR, CEHR et CDHR » pour un même revenu.
+  // C'est cette écriture jointive que portent déjà data/referentiels/ir.json,
+  // le barème des mutations à titre gratuit et le simulateur « IR, CEHR et
+  // CDHR ».
   return [
-    {de:v('t1_de'), a:v('t1_a'),  tx:BAREME_IR[0].taux},
-    {de:v('t1_a')+1, a:v('t2_a'), tx:v('t2_tx')/100},
-    {de:v('t2_a')+1, a:v('t3_a'), tx:v('t3_tx')/100},
-    {de:v('t3_a')+1, a:v('t4_a'), tx:v('t4_tx')/100},
-    {de:v('t4_a')+1, a:Infinity,  tx:v('t5_tx')/100},
+    {de:v('t1_de'), a:v('t1_a'), tx:BAREME_IR[0].taux},
+    {de:v('t1_a'),  a:v('t2_a'), tx:v('t2_tx')/100},
+    {de:v('t2_a'),  a:v('t3_a'), tx:v('t3_tx')/100},
+    {de:v('t3_a'),  a:v('t4_a'), tx:v('t4_tx')/100},
+    {de:v('t4_a'),  a:Infinity,  tx:v('t5_tx')/100},
   ];
 }
 function impot(rev) {
