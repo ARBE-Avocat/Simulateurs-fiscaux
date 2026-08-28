@@ -6,7 +6,16 @@ jugé fautif mais **laissé en l'état** faute de certitude.
 
 Aucune connaissance technique n'est nécessaire pour le lire.
 
-Dernière mise à jour : 27 août 2026 — jalon `0.5`, #19 (millésime fiscal affiché).
+**État du dossier :** `0.5.0-beta.13` — dossier complet du jalon `0.5` au
+28 août 2026. Il comprend les 19 fiches `1.1` à `4.4`, dont les derniers
+points relevés pendant les chantiers des taux de change et du millésime fiscal.
+
+**Réponses reçues le 28 août 2026.** Le référent fiscal a répondu à toutes les
+fiches, y compris 3.3, sauf 3.6 (délibérément traitée à part, voir cette
+fiche). Chaque fiche concernée porte désormais sa réponse. Les corrections
+qu'elle appelait ont été appliquées dans la même branche, à l'exception des
+valeurs dont la source reste « inconnue » : ces données restent au statut
+« non validé » dans `data/referentiels/`, en attente d'une source officielle.
 
 **Version interactive :** <https://claude.ai/code/artifact/ed86515a-2108-4df9-b7fc-acc15b0682d3>
 Cette page reprend le contenu ci-dessous et permet de répondre point par point.
@@ -57,6 +66,9 @@ votre confirmation en priorité.
 
 ## 1.1 — IFI : un bien détenu à 0 % était compté en totalité
 
+> **Réponse du référent fiscal (28 août 2026).** Confirmé : c'était bien une
+> erreur. Aucune action supplémentaire — la correction était déjà en place.
+
 **Ce que voyait l'utilisateur.** Dans le tableau des biens du simulateur IFI, la
 colonne « quote-part » indique le pourcentage de détention du bien. En saisissant
 `0`, le simulateur ne retenait pas 0 % mais **100 %**. Le bien était donc intégré
@@ -89,6 +101,13 @@ possible.
 
 ## 1.2 — Succession : des frais funéraires à 0 € repassaient à 1 500 €
 
+> **Réponse du référent fiscal (28 août 2026).** Ce n'était pas une erreur : la
+> valeur par défaut de 1 500 € reste d'actualité, sourcée à l'art. 775 CGI. La
+> mention suivante a été ajoutée dans la partie « Passif » du simulateur :
+> « Art. 775 CGI : les frais funéraires sont déduits de l'actif de la
+> succession pour un montant de 1 500 €, et pour la totalité de l'actif si
+> celui-ci est inférieur à ce montant. »
+
 **Ce que voyait l'utilisateur.** Le champ « Frais funéraires » du simulateur de
 succession propose 1 500 € par défaut. En saisissant `0`, le simulateur retenait
 quand même **1 500 €** au passif de la succession.
@@ -119,6 +138,9 @@ autre passif :
    forfaitaire différent s'applique, merci d'indiquer lequel et sa source.
 
 ## 1.3 — Démembrement : le barème modifiable refusait la valeur zéro
+
+> **Réponse du référent fiscal (28 août 2026).** Confirmé : c'était bien une
+> erreur. Aucune action supplémentaire — la correction était déjà en place.
 
 **Ce que voyait l'utilisateur.** Le simulateur de donation en nue-propriété
 permet de modifier les paramètres du barème : abattements par lien de parenté,
@@ -157,6 +179,9 @@ mis à zéro. Deux remarques à trancher :
    référentiels.
 
 ## 1.4 — IRPP : la réduction pour dons ne suivait pas les changements de revenu
+
+> **Réponse du référent fiscal (28 août 2026).** Confirmé : c'était bien une
+> erreur. Aucune action supplémentaire — la correction était déjà en place.
 
 **Ce que voyait l'utilisateur.** La réduction d'impôt pour dons est plafonnée à
 20 % du revenu net imposable. Le simulateur affichait bien ce plafond et le
@@ -208,6 +233,14 @@ doit jamais dépendre de l'ordre de saisie.
 # Partie 2 — Corrections **non appliquées**, en attente de votre décision
 
 ## 2.1 — IRPP : la décote de la CDHR ne se déclenche jamais
+
+> **Réponse du référent fiscal (28 août 2026).** C'est la formule du
+> simulateur « IR, CEHR et CDHR » qui fait foi. Le simulateur IRPP applique
+> désormais la même bande de décote (250 000 € – 330 000 € pour un
+> célibataire, 500 000 € – 660 000 € pour un couple) et la même formule,
+> retranchée de la cible de 20 % avant imputation de l'impôt et de la CEHR
+> déjà retenus. Les bornes et le coefficient restent au statut « non validé »
+> dans les données : aucune source officielle n'a été communiquée.
 
 **C'est le point le plus important de ce document.**
 
@@ -274,6 +307,17 @@ préparé pour ne plus dépendre que de cette formule.
 
 ## 2.2 — Le taux des prélèvements sociaux n'est pas le même partout
 
+> **Réponse du référent fiscal (28 août 2026).** Les deux taux sont justes,
+> selon le cas : la LF2026 fait varier le taux des prélèvements sociaux selon
+> la nature du gain — certains gains 2025 restent à 17,2 % même en 2027,
+> d'autres passent à 18,6 % dès 2025, d'autres encore passent de 17,2 % à
+> 18,6 % en 2026. Décision : conserver le taux par défaut de chaque
+> simulateur, et rendre ce taux modifiable partout où il ne l'était pas. Le
+> champ est désormais éditable dans l'IRPP et la plus-value immobilière,
+> comme il l'était déjà dans le simulateur IR. Aucune règle générale associant
+> chaque taux à une catégorie de revenu n'a été demandée : c'est à
+> l'utilisateur d'ajuster le taux selon son cas.
+
 **Ce que voyait l'utilisateur.** Les simulateurs n'appliquent pas le même taux de
 prélèvements sociaux à une plus-value :
 
@@ -310,6 +354,14 @@ projet obtient deux résultats, sans savoir lequel retenir.
 4. Quelle source et quelle date d'effet citer ?
 
 ## 2.3 — IRPP : le plafonnement du quotient familial n'est pas appliqué
+
+> **Réponse du référent fiscal (28 août 2026).** Oui, le plafonnement doit
+> être ajouté ; la méthode de calcul a été laissée au développement. Le
+> simulateur IRPP applique désormais le même mécanisme et le même plafond
+> (1 807 € par demi-part) que le simulateur « IR, CEHR et CDHR ». Réserve non
+> tranchée : faute d'une situation familiale demandée explicitement, la part
+> de référence (1 ou 2) est déduite de la case « second déclarant », comme le
+> fait déjà la décote du simulateur.
 
 **Ce que voit l'utilisateur.** Le simulateur IRPP demande un nombre de parts,
 divise le revenu par ce nombre, calcule l'impôt sur le quotient obtenu et
@@ -360,6 +412,12 @@ IRPP n'a aujourd'hui aucun moyen de distinguer.
    simple nombre de parts, afin de savoir quelles parts sont plafonnables ?
 
 ## 2.4 — L'IFI n'est pas calculé de la même façon dans les deux simulateurs qui le calculent
+
+> **Réponse du référent fiscal (28 août 2026).** C'est la méthode en deux
+> temps du simulateur IFI qui fait foi. La section IFI du simulateur IRPP
+> applique désormais le même calcul : l'IFI théorique est retranché du
+> patrimoine net, puis l'impôt définitif et sa décote se recalculent sur ce
+> patrimoine réduit.
 
 **Ce que voit l'utilisateur.** L'IFI est calculé à deux endroits : dans le
 simulateur IFI, et dans une section du simulateur IRPP. Pour un même patrimoine,
@@ -413,6 +471,11 @@ simulateur IFI.
 4. quelle source citer ?
 
 ## 2.5 — IRPP : l'abattement pour durée de détention des plus-values mobilières emploie deux règles opposées
+
+> **Réponse du référent fiscal (28 août 2026).** L'abattement de droit commun
+> s'ouvre dès deux ans révolus. Le simulateur applique désormais le même
+> principe « dès » aux deux paliers (2 ans et 8 ans), par cohérence avec le
+> régime renforcé qui l'appliquait déjà.
 
 **Ce que voit l'utilisateur.** Le simulateur applique un abattement pour durée
 de détention aux plus-values de cession de titres, avec un régime de droit
@@ -471,6 +534,16 @@ n'a été modifié.
 
 ## 3.1 — Démembrement : l'âge et le nombre de donataires refusent le zéro
 
+> **Réponse du référent fiscal (28 août 2026).** Art. 669 CGI : la tranche la
+> plus basse du barème de l'usufruit couvre les âges jusqu'à 21 ans révolus —
+> un âge de 0 an y trouve donc bien une place, contrairement à ce que
+> supposait ce point. Le champ « âge » accepte désormais un 0 saisi comme les
+> autres champs corrigés en partie 1. Le nombre de donataires reste, lui,
+> mathématiquement contraint à un minimum de 1 (division par zéro) ; une
+> saisie nulle ou invalide retombe sur la valeur par défaut, avec un
+> avertissement visible plutôt que silencieux. Voir aussi la fiche 3.2 pour
+> les bornes générales de l'âge.
+
 Contrairement aux autres champs, ces deux-là remplacent toujours un `0` par leur
 valeur par défaut — 68 ans et 1 donataire. Ce comportement a été **conservé
 volontairement** : un âge de 0 an ne correspond à aucune tranche du barème de
@@ -481,6 +554,12 @@ message d'erreur qu'appliquer une valeur par défaut silencieuse. Quelles bornes
 faut-il accepter ? Un âge minimum et maximum, un nombre maximum de donataires ?
 
 ## 3.2 — Démembrement : un âge aberrant est accepté sans avertissement
+
+> **Réponse du référent fiscal (28 août 2026).** Bornes plausibles retenues :
+> 1 jour au minimum, 123 ans au maximum. Un âge hors de ces bornes continue
+> d'être calculé — la tranche extrême du barème s'applique toujours — mais un
+> avertissement visible signale désormais l'anomalie au lieu de la laisser
+> passer pour un résultat ordinaire.
 
 Toujours sur le champ « âge du donateur », une valeur manifestement impossible
 est acceptée et produit un résultat d'apparence normale :
@@ -501,6 +580,12 @@ place. Voir la question posée au point 3.1.
 
 ## 3.3 — Les barèmes ne portent ni source ni date
 
+> **Réponse du référent fiscal (28 août 2026).** « On le fera avec le
+> chantier de référentiel, petit à petit, tout en faisant en sorte de
+> préparer le terrain en amont si nécessaire. » Associé au relevé des
+> sources au fur et à mesure du chantier de référentiels (#12), plutôt que
+> dès maintenant.
+
 Tous les barèmes, seuils, abattements et taux des simulateurs sont inscrits
 directement dans les fichiers, sans mention de leur source ni de leur date
 d'application. Il est donc impossible, aujourd'hui, de vérifier un chiffre sans
@@ -510,6 +595,9 @@ C'est l'objet d'un chantier séparé. Il supposera, pour chaque valeur, une sour
 officielle et un millésime que vous seul pouvez confirmer.
 
 ## 3.4 — Plus-value immobilière : le seuil de la surtaxe n'est pas lissé
+
+> **Réponse du référent fiscal (28 août 2026).** Le calcul actuel est bon : le
+> ressaut au premier seuil est voulu par le texte. Aucun changement.
 
 **Ce que voit l'utilisateur.** La surtaxe sur les plus-values immobilières
 supérieures à 50 000 € comporte des paliers de raccordement, destinés à éviter
@@ -544,6 +632,17 @@ ce ressaut de 500 €, ou la première bande doit-elle ramener la surtaxe à zé
 seuil, comme le font les autres raccordements ? Quelle source citer ?
 
 ## 3.5 — Quel taux de change retenir lorsque la date tombe un jour non coté
+
+> **Réponse du référent fiscal (28 août 2026).** Une autre règle : le jour
+> coté le plus proche, et si le jour non coté est un jour chaumé isolé — entre
+> deux jours cotés — on retient le jour suivant. Cette règle est désormais
+> implémentée dans `src/change.js` et documentée dans `data/change/README.md`.
+> Elle laisse inchangé le cas du samedi (le vendredi reste le plus proche) et
+> des fermetures prolongées, mais change celui du **dimanche** : le lundi,
+> plus proche (1 jour) que le vendredi (2 jours), est désormais retenu au lieu
+> du vendredi. L'échantillon de non-régression de 3 375 taux a été régénéré en
+> conséquence (568 cas diffèrent de l'ancienne règle). La provenance des taux
+> de change reste « inconnue », faute de confirmation.
 
 **Ce que voit l'utilisateur.** Les simulateurs de plus-value immobilière et
 d'IFI acceptent des montants en devises et les convertissent en euros. La série
@@ -591,6 +690,11 @@ automatique la rejoue sur 3 375 taux.
    pas confirmée, la source reste inscrite comme « inconnue ».
 
 ## 3.6 — Aucune date ne rattache un simulateur à un millésime fiscal
+
+> **Réponse du référent fiscal (28 août 2026).** Les millésimes actuellement
+> appliqués sont corrects ; un champ de date devra être ajouté. **Ce chantier
+> est volontairement traité à part** — c'est le seul point de ce dossier non
+> repris dans cette série de corrections — et fera l'objet d'une issue dédiée.
 
 **Ce que voit l'utilisateur.** Depuis cette version, chaque simulateur affiche
 en tête un bandeau « Référentiel fiscal employé » : le millésime des barèmes

@@ -6,6 +6,32 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.5.0-beta.14] - 2026-08-28
+
+Le référent fiscal a répondu à `docs/CORRECTIONS_A_VALIDER.md` : les corrections suivantes appliquent ses décisions. Le détail de chaque question et de chaque réponse reste dans ce document, fiche par fiche.
+
+### Corrigé
+
+- **La décote de la CDHR, jusqu'ici toujours nulle, se déclenche désormais** (fiche 2.1, issue #4). Le référent a désigné la formule du simulateur « IR, CEHR et CDHR » comme celle qui fait foi : bande de 250 000 € à 330 000 € pour un célibataire, 500 000 € à 660 000 € pour un couple, retranchée de la cible de 20 % avant imputation de l'impôt et de la CEHR déjà retenus. L'écart pouvait atteindre 45 000 € pour un célibataire proche du seuil.
+- **Le plafonnement du quotient familial s'applique désormais dans l'IRPP**, comme il le fait déjà dans le simulateur « IR, CEHR et CDHR » (fiche 2.3). L'écart pouvait atteindre 19 985,10 € pour une famille de trois enfants à revenu élevé.
+- **La section IFI de l'IRPP calcule désormais l'impôt selon la même méthode en deux temps que le simulateur IFI** (fiche 2.4) : l'IFI théorique est retranché du patrimoine net avant le calcul définitif et sa décote. L'écart pouvait atteindre 668,39 € sur l'exemple soumis au référent.
+- **L'abattement de droit commun pour durée de détention des plus-values mobilières s'ouvre désormais dès deux ans révolus**, et non seulement au-delà (fiche 2.5). Détenir des titres deux ans exactement coûtait jusqu'à 112 500 € d'impôt de plus que de les détenir un jour de plus.
+- **Le taux de change retenu un jour non coté est désormais le jour coté le plus proche**, en avant comme en arrière, un jour chaumé isolé se résolvant vers le jour suivant à égalité d'écart (fiche 3.5, issue #1). Un dimanche retient ainsi le taux du lundi plutôt que celui du vendredi précédent ; un samedi continue de retenir le vendredi, plus proche. L'échantillon de non-régression de 3 375 taux a été mis à jour en conséquence.
+- **Le champ « âge du donateur » du simulateur de démembrement accepte désormais un 0 volontaire** (fiche 3.1), comme les champs corrigés en beta.1 à beta.6 : la tranche « moins de 21 ans révolus » du barème de l'usufruit (art. 669 CGI) le couvre. Un avertissement visible signale désormais un âge hors des bornes plausibles, 1 jour à 123 ans (fiche 3.2).
+
+### Ajouté
+
+- **Le taux des prélèvements sociaux est désormais modifiable dans l'IRPP et la plus-value immobilière**, comme il l'était déjà dans le simulateur IR (fiche 2.2). Le référent a confirmé que 17,2 % et 18,6 % sont tous deux justes selon la nature du revenu concerné (LF2026) et a demandé de conserver le taux par défaut de chaque simulateur tout en le rendant modifiable plutôt que de choisir un taux unique.
+- Le simulateur de succession cite désormais l'art. 775 CGI dans la partie « Passif » à propos du forfait de 1 500 € de frais funéraires (fiche 1.2).
+
+### Connu
+
+- Les fiches 1.1, 1.3 et 1.4 étaient déjà corrigées ; le référent a confirmé qu'il s'agissait bien d'erreurs.
+- La fiche 3.3 (sources et dates des barèmes) et la fiche 3.6 (millésime fiscal des cinq simulateurs sans date) restent ouvertes : la première sera traitée avec le chantier de référentiels, la seconde fait l'objet d'un chantier séparé.
+- Les valeurs concernées restent au statut « non validé » dans `data/referentiels/` : le référent a tranché la méthode et la formule à appliquer, pas la source officielle de chaque montant.
+
+Aucun test de non-régression n'a été retouché sans raison : les instantanés qui figeaient volontairement les anciens défauts (décote CDHR, plafonnement du quotient, méthode IFI) ont été régénérés sur le simulateur corrigé, et les deux tests qui figeaient explicitement une divergence vérifient désormais qu'elle a disparu.
+
 ## [0.5.0-beta.13] - 2026-08-27
 
 ### Ajouté

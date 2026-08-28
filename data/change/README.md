@@ -59,13 +59,23 @@ c'est le cas du rouble à partir de 2022.
 
 ## Quel taux s'applique à une date
 
-Le simulateur retient **le dernier jour coté à la date demandée ou avant, en
-remontant au plus dix jours**. Au-delà, aucun taux n'est retenu et la page ne
-montre pas de résultat plutôt qu'un montant faux.
+Le simulateur retient **le jour coté le plus proche de la date demandée, en
+avant comme en arrière, à égalité d'écart le jour suivant l'emportant sur le
+jour précédent**, dans la limite de dix jours d'écart. Au-delà, aucun taux
+n'est retenu et la page ne montre pas de résultat plutôt qu'un montant faux.
 
-Cette règle était déjà celle du code avant l'extraction ; elle n'a pas été
-inventée ici et n'a pas été modifiée. **Elle n'est pas confirmée** : c'est
-l'objet de l'issue #1 et de la fiche 3.5 de `docs/CORRECTIONS_A_VALIDER.md`.
+Pour un samedi, le vendredi reste le plus proche (1 jour, contre 2 pour le
+lundi) et continue d'être retenu, sans changement par rapport à l'ancienne
+règle. Pour un **dimanche**, en revanche, le lundi est réellement plus proche
+(1 jour) que le vendredi (2 jours) : la règle retient désormais le lundi, alors
+que l'ancienne règle, qui ne remontait qu'en arrière, retenait le vendredi.
+Pour un jour chaumé isolé en semaine — entouré de deux jours cotés, également
+proches en avant et en arrière — le jour suivant est retenu à égalité d'écart.
+
+Cette règle a été tranchée par le référent fiscal, fiche 3.5 de
+`docs/CORRECTIONS_A_VALIDER.md` et issue #1. Elle remplace l'ancienne règle du
+code d'origine (« dernier jour coté à la date demandée ou avant »), qui n'avait
+jamais été écrite ailleurs que dans le code et n'était pas confirmée.
 
 ## Provenance
 

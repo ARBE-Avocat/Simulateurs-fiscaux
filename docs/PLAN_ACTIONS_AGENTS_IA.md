@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 27 août 2026 — synchronisé avec `v0.5.0-beta.13`.
+Dernière mise à jour du plan : 28 août 2026 — synchronisé avec `v0.5.0-beta.14`.
 
 ## Objectifs de l’orchestration
 
@@ -44,6 +44,8 @@ Dernière mise à jour du plan : 27 août 2026 — synchronisé avec `v0.5.0-bet
 - Une fiche 3.6 a été ajoutée le 27 août 2026 : aucune date ne rattache cinq des six simulateurs à un millésime fiscal (issue #19). Trois points supplémentaires ont été ajoutés au dossier d'arbitrage le 27 août 2026, dont la règle de résolution des dates non cotées (fiche 3.5, issue #1). Deux points supplémentaires y ont été ajoutés le 27 août 2026, découverts en revue de code : l'abattement pour durée de détention des plus-values mobilières de l'IRPP emploie deux conventions de bornes opposées dans la même expression, jusqu'à 112 500 € d'écart d'impôt (fiche 2.5) ; et le franchissement du seuil de 50 000 € de la surtaxe de plus-value immobilière n'est pas lissé, 500 € pour un euro de plus-value (fiche 3.4, signalé sans être présenté comme un défaut).
 - Deux divergences supplémentaires ont été découvertes pendant l'inventaire et ajoutées aux fiches 2.3 et 2.4 de `docs/CORRECTIONS_A_VALIDER.md` : le plafonnement du quotient familial, appliqué par le simulateur IR et absent de l'IRPP, jusqu'à 19 985,10 € d'écart ; et la méthode de liquidation de l'IFI, différente entre le simulateur IFI et la section IFI de l'IRPP, 668,39 € d'écart sur l'exemple relevé. Aucune n'est tranchée.
 - `docs/arbitrages.html` porte désormais ces deux points. **La page publiée n'a pas encore été republiée** : elle doit l'être à la même adresse, par CLV, avant la prochaine sollicitation du référent juridique.
+- **Le référent fiscal a répondu à `docs/CORRECTIONS_A_VALIDER.md` le 28 août 2026**, sur toutes les fiches sauf 3.6 (délibérément traitée à part). #4 (décote CDHR) est donc tranchée et corrigée, de même que le taux des PS (fiche 2.2, rendu modifiable plutôt qu'unifié), le plafonnement du quotient familial et la méthode de liquidation de l'IFI dans l'IRPP (fiches 2.3 et 2.4, découvertes pendant l'inventaire), l'abattement pour durée de détention (fiche 2.5) et la règle de remontée aux jours non cotés (fiche 3.5, issue #1). Détail en `v0.5.0-beta.14` de `CHANGELOG.md`. La page d'arbitrage a été republiée avec les réponses reçues.
+- Point de contrôle humain A : items 1 et 2 (décote CDHR, taux des PS) sont désormais levés. Restent ouverts : #9 (cas de référence pour valider les fixtures) et #11 (champs obligatoires, bornes, messages d'erreur) — ce dernier n'a été traité que ponctuellement pour le démembrement (fiches 3.1 et 3.2), pas comme politique commune aux six simulateurs.
 
 ## Décisions d'architecture déjà arbitrées
 
@@ -185,7 +187,7 @@ Un agent peut inventorier les cas, préparer les fixtures et retrouver les sourc
 
 Voie IRPP, à exécuter séquentiellement :
 
-1. [#4 — Corriger la décote CDHR](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/4) — **bloquée sur validation métier**. Le calcul est isolé et testé, le défaut est enregistré en attente dans la suite de tests, et la question a été posée sur l'issue. Le dépôt contient deux implémentations divergentes de la décote ; l'écart atteint 45 000 € pour un célibataire proche du seuil. Ne pas trancher sans réponse du référent fiscal.
+1. [#4 — Corriger la décote CDHR](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/4) — **corrigée**, `v0.5.0-beta.14`. Le référent fiscal a désigné la formule du simulateur « IR, CEHR et CDHR » comme celle qui fait foi (fiche 2.1) ; l'IRPP l'applique désormais. L'écart pouvait atteindre 45 000 € pour un célibataire proche du seuil.
 2. [#5 — Recalculer les dons lorsque le RNI change](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/5) — corrigée, en attente de relecture
 
 L'ordre a été inversé : #5 est purement technique et a été traitée d'abord, tandis que #4 attend une décision métier. Les deux touchent le même fichier et restent séquentielles.
@@ -219,10 +221,10 @@ Le document `docs/CORRECTIONS_A_VALIDER.md` rassemble, en langage non technique,
 
 Décisions métier attendues, par ordre d'urgence :
 
-1. #4 — formule, intervalle et point d'application de la décote CDHR.
-2. Le taux des prélèvements sociaux, 17,2 % ou 18,6 %, et son champ d'application.
-3. #9 — cas fiscaux de référence, qui permettront de faire passer les fixtures actuelles de « non validé » à « validé ».
-4. #11 — champs obligatoires, bornes acceptées et messages d'erreur, reliquat de #8.
+1. ~~#4 — formule, intervalle et point d'application de la décote CDHR.~~ Tranché le 28 août 2026, corrigé en `v0.5.0-beta.14`.
+2. ~~Le taux des prélèvements sociaux, 17,2 % ou 18,6 %, et son champ d'application.~~ Tranché le 28 août 2026 : les deux sont justes selon le cas, le taux est désormais modifiable partout plutôt qu'unifié.
+3. #9 — cas fiscaux de référence, qui permettront de faire passer les fixtures actuelles de « non validé » à « validé ». **Toujours ouvert** : le référent a tranché des formules et des méthodes, pas les sources officielles des montants.
+4. #11 — champs obligatoires, bornes acceptées et messages d'erreur, reliquat de #8. **Toujours ouvert** comme politique commune ; seul le cas du démembrement (âge, nombre de donataires) a été traité ponctuellement, fiches 3.1 et 3.2.
 
 Avant de poursuivre :
 
