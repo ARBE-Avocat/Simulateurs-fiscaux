@@ -716,6 +716,13 @@
 </div>
 
 <script>
+// Distingue un champ vide ou invalide (valeur par défaut) du zéro saisi explicitement.
+function nombreOu(brut, defaut) {
+  if (brut === '' || brut === null || brut === undefined) return defaut;
+  const n = parseFloat(brut);
+  return Number.isNaN(n) ? defaut : n;
+}
+
 // ============================================================
 // BARÈME USUFRUIT (CGI art. 669) — déterminé par l'âge
 // ============================================================
@@ -749,18 +756,18 @@ function getAbattement(lien) {
 // ============================================================
 function getParams() {
   return {
-    aba_directe: parseFloat(document.getElementById('p_aba_directe').value) || 100000,
-    aba_frere:   parseFloat(document.getElementById('p_aba_frere').value)   || 15932,
-    aba_neveu:   parseFloat(document.getElementById('p_aba_neveu').value)   || 7967,
-    aba_autre:   parseFloat(document.getElementById('p_aba_autre').value)   || 1594,
+    aba_directe: nombreOu(document.getElementById('p_aba_directe').value, 100000),
+    aba_frere:   nombreOu(document.getElementById('p_aba_frere').value, 15932),
+    aba_neveu:   nombreOu(document.getElementById('p_aba_neveu').value, 7967),
+    aba_autre:   nombreOu(document.getElementById('p_aba_autre').value, 1594),
     tranches: [
-      { low: parseFloat(document.getElementById('p_t1_low').value)||0,       high: parseFloat(document.getElementById('p_t1_high').value)||8072,    taux: (parseFloat(document.getElementById('p_t1_taux').value)||5)/100 },
-      { low: parseFloat(document.getElementById('p_t2_low').value)||8072,    high: parseFloat(document.getElementById('p_t2_high').value)||12109,   taux: (parseFloat(document.getElementById('p_t2_taux').value)||10)/100 },
-      { low: parseFloat(document.getElementById('p_t3_low').value)||12109,   high: parseFloat(document.getElementById('p_t3_high').value)||15932,   taux: (parseFloat(document.getElementById('p_t3_taux').value)||15)/100 },
-      { low: parseFloat(document.getElementById('p_t4_low').value)||15932,   high: parseFloat(document.getElementById('p_t4_high').value)||552324,  taux: (parseFloat(document.getElementById('p_t4_taux').value)||20)/100 },
-      { low: parseFloat(document.getElementById('p_t5_low').value)||552324,  high: parseFloat(document.getElementById('p_t5_high').value)||902838,  taux: (parseFloat(document.getElementById('p_t5_taux').value)||30)/100 },
-      { low: parseFloat(document.getElementById('p_t6_low').value)||902838,  high: parseFloat(document.getElementById('p_t6_high').value)||1805677, taux: (parseFloat(document.getElementById('p_t6_taux').value)||40)/100 },
-      { low: parseFloat(document.getElementById('p_t7_low').value)||1805677, high: Infinity,                                                         taux: (parseFloat(document.getElementById('p_t7_taux').value)||45)/100 },
+      { low: nombreOu(document.getElementById('p_t1_low').value, 0),       high: nombreOu(document.getElementById('p_t1_high').value, 8072),    taux: (nombreOu(document.getElementById('p_t1_taux').value, 5))/100 },
+      { low: nombreOu(document.getElementById('p_t2_low').value, 8072),    high: nombreOu(document.getElementById('p_t2_high').value, 12109),   taux: (nombreOu(document.getElementById('p_t2_taux').value, 10))/100 },
+      { low: nombreOu(document.getElementById('p_t3_low').value, 12109),   high: nombreOu(document.getElementById('p_t3_high').value, 15932),   taux: (nombreOu(document.getElementById('p_t3_taux').value, 15))/100 },
+      { low: nombreOu(document.getElementById('p_t4_low').value, 15932),   high: nombreOu(document.getElementById('p_t4_high').value, 552324),  taux: (nombreOu(document.getElementById('p_t4_taux').value, 20))/100 },
+      { low: nombreOu(document.getElementById('p_t5_low').value, 552324),  high: nombreOu(document.getElementById('p_t5_high').value, 902838),  taux: (nombreOu(document.getElementById('p_t5_taux').value, 30))/100 },
+      { low: nombreOu(document.getElementById('p_t6_low').value, 902838),  high: nombreOu(document.getElementById('p_t6_high').value, 1805677), taux: (nombreOu(document.getElementById('p_t6_taux').value, 40))/100 },
+      { low: nombreOu(document.getElementById('p_t7_low').value, 1805677), high: Infinity,                                                         taux: (nombreOu(document.getElementById('p_t7_taux').value, 45))/100 },
     ]
   };
 }
@@ -842,9 +849,9 @@ function updateBaremeProgressif(base, tranches) {
 // CALCUL PRINCIPAL
 // ============================================================
 function recalculate() {
-  const age = parseInt(document.getElementById('age').value) || 68;
-  const nb  = parseInt(document.getElementById('nbDonataires').value) || 1;
-  const vpp = parseFloat(document.getElementById('valeurPP').value) || 0;
+  const age = nombreOu(document.getElementById('age').value, 68);
+  const nb  = Math.max(1, nombreOu(document.getElementById('nbDonataires').value, 1));
+  const vpp = nombreOu(document.getElementById('valeurPP').value, 0);
   const lien = document.getElementById('lienParente').value;
   const nature = document.getElementById('natureOp').value;
   const params = getParams();
