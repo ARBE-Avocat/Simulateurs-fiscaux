@@ -350,9 +350,9 @@
       </td>
       <td style="text-align:center;white-space:nowrap;">
         <input type="checkbox" title="Appliquer une décote personnalisée" onchange="setBienVal(1,&#39;decote&#39;,this.checked);renderBiens();compute();" style="width:auto;cursor:pointer;vertical-align:middle;">
-        <input type="number" value="" placeholder="%" min="0" max="100" step="0.1" style="width:52px;margin-left:4px;vertical-align:middle;opacity:0.35;pointer-events:none;" oninput="setBienVal(1,&#39;decotePct&#39;,parseFloat(this.value)||0);updateBienCells(1);compute();" onblur="renderBiens();" tabindex="-1">
+        <input type="number" value="" placeholder="%" min="0" max="100" step="0.1" style="width:52px;margin-left:4px;vertical-align:middle;opacity:0.35;pointer-events:none;" oninput="setBienVal(1,&#39;decotePct&#39;,nombreOu(this.value,0));updateBienCells(1);compute();" onblur="renderBiens();" tabindex="-1">
       </td>
-      <td><input type="number" value="5566000" placeholder="0" min="0" step="1" oninput="setBienVal(1,&#39;valeur&#39;,parseFloat(this.value)||0);updateBienCells(1);compute();" onblur="renderBiens();"></td>
+      <td><input type="number" value="5566000" placeholder="0" min="0" step="1" oninput="setBienVal(1,&#39;valeur&#39;,nombreOu(this.value,0));updateBienCells(1);compute();" onblur="renderBiens();"></td>
       <td>
         <select onchange="setBienVal(1,&#39;devise&#39;,this.value);renderBiens();compute();">
           <option value="EUR" selected="">EUR</option>
@@ -370,7 +370,7 @@
         </select>
       </td>
       <td class="val-cell" id="eurCell_1">—</td>
-      <td><input type="number" value="100" min="0" max="100" step="1" style="width:60px" oninput="setBienVal(1,&#39;quotePart&#39;,parseFloat(this.value)||100);renderBiens();compute();">%</td>
+      <td><input type="number" value="100" min="0" max="100" step="1" style="width:60px" oninput="setBienVal(1,&#39;quotePart&#39;,nombreOu(this.value,100));renderBiens();compute();">%</td>
       <td class="val-cell" id="taxCell_1">5 566 000 €</td>
       <td><button class="del-btn" onclick="removeBien(1)" title="Supprimer">✕</button></td>
     </tr></tbody>
@@ -624,6 +624,13 @@
 </footer>
 
 <script>
+// Distingue un champ vide ou invalide (valeur par défaut) du zéro saisi explicitement.
+function nombreOu(brut, defaut) {
+  if (brut === '' || brut === null || brut === undefined) return defaut;
+  const n = parseFloat(brut);
+  return Number.isNaN(n) ? defaut : n;
+}
+
 // ============================================================
 // DATE INPUT + LIEN BANQUE DE FRANCE + MISE À JOUR DES TAUX
 // ============================================================
@@ -906,11 +913,11 @@ function renderBiens() {
         <input type="checkbox" ${b.decote?'checked':''} title="Appliquer une décote personnalisée" onchange="setBienVal(${b.id},'decote',this.checked);renderBiens();compute();" style="width:auto;cursor:pointer;vertical-align:middle;">
         <input type="number" value="${b.decotePct||''}" placeholder="%" min="0" max="100" step="0.1"
           style="width:52px;margin-left:4px;vertical-align:middle;${!b.decote?'opacity:0.35;pointer-events:none;':''}"
-          oninput="setBienVal(${b.id},'decotePct',parseFloat(this.value)||0);updateBienCells(${b.id});compute();"
+          oninput="setBienVal(${b.id},'decotePct',nombreOu(this.value,0));updateBienCells(${b.id});compute();"
           onblur="renderBiens();"
           ${!b.decote?'tabindex="-1"':''}>
       </td>
-      <td><input type="number" value="${b.valeur||''}" placeholder="0" min="0" step="1" oninput="setBienVal(${b.id},'valeur',parseFloat(this.value)||0);updateBienCells(${b.id});compute();" onblur="renderBiens();"></td>
+      <td><input type="number" value="${b.valeur||''}" placeholder="0" min="0" step="1" oninput="setBienVal(${b.id},'valeur',nombreOu(this.value,0));updateBienCells(${b.id});compute();" onblur="renderBiens();"></td>
       <td>
         <select onchange="setBienVal(${b.id},'devise',this.value);renderBiens();compute();">
           <option value="EUR" ${b.devise==='EUR'?'selected':''}>EUR</option>
@@ -928,7 +935,7 @@ function renderBiens() {
         </select>
       </td>
       <td class="val-cell" id="eurCell_${b.id}">${b.devise !== 'EUR' ? fmtEur(eurVal) : '—'}</td>
-      <td><input type="number" value="${b.quotePart}" min="0" max="100" step="1" style="width:60px" oninput="setBienVal(${b.id},'quotePart',parseFloat(this.value)||100);renderBiens();compute();">%</td>
+      <td><input type="number" value="${b.quotePart}" min="0" max="100" step="1" style="width:60px" oninput="setBienVal(${b.id},'quotePart',nombreOu(this.value,100));renderBiens();compute();">%</td>
       <td class="val-cell" id="taxCell_${b.id}">${fmtEur(taxable)}</td>
       <td><button class="del-btn" onclick="removeBien(${b.id})" title="Supprimer">✕</button></td>
     `;
