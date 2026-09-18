@@ -37,16 +37,17 @@ tests/
 
 ## Comment un simulateur est testé sans navigateur
 
-Les simulateurs sont encore des fichiers HTML complets : le JavaScript de calcul
-est embarqué dans une balise `<script>`, mêlé au câblage de l'interface.
-L'architecture cible est désormais arrêtée — voir `docs/ARCHITECTURE_CIBLE.md` —
-mais son étape de déplacement des fichiers appartient au jalon `0.6`. Jusque-là,
-ce code reste où il est.
+Chaque simulateur est une page `simulateurs/<slug>/index.html` dont le
+JavaScript d'interface est embarqué dans une balise `<script>`, et qui charge
+par `<script src>` les ressources partagées de `src/` : conventions,
+référentiels générés, moteurs de calcul.
 
-`tests/helpers/simulateurs.js` lit donc le fichier HTML, en extrait le script et
-l'exécute dans Node avec un faux DOM minimal
+`tests/helpers/simulateurs.js` lit la page, exécute ces ressources puis le
+script embarqué dans Node avec un faux DOM minimal
 (`tests/helpers/dom-minimal.js`). Les appels d'interface sont absorbés sans
-erreur, et les fonctions de calcul deviennent appelables directement.
+erreur, et les fonctions de calcul deviennent appelables directement. C'est le
+chemin des tests d'intégration et des instantanés : ils exercent le simulateur
+complet, moteur et câblage.
 
 Les fonctions déclarées au premier niveau du script ne sont pas des propriétés
 de l'objet global : on les récupère avec `evaluer`.

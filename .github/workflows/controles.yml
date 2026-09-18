@@ -5,7 +5,9 @@
 # distinctes afin que l'onglet Actions montre immédiatement lequel a échoué.
 #
 # Le dépôt n'a aucune dépendance de production ni de développement : il n'y a ni
-# `npm ci`, ni cache, ni étape de construction. Le seul prérequis est Node.js.
+# `npm ci`, ni cache. Le seul prérequis est Node.js. La construction du site est
+# vérifiée ici sans rien publier ; la publication est le rôle de `publier.yml`,
+# sur `main` uniquement.
 name: Contrôles
 
 on:
@@ -49,6 +51,9 @@ jobs:
 
       - name: Valider la série de taux de change
         run: npm run change:valider
+
+      - name: Vérifier que le site se construit sans lien cassé
+        run: npm run build -- --verifier
 
       - name: Lancer les tests
         run: npm test

@@ -72,33 +72,52 @@ Règle générale : **une valeur fiscale n'existe qu'à un seul endroit**, dans
 
 ### 2.3 — Arborescence cible
 
+**Amendement du 18 septembre 2026, à la réalisation de M3.** Les pages vivent à
+la racine du dépôt, dans `simulateurs/<slug>/`, et non dans
+`src/simulateurs/` comme prévu le 26 août. La raison est purement technique :
+le repli des taux de change est un fichier JSON chargé par le navigateur
+depuis `data/change/`, et les scripts partagés sont dans `src/`. Si les pages
+avaient été placées sous `src/` puis recopiées à un autre niveau dans `site/`,
+leurs chemins relatifs auraient dû être réécrits par le build, avec deux
+arborescences à maintenir en tête. En donnant au dépôt **exactement
+l'arborescence du site publié**, le build n'est plus qu'une copie d'une liste
+blanche, et ce que l'on voit servi depuis la racine du dépôt est ce qui sera
+publié. Aucun objectif de #20 n'est modifié : adresses stables, un seul
+livrable, source de vérité unique.
+
 ```text
-index.html                     redirection ou copie de src/index.html (voir §4)
+index.html                     accueil
+simulateurs/                   une page par simulateur, à son adresse stable
+  irpp/index.html
+  ir-cehr-cdhr/index.html
+  plus-value-immobiliere/index.html
+  ifi/index.html
+  succession/index.html
+  demembrement/index.html
+src/                           scripts partagés, chargés par chemin relatif
+  conventions.js               lecture des saisies, mise en forme (#11)
+  lecture-referentiels.js      accès aux référentiels générés
+  millesime.js                 bandeau du millésime employé (#19)
+  change.js                    taux de change : BCE puis repli (#13)
+  moteurs/                     calculs sans DOM, un fichier par simulateur (#21)
+  styles/                      feuille de style commune (#31)
+  genere/                      produits par scripts/ — jamais édités à la main
 data/
   schema/                      schéma commun des référentiels (#12)
   referentiels/                un fichier par domaine fiscal, millésimé (#14 à #17)
   imports/                     CSV et JSON officiels déposés, datés (#18)
+  change/                      série de taux de change, un fichier par année (#13)
 docs/                          documentation, plan d'action, supports d'arbitrage
-scripts/                       outillage Node : import, validation, génération, build
-src/
-  index.html                   accueil
-  simulateurs/
-    irpp/index.html
-    ir-cehr-cdhr/index.html
-    plus-value-immobiliere/index.html
-    ifi/index.html
-    succession/index.html
-    demembrement/index.html
-  moteurs/                     calculs sans DOM (#21)
-  styles/                      feuille de style commune (#31)
-  genere/                      produits par scripts/ — jamais édités à la main
+scripts/                       outillage Node : import, validation, génération, build, serveur local
 site/                          sortie de build, ignorée par Git
 tests/
 ```
 
-Aujourd'hui, les six HTML et `index.html` sont à la racine et `data/`, `src/`,
-`scripts/` et `site/` n'existent pas encore. Le §5 décrit comment on passe de
-l'un à l'autre.
+Ce qui est livré dans `site/` est une liste blanche tenue dans
+`scripts/construire-site.js` : `index.html`, `simulateurs/`, `src/` et
+`data/change/`, plus les pages de redirection. Tout le reste — `docs/`,
+`tests/`, `data/referentiels/`, fichiers de gouvernance — n'est pas publiable,
+par construction.
 
 ### 2.4 — Comment les données arrivent dans le navigateur
 
@@ -241,7 +260,7 @@ src/genere/referentiels.js               versionné, jamais édité à la main
    │
    ├─▶ tests/  ──  npm test              les tests lisent le même fichier
    │
-   └─▶ src/simulateurs/…  ──  npm run build
+   └─▶ simulateurs/…  ──  npm run build
                                   ▼
                                site/  ──▶ GitHub Pages
 ```
@@ -298,7 +317,7 @@ Aucune étape ne mélange déplacement de fichiers et changement de calcul.
 |---|---|---|---|
 | M1 | 0.5 | `_config.yml` protecteur ; création de `data/`, du schéma (#12) et de l'outillage (#18). Aucun HTML déplacé ni modifié. | nul |
 | M2 | 0.5 | Extraction des référentiels (#14 à #17, #13). Les HTML restent à la racine et chargent `src/genere/referentiels.js` par chemin relatif. **Engagée** : #16 est livrée. | faible, verrouillé par comparaison avant/après |
-| M3 | 0.6 | Déplacement vers `src/simulateurs/<slug>/`, build `site/`, redirections, bascule de Pages sur GitHub Actions (avec #28). | moyen, concentré sur les chemins |
+| M3 | 0.6 | Déplacement vers `simulateurs/<slug>/` (voir l'amendement du §2.3), build `site/`, redirections, workflow de publication Pages (avec #28). **Réalisée** en `0.6.0-beta.1` ; la bascule du réglage Pages sur « GitHub Actions » appartient au propriétaire, au moment de la fusion dans `main`. | moyen, concentré sur les chemins |
 | M4 | 0.6 | Découplage des moteurs vers `src/moteurs/` (#21). | moyen |
 | M5 | 0.6 / 0.7 | Feuille de style commune dans `src/styles/` (#31), en PR distinctes du découplage. | faible |
 | M6 | 0.7 | Nettoyage final, `CODEMAP.md`, accessibilité (#29). | faible |
@@ -307,9 +326,11 @@ Règle de sûreté valable à chaque étape : **relever les résultats avant, re
 après, comparer au centime.** Une étape qui déplace un résultat est un défaut,
 pas une amélioration.
 
-Point d'attention pour M2 et M3 : `index.html` et
-`tests/helpers/simulateurs.js` contiennent tous deux la liste des fichiers de
-simulateurs. Ils doivent être modifiés dans le même commit que tout renommage.
+Point d'attention : `index.html`, `tests/helpers/simulateurs.js` et la table
+des anciennes adresses de `scripts/lib/redirections.js` contiennent tous trois
+la liste des simulateurs. Ils doivent être modifiés dans le même commit que
+tout renommage, et une adresse publiée une fois reste dans la table pour
+toujours.
 
 ---
 
@@ -319,7 +340,7 @@ Aujourd'hui :
 
 ```bash
 npm test                        # tous les tests, sans installation préalable
-python3 -m http.server 8000     # puis http://localhost:8000/index.html
+npm run dev                     # sert la racine du dépôt sur http://localhost:8000/
 ```
 
 Ajoutées par #18, au jalon 0.5 :
@@ -330,10 +351,12 @@ npm run donnees:generer         # reconstruit src/genere/referentiels.js depuis 
 npm run donnees:importer -- <fichier.csv>   # normalise un CSV officiel vers data/
 ```
 
-Ajoutée par M3 :
+Ajoutées par M3, au jalon 0.6 :
 
 ```bash
-npm run build                   # construit site/
+npm run build                   # construit site/ ; échoue si un lien relatif est cassé
+npm run build -- --verifier     # même contrôle sans rien écrire ; exécuté par la CI
+npm run verifier                # enchaîne tous les contrôles, comme la CI
 ```
 
 Aucune de ces commandes n'installe quoi que ce soit : le projet reste sans

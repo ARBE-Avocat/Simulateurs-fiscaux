@@ -1,0 +1,69 @@
+# Publication du site sur GitHub Pages.
+#
+# Seul le dossier `site/`, construit par `npm run build`, est publié. Ce qui
+# n'y est pas — `docs/`, `tests/`, `data/referentiels/`, les fichiers de
+# gouvernance — n'est pas publiable, par construction. C'est la cible décrite en
+# `docs/ARCHITECTURE_CIBLE.md` §2.6, qui remplace la liste d'exclusions de
+# `_config.yml`.
+#
+# Prérequis, une seule fois, dans les réglages du dépôt : Settings → Pages →
+# Source : « GitHub Actions ». Tant que la source reste « Deploy from a
+# branch », ce workflow construit et vérifie le site mais son déploiement est
+# ignoré, et Pages continue de servir la branche `main` avec `_config.yml`.
+#
+# Il ne se déclenche que sur `main` : une pull request ou une branche `clv/`
+# ne publie jamais rien (issue #28).
+name: Publier
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un seul déploiement à la fois ; un nouveau push attend le précédent plutôt
+# que de l'annuler, pour ne jamais laisser le site dans un état intermédiaire.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construire:
+    name: Construire le site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v7
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Exécuter tous les contrôles
+        run: npm run verifier
+
+      - name: Construire site/
+        run: npm run build
+
+      - name: Téléverser le site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deployer:
+    name: Déployer sur GitHub Pages
+    needs: construire
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - name: Déployer
+        id: deploiement
+        uses: actions/deploy-pages@v4

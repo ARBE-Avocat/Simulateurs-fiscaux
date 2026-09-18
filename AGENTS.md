@@ -11,7 +11,7 @@ Le dépôt contient des simulateurs fiscaux et patrimoniaux français à usage i
 
 Un choix technique ne vaut jamais validation juridique. Une intention métier ne dispense jamais des contrôles techniques.
 
-État actuel : fichiers HTML statiques à la racine, dont plusieurs chargent désormais des scripts et référentiels partagés, sans installation ni serveur applicatif. Le livrable est le dossier complet servi en HTTP ; l'ouverture directe par `file://` et la distribution d'un HTML isolé ne sont plus des contraintes. La migration vers `docs/ARCHITECTURE_CIBLE.md` reste progressive et ne doit pas être anticipée dans une tâche sans rapport. Le site vise prioritairement l'ordinateur : le responsive mobile est hors périmètre sauf issue explicite.
+État actuel : site statique dont l'arborescence est celle du dépôt — `index.html`, une page par simulateur dans `simulateurs/<slug>/`, scripts partagés et moteurs dans `src/`, données dans `data/` — sans installation ni serveur applicatif. Le livrable est le dossier `site/` construit par `npm run build` et servi en HTTP ; l'ouverture directe par `file://` et la distribution d'un HTML isolé ne sont pas supportées. `docs/CODEMAP.md` indique où vit chaque chose et `docs/ARCHITECTURE_CIBLE.md` ce qui reste à migrer ; ne pas anticiper une étape de migration dans une tâche sans rapport. Le site vise prioritairement l'ordinateur : le responsive mobile est hors périmètre sauf issue explicite.
 
 ## 2. Instructions et documents de référence
 
@@ -110,15 +110,21 @@ Une mise à jour annuelle doit à terme modifier une donnée fiscale dans une so
 
 Une correction commence, dès que le socle le permet, par un test reproduisant le défaut. Une refactorisation doit prouver la conservation du comportement.
 
-Le dépôt initial ne garantit encore aucune commande automatisée de test ou build. Ne jamais prétendre avoir exécuté un contrôle inexistant. Utiliser les commandes documentées dès leur introduction.
-
-Contrôle manuel minimal actuel :
+Ne jamais prétendre avoir exécuté un contrôle inexistant. La commande de référence, identique à celle de la CI, est :
 
 ```bash
-python3 -m http.server 8000
+npm run verifier
 ```
 
-Sur ordinateur, vérifier `http://localhost:8000/index.html`, les liens, les parcours concernés, la console et les cas limites pertinents. L'ouverture directe des HTML par `file://` n'est pas un mode supporté et n'a à être vérifiée que si une issue la vise explicitement.
+Elle enchaîne le contrôle de syntaxe, la validation des référentiels et des taux de change, la vérification des fichiers générés, la construction du site sans lien cassé et les tests. `npm test` seul suffit pendant le développement.
+
+Contrôle manuel minimal :
+
+```bash
+npm run dev
+```
+
+Sur ordinateur, vérifier `http://localhost:8000/`, les liens, les parcours concernés, la console et les cas limites pertinents. L'ouverture directe des HTML par `file://` n'est pas un mode supporté et n'a à être vérifiée que si une issue la vise explicitement.
 
 Chaque compte rendu indique les commandes et contrôles réellement exécutés, leurs résultats et les zones non vérifiées.
 
@@ -145,7 +151,7 @@ Scinder une PR trop large. L'exception CLV « une branche par `Y` » conserve un
 Mettre la documentation à jour dans la même PR qu'un changement de comportement, de workflow ou d'architecture.
 
 - `README.md` reste centré sur l'utilisation.
-- Le futur `CODEMAP.md` localisera données, moteurs, interfaces et scripts.
+- `docs/CODEMAP.md` localise données, moteurs, interfaces et scripts ; le mettre à jour dès qu'un fichier change de rôle ou d'emplacement.
 - `CHANGELOG.md` décrit les changements visibles par version et la prochaine version en préparation.
 - `VERSION` contient la version exacte portée par la branche, sans préfixe `v`.
 - Le futur `CONTRIBUTING.md` détaillera le workflow humain.

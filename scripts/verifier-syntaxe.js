@@ -12,7 +12,8 @@
  *
  * Sont contrôlés :
  * - les fichiers `.js` de `scripts/`, `src/` et `tests/` ;
- * - le JavaScript embarqué dans les pages HTML de la racine et de `docs/`.
+ * - le JavaScript embarqué dans les pages HTML de la racine, de `docs/` et de
+ *   `simulateurs/`.
  *
  * Usage : node scripts/verifier-syntaxe.js
  */
@@ -26,8 +27,8 @@ const RACINE = path.resolve(__dirname, '..');
 /** Dossiers explorés pour les fichiers `.js`. */
 const DOSSIERS_JS = ['scripts', 'src', 'tests'];
 
-/** Dossiers explorés pour les pages HTML. Non récursif. */
-const DOSSIERS_HTML = ['.', 'docs'];
+/** Dossiers explorés pour les pages HTML : la racine sans descendre, les autres récursivement. */
+const DOSSIERS_HTML = ['.', 'docs', 'simulateurs'];
 
 /** Dossiers jamais explorés, quel que soit leur emplacement. */
 const IGNORES = new Set(['node_modules', '.git']);
@@ -50,14 +51,25 @@ function fichiersJs(dossier) {
   return trouves;
 }
 
-/** Liste les pages HTML d'un dossier, sans descendre dans ses sous-dossiers. */
+/**
+ * Liste les pages HTML d'un dossier. La racine n'est pas parcourue récursivement
+ * — elle contient `node_modules/` et `site/` — ; les autres dossiers le sont.
+ */
 function fichiersHtml(dossier) {
   const absolu = path.join(RACINE, dossier);
   if (!fs.existsSync(absolu)) return [];
 
-  return fs.readdirSync(absolu, { withFileTypes: true })
-    .filter((entree) => entree.isFile() && entree.name.endsWith('.html'))
-    .map((entree) => path.join(dossier === '.' ? '' : dossier, entree.name));
+  const trouves = [];
+  for (const entree of fs.readdirSync(absolu, { withFileTypes: true })) {
+    if (IGNORES.has(entree.name)) continue;
+    const relatif = path.join(dossier === '.' ? '' : dossier, entree.name);
+    if (entree.isDirectory()) {
+      if (dossier !== '.') trouves.push(...fichiersHtml(relatif));
+    } else if (entree.name.endsWith('.html')) {
+      trouves.push(relatif);
+    }
+  }
+  return trouves;
 }
 
 /**

@@ -1,11 +1,12 @@
 /**
  * Chargement des simulateurs pour les tests.
  *
- * Les simulateurs sont aujourd'hui des fichiers HTML autonomes : le JavaScript
- * de calcul est embarqué dans une balise `<script>`. Tant que l'architecture
- * cible n'est pas tranchée (issue #20), on ne déplace pas ce code. Ce module
- * lit donc le HTML, en extrait le script et l'exécute dans Node avec un faux
- * DOM minimal, afin de tester les fonctions de calcul sans navigateur.
+ * Chaque simulateur est une page HTML dont le JavaScript d'interface est
+ * embarqué dans une balise `<script>`, et qui charge par `<script src>` les
+ * ressources partagées de `src/` : conventions, référentiels générés, moteurs
+ * de calcul. Ce module lit la page, exécute ces ressources puis le script
+ * embarqué dans Node avec un faux DOM minimal, afin d'exercer le simulateur
+ * complet — moteur et câblage — sans navigateur.
  */
 
 const fs = require('node:fs');
@@ -19,17 +20,21 @@ const RACINE = path.resolve(__dirname, '..', '..');
 /**
  * Liste des simulateurs testés.
  *
- * `cle` sert d'identifiant stable dans les tests, `fichier` est le nom réel du
- * fichier HTML. Si un fichier est renommé, cette liste et les liens de
- * `index.html` doivent être mis à jour ensemble.
+ * `cle` sert d'identifiant stable dans les tests et dans le champ `utilisePar`
+ * des référentiels ; `fichier` est le chemin réel de la page depuis la racine
+ * du dépôt. Depuis le jalon `0.6`, chaque simulateur vit dans
+ * `simulateurs/<slug>/index.html` : son adresse publiée est le dossier, sans
+ * millésime ni extension. Renommer un dossier impose de mettre à jour cette
+ * liste, les liens de `index.html` et la table des anciennes adresses de
+ * `scripts/lib/redirections.js` dans le même commit.
  */
 const SIMULATEURS = [
-  { cle: 'ir-cehr-cdhr', fichier: 'Simulateur_IR 2025 et CEHR_CDHR 2026.html' },
-  { cle: 'pv-immobiliere', fichier: 'Simulateur_PV_Immobilière Juillet 2026.html' },
-  { cle: 'ifi', fichier: 'Simulation IFI - Avril 2026.html' },
-  { cle: 'irpp', fichier: 'Simulation IRPP - Avril 2026.html' },
-  { cle: 'succession', fichier: 'Simulation Succession.html' },
-  { cle: 'demembrement', fichier: 'Simulation démembrement immo - Juin 2026.html' },
+  { cle: 'ir-cehr-cdhr', fichier: 'simulateurs/ir-cehr-cdhr/index.html' },
+  { cle: 'pv-immobiliere', fichier: 'simulateurs/plus-value-immobiliere/index.html' },
+  { cle: 'ifi', fichier: 'simulateurs/ifi/index.html' },
+  { cle: 'irpp', fichier: 'simulateurs/irpp/index.html' },
+  { cle: 'succession', fichier: 'simulateurs/succession/index.html' },
+  { cle: 'demembrement', fichier: 'simulateurs/demembrement/index.html' },
 ];
 
 /**
@@ -161,8 +166,12 @@ function chargerSimulateur(cle) {
   // Les ressources externes sont exécutées avant les scripts embarqués, comme
   // le fait le navigateur pour des balises `<script>` sans `defer` placées plus
   // haut dans le document.
+  // Un chemin `src` est relatif à la page qui le porte, pas à la racine du
+  // dépôt : il est résolu depuis le dossier du fichier HTML, comme le fait le
+  // navigateur.
+  const dossierPage = path.dirname(chemin(simulateur(cle).fichier));
   for (const relatif of extraireScriptsExternes(html)) {
-    const absolu = chemin(relatif);
+    const absolu = path.resolve(dossierPage, relatif);
     if (!fs.existsSync(absolu)) {
       throw new Error(
         `${simulateur(cle).fichier} référence ${relatif}, introuvable. `

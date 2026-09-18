@@ -27,7 +27,7 @@ function textesDuBandeau(simulateur) {
 test('millésime — chaque simulateur charge le module et réserve un emplacement', () => {
   for (const { cle } of SIMULATEURS) {
     const html = lireHtml(cle);
-    assert.match(html, /<script src="src\/millesime\.js"><\/script>/, `${cle} doit charger src/millesime.js`);
+    assert.match(html, /<script src="\.\.\/\.\.\/src\/millesime\.js"><\/script>/, `${cle} doit charger src/millesime.js`);
     assert.match(html, /id="bandeauMillesime"/, `${cle} doit porter le bandeau`);
   }
 });

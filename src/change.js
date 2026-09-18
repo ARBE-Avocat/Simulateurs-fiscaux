@@ -85,9 +85,26 @@
     return Array.from(annees).sort((a, b) => a - b);
   }
 
-  /** Chemin relatif du fichier d'une année, tel que servi par le site. */
+  /**
+   * Emplacement de `data/change/`, résolu **par rapport à ce script** et non à
+   * la page qui le charge. Les pages vivent dans `simulateurs/<slug>/` et ce
+   * fichier dans `src/` : un chemin relatif à la page dépendrait de la
+   * profondeur de chaque page, un chemin relatif au script est le même partout.
+   *
+   * Hors navigateur — tests, absence de `document.currentScript` — le chemin
+   * reste `data/change/`, relatif au dossier du dépôt.
+   */
+  const BASE_CHANGE = (function () {
+    const script = typeof document !== 'undefined' && document && document.currentScript;
+    if (script && typeof script.src === 'string' && script.src) {
+      try { return new URL('../data/change/', script.src).href; } catch (e) { /* repli */ }
+    }
+    return 'data/change/';
+  })();
+
+  /** Adresse du fichier d'une année, telle que servie par le site. */
   function urlAnnee(annee) {
-    return `data/change/${annee}.json`;
+    return `${BASE_CHANGE}${annee}.json`;
   }
 
   /**

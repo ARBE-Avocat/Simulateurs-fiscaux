@@ -4,18 +4,25 @@
 # tout le dépôt serait publié, y compris les supports de travail internes :
 # `AGENTS.md` interdit que `docs/arbitrages.html` soit servi par Pages.
 #
-# Ce fichier est une protection provisoire. La cible, décrite dans
-# `docs/ARCHITECTURE_CIBLE.md` §2.6, est de publier uniquement le dossier `site/`
-# construit par `npm run build`, via GitHub Actions (issue #28). Une liste
-# d'exclusions doit être maintenue ; un dossier de sortie, non.
+# Ce fichier est une protection provisoire, active tant que Pages est réglé sur
+# « Deploy from a branch ». La cible, décrite dans `docs/ARCHITECTURE_CIBLE.md`
+# §2.6, est livrée par `.github/workflows/publier.yml` : seul le dossier `site/`
+# construit par `npm run build` est publié. Une fois la source Pages basculée
+# sur « GitHub Actions » dans les réglages du dépôt, ce fichier n'a plus d'effet
+# et peut être supprimé.
 #
-# Toute nouvelle ressource non destinée au public doit être ajoutée ici.
+# Tant qu'il sert, toute nouvelle ressource non destinée au public doit être
+# ajoutée ici. `data/change/` n'est pas exclu : c'est le repli des taux de
+# change, que le navigateur charge quand la BCE ne répond pas.
 
 exclude:
   - docs/
   - tests/
   - scripts/
-  - data/
+  - data/referentiels/
+  - data/imports/
+  - data/schema/
+  - data/README.md
   - node_modules/
   - package.json
   - package-lock.json

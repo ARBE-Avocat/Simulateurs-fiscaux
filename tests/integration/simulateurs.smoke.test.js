@@ -9,6 +9,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const path = require('node:path');
 
 const { trouverMelangesAlphabets } = require('../helpers/confusables');
 const {
@@ -28,7 +29,7 @@ for (const { cle, fichier } of SIMULATEURS) {
   test(`simulateur ${cle} — la page a un titre et un lien vers l'accueil`, () => {
     const html = lireHtml(cle);
     assert.match(html, /<title>[^<]+<\/title>/, 'la page doit avoir un <title> non vide');
-    assert.match(html, /href="index\.html"/, 'la page doit garder un lien relatif vers index.html');
+    assert.match(html, /href="\.\.\/\.\.\/"/, "la page doit garder un lien relatif vers l'accueil (../../)");
   });
 
   test(`simulateur ${cle} — le script embarqué est syntaxiquement valide`, () => {
@@ -58,7 +59,16 @@ for (const { cle, fichier } of SIMULATEURS) {
   });
 }
 
-test("index.html — les liens vers les simulateurs pointent vers des fichiers existants", () => {
+/** Résout un lien relatif de l'accueil vers le fichier servi : un dossier vaut son index.html. */
+function cibleDuLien(lien) {
+  const cible = chemin(lien);
+  if (fs.existsSync(cible) && fs.statSync(cible).isDirectory()) {
+    return path.join(cible, 'index.html');
+  }
+  return cible;
+}
+
+test("index.html — les liens vers les simulateurs pointent vers des pages existantes", () => {
   const accueil = fs.readFileSync(chemin('index.html'), 'utf8');
   const liens = [...accueil.matchAll(/href="([^"]+)"/g)]
     .map((correspondance) => correspondance[1])
@@ -67,7 +77,7 @@ test("index.html — les liens vers les simulateurs pointent vers des fichiers e
 
   assert.ok(liens.length > 0, "aucun lien relatif trouvé dans index.html");
   for (const lien of liens) {
-    assert.ok(fs.existsSync(chemin(lien)), `lien cassé depuis index.html : ${lien}`);
+    assert.ok(fs.existsSync(cibleDuLien(lien)), `lien cassé depuis index.html : ${lien}`);
   }
 });
 
@@ -75,6 +85,7 @@ test("index.html — chaque simulateur listé est accessible depuis l'accueil", 
   const accueil = fs.readFileSync(chemin('index.html'), 'utf8');
   const liens = [...accueil.matchAll(/href="([^"]+)"/g)].map((c) => decodeURIComponent(c[1]));
   for (const { cle, fichier } of SIMULATEURS) {
-    assert.ok(liens.includes(fichier), `${cle} n'est pas lié depuis index.html`);
+    const dossier = `${path.posix.dirname(fichier)}/`;
+    assert.ok(liens.includes(dossier), `${cle} n'est pas lié depuis index.html (attendu : ${dossier})`);
   }
 });
