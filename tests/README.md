@@ -49,6 +49,19 @@ erreur, et les fonctions de calcul deviennent appelables directement. C'est le
 chemin des tests d'intégration et des instantanés : ils exercent le simulateur
 complet, moteur et câblage.
 
+Les moteurs de `src/moteurs/` se testent aussi directement, sans page ni faux
+DOM, par un simple `require` : c'est le chemin des tests unitaires. Les
+paramètres fiscaux s'obtiennent par `parametresDepuisReferentiels`, à partir
+des lecteurs de `tests/helpers/referentiels.js`.
+
+```js
+const Moteur = require('../../src/moteurs/ir-cehr-cdhr');
+const { lecteur } = require('../helpers/referentiels');
+
+const parametres = Moteur.parametresDepuisReferentiels(lecteur('ir'), lecteur('prelevements-sociaux'));
+Moteur.bareme(30000, parametres.bareme); // appel direct, sans navigateur
+```
+
 Les fonctions déclarées au premier niveau du script ne sont pas des propriétés
 de l'objet global : on les récupère avec `evaluer`.
 
@@ -56,9 +69,9 @@ de l'objet global : on les récupère avec `evaluer`.
 const { chargerSimulateur } = require('../helpers/simulateurs');
 
 const simulateur = chargerSimulateur('ir-cehr-cdhr');
-const bareme = simulateur.evaluer('bareme');
+const compute = simulateur.evaluer('compute');
 
-bareme(30000); // appel direct, sans navigateur
+compute(); // lit le faux DOM, appelle le moteur, affiche dans le faux DOM
 ```
 
 Pour un calcul qui lit encore des champs de formulaire, on prépare les champs

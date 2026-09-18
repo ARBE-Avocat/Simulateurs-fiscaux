@@ -258,9 +258,9 @@ test('Prélèvements sociaux — les deux simulateurs désignent des variantes d
   assert.equal(parSimulateur['ir-cehr-cdhr'], '18-6');
 
   assert.match(
-    lireHtml('irpp'),
+    fs.readFileSync(chemin('src', 'moteurs', 'irpp.js'), 'utf8'),
     /PS\.variante\('ps\.taux\.global', '17-2'\)/,
-    'le simulateur IRPP doit désigner explicitement sa variante',
+    'le moteur du simulateur IRPP doit désigner explicitement sa variante',
   );
   assert.match(
     fs.readFileSync(chemin('src', 'moteurs', 'ir-cehr-cdhr.js'), 'utf8'),

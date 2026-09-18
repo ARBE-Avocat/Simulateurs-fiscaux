@@ -1451,6 +1451,8 @@ footer strong { color: var(--gold); font-weight: 400; }
 <script src="../../src/conventions.js"></script>
 <script src="../../src/lecture-referentiels.js"></script>
 <script src="../../src/millesime.js"></script>
+<script src="../../src/moteurs/ifi.js"></script>
+<script src="../../src/moteurs/irpp.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 // `|| 0` ne se voyait pas ici car la valeur par défaut est déjà zéro. Passer
@@ -1469,44 +1471,6 @@ const cb = id => Conventions.caseCochee($(id));
 // « npm run donnees:generer ». Voir data/README.md.
 const IR = LectureReferentiels.lecteur('ir');
 const PS = LectureReferentiels.lecteur('prelevements-sociaux');
-
-// Le taux des prélèvements sociaux est contesté : deux simulateurs du dépôt en
-// appliquent un différent. Fiche 2.2 de docs/CORRECTIONS_A_VALIDER.md : le
-// référent fiscal a répondu que les deux taux sont justes selon le revenu
-// concerné (LF2026, art. non précisé), et a demandé de conserver ce taux par
-// défaut tout en rendant le champ modifiable, comme il l'est déjà dans le
-// simulateur « IR, CEHR et CDHR ». La variante par défaut reste celle
-// employée jusqu'ici par ce simulateur.
-const PS_TAUX_DEFAUT = PS.variante('ps.taux.global', '17-2');
-let PS_TAUX = PS_TAUX_DEFAUT;
-
-const BAREME_IR = IR.bareme('ir.bareme.progressif');
-const PFU_TAUX_IR = IR.valeur('pfu.taux.impot-revenu');
-
-const ABATTEMENT = {
-  salairesTaux: IR.valeur('ir.abattement.salaires.taux'),
-  salairesPlafond: IR.valeur('ir.abattement.salaires.plafond'),
-  pensionsTaux: IR.valeur('ir.abattement.pensions.taux'),
-  pensionsPlafond: IR.valeur('ir.abattement.pensions.plafond'),
-  pensionsPlancher: IR.valeur('ir.abattement.pensions.plancher'),
-};
-
-const DECOTE = {
-  taux: IR.valeur('ir.decote.taux'),
-  celibataire: {
-    seuil: IR.valeur('ir.decote.celibataire.seuil'),
-    montant: IR.valeur('ir.decote.celibataire.montant'),
-  },
-  couple: {
-    seuil: IR.valeur('ir.decote.couple.seuil'),
-    montant: IR.valeur('ir.decote.couple.montant'),
-  },
-};
-
-const CEHR_BAREME = {
-  celibataire: IR.bareme('cehr.bareme.celibataire'),
-  couple: IR.bareme('cehr.bareme.couple'),
-};
 
 const REF_IFI = LectureReferentiels.lecteur('ifi');
 
@@ -1530,43 +1494,21 @@ function afficherMillesime() {
 afficherMillesime();
 
 
-const IFI = {
-  bareme: REF_IFI.bareme('ifi.bareme.progressif'),
-  seuil: REF_IFI.valeur('ifi.seuil.assujettissement'),
-  decoteMontant: REF_IFI.valeur('ifi.decote.montant'),
-  decoteTaux: REF_IFI.valeur('ifi.decote.taux'),
-  decotePlafond: REF_IFI.valeur('ifi.decote.plafond'),
-  abattementResidencePrincipale: REF_IFI.valeur('ifi.residence-principale.abattement'),
-  reductionDonsTaux: REF_IFI.valeur('ifi.reduction.dons.taux'),
-};
-
-const CDHR = {
-  tauxCible: IR.valeur('cdhr.taux.cible'),
-  coefficientDecote: IR.valeur('cdhr.decote.coefficient'),
-  seuilCelibataire: IR.valeur('cdhr.seuil.celibataire'),
-  seuilCouple: IR.valeur('cdhr.seuil.couple'),
-  borneHauteDecoteCelibataire: IR.valeur('cdhr.decote.borne-haute.celibataire'),
-  borneHauteDecoteCouple: IR.valeur('cdhr.decote.borne-haute.couple'),
-  abattementImpositionCommune: IR.valeur('cdhr.abattement.imposition-commune'),
-  abattementParPersonneACharge: IR.valeur('cdhr.abattement.personne-a-charge'),
-};
-
-// Plafonnement du quotient familial (art. 197, I, 2 CGI). Ajouté à la suite de
-// la fiche 2.3 de docs/CORRECTIONS_A_VALIDER.md : le référent fiscal a demandé
-// son ajout et laissé le calcul à la charge du développement. La méthode et le
-// plafond par demi-part reprennent ceux déjà appliqués par le simulateur
-// « IR, CEHR et CDHR » (fonction irAvecQuotientFamilial). Réserve non tranchée :
-// ce simulateur ne demande qu'un nombre de parts, pas une situation familiale ;
-// la part de référence est donc déduite de la case « second déclarant », comme
-// le fait déjà la décote plus bas.
-const PLAFOND_DEMI_PART = IR.valeur('ir.quotient.plafond-demi-part');
+// Les valeurs fiscales sont lues une fois par le moteur, qui les reçoit à
+// chaque calcul. La page ne connaît plus les identifiants du référentiel :
+// voir src/moteurs/irpp.js.
+const PARAMETRES = MoteurIrpp.parametresDepuisReferentiels(IR, PS, REF_IFI);
+const PS_TAUX_DEFAUT = PARAMETRES.psTauxDefaut;
+// Taux des PS appliqué par le dernier calcul, repris dans les libellés des
+// cartes de plus-value. Fiche 2.2 : modifiable à l'écran, défaut du référentiel.
+let PS_TAUX = PS_TAUX_DEFAUT;
+const IFI = PARAMETRES.ifi;
 
 // Les paramètres modifiables du formulaire — bornes du barème, plafonds
-// d'abattement, décote, abattements CDHR — restent lus dans les champs, avec
-// leurs valeurs pré-remplies dans le HTML. Les générer depuis le référentiel
-// changerait ce que la page fait au chargement, ce qui n'a pas sa place dans
-// une refactorisation. Un contrôle automatique interdit en revanche qu'elles
-// divergent des données : voir tests/unit/coherence-referentiels.test.js.
+// d'abattement, décote, abattements CDHR — sont lus dans les champs, avec
+// leurs valeurs écrites au chargement depuis le référentiel. Un contrôle
+// automatique interdit qu'elles divergent des données : voir
+// tests/unit/coherence-referentiels.test.js.
 // Un calcul qui n'aboutit pas s'affiche « — » plutôt que « NaN € » (#11).
 const fmt = (n, d=0) => Conventions.formaterMontant(n, d);
 
@@ -1584,83 +1526,46 @@ function toggleD2() {
   });
   if (has && v('nb_parts') < 2) { $('nb_parts').value = 2; }
   else if (!has && v('nb_parts') === 2) { $('nb_parts').value = 1; }
-  calcMajoration();
   calc();
 }
 
 function updateNames() {}
 
 // ── Majoration plafond emploi à domicile (art. 199 sexdecies CGI) ──
-let _plafond_emploi_dom = 12000;
-function calcMajoration() {
-  const ANNEE_REF = 2025; // revenus 2025
-  const has_d2 = cb('has_d2');
+// Le calcul vit dans le moteur (calculerMajorationEmploiDomicile) et fait
+// partie du calcul principal : un champ modifié déclenche un seul cycle, sans
+// appel réentrant.
+function calcMajoration() { calc(); }
 
-  // Invalidité : si D1 ou D2 est invalide → plafond passe à 20 000 €
-  const inv_d1 = cb('inv_d1') || cb('cmi_d1');
-  const inv_d2 = has_d2 && (cb('inv_d2') || cb('cmi_d2'));
-  const any_invalide = inv_d1 || inv_d2;
-
-  // Âge > 65 ans : calculé depuis l'année de naissance
-  const naiss_d1 = parseInt($('naiss_d1')?.value) || 0;
-  const naiss_d2 = parseInt($('naiss_d2')?.value) || 0;
-  const age_d1 = naiss_d1 > 0 ? ANNEE_REF - naiss_d1 : 0;
-  const age_d2 = naiss_d2 > 0 ? ANNEE_REF - naiss_d2 : 0;
-  const d1_sup65 = age_d1 >= 65;
-  const d2_sup65 = has_d2 && age_d2 >= 65;
-
-  // Mise à jour des badges âge
+function afficherMajoration(m) {
   const badge_d1 = $('age_d1_badge'), info_d1 = $('age_d1_info');
   const badge_d2 = $('age_d2_badge'), info_d2 = $('age_d2_info');
-  if (naiss_d1 > 0) {
-    if (info_d1) info_d1.textContent = `${age_d1} ans en 2025`;
-    if (badge_d1) { badge_d1.textContent = d1_sup65 ? '✅ Oui' : '❌ Non'; badge_d1.style.color = d1_sup65 ? 'var(--green-ok)' : 'var(--muted)'; }
+  if (m.naissD1 > 0) {
+    if (info_d1) info_d1.textContent = `${m.ageD1} ans en ${m.anneeReference}`;
+    if (badge_d1) { badge_d1.textContent = m.d1Sup65 ? '✅ Oui' : '❌ Non'; badge_d1.style.color = m.d1Sup65 ? 'var(--green-ok)' : 'var(--muted)'; }
   } else {
     if (info_d1) info_d1.textContent = 'Année de naissance non renseignée';
     if (badge_d1) { badge_d1.textContent = '—'; badge_d1.style.color = 'var(--muted)'; }
   }
-  if (naiss_d2 > 0 && has_d2) {
-    if (info_d2) info_d2.textContent = `${age_d2} ans en 2025`;
-    if (badge_d2) { badge_d2.textContent = d2_sup65 ? '✅ Oui' : '❌ Non'; badge_d2.style.color = d2_sup65 ? 'var(--green-ok)' : 'var(--muted)'; }
+  const has_d2 = cb('has_d2');
+  if (m.naissD2 > 0 && has_d2) {
+    if (info_d2) info_d2.textContent = `${m.ageD2} ans en ${m.anneeReference}`;
+    if (badge_d2) { badge_d2.textContent = m.d2Sup65 ? '✅ Oui' : '❌ Non'; badge_d2.style.color = m.d2Sup65 ? 'var(--green-ok)' : 'var(--muted)'; }
   } else {
     if (info_d2) info_d2.textContent = has_d2 ? 'Année de naissance non renseignée' : '—';
     if (badge_d2) { badge_d2.textContent = '—'; badge_d2.style.color = 'var(--muted)'; }
   }
 
-  // Calcul de la majoration
-  // Règle : si invalidité → plafond base 20 000 €, sinon 12 000 €
-  const plafond_base = any_invalide ? 20000 : 12000;
-  const mj_invalide = any_invalide ? (20000 - 12000) : 0;
+  set('mj_invalide', m.anyInvalide ? '+' + fmt(m.mjInvalide) : '0 €');
+  set('mj_pac', m.mjEnfants > 0 ? '+' + fmt(m.mjEnfants) : '0 €');
+  set('mj_age', m.mjAge > 0 ? '+' + fmt(m.mjAge) : '0 €');
+  set('mj_apa', m.mjApa > 0 ? '+' + fmt(m.mjApa) : '0 €');
+  set('mj_plafond_total', fmt(m.plafondTotal));
+  const pe = $('plaf_emploi_dom'); if (pe) pe.textContent = fmt(m.plafondTotal);
 
-  // +1 500 € par enfant à charge
-  const nb_enfants = Math.max(0, parseInt($('enfants_charge')?.value) || 0);
-  const mj_enfants = nb_enfants * 1500;
-
-  // +1 500 € par membre du foyer > 65 ans
-  const nb_sup65 = (d1_sup65 ? 1 : 0) + (d2_sup65 ? 1 : 0);
-  const mj_age = nb_sup65 * 1500;
-
-  // +1 500 € par ascendant APA
-  const nb_apa = Math.max(0, parseInt($('ascendants_apa')?.value) || 0);
-  const mj_apa = nb_apa * 1500;
-
-  // Total majoré, plafonné à 15 000 € (ou 20 000 € si invalidité)
-  const plafond_max = any_invalide ? 20000 : 15000;
-  const plafond_total = Math.min(plafond_max, plafond_base + mj_enfants + mj_age + mj_apa);
-  _plafond_emploi_dom = plafond_total;
-
-  // Mise à jour affichage
-  set('mj_invalide', any_invalide ? '+' + fmt(mj_invalide) : '0 €');
-  set('mj_pac', mj_enfants > 0 ? '+' + fmt(mj_enfants) : '0 €');
-  set('mj_age', mj_age > 0 ? '+' + fmt(mj_age) : '0 €');
-  set('mj_apa', mj_apa > 0 ? '+' + fmt(mj_apa) : '0 €');
-  set('mj_plafond_total', fmt(plafond_total));
-  const pe = $('plaf_emploi_dom'); if (pe) pe.textContent = fmt(plafond_total);
-
-  // Indicateur visuel si majoration active
   const bar = $('majoration-bar');
   if (bar) {
-    if (plafond_total > 12000) {
+    if (m.plafondTotal > 12000) {
       bar.style.background = 'rgba(10,102,64,0.06)';
       bar.style.borderColor = 'rgba(10,102,64,0.25)';
     } else {
@@ -1668,7 +1573,6 @@ function calcMajoration() {
       bar.style.borderColor = 'rgba(10,102,64,0.12)';
     }
   }
-  calc();
 }
 
 // ── Accordion ──
@@ -1679,154 +1583,18 @@ function toggleAcc(hdr) {
   body.classList.toggle('open', !open);
 }
 
-// ── Barème IR ──
-function getBareme() {
-  // Le taux de la première tranche vient du référentiel ; les bornes et les
-  // autres taux restent lus dans le formulaire, où l'utilisateur peut les
-  // ajuster.
-  //
-  // Les tranches sont jointives (issue #7) : chacune s'arrête à sa borne haute
-  // incluse, et la suivante reprend exactement là. Le code faisait auparavant
-  // commencer chaque tranche un euro plus haut, si bien qu'un euro par seuil
-  // n'était taxé nulle part et que ce simulateur rendait un impôt inférieur de
-  // 1,27 € à celui du simulateur « IR, CEHR et CDHR » pour un même revenu.
-  // C'est cette écriture jointive que portent déjà data/referentiels/ir.json,
-  // le barème des mutations à titre gratuit et le simulateur « IR, CEHR et
-  // CDHR ».
-  return [
-    {de:v('t1_de'), a:v('t1_a'), tx:BAREME_IR[0].taux},
-    {de:v('t1_a'),  a:v('t2_a'), tx:v('t2_tx')/100},
-    {de:v('t2_a'),  a:v('t3_a'), tx:v('t3_tx')/100},
-    {de:v('t3_a'),  a:v('t4_a'), tx:v('t4_tx')/100},
-    {de:v('t4_a'),  a:Infinity,  tx:v('t5_tx')/100},
-  ];
-}
-function impot(rev) {
-  return getBareme().reduce((s,t) => s + Math.max(0, Math.min(rev, t.a) - t.de) * t.tx, 0);
-}
-
-/**
- * Impôt du foyer après plafonnement de l'avantage du quotient familial.
- * Compare l'impôt avec le nombre de parts déclaré à celui calculé avec la
- * part de référence (1 ou 2) ; si l'économie dépasse le plafond par demi-part,
- * elle est ramenée à ce plafond.
- */
-function irAvecPlafonnementQuotient(revenu, parts, partsRef) {
-  if (revenu <= 0) return 0;
-  const taxN = impot(revenu / parts) * parts;
-  const taxRef = impot(revenu / partsRef) * partsRef;
-  const avantage = taxRef - taxN;
-  const demiPartsSup = Math.max(0, parts - partsRef) * 2;
-  const plafond = demiPartsSup * PLAFOND_DEMI_PART;
-  if (avantage > plafond) return taxRef - plafond;
-  return taxN;
-}
-
-// ── CEHR ──
-function calcCEHR(rfr, couple) {
-  // Même résultat qu'auparavant : chaque tranche n'est imposée que sur la part
-  // du revenu qu'elle couvre. Le barème du célibataire comportait une tranche
-  // intermédiaire au même taux que la suivante ; les deux se confondent.
-  const tranches = couple ? CEHR_BAREME.couple : CEHR_BAREME.celibataire;
-  return tranches.reduce(
-    (total, t) => total + Math.max(0, Math.min(rfr, t.max) - t.min) * t.taux,
-    0,
-  );
-}
-
-// ── CDHR ──
-/**
- * Calcule la CDHR à partir d'entrées explicites, sans lire le formulaire.
- *
- * Corrigé selon la fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md (issue #4) :
- * le référent fiscal a désigné la formule du simulateur
- * `Simulateur_IR 2025 et CEHR_CDHR 2026.html` comme celle qui fait foi. La
- * décote s'y applique dans la bande située entre le seuil d'assujettissement
- * et une borne haute, et se retranche de la cible de 20 % avant l'imputation
- * de l'impôt et de la CEHR déjà retenus — non de la contribution brute.
- *
- * @param {object} entrees
- * @param {number} entrees.rfrr revenu fiscal de référence retraité
- * @param {number} entrees.irCehr impôt et CEHR déjà retenus
- * @param {number} entrees.seuil seuil d'assujettissement applicable au foyer
- * @param {number} entrees.borneHaute borne haute de la bande de décote
- * @param {number} entrees.abattementTotal abattements applicables au foyer
- * @returns {{brut: number, decote: number, net: number, seuil: number}}
- */
-function calculerCDHR({ rfrr, irCehr, seuil, borneHaute, abattementTotal }) {
-  const cible = rfrr * CDHR.tauxCible;
-  const decote = (rfrr > seuil && rfrr <= borneHaute)
-    ? Math.max(0, cible - CDHR.coefficientDecote * (rfrr - seuil))
-    : 0;
-  const cibleApresDecote = Math.max(0, cible - decote);
-  const net = Math.max(0, cibleApresDecote - irCehr - abattementTotal);
-  return { brut: Math.max(0, cible - irCehr - abattementTotal), decote, net, seuil };
-}
-
-/** Lit le formulaire puis délègue le calcul de la CDHR. */
-function calcCDHR(rfrr, ir_cehr, couple, pac) {
-  const seuil      = couple ? CDHR.seuilCouple : CDHR.seuilCelibataire;
-  const borneHaute = couple ? CDHR.borneHauteDecoteCouple : CDHR.borneHauteDecoteCelibataire;
-  const aba_ic  = couple ? v('cdhr_aba_ic') : 0;
-  const aba_pac = pac * v('cdhr_aba_pac');
-  return calculerCDHR({
-    rfrr,
-    irCehr: ir_cehr,
-    seuil,
-    borneHaute,
-    abattementTotal: aba_ic + aba_pac,
-  });
-}
+// ── Barème IR, CEHR, CDHR ──
+// Les calculs vivent dans src/moteurs/irpp.js. Ces fonctions restent
+// appelables directement, avec les paramètres du formulaire.
+function getBareme() { return MoteurIrpp.baremeDepuisSaisies(lireSaisies(), PARAMETRES); }
+function impot(rev) { return MoteurIrpp.impot(rev, getBareme()); }
+function calculerCDHR(entrees) { return MoteurIrpp.calculerCDHR(entrees, PARAMETRES.cdhr); }
 
 // ── DONS ──
-// ── DONS ──
-// Le calcul des dons dépend du revenu net imposable, qui n'est connu qu'à la
-// fin du calcul principal. Il était auparavant mémorisé dans deux variables
-// partagées, `_dons_red_totale` et `_rni_for_dons` : la réduction affichée
-// restait alors celle d'une saisie précédente tant qu'un champ de dons n'était
-// pas modifié (issue #5).
-//
-// Le calcul reçoit désormais toutes ses entrées explicitement et ne conserve
-// aucun état entre deux appels.
-
-/** Rassemble les montants saisis dans l'onglet Dons. */
-function lireEntreesDons(rni) {
-  return {
-    // Plafond 75% : 1000 € (avant 14/10/2025) ou 2000 € (LF 2026 art. 28)
-    plafond75: cb('don75_lf2026') ? 2000 : 1000,
-    dons75: v('don75_restoscœur') + v('don75_secourspop') + v('don75_croixrouge') + v('don75_autres'),
-    dons66Directs: v('don66_fondations') + v('don66_partis') + v('don66_cultuels') + v('don66_nature') + v('don66_autres'),
-    rni,
-  };
-}
-
-/**
- * Calcule les réductions pour dons. Fonction pure : mêmes entrées, même
- * résultat, sans lecture du formulaire ni écriture dans la page.
- */
-function calculerDons({ dons75, dons66Directs, rni, plafond75 }) {
-  const d75_plaf = Math.min(dons75, plafond75);
-  const d75_excess = Math.max(0, dons75 - plafond75);
-  const red75 = d75_plaf * 0.75;
-
-  const d66_total = dons66Directs + d75_excess;
-  const rniConnu = rni > 0;
-  const plaf66 = rniConnu ? rni * 0.20 : Infinity;
-  const d66_pris = rniConnu ? Math.min(d66_total, plaf66) : d66_total;
-  const d66_excedent = Math.max(0, d66_total - d66_pris);
-  const red66 = d66_pris * 0.66;
-
-  const red_totale = red75 + red66;
-  const total_verses = dons75 + dons66Directs;
-
-  return {
-    plafond75, rniConnu,
-    d75: dons75, d75_plaf, d75_excess, red75,
-    d66_total, plaf66, d66_pris, d66_excedent, red66,
-    red_totale, total_verses,
-    taux_moyen: total_verses > 0 ? (red_totale / total_verses) * 100 : 0,
-  };
-}
+// Le calcul reçoit toutes ses entrées explicitement et ne conserve aucun état
+// entre deux appels (issue #5). Il vit dans le moteur ; le revenu net imposable
+// n'étant connu qu'à la fin du calcul principal, c'est `calc()` qui l'appelle.
+function calculerDons(entrees) { return MoteurIrpp.calculerDons(entrees); }
 
 /** Affiche un résultat de dons dans la page. */
 function afficherDons(r) {
@@ -1899,292 +1667,187 @@ function calcDons() {
   calc();
 }
 
-// ── CALCUL PRINCIPAL ──
-function calc() {
-  // Rafraîchir les majorations (âge auto-détecté)
-  calcMajoration._running = calcMajoration._running || false;
-  if (!calcMajoration._running) {
-    calcMajoration._running = true;
-    calcMajoration();
-    calcMajoration._running = false;
-  }
+// ── LECTURE DU FORMULAIRE ──
+const CHAMPS_NOMBRE = [
+  'aba_pen', 'aba_sal', 'acomptes', 'autre_rev_brut_d1', 'autre_rev_brut_d2', 'avance_60', 'avances',
+  'bic_brut_d1', 'bic_brut_d2', 'bic_charges', 'bnc_brut_d1', 'bnc_brut_d2', 'bnc_charges',
+  'bspce_brut_d1', 'bspce_brut_d2', 'cdhr_aba_ic', 'cdhr_aba_pac', 'cdhr_pac', 'credit', 'csg_ded_montant',
+  'dec_cel_mt', 'dec_cel_seuil', 'dec_cou_mt', 'dec_cou_seuil',
+  'don66_autres', 'don66_cultuels', 'don66_fondations', 'don66_nature', 'don66_partis',
+  'don75_autres', 'don75_croixrouge', 'don75_restoscœur', 'don75_secourspop',
+  'fon_brut_d1', 'fon_brut_d2', 'fon_charges', 'mv_report', 'nb_parts', 'pas',
+  'pen_brut_d1', 'pen_brut_d2', 'pen_etr_brut_d1', 'pen_etr_brut_d2', 'pen_taux_ps', 'ps_payes', 'ras',
+  'red_pens', 'red_scola', 'rfr_ret', 'sal_brut_d1', 'sal_brut_d2',
+  't1_a', 't1_de', 't2_a', 't2_tx', 't3_a', 't3_tx', 't4_a', 't4_tx', 't5_tx',
+  'div_brut', 'div_mv', 'int_brut', 'int_mv', 'autre_brut', 'autre_mv',
+  'microfon_brut_d1', 'microfon_brut_d2', 'loc_brut_d1', 'loc_brut_d2', 'microbnc_brut_d1', 'microbnc_brut_d2',
+  'microbic_vente_brut_d1', 'microbic_vente_brut_d2', 'microbic_serv_brut_d1', 'microbic_serv_brut_d2',
+  'ifi_taxes', 'ifi_interets', 'ifi_depenses', 'ifi_dons_verses',
+];
+const CHAMPS_ENTIER = ['naiss_d1', 'naiss_d2', 'enfants_charge', 'ascendants_apa'];
+const CASES = [
+  'has_d2', 'inv_d1', 'cmi_d1', 'inv_d2', 'cmi_d2', 'don75_lf2026',
+  'psx_div', 'psx_int', 'psx_autre', 'psx_sal', 'psx_bspce', 'psx_pen_etr',
+  'psx_microfon', 'psx_loc', 'psx_microbnc', 'psx_microbic_vente', 'psx_microbic_serv',
+  'psx_fon', 'psx_bnc', 'psx_bic', 'psx_autre_rev',
+];
 
-  // Fiche 2.2 : taux des PS modifiable, par défaut celui déjà employé ici.
+/**
+ * Lit tout le formulaire en un objet dont les clés sont les identifiants des
+ * champs : c'est l'entrée du moteur, qui n'accède jamais au DOM.
+ */
+function lireSaisies() {
+  const s = {};
+  CHAMPS_NOMBRE.forEach(id => { s[id] = v(id); });
+  CHAMPS_ENTIER.forEach(id => { s[id] = parseInt($(id)?.value) || 0; });
+  CASES.forEach(id => { s[id] = cb(id); });
+  // Fiche 2.2 : taux des PS modifiable ; un champ vide vaut le défaut du référentiel.
   const ps_taux_champ = $('ps_taux');
-  PS_TAUX = ps_taux_champ && ps_taux_champ.value !== '' ? v('ps_taux') / 100 : PS_TAUX_DEFAUT;
-  const ps_taux_lbl = (PS_TAUX*100).toLocaleString('fr-FR') + '%';
+  s.ps_taux = ps_taux_champ && ps_taux_champ.value !== '' ? v('ps_taux') : null;
+  return s;
+}
+
+// ── CALCUL PRINCIPAL ──
+// Un seul cycle : lecture du formulaire, moteur, affichage. Les champs de
+// l'onglet Dons, de la majoration et des plus-values passent tous par ici.
+function calc() {
+  afficher(MoteurIrpp.calculer(lireSaisies(), pvRows, PARAMETRES));
+}
+
+function afficher(R) {
+  PS_TAUX = R.psTaux;
+  afficherMajoration(R.majoration);
+
+  const ps_taux_lbl = (R.psTaux*100).toLocaleString('fr-FR') + '%';
   ['ps_lbl_pfu','ps_lbl_reel','ps_lbl_pfu2','ps_lbl_fon','ps_lbl_pv','ps_lbl_note','ps_lbl_totbar']
     .forEach(id => set(id, ps_taux_lbl));
-
-  const has_d2 = cb('has_d2');
-  const aba_sal_val = v('aba_sal');
-  const aba_pen_val = v('aba_pen');
-
-  ['aba_sal_lbl','aba_sal_lbl2','aba_sal_lbl3'].forEach(id => {
-    const e=$(id); if(e) e.textContent = fmt(aba_sal_val);
-  });
-  ['aba_pen_lbl','aba_pen_etr_lbl','aba_pen_lbl_note'].forEach(id => {
-    const e=$(id); if(e) e.textContent = fmt(aba_pen_val);
-  });
-  [['t2_de','t1_a'],['t3_de','t2_a'],['t4_de','t3_a'],['t5_de','t4_a']].forEach(([id,src])=>{
-    const e=$(id); if(e) e.textContent = fmt(v(src)+1);
-  });
+  ['aba_sal_lbl','aba_sal_lbl2','aba_sal_lbl3'].forEach(id => set(id, fmt(R.abaSalVal)));
+  ['aba_pen_lbl','aba_pen_etr_lbl','aba_pen_lbl_note'].forEach(id => set(id, fmt(R.abaPenVal)));
+  ['t2_de','t3_de','t4_de','t5_de'].forEach((id, i) => set(id, fmt(R.bareme[i].a + 1)));
 
   // ── PFU ──
-  const pfuDefs = [
-    ['div',   'div_brut',   'div_mv',   'psx_div'],
-    ['int',   'int_brut',   'int_mv',   'psx_int'],
-    ['autre', 'autre_brut', 'autre_mv', 'psx_autre'],
-  ];
-  let pfu_b=0, pfu_ir_t=0, pfu_ps_t=0;
-  pfuDefs.forEach(([p,bI,mI,psI]) => {
-    const base = Math.max(0, v(bI) - v(mI));
-    const ir   = base * PFU_TAUX_IR;
-    const ps   = cb(psI) ? base * PS_TAUX : 0;
-    set(`${p}_ir`,  fmt(ir,2));
-    set(`${p}_ps`,  fmt(ps,2));
-    set(`${p}_tot`, fmt(ir+ps,2));
-    set(`${p}_net`, fmt(base-ir-ps,2));
-    pfu_b += v(bI); pfu_ir_t += ir; pfu_ps_t += ps;
+  ['div', 'int', 'autre'].forEach(p => {
+    const l = R.pfu.lignes[p];
+    set(`${p}_ir`,  fmt(l.ir,2));
+    set(`${p}_ps`,  fmt(l.ps,2));
+    set(`${p}_tot`, fmt(l.tot,2));
+    set(`${p}_net`, fmt(l.net,2));
   });
-  const pfu_tot = pfu_ir_t + pfu_ps_t;
-  set('pfu_brut', fmt(pfu_b,2)); set('pfu_ir', fmt(pfu_ir_t,2));
-  set('pfu_ps',   fmt(pfu_ps_t,2)); set('pfu_tot', fmt(pfu_tot,2));
-  set('pfu_net',  fmt(pfu_b - pfu_tot,2));
-  set('sum_pfu',  'Flat Tax 30% — IR+PS : ' + fmt(pfu_tot,2));
+  set('pfu_brut', fmt(R.pfu.brut,2)); set('pfu_ir', fmt(R.pfu.ir,2));
+  set('pfu_ps',   fmt(R.pfu.ps,2)); set('pfu_tot', fmt(R.pfu.tot,2));
+  set('pfu_net',  fmt(R.pfu.net,2));
+  set('sum_pfu',  'Flat Tax 30% — IR+PS : ' + fmt(R.pfu.tot,2));
 
   // ── Salaires ──
-  const sal_b_d1 = v('sal_brut_d1'), sal_b_d2 = has_d2 ? v('sal_brut_d2') : 0;
-  const sal_aba_d1 = Math.min(sal_b_d1 * ABATTEMENT.salairesTaux, aba_sal_val);
-  const sal_aba_d2 = Math.min(sal_b_d2 * ABATTEMENT.salairesTaux, aba_sal_val);
-  const sal_imp_d1 = Math.max(0, sal_b_d1 - sal_aba_d1);
-  const sal_imp_d2 = Math.max(0, sal_b_d2 - sal_aba_d2);
-  const sal_imp_tot_val = sal_imp_d1 + sal_imp_d2;
-  const sal_ps = cb('psx_sal') ? sal_imp_tot_val * PS_TAUX : 0;
-  set('sal_aba_d1', fmt(sal_aba_d1,2)); set('sal_imp_d1', fmt(sal_imp_d1,2));
-  set('sal_aba_d2', fmt(sal_aba_d2,2)); set('sal_imp_d2', fmt(sal_imp_d2,2));
-  set('sal_imp_tot', fmt(sal_imp_tot_val,2));
-  set('sal_ps', fmt(sal_ps,2));
+  const S = R.salaires;
+  set('sal_aba_d1', fmt(S.abaD1,2)); set('sal_imp_d1', fmt(S.impD1,2));
+  set('sal_aba_d2', fmt(S.abaD2,2)); set('sal_imp_d2', fmt(S.impD2,2));
+  set('sal_imp_tot', fmt(S.impTot,2));
+  set('sal_ps', fmt(S.ps,2));
+  set('bspce_aba_d1', fmt(S.bspce.abaD1,2)); set('bspce_imp_d1', fmt(S.bspce.impD1,2));
+  set('bspce_aba_d2', fmt(S.bspce.abaD2,2)); set('bspce_imp_d2', fmt(S.bspce.impD2,2));
+  set('bspce_imp_tot', fmt(S.bspce.impTot,2));
+  set('bspce_ps', fmt(S.bspce.ps,2));
+  set('sal_tot_d1', fmt(S.totD1,2));
+  set('sal_tot_d2', fmt(S.totD2,2));
+  set('sal_grand_tot', fmt(S.grandTot,2));
+  set('sal_ps_tot', fmt(S.psTot,2));
+  set('sum_sal', 'Imposable : ' + fmt(S.grandTot,2));
 
-  // BSPCE
-  const bspce_b_d1 = v('bspce_brut_d1'), bspce_b_d2 = has_d2 ? v('bspce_brut_d2') : 0;
-  const bspce_aba_d1 = bspce_b_d1 * 0.71, bspce_aba_d2 = bspce_b_d2 * 0.71;
-  const bspce_imp_d1 = Math.max(0, bspce_b_d1 - bspce_aba_d1);
-  const bspce_imp_d2 = Math.max(0, bspce_b_d2 - bspce_aba_d2);
-  const bspce_imp_tot_val = bspce_imp_d1 + bspce_imp_d2;
-  const bspce_ps = cb('psx_bspce') ? bspce_imp_tot_val * PS_TAUX : 0;
-  set('bspce_aba_d1', fmt(bspce_aba_d1,2)); set('bspce_imp_d1', fmt(bspce_imp_d1,2));
-  set('bspce_aba_d2', fmt(bspce_aba_d2,2)); set('bspce_imp_d2', fmt(bspce_imp_d2,2));
-  set('bspce_imp_tot', fmt(bspce_imp_tot_val,2));
-  set('bspce_ps', fmt(bspce_ps,2));
-
-  const sal_tot_d1_val = sal_imp_d1 + bspce_imp_d1;
-  const sal_tot_d2_val = sal_imp_d2 + bspce_imp_d2;
-  const sal_grand_tot_val = sal_tot_d1_val + sal_tot_d2_val;
-  const sal_ps_tot_val = sal_ps + bspce_ps;
-  set('sal_tot_d1', fmt(sal_tot_d1_val,2));
-  set('sal_tot_d2', fmt(sal_tot_d2_val,2));
-  set('sal_grand_tot', fmt(sal_grand_tot_val,2));
-  set('sal_ps_tot', fmt(sal_ps_tot_val,2));
-  set('sum_sal', 'Imposable : ' + fmt(sal_grand_tot_val,2));
-
-  // ── PENSIONS françaises — taux saisi ──
-  const pen_d1 = v('pen_brut_d1'), pen_d2 = has_d2 ? v('pen_brut_d2') : 0;
-  const pen_brut_foyer = pen_d1 + pen_d2;
-  const pen_aba_calc   = pen_brut_foyer * 0.10;
-  const pen_aba_foyer  = Math.min(Math.max(pen_aba_calc, pen_brut_foyer > 0 ? ABATTEMENT.pensionsPlancher : 0), aba_pen_val);
-  const pen_imp_foyer_val = Math.max(0, pen_brut_foyer - pen_aba_foyer);
-  const pen_taux_ps_val = v('pen_taux_ps') / 100;
-  const pen_ps_val     = pen_brut_foyer * pen_taux_ps_val;
-  set('pen_total_brut',   fmt(pen_brut_foyer,2));
-  set('pen_aba_foyer',    fmt(pen_aba_foyer,2));
-  set('pen_imp_foyer',    fmt(pen_imp_foyer_val,2));
-  set('pen_ps',           fmt(pen_ps_val,2));
-
-  // Pensions étrangères
-  const pe_d1 = v('pen_etr_brut_d1'), pe_d2 = has_d2 ? v('pen_etr_brut_d2') : 0;
-  const pe_brut_foyer = pe_d1 + pe_d2;
-  const pe_aba_calc   = pe_brut_foyer * 0.10;
-  const pe_aba_foyer  = Math.min(Math.max(pe_aba_calc, pe_brut_foyer > 0 ? ABATTEMENT.pensionsPlancher : 0), aba_pen_val);
-  const pe_imp_foyer_val = Math.max(0, pe_brut_foyer - pe_aba_foyer);
-  const pe_ps_val     = cb('psx_pen_etr') ? pe_brut_foyer * 0.092 : 0;
-  set('pen_etr_total_brut',   fmt(pe_brut_foyer,2));
-  set('pen_etr_aba_foyer',    fmt(pe_aba_foyer,2));
-  set('pen_etr_imp_foyer',    fmt(pe_imp_foyer_val,2));
-  set('pen_etr_ps',           fmt(pe_ps_val,2));
-
-  const pen_grand_tot_val = pen_imp_foyer_val + pe_imp_foyer_val;
-  const pen_ps_tot_val    = pen_ps_val + pe_ps_val;
-  set('pen_grand_tot', fmt(pen_grand_tot_val,2));
-  set('pen_ps_tot',    fmt(pen_ps_tot_val,2));
-  set('sum_pen',       'Imposable : ' + fmt(pen_grand_tot_val,2));
-
-  const pr = $('pen_recap_txt');
-  if (pr) {
-    pr.textContent = `Total brut : ${fmt(pen_brut_foyer,0)} × 10% = ${fmt(pen_aba_calc,0)} → plafonné à ${fmt(pen_aba_foyer,0)} → imposable : ${fmt(pen_imp_foyer_val,0)} | PS ${(pen_taux_ps_val*100).toFixed(1)}% = ${fmt(pen_ps_val,0)}`;
+  // ── Pensions ──
+  const P = R.pensions;
+  set('pen_total_brut',   fmt(P.brut,2));
+  set('pen_aba_foyer',    fmt(P.aba,2));
+  set('pen_imp_foyer',    fmt(P.imp,2));
+  set('pen_ps',           fmt(P.ps,2));
+  set('pen_etr_total_brut',   fmt(P.etr.brut,2));
+  set('pen_etr_aba_foyer',    fmt(P.etr.aba,2));
+  set('pen_etr_imp_foyer',    fmt(P.etr.imp,2));
+  set('pen_etr_ps',           fmt(P.etr.ps,2));
+  set('pen_grand_tot', fmt(P.grandTot,2));
+  set('pen_ps_tot',    fmt(P.psTot,2));
+  set('sum_pen',       'Imposable : ' + fmt(P.grandTot,2));
+  const pr_txt = $('pen_recap_txt');
+  if (pr_txt) {
+    pr_txt.textContent = `Total brut : ${fmt(P.brut,0)} × 10% = ${fmt(P.abaCalc,0)} → plafonné à ${fmt(P.aba,0)} → imposable : ${fmt(P.imp,0)} | PS ${(P.tauxPs*100).toFixed(1)}% = ${fmt(P.ps,0)}`;
   }
 
   // ── Autres revenus avec abattement ──
-  const abaRevs = [
-    ['microfon',       0.30, 'psx_microfon',       PS_TAUX],
-    ['loc',            0.30, 'psx_loc',             PS_TAUX],
-    ['microbnc',       0.34, 'psx_microbnc',        PS_TAUX],
-    ['microbic_vente', 0.71, 'psx_microbic_vente',  PS_TAUX],
-    ['microbic_serv',  0.50, 'psx_microbic_serv',   PS_TAUX],
-  ];
-  let aba_imp_tot_val = 0, aba_ps_tot_val = 0;
-  abaRevs.forEach(([p, tx_aba, psId, tx_ps]) => {
-    const b_d1 = v(`${p}_brut_d1`);
-    const b_d2 = has_d2 ? v(`${p}_brut_d2`) : 0;
-    const b    = b_d1 + b_d2;
-    set(`${p}_brut_tot`, fmt(b, 2));
-    const aba = b * tx_aba;
-    const imp = Math.max(0, b - aba);
-    const ps  = cb(psId) ? imp * tx_ps : 0;
-    set(`${p}_aba`, fmt(aba,2));
-    set(`${p}_imp`, fmt(imp,2));
-    set(`${p}_ps`,  fmt(ps,2));
-    aba_imp_tot_val += imp;
-    aba_ps_tot_val  += ps;
+  Object.entries(R.abattus.lignes).forEach(([p, l]) => {
+    set(`${p}_brut_tot`, fmt(l.brut, 2));
+    set(`${p}_aba`, fmt(l.aba,2));
+    set(`${p}_imp`, fmt(l.imp,2));
+    set(`${p}_ps`,  fmt(l.ps,2));
   });
-  set('aba_imp_tot', fmt(aba_imp_tot_val,2));
-  set('aba_ps_tot',  fmt(aba_ps_tot_val,2));
-  set('sum_aba', 'Imposable : ' + fmt(aba_imp_tot_val,2));
+  set('aba_imp_tot', fmt(R.abattus.impTot,2));
+  set('aba_ps_tot',  fmt(R.abattus.psTot,2));
+  set('sum_aba', 'Imposable : ' + fmt(R.abattus.impTot,2));
 
   // ── Revenus sans abattement ──
-  const fon_b = v('fon_brut_d1') + (has_d2 ? v('fon_brut_d2') : 0);
-  set('fon_brut_tot', fmt(fon_b, 2));
-  const fon_imp = Math.max(0, fon_b - v('fon_charges'));
-  const fon_ps  = cb('psx_fon') ? fon_imp * PS_TAUX : 0;
-  set('fon_imp', fmt(fon_imp,2)); set('fon_ps', fmt(fon_ps,2));
+  [['fon', R.reel.fon], ['bnc', R.reel.bnc], ['bic', R.reel.bic], ['autre_rev', R.reel.autre]].forEach(([p, l]) => {
+    set(`${p}_brut_tot`, fmt(l.brut, 2));
+    set(`${p}_imp`, fmt(l.imp,2)); set(`${p}_ps`, fmt(l.ps,2));
+  });
+  set('reel_imp_tot', fmt(R.reel.impTot,2));
+  set('reel_ps_tot',  fmt(R.reel.psTot,2));
+  set('sum_reel', 'Imposable : ' + fmt(R.reel.impTot,2));
 
-  const bnc_b = v('bnc_brut_d1') + (has_d2 ? v('bnc_brut_d2') : 0);
-  set('bnc_brut_tot', fmt(bnc_b, 2));
-  const bnc_imp = Math.max(0, bnc_b - v('bnc_charges'));
-  const bnc_ps  = cb('psx_bnc') ? bnc_imp * PS_TAUX : 0;
-  set('bnc_imp', fmt(bnc_imp,2)); set('bnc_ps', fmt(bnc_ps,2));
-
-  const bic_b = v('bic_brut_d1') + (has_d2 ? v('bic_brut_d2') : 0);
-  set('bic_brut_tot', fmt(bic_b, 2));
-  const bic_imp = Math.max(0, bic_b - v('bic_charges'));
-  const bic_ps  = cb('psx_bic') ? bic_imp * PS_TAUX : 0;
-  set('bic_imp', fmt(bic_imp,2)); set('bic_ps', fmt(bic_ps,2));
-
-  const ar_b = v('autre_rev_brut_d1') + (has_d2 ? v('autre_rev_brut_d2') : 0);
-  set('autre_rev_brut_tot', fmt(ar_b, 2));
-  const ar_imp = Math.max(0, ar_b);
-  const ar_ps  = cb('psx_autre_rev') ? ar_imp * PS_TAUX : 0;
-  set('autre_rev_imp', fmt(ar_imp,2)); set('autre_rev_ps', fmt(ar_ps,2));
-
-  const reel_imp_tot_val = fon_imp + bnc_imp + bic_imp + ar_imp;
-  const reel_ps_tot_val  = fon_ps + bnc_ps + bic_ps + ar_ps;
-  set('reel_imp_tot', fmt(reel_imp_tot_val,2));
-  set('reel_ps_tot',  fmt(reel_ps_tot_val,2));
-  set('sum_reel', 'Imposable : ' + fmt(reel_imp_tot_val,2));
-
-  // ── PV ──
-  const pv_net = getPVNet();
-  const pv_ps  = getPVPS();
+  // ── Plus-values ──
+  afficherPlusValues(R.pv);
 
   // ── CSG déductible ──
-  const csg_ded_montant_val = v('csg_ded_montant');
-  set('csg_ded_display', fmt(csg_ded_montant_val, 2));
-  set('s_csg_ded', '− ' + fmt(csg_ded_montant_val, 2));
+  set('csg_ded_display', fmt(R.csgDed, 2));
+  set('s_csg_ded', '− ' + fmt(R.csgDed, 2));
 
   // ── Barème total ──
-  const total_bar_brut = sal_grand_tot_val + pen_grand_tot_val + aba_imp_tot_val + reel_imp_tot_val + pv_net;
-  const total_bar = Math.max(0, total_bar_brut - csg_ded_montant_val);
-  const rfr = total_bar_brut + pfu_b;
+  set('res_rfr',      fmt(R.rfr,2));
+  set('res_quotient', fmt(R.quotient,2));
+  set('res_parts_label', 'pour ' + R.nb + ' part' + (R.nb>1?'s':''));
 
-  const nb = Math.max(1, v('nb_parts'));
-  const couple = nb >= 2;
-  const quotient = total_bar / nb;
-  set('res_rfr',      fmt(rfr,2));
-  set('res_quotient', fmt(quotient,2));
-  set('res_parts_label', 'pour ' + nb + ' part' + (nb>1?'s':''));
+  afficherDons(R.dons);
+  set('sum_red', 'PAS + déductions : ' + fmt(R.pas + R.redHorsDons + R.redDons + R.credits,2));
 
-  const partsRef = couple ? 2 : 1;
-  const imp_foy = irAvecPlafonnementQuotient(total_bar, nb, partsRef);
-
-  // Décote
-  const dec_cel_seuil = v('dec_cel_seuil'), dec_cel_mt = v('dec_cel_mt');
-  const dec_cou_seuil = v('dec_cou_seuil'), dec_cou_mt = v('dec_cou_mt');
-  let decote = 0;
-  if (couple) decote = imp_foy > dec_cou_seuil ? 0 : Math.max(0, dec_cou_mt - imp_foy * DECOTE.taux);
-  else        decote = imp_foy > dec_cel_seuil ? 0 : Math.max(0, dec_cel_mt - imp_foy * DECOTE.taux);
-
-  // Réductions (hors dons)
-  const pas      = v('pas');
-  const red_tot_hors_dons = v('red_scola') + v('red_pens');
-  const credits  = v('credit');
-  const retenues = v('ras') + v('acomptes') + v('avances');
-  const ps_payes = v('ps_payes');
-
-  // Réduction dons : recalculée ici avec le revenu net imposable à jour, puis
-  // réaffichée. Elle ne provient plus d'un montant mémorisé lors d'une saisie
-  // précédente, qui restait périmé quand seul le revenu changeait (issue #5).
-  const dons = calculerDons(lireEntreesDons(total_bar));
-  afficherDons(dons);
-  const red_dons_val = dons.red_totale;
-  set('sum_red', 'PAS + déductions : ' + fmt(pas + red_tot_hors_dons + red_dons_val + credits,2));
-
-  const imp_net = Math.max(0, imp_foy - decote - red_tot_hors_dons - red_dons_val - pas);
-
-  set('s_impot_foyer', fmt(imp_foy,2));
-  set('s_decote',      fmt(decote,2));
-  set('s_red_tot',     fmt(red_tot_hors_dons,2));
-  set('s_red_dons',    fmt(red_dons_val,2));
-  set('s_pas',         fmt(pas,2));
-  set('s_impot_net',   fmt(imp_net,2), 's-green');
-  set('s_ir_pfu',      fmt(pfu_ir_t,2));
+  set('s_impot_foyer', fmt(R.impFoy,2));
+  set('s_decote',      fmt(R.decote,2));
+  set('s_red_tot',     fmt(R.redHorsDons,2));
+  set('s_red_dons',    fmt(R.redDons,2));
+  set('s_pas',         fmt(R.pas,2));
+  set('s_impot_net',   fmt(R.impNet,2), 's-green');
+  set('s_ir_pfu',      fmt(R.pfu.ir,2));
 
   // ── PS ──
-  const ps_fon_reel = fon_ps + bnc_ps + bic_ps + ar_ps + aba_ps_tot_val + sal_ps_tot_val;
-  set('s_ps_pen',  fmt(pen_ps_val,2));
-  set('s_ps_etr',  fmt(pe_ps_val,2));
-  set('s_ps_fon',  fmt(ps_fon_reel,2));
-  set('s_ps_pfu',  fmt(pfu_ps_t,2));
-  set('s_ps_pv',   fmt(pv_ps,2));
+  set('s_ps_pen',  fmt(P.ps,2));
+  set('s_ps_etr',  fmt(P.etr.ps,2));
+  set('s_ps_fon',  fmt(R.psFonReel,2));
+  set('s_ps_pfu',  fmt(R.pfu.ps,2));
+  set('s_ps_pv',   fmt(R.pv.ps,2));
 
-  // ── CEHR ──
-  const cehr = calcCEHR(rfr, couple);
-  set('s_cehr', fmt(cehr,2));
+  // ── CEHR / CDHR ──
+  set('s_cehr', fmt(R.cehr,2));
+  set('sum_cdhr', 'Art. 224 CGI · RFRR : ' + fmt(R.rfrr,2));
+  set('cdhr_brut', fmt(R.cdhr.brut,2));
+  set('cdhr_net',  fmt(R.cdhr.net,2));
+  set('s_cdhr',    fmt(R.cdhr.net,2));
 
-  // ── CDHR ──
-  const rfrr = v('rfr_ret');
-  const pac  = Math.max(0, Math.round(v('cdhr_pac')));
-  set('sum_cdhr', 'Art. 224 CGI · RFRR : ' + fmt(rfrr,2));
-  const ir_cehr_ref = imp_net + pfu_ir_t + cehr;
-  const cdhr = calcCDHR(rfrr, ir_cehr_ref, couple, pac);
-  set('cdhr_brut', fmt(cdhr.brut,2));
-  set('cdhr_net',  fmt(cdhr.net,2));
-  set('s_cdhr',    fmt(cdhr.net,2));
+  set('s_credits',  fmt(R.credits,2));
+  set('s_ps_payes', fmt(R.psPayes,2));
+  set('s_ret',      fmt(R.retenues,2));
+  set('s_avance60', fmt(R.avance60, 2));
 
-  set('s_credits',  fmt(credits,2));
-  set('s_ps_payes', fmt(ps_payes,2));
-  set('s_ret',      fmt(retenues,2));
-
-  const ps_total = pen_ps_val + pe_ps_val + ps_fon_reel + pfu_ps_t + pv_ps;
-  const avance_60_val = v('avance_60');
-  set('s_avance60', fmt(avance_60_val, 2));
-
-  const final_val = imp_net + pfu_ir_t + cehr + cdhr.net + ps_total - credits - retenues - ps_payes + avance_60_val;
-  set('res_final', fmt(final_val,2), final_val < 0 ? 'neg' : '');
-  set('s_final',   fmt(final_val,2));
+  set('res_final', fmt(R.final,2), R.final < 0 ? 'neg' : '');
+  set('s_final',   fmt(R.final,2));
   const sf = $('s_final');
-  if(sf) { if(final_val < 0) sf.classList.add('s-red'); else sf.classList.remove('s-red'); }
+  if(sf) { if(R.final < 0) sf.classList.add('s-red'); else sf.classList.remove('s-red'); }
 
   // ── Sticky bar ──
-  set('st_rfr',   fmt(rfr,2));
-  set('st_ir',    fmt(imp_net,2));
-  set('st_pfu',   fmt(pfu_ir_t,2));
-  set('st_cehr',  fmt(cehr,2));
-  set('st_cdhr',  fmt(cdhr.net,2));
-  set('st_ps',    fmt(ps_total,2));
-  set('st_dons',  fmt(red_dons_val,2));
-  set('st_total', fmt(final_val,2));
-
-  updatePVTotals();
+  set('st_rfr',   fmt(R.rfr,2));
+  set('st_ir',    fmt(R.impNet,2));
+  set('st_pfu',   fmt(R.pfu.ir,2));
+  set('st_cehr',  fmt(R.cehr,2));
+  set('st_cdhr',  fmt(R.cdhr.net,2));
+  set('st_ps',    fmt(R.psTotal,2));
+  set('st_dons',  fmt(R.redDons,2));
+  set('st_total', fmt(R.final,2));
 }
 
 // ════════ PV ════════
@@ -2272,34 +1935,13 @@ function pr(id, k, val) {
 }
 function rmPV(id) { pvRows = pvRows.filter(r=>r.id!==id); renderPV(); calc(); }
 
-function dy(d1, d2) {
-  if(!d1||!d2) return null;
-  const a=new Date(d1), b=new Date(d2);
-  if(isNaN(a)||isNaN(b)) return null;
-  let y = b.getFullYear()-a.getFullYear();
-  if(b.getMonth()<a.getMonth() || (b.getMonth()===a.getMonth()&&b.getDate()<a.getDate())) y--;
-  return Math.max(0,y);
-}
-// Fiche 2.5 de docs/CORRECTIONS_A_VALIDER.md : le référent fiscal a confirmé
-// que l'abattement de droit commun s'ouvre dès la durée de détention révolue
-// (deux ans, puis huit ans), et non seulement au-delà — comme le régime
-// renforcé l'appliquait déjà.
-function abTx(y, r) {
-  if(y===null) return 0;
-  return r ? (y>=8?.85 : y>=4?.65 : y>=2?.5 : 0) : (y>=8?.65 : y>=2?.5 : 0);
-}
-function pvCalc(r) {
-  const ba=r.pu_a*r.qte, na=(ba+r.fr_a)/(r.fx_a||1);
-  const bc=r.pu_c*r.qte, nc=(bc-r.fr_c)/(r.fx_c||1);
-  const pvmv=nc-na, y=dy(r.da,r.dc), tx=abTx(y,r.renf);
-  const mt=pvmv>0?pvmv*tx:0, net=pvmv-mt;
-  // PS calculé sur la PV brute (avant abattement durée) conformément aux règles fiscales
-  const ps=r.psx ? Math.max(0,pvmv)*PS_TAUX : 0;
-  return {ba,na,bc,nc,pvmv,y,tx,mt,net,ps};
-}
-function updatePVCalc() {
-  pvRows.forEach(r => {
-    const c=pvCalc(r), id=r.id;
+// Les calculs d'une cession — durée, abattement, PS — vivent dans le moteur.
+// Toute saisie d'une carte déclenche le calcul complet, une seule fois.
+function updatePVCalc() { calc(); }
+
+function afficherPlusValues(pv) {
+  pv.lignes.forEach(c => {
+    const id = c.id;
     const n=(i,val,neg=false)=>{const e=$(i);if(!e)return;e.textContent=fmt(val,2);e.className='calc-val'+(neg&&val<0?' neg':'');};
     n(`pn_a_${id}`,c.na); n(`pn_c_${id}`,c.nc);
     const eh=$(`hpvmv_${id}`);
@@ -2310,35 +1952,15 @@ function updatePVCalc() {
     const et=$(`txab_${id}`); if(et){et.className='calc-val';et.textContent=(c.tx*100).toFixed(0)+'%';}
     n(`mtab_${id}`,c.mt); n(`pvn_${id}`,c.net,true); n(`pvps_${id}`,c.ps);
   });
-  updatePVTotals();
-  calc();
-}
-function getPVNet() {
-  // PV nette totale après imputation MV reportables
-  const tot_net = pvRows.reduce((s,r)=>s+pvCalc(r).net, 0);
-  const mv_rep = v('mv_report');
-  return Math.max(0, tot_net - mv_rep);
-}
-function getPVPS()    { return pvRows.reduce((s,r)=>s+pvCalc(r).ps,  0); }
-function updatePVTotals() {
-  const tp=pvRows.reduce((s,r)=>s+pvCalc(r).pvmv,0);
-  const tn_raw=pvRows.reduce((s,r)=>s+pvCalc(r).net, 0);
-  const mv_rep = v('mv_report');
-  const tn = Math.max(0, tn_raw - mv_rep);
-  const mv_res = Math.max(0, mv_rep - tn_raw);
-  const tps=pvRows.reduce((s,r)=>s+pvCalc(r).ps,  0);
 
   const e1=$('pv_tot_pvmv'), e2=$('pv_tot_net'), e3=$('pv_tot_ps'), e4=$('mv_residuelle'), e5=$('pv_tot_mv_report');
-  if(e1){e1.textContent=fmt(tp,2); e1.className='val'+(tp<0?' neg':'');}
-  if(e2){e2.textContent=fmt(tn,2); e2.className='val gold'+(tn<0?' neg':'');}
-  if(e3) e3.textContent=fmt(tps,2);
-  if(e4){e4.textContent=fmt(mv_res,2); e4.className='calc-val'+(mv_res>0?' calc-neg':'');}
-  if(e5) e5.textContent = mv_rep > 0 ? fmt(Math.min(mv_rep, Math.max(0,tn_raw)),2) : '0 €';
-
-  // IR estimé sur PV nette
-  const ir_est = impot(tn / Math.max(1, v('nb_parts'))) * Math.max(1, v('nb_parts'));
+  if(e1){e1.textContent=fmt(pv.totPvmv,2); e1.className='val'+(pv.totPvmv<0?' neg':'');}
+  if(e2){e2.textContent=fmt(pv.net,2); e2.className='val gold'+(pv.net<0?' neg':'');}
+  if(e3) e3.textContent=fmt(pv.ps,2);
+  if(e4){e4.textContent=fmt(pv.mvResiduelle,2); e4.className='calc-val'+(pv.mvResiduelle>0?' calc-neg':'');}
+  if(e5) e5.textContent = pv.mvReport > 0 ? fmt(pv.mvImputee,2) : '0 €';
   const e6=$('pv_tot_ir_estime');
-  if(e6) e6.textContent = fmt(ir_est, 2);
+  if(e6) e6.textContent = fmt(pv.irEstime, 2);
 }
 
 // ── Lock ──
@@ -2419,70 +2041,29 @@ function pb(id, k, val) {
 function rmBien(id) { ifiBiens = ifiBiens.filter(b => b.id !== id); renderBiens(); }
 
 function calcIFI() {
-  const SEUIL_IFI = IFI.seuil, SEUIL_DECOTE_MAX = IFI.decotePlafond;
-  let tot_venale=0, tot_ifi_val=0, tot_dette=0;
-  ifiBiens.forEach(b => {
-    const val_ifi = b.rp ? b.valeur * (1 - IFI.abattementResidencePrincipale) : b.valeur;
-    const val_nette = Math.max(0, val_ifi - b.dette);
-    const e_val=$(`ifi_val_${b.id}`), e_net=$(`ifi_net_${b.id}`);
-    if(e_val) e_val.textContent = fmt(val_ifi,2);
-    if(e_net) e_net.textContent = fmt(val_nette,2);
-    tot_venale += b.valeur; tot_ifi_val += val_ifi; tot_dette += b.dette;
+  const s = lireSaisies();
+  const r = MoteurIrpp.calculerIfi(ifiBiens, s, IFI);
+  r.lignes.forEach(l => {
+    const e_val=$(`ifi_val_${l.id}`), e_net=$(`ifi_net_${l.id}`);
+    if(e_val) e_val.textContent = fmt(l.valIfi,2);
+    if(e_net) e_net.textContent = fmt(l.valNette,2);
   });
-  const tot_net_biens = Math.max(0, tot_ifi_val - tot_dette);
-  set('ifi_tot_venale', fmt(tot_venale,2)); set('ifi_tot_ifi', fmt(tot_ifi_val,2));
-  set('ifi_tot_dette',  fmt(tot_dette,2));  set('ifi_tot_net',  fmt(tot_net_biens,2));
-
-  const taxes=v('ifi_taxes'), interets=v('ifi_interets'), depenses=v('ifi_depenses');
-  const dons_vers=v('ifi_dons_verses'), red_dons=dons_vers*IFI.reductionDonsTaux;
-  const tot_ded=taxes+interets+depenses;
-  set('ifi_tot_deductions', fmt(tot_ded,2)); set('ifi_red_dons', fmt(red_dons,2));
-
-  const pat_brut = tot_ifi_val;
-  const pat_net_avant = Math.max(0, pat_brut - tot_dette - tot_ded);
-  set('ifi_s_brut',      fmt(pat_brut,2));
-  set('ifi_s_deductions',fmt(tot_dette+tot_ded,2));
-  set('ifi_s_net_avant', fmt(pat_net_avant,2));
-  set('ifi_res_net',     fmt(pat_net_avant,2));
-
-  // Barème lu dans les données. Le décalage d'un euro entre tranches est celui
-  // du référentiel et n'est pas corrigé ici : il relève de l'issue #7.
-  const bareme=IFI.bareme.map(t=>({de:t.min, a:t.max, tx:t.taux}));
-  const ids=['ifi_t1','ifi_t2','ifi_t3','ifi_t4','ifi_t5','ifi_t6'];
-  function baremeIFI(base){
-    let total=0; const montants=bareme.map(t=>{
-      const m=Math.max(0,Math.min(base,t.a)-t.de)*t.tx; total+=m; return m;
-    });
-    return { total, montants };
-  }
-  function decoteIFI(patrimoineNet){
-    if (patrimoineNet>=SEUIL_DECOTE_MAX) return 0;
-    return Math.max(0, IFI.decoteMontant - IFI.decoteTaux*patrimoineNet);
-  }
-
-  // Méthode « en deux temps » du simulateur IFI, retenue par le référent
-  // fiscal (fiche 2.4 de docs/CORRECTIONS_A_VALIDER.md) : l'IFI théorique est
-  // d'abord calculé et retranché du patrimoine net, puis l'impôt définitif et
-  // sa décote se recalculent sur ce patrimoine réduit.
-  const decoteTheo = decoteIFI(pat_net_avant);
-  const ifiTheoriqueApresDecote = Math.max(0, baremeIFI(pat_net_avant).total - decoteTheo);
-  const ifiTheoriqueNet = Math.max(0, ifiTheoriqueApresDecote - red_dons);
-  const pat_net_apres = Math.max(0, pat_net_avant - ifiTheoriqueNet);
-  set('ifi_s_theorique', fmt(ifiTheoriqueApresDecote,2)); set('ifi_s_net_apres',fmt(pat_net_apres,2));
-
-  const { total: ifi_calcule, montants } = baremeIFI(pat_net_apres);
-  montants.forEach((m,i)=> set(ids[i], fmt(m,2)));
-  const decote = decoteIFI(pat_net_apres);
-  set('ifi_s_decote', fmt(decote,2));
-
-  const ifi_final=Math.max(0,ifi_calcule-decote-red_dons);
-  const ifi_du=pat_net_avant>=SEUIL_IFI?ifi_final:0;
-  set('ifi_s_red_dons',fmt(red_dons,2)); set('ifi_s_final',fmt(ifi_du,2)); set('ifi_res_final',fmt(ifi_du,2));
+  set('ifi_tot_venale', fmt(r.totVenale,2)); set('ifi_tot_ifi', fmt(r.totIfiVal,2));
+  set('ifi_tot_dette',  fmt(r.totDette,2));  set('ifi_tot_net',  fmt(r.totNetBiens,2));
+  set('ifi_tot_deductions', fmt(r.totDed,2)); set('ifi_red_dons', fmt(r.redDons,2));
+  set('ifi_s_brut',      fmt(r.patBrut,2));
+  set('ifi_s_deductions',fmt(r.totDette+r.totDed,2));
+  set('ifi_s_net_avant', fmt(r.patNetAvant,2));
+  set('ifi_res_net',     fmt(r.patNetAvant,2));
+  set('ifi_s_theorique', fmt(r.ifiTheoriqueApresDecote,2)); set('ifi_s_net_apres',fmt(r.patNetApres,2));
+  ['ifi_t1','ifi_t2','ifi_t3','ifi_t4','ifi_t5','ifi_t6'].forEach((id,i)=> set(id, fmt(r.montantsParTranche[i],2)));
+  set('ifi_s_decote', fmt(r.decote,2));
+  set('ifi_s_red_dons',fmt(r.redDons,2)); set('ifi_s_final',fmt(r.ifiDu,2)); set('ifi_res_final',fmt(r.ifiDu,2));
 
   const sub=$('ifi_res_sub');
   if(sub){
-    if(pat_net_avant<SEUIL_IFI){sub.textContent='En-dessous du seuil de 1 300 000 €';sub.style.color='var(--muted)';}
-    else{sub.textContent='Patrimoine net : '+fmt(pat_net_avant,2);sub.style.color='var(--forest)';}
+    if(r.sousLeSeuil){sub.textContent='En-dessous du seuil de '+fmt(IFI.seuil,0);sub.style.color='var(--muted)';}
+    else{sub.textContent='Patrimoine net : '+fmt(r.patNetAvant,2);sub.style.color='var(--forest)';}
   }
 }
 
@@ -2504,20 +2085,21 @@ function calcCSGHelper() {
 function appliquerReferentielAuFormulaire() {
   const ecrire = (id, valeur) => { const e = $(id); if (e) e.value = valeur; };
 
-  ecrire('t1_de', BAREME_IR[0].min);
-  BAREME_IR.slice(0, -1).forEach((tranche, i) => ecrire(`t${i + 1}_a`, tranche.max));
-  BAREME_IR.slice(1).forEach((tranche, i) => ecrire(`t${i + 2}_tx`, tranche.taux * 100));
+  const { baremeIr, abattement, decote, cdhr } = PARAMETRES;
+  ecrire('t1_de', baremeIr[0].min);
+  baremeIr.slice(0, -1).forEach((tranche, i) => ecrire(`t${i + 1}_a`, tranche.max));
+  baremeIr.slice(1).forEach((tranche, i) => ecrire(`t${i + 2}_tx`, tranche.taux * 100));
 
-  ecrire('aba_sal', ABATTEMENT.salairesPlafond);
-  ecrire('aba_pen', ABATTEMENT.pensionsPlafond);
+  ecrire('aba_sal', abattement.salairesPlafond);
+  ecrire('aba_pen', abattement.pensionsPlafond);
 
-  ecrire('dec_cel_seuil', DECOTE.celibataire.seuil);
-  ecrire('dec_cel_mt', DECOTE.celibataire.montant);
-  ecrire('dec_cou_seuil', DECOTE.couple.seuil);
-  ecrire('dec_cou_mt', DECOTE.couple.montant);
+  ecrire('dec_cel_seuil', decote.celibataire.seuil);
+  ecrire('dec_cel_mt', decote.celibataire.montant);
+  ecrire('dec_cou_seuil', decote.couple.seuil);
+  ecrire('dec_cou_mt', decote.couple.montant);
 
-  ecrire('cdhr_aba_ic', CDHR.abattementImpositionCommune);
-  ecrire('cdhr_aba_pac', CDHR.abattementParPersonneACharge);
+  ecrire('cdhr_aba_ic', cdhr.abattementImpositionCommune);
+  ecrire('cdhr_aba_pac', cdhr.abattementParPersonneACharge);
 
   ecrire('ps_taux', PS_TAUX_DEFAUT * 100);
 }
@@ -2526,8 +2108,6 @@ function appliquerReferentielAuFormulaire() {
 appliquerReferentielAuFormulaire();
 document.querySelectorAll('.d2-col, .d2-hidden').forEach(el => { el.style.display = 'none'; });
 calcIFI();
-calcMajoration();
-calcDons();
 calc();
 </script>
 </body>

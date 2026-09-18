@@ -114,15 +114,17 @@ sa présentation. `Conventions.formaterMontant()` prend le nombre de décimales
 en paramètre plutôt que de l'imposer : le jour où le choix sera fait, il se
 posera à un seul endroit.
 
-### 2.2 Arrondis intermédiaires — un cas isolé à corriger
+### 2.2 Arrondis intermédiaires — corrigé
 
 Les arrondis sont partout réservés à l'affichage, ce qui est sain. Une
-exception : dans l'IFI, l'exonération des fermages est arrondie à l'euro pour
-l'affichage alors que le calcul réutilise la valeur non arrondie. Le détail
-montré peut donc différer de quelques centimes du montant réellement retenu.
+exception subsistait : dans l'IFI, l'exonération des fermages était arrondie à
+l'euro pour l'affichage alors que le calcul réutilisait la valeur non arrondie.
+Le détail montré pouvait donc différer de quelques centimes du montant
+réellement retenu.
 
-C'est une incohérence interne, pas une question de droit : l'affichage doit
-montrer ce que le calcul emploie. Reste à corriger.
+C'était une incohérence interne, pas une question de droit : l'affichage doit
+montrer ce que le calcul emploie. Corrigé en `0.6.0-beta.1`, lors du
+découplage du moteur IFI (#25) : les deux champs affichent la valeur exacte.
 
 ### 2.3 Champs obligatoires et messages d'erreur — politique à appliquer
 

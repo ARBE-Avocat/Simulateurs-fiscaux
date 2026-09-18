@@ -318,7 +318,7 @@ Aucune étape ne mélange déplacement de fichiers et changement de calcul.
 | M1 | 0.5 | `_config.yml` protecteur ; création de `data/`, du schéma (#12) et de l'outillage (#18). Aucun HTML déplacé ni modifié. | nul |
 | M2 | 0.5 | Extraction des référentiels (#14 à #17, #13). Les HTML restent à la racine et chargent `src/genere/referentiels.js` par chemin relatif. **Engagée** : #16 est livrée. | faible, verrouillé par comparaison avant/après |
 | M3 | 0.6 | Déplacement vers `simulateurs/<slug>/` (voir l'amendement du §2.3), build `site/`, redirections, workflow de publication Pages (avec #28). **Réalisée** en `0.6.0-beta.1` ; la bascule du réglage Pages sur « GitHub Actions » appartient au propriétaire, au moment de la fusion dans `main`. | moyen, concentré sur les chemins |
-| M4 | 0.6 | Découplage des moteurs vers `src/moteurs/` (#21). | moyen |
+| M4 | 0.6 | Découplage des moteurs vers `src/moteurs/` (#21). **Réalisée** en `0.6.0-beta.1` : six moteurs sans DOM, un fichier par simulateur, barème IFI partagé entre le simulateur IFI et la section IFI de l'IRPP. | moyen |
 | M5 | 0.6 / 0.7 | Feuille de style commune dans `src/styles/` (#31), en PR distinctes du découplage. | faible |
 | M6 | 0.7 | Nettoyage final, `CODEMAP.md`, accessibilité (#29). | faible |
 
