@@ -542,6 +542,7 @@
 <script src="../../src/lecture-referentiels.js"></script>
 <script src="../../src/millesime.js"></script>
 <script src="../../src/change.js"></script>
+<script src="../../src/moteurs/pv-immobiliere.js"></script>
 <script>
 
 
@@ -595,14 +596,6 @@ async function assurerTaux(dateStr, currency) {
   compute();
 }
 
-function fullYears(d1, d2) {
-  if (!d1 || !d2 || d2 <= d1) return 0;
-  let y = d2.getFullYear() - d1.getFullYear();
-  const anniv = new Date(d1); anniv.setFullYear(d2.getFullYear());
-  if (anniv > d2) y--;
-  return Math.max(0, y);
-}
-
 // ============================================================
 // RÉFÉRENTIEL DE LA PLUS-VALUE IMMOBILIÈRE
 // ============================================================
@@ -622,14 +615,10 @@ function fullYears(d1, d2) {
 let PVI;
 let REF_PS;
 
-let TAUX_IR;
-let FORFAIT_FRAIS_ACQUISITION;
-let FORFAIT_TRAVAUX;
-let FORFAIT_TRAVAUX_DUREE_MINIMALE;
-let ABATTEMENT_IR;
-let ABATTEMENT_PS;
-let SURTAXE_PALIERS;
-let TAUX_PS;
+// Paramètres fiscaux du millésime courant, lus par le moteur
+// (src/moteurs/pv-immobiliere.js). La page ne connaît plus les identifiants
+// du référentiel.
+let PARAMETRES;
 
 // `undefined` signifie « jamais chargé », `null` « chargé sans date de
 // rattachement ». Les confondre empêcherait le tout premier chargement.
@@ -655,32 +644,12 @@ function appliquerMillesime(annee) {
   PVI = LectureReferentiels.lecteur('pv-immobiliere', { millesime: annee });
   REF_PS = LectureReferentiels.lecteur('prelevements-sociaux', { millesime: annee });
 
-  TAUX_IR = PVI.valeur('pv-immobiliere.taux.impot-revenu');
-  FORFAIT_FRAIS_ACQUISITION = PVI.valeur('pv-immobiliere.forfait.frais-acquisition');
-  FORFAIT_TRAVAUX = PVI.valeur('pv-immobiliere.forfait.travaux');
-  FORFAIT_TRAVAUX_DUREE_MINIMALE = PVI.valeur('pv-immobiliere.forfait.travaux.duree-minimale');
-
-  ABATTEMENT_IR = {
-    tauxAnnuel: PVI.valeur('pv-immobiliere.abattement.ir.taux-annuel'),
-    anneeDebut: PVI.valeur('pv-immobiliere.abattement.ir.annee-debut'),
-    anneeExoneration: PVI.valeur('pv-immobiliere.abattement.ir.annee-exoneration'),
-  };
-
-  ABATTEMENT_PS = {
-    tauxAnnuel: PVI.valeur('pv-immobiliere.abattement.ps.taux-annuel'),
-    tauxAnnee22: PVI.valeur('pv-immobiliere.abattement.ps.taux-annee-22'),
-    tauxAnnuelApres22: PVI.valeur('pv-immobiliere.abattement.ps.taux-annuel-apres-22'),
-    anneeExoneration: PVI.valeur('pv-immobiliere.abattement.ps.annee-exoneration'),
-  };
-
-  SURTAXE_PALIERS = PVI.valeur('pv-immobiliere.surtaxe.paliers');
-
-  // Le taux des prélèvements sociaux est contesté : deux simulateurs du dépôt en
-  // appliquent un différent. Fiche 2.2 de docs/CORRECTIONS_A_VALIDER.md : le
+  // Le taux des prélèvements sociaux est contesté : deux simulateurs du dépôt
+  // en appliquent un différent. Fiche 2.2 de docs/CORRECTIONS_A_VALIDER.md : le
   // référent fiscal a confirmé que les deux taux sont justes selon le revenu
   // concerné (LF2026) et a demandé de conserver ce taux par défaut, tout en le
   // rendant modifiable. Voir le champ « tauxPSManuel », lu dans compute().
-  TAUX_PS = REF_PS.variante('ps.taux.global', '17-2');
+  PARAMETRES = MoteurPvImmobiliere.parametresDepuisReferentiels(PVI, REF_PS);
 
   millesimeCharge = annee;
   return true;
@@ -715,46 +684,11 @@ function afficherMillesime() {
 
 appliquerMillesime(null);
 
-// Abattement IR pour durée de détention — CGI art. 150 VC
-function abatIR(years) {
-  if (years <= ABATTEMENT_IR.anneeDebut) return 0;
-  if (years < ABATTEMENT_IR.anneeExoneration) {
-    return (years - ABATTEMENT_IR.anneeDebut) * ABATTEMENT_IR.tauxAnnuel;
-  }
-  return 1; // exonéré à partir de la 22e année
-}
-
-// Abattement PS pour durée de détention — CGI art. 150 VC
-function abatPS(years) {
-  // Les années au taux annuel de base : de la 6e à la 21e incluses.
-  const anneesTauxDeBase = ABATTEMENT_IR.anneeExoneration - 1 - ABATTEMENT_IR.anneeDebut;
-  const acquisALaVingtDeuxieme = anneesTauxDeBase * ABATTEMENT_PS.tauxAnnuel + ABATTEMENT_PS.tauxAnnee22;
-
-  if (years <= ABATTEMENT_IR.anneeDebut) return 0;
-  if (years < ABATTEMENT_IR.anneeExoneration) {
-    return (years - ABATTEMENT_IR.anneeDebut) * ABATTEMENT_PS.tauxAnnuel;
-  }
-  if (years === ABATTEMENT_IR.anneeExoneration) return acquisALaVingtDeuxieme;
-  if (years <= ABATTEMENT_PS.anneeExoneration) {
-    return acquisALaVingtDeuxieme
-      + (years - ABATTEMENT_IR.anneeExoneration) * ABATTEMENT_PS.tauxAnnuelApres22;
-  }
-  return 1; // exonéré à partir de la 30e année
-}
-
-// Surtaxe pour les plus-values imposables à l'IR supérieures à 50 000 € — art. 1609 nonies G CGI / BOI-RFPI-TPVIE-20
-function surtaxe(pv) {
-  // Chaque palier s'applique tant que la plus-value ne dépasse pas son plafond ;
-  // le dernier n'en a pas. Sur les paliers de raccordement, un coefficient de
-  // lissage retranche ce qui manque pour atteindre le plafond.
-  for (const palier of SURTAXE_PALIERS) {
-    if (palier.plafond === null || pv <= palier.plafond) {
-      const lissage = palier.lissage ? (palier.plafond - pv) * palier.lissage : 0;
-      return palier.taux * pv - lissage;
-    }
-  }
-  return 0;
-}
+// Abattements pour durée de détention (CGI art. 150 VC) et surtaxe (art. 1609
+// nonies G) : calculés par le moteur avec les paramètres du millésime courant.
+function abatIR(years) { return MoteurPvImmobiliere.abattementIr(years, PARAMETRES); }
+function abatPS(years) { return MoteurPvImmobiliere.abattementPs(years, PARAMETRES); }
+function surtaxe(pv) { return MoteurPvImmobiliere.surtaxe(pv, PARAMETRES.surtaxePaliers); }
 
 function compute() {
   // Le droit applicable est celui de l'année de cession. Un choix manuel de
@@ -772,15 +706,14 @@ function compute() {
   appliquerMillesime(millesimeManuel !== null ? millesimeManuel : anneeCession);
   afficherMillesime();
 
-  // Fiche 2.2 : taux des PS modifiable, par défaut celui du référentiel.
+  // Fiche 2.2 : taux des PS modifiable, par défaut celui du référentiel. Un
+  // champ vidé revient au défaut, au lieu de conserver la dernière saisie.
   const psTauxManuel = document.getElementById('tauxPSManuel').value;
-  if (psTauxManuel !== '') TAUX_PS = parseFloat(psTauxManuel) / 100;
 
   const dAcq = getDate('dateAcq');
   const dCes = getDate('dateCes');
   const devise = el('devise').value;
   const isFx = devise !== 'EUR';
-  const years = (dAcq && dCes) ? fullYears(dAcq, dCes) : null;
 
   const dAcqStr = dAcq ? dAcq.toISOString().slice(0, 10) : null;
   const dCesStr = dCes ? dCes.toISOString().slice(0, 10) : null;
@@ -793,6 +726,24 @@ function compute() {
     if (dCesStr) assurerTaux(dCesStr, devise);
     if (dAcqStr) assurerTaux(dAcqStr, devise);
   }
+
+  // Le calcul vit dans src/moteurs/pv-immobiliere.js : la page lit le
+  // formulaire, appelle le moteur, puis affiche.
+  const saisies = {
+    dateAcquisition: dAcq, dateCession: dCes, devise,
+    tauxCession: rateCes, tauxAcquisition: rateAcq,
+    tauxPs: psTauxManuel !== '' ? parseFloat(psTauxManuel) / 100 : null,
+  };
+  ['quotePart', 'nbCedants', 'prixImmeuble', 'valeurMobilier', 'autresCession',
+   'majCesCharges', 'majCesAssur', 'majCesAutres', 'minCesTVA', 'minCesInter',
+   'minCesDiag', 'minCesEvict', 'minCesArchi', 'minCesAutres', 'prixAcquitte',
+   'dmtgGratuit', 'valeurVenale', 'renteViagere', 'demembrement', 'autresAcqBase',
+   'chargesHorsForfait', 'casGratuitFrais', 'autresMajAcq', 'fraisReel', 'travauxReel',
+  ].forEach((id) => { saisies[id] = val(id); });
+  const r = MoteurPvImmobiliere.calculer(saisies, PARAMETRES);
+  const { years, nb, cBase, cMaj, cMin, cNetCes, cAcqBase, forfaitCharges, forfaitTravaux,
+          chargesRetenues, travauxRetenus, autresMajAcq, cNetAcq, netCesEur, netAcqEur } = r;
+  const TAUX_PS = r.tauxPs;
 
   // Un taux « dépôt » n'a pas de source confirmée : voir fiche 3.5 de
   // docs/CORRECTIONS_A_VALIDER.md. Ne jamais lui prêter la BCE ni la BdF.
@@ -827,33 +778,11 @@ function compute() {
     el('durée-display').style.display = 'none';
   }
 
-  const qp = (val('quotePart') > 0 && val('quotePart') <= 100) ? val('quotePart') / 100 : 1;
-  const nb = (val('nbCedants') >= 1) ? val('nbCedants') : 1;
-
-  // ---- PRIX DE CESSION (devise units) ----
-  const cBase = val('prixImmeuble') + val('valeurMobilier') + val('autresCession');
-  const cMaj = val('majCesCharges') + val('majCesAssur') + val('majCesAutres');
-  const cMin = val('minCesTVA') + val('minCesInter') + val('minCesDiag') + val('minCesEvict') + val('minCesArchi') + val('minCesAutres');
-  const cNetCes = cBase + cMaj - cMin;
-
-  // ---- PRIX D'ACQUISITION (devise units) ----
-  const cAcqBase = val('prixAcquitte') + val('dmtgGratuit') + val('valeurVenale') + val('renteViagere') + val('demembrement') + val('autresAcqBase');
-  const forfaitCharges = cAcqBase * FORFAIT_FRAIS_ACQUISITION;
-  const forfaitTravaux = cAcqBase * FORFAIT_TRAVAUX;
   el('fraisForfait').value = isFx ? fmtDevise(forfaitCharges, devise) : fmt(forfaitCharges);
   el('travauxForfait').value = isFx ? fmtDevise(forfaitTravaux, devise) : fmt(forfaitTravaux);
-  el('travauxHint').textContent = (years !== null && years < FORFAIT_TRAVAUX_DUREE_MINIMALE)
+  el('travauxHint').textContent = r.forfaitTravauxTropCourt
     ? 'Détention < 5 ans : le forfait travaux ne s\'applique en principe pas'
     : 'Retenu si aucun travaux réel n\'est renseigné (détention ≥ 5 ans)';
-
-  const chargesRetenues = val('fraisReel') > 0 ? val('fraisReel') : forfaitCharges;
-  const travauxRetenus = val('travauxReel') > 0 ? val('travauxReel') : forfaitTravaux;
-  const cMajAcq = val('chargesHorsForfait') + val('casGratuitFrais') + val('autresMajAcq') + chargesRetenues + travauxRetenus;
-  const cNetAcq = cAcqBase + cMajAcq;
-
-  // ---- Conversion en EUR ----
-  const netCesEur = isFx ? (rateCes ? cNetCes / rateCes : null) : cNetCes;
-  const netAcqEur = isFx ? (rateAcq ? cNetAcq / rateAcq : null) : cNetAcq;
 
   if (cNetCes) {
     el('netCesBanner').style.display = 'block';
@@ -872,23 +801,22 @@ function compute() {
 
   const body = el('resultsBody');
 
-  if (!dAcq || !dCes || !cBase || !cAcqBase) {
+  if (r.etat === 'incomplet') {
     body.innerHTML = '<div class="empty-state"><div class="big">◎</div>Renseignez les dates et les montants pour obtenir votre estimation fiscale.</div>';
     return;
   }
-  if (dCes <= dAcq) {
+  if (r.etat === 'dates-invalides') {
     body.innerHTML = '<div class="empty-state"><div class="big">!</div>La date de cession doit être postérieure à la date d\'acquisition.</div>';
     return;
   }
-  if (isFx && (netCesEur === null || netAcqEur === null)) {
+  if (r.etat === 'taux-indisponible') {
     body.innerHTML = '<div class="empty-state"><div class="big">!</div>Taux de change indisponible pour l\'une des dates renseignées.</div>';
     return;
   }
 
-  const pvBruteRaw = netCesEur - netAcqEur;
-  const pvBrute = pvBruteRaw > 0 ? pvBruteRaw : 0;
+  const { pvBruteRaw, pvBrute } = r;
 
-  if (pvBruteRaw <= 0) {
+  if (r.etat === 'moins-value') {
     body.innerHTML = `
       <div class="metric-grid">
         <div class="metric"><div class="m-label">Prix net de cession</div><div class="m-val">${fmt(netCesEur)}</div></div>
@@ -899,19 +827,8 @@ function compute() {
     return;
   }
 
-  const pctIR = abatIR(years);
-  const pctPS = abatPS(years);
-  const pvNetIR = pvBrute * (1 - pctIR);
-  const pvNetPS = pvBrute * (1 - pctPS);
-  const pvImposIR = pvNetIR * qp;
-  const pvImposPS = pvNetPS * qp;
-  const ir = pvImposIR * TAUX_IR;
-  const ps = pvImposPS * TAUX_PS;
-  const surt = surtaxe(pvImposIR);
-  const total = ir + ps + surt;
-  const parCedant = total / nb;
-  const exoIR = pctIR >= 1;
-  const exoPS = pctPS >= 1;
+  const { qp, pctIR, pctPS, pvNetIR, pvNetPS, pvImposIR, pvImposPS, ir, ps, total, parCedant, exoIR, exoPS } = r;
+  const surt = r.surtaxe;
   const showQP = qp < 1;
   const showNb = nb > 1;
 
@@ -938,9 +855,9 @@ function compute() {
 
       <div class="breakdown-row section-head" style="background:#edf5f4"><span>Prix d'acquisition${isFx ? ` <span style="font-size:11px;color:var(--mid-gray)">(1 EUR = ${rateAcq ? rateAcq.toFixed(4) : '—'} ${devise} au jour d'acquisition)</span>` : ''}</span></div>
       <div class="breakdown-row"><span class="label">Prix d'acquisition retenu${isFx ? ` (${fmtDevise(cAcqBase, devise)})` : ''}</span><span class="amount">${fmtFx(cAcqBase, rateAcq)}</span></div>
-      <div class="breakdown-row"><span class="label">+ Charges d'acquisition retenues${val('fraisReel') > 0 ? '<span class="abat-pct">(frais réels)</span>' : '<span class="abat-pct">(forfait 7,5 %)</span>'}</span><span class="amount">${fmtFx(chargesRetenues, rateAcq)}</span></div>
-      ${travauxRetenus > 0 ? `<div class="breakdown-row"><span class="label">+ Travaux retenus${val('travauxReel') > 0 ? '<span class="abat-pct">(frais réels)</span>' : '<span class="abat-pct">(forfait 15 %)</span>'}</span><span class="amount">${fmtFx(travauxRetenus, rateAcq)}</span></div>` : ''}
-      ${(val('chargesHorsForfait') + val('casGratuitFrais') + val('autresMajAcq')) > 0 ? `<div class="breakdown-row"><span class="label">+ Autres majorations du prix d'acquisition</span><span class="amount">${fmtFx(val('chargesHorsForfait') + val('casGratuitFrais') + val('autresMajAcq'), rateAcq)}</span></div>` : ''}
+      <div class="breakdown-row"><span class="label">+ Charges d'acquisition retenues${r.fraisReelsRetenus ? '<span class="abat-pct">(frais réels)</span>' : '<span class="abat-pct">(forfait 7,5 %)</span>'}</span><span class="amount">${fmtFx(chargesRetenues, rateAcq)}</span></div>
+      ${travauxRetenus > 0 ? `<div class="breakdown-row"><span class="label">+ Travaux retenus${r.travauxReelsRetenus ? '<span class="abat-pct">(frais réels)</span>' : '<span class="abat-pct">(forfait 15 %)</span>'}</span><span class="amount">${fmtFx(travauxRetenus, rateAcq)}</span></div>` : ''}
+      ${autresMajAcq > 0 ? `<div class="breakdown-row"><span class="label">+ Autres majorations du prix d'acquisition</span><span class="amount">${fmtFx(autresMajAcq, rateAcq)}</span></div>` : ''}
       <div class="breakdown-row" style="background:var(--off-white)"><span class="label" style="font-weight:500;color:var(--text-dark)">= Prix net d'acquisition</span><span class="amount" style="font-size:15px">${fmt(netAcqEur)}</span></div>
 
       <div class="breakdown-row section-head" style="background:#edf5f4"><span>Calcul de l'imposition</span></div>

@@ -724,6 +724,7 @@
 <script src="../../src/conventions.js"></script>
 <script src="../../src/lecture-referentiels.js"></script>
 <script src="../../src/millesime.js"></script>
+<script src="../../src/moteurs/demembrement.js"></script>
 <script>
 // ============================================================
 // RÉFÉRENTIEL DES MUTATIONS À TITRE GRATUIT
@@ -753,42 +754,25 @@ function afficherMillesime() {
 afficherMillesime();
 
 
-const USUFRUIT = DMTG.bareme('dmtg.usufruit.taux-nue-propriete');
-
-const ABATTEMENTS_DEFAUT = {
-  directe: DMTG.valeur('dmtg.abattement.enfant'),
-  frere:   DMTG.valeur('dmtg.abattement.frere-soeur'),
-  neveu:   DMTG.valeur('dmtg.abattement.neveu-niece'),
-  autre:   DMTG.valeur('dmtg.abattement.autre'),
-};
-
-const TRANCHES_DEFAUT = DMTG.bareme('dmtg.bareme.ligne-directe');
+// Les valeurs fiscales sont lues une fois par le moteur. La page ne connaît
+// plus les identifiants du référentiel : voir src/moteurs/demembrement.js.
+const PARAMETRES_DEFAUT = MoteurDemembrement.parametresDepuisReferentiels(DMTG);
+const USUFRUIT = PARAMETRES_DEFAUT.usufruit;
+const ABATTEMENTS_DEFAUT = PARAMETRES_DEFAUT.abattements;
+const TRANCHES_DEFAUT = PARAMETRES_DEFAUT.tranches;
 
 // ============================================================
 // BARÈME USUFRUIT (CGI art. 669) — déterminé par l'âge
 // ============================================================
 function getTauxNP(age) {
-  // Comportement inchangé : la première tranche dont la borne haute n'est pas
-  // dépassée l'emporte. Un âge négatif relève donc toujours de la première
-  // tranche, et un âge aberrant de la dernière — anomalie soumise au référent
-  // fiscal, fiche 3.2 de docs/CORRECTIONS_A_VALIDER.md.
-  for (const tranche of USUFRUIT) {
-    if (age <= tranche.max) return tranche.taux;
-  }
-  return USUFRUIT[USUFRUIT.length - 1].taux;
+  return MoteurDemembrement.tauxNuePropriete(age, USUFRUIT);
 }
 
 // ============================================================
 // ABATTEMENTS (CGI art. 779) par lien de parenté
 // ============================================================
 function getAbattement(lien) {
-  const params = getParams();
-  switch(lien) {
-    case 'directe': return params.aba_directe;
-    case 'frere':   return params.aba_frere;
-    case 'neveu':   return params.aba_neveu;
-    default:        return params.aba_autre;
-  }
+  return MoteurDemembrement.abattementPour(lien, getParams().abattements);
 }
 
 // ============================================================
@@ -821,11 +805,18 @@ function getParams() {
   // Les valeurs pré-remplies viennent du référentiel ; la saisie de
   // l'utilisateur continue de primer, y compris un zéro volontaire (issue #8).
   // Seule la dernière tranche n'a pas de borne haute modifiable.
+  const abattements = {
+    directe: nombreSaisi(document.getElementById('p_aba_directe').value, ABATTEMENTS_DEFAUT.directe),
+    frere:   nombreSaisi(document.getElementById('p_aba_frere').value, ABATTEMENTS_DEFAUT.frere),
+    neveu:   nombreSaisi(document.getElementById('p_aba_neveu').value, ABATTEMENTS_DEFAUT.neveu),
+    autre:   nombreSaisi(document.getElementById('p_aba_autre').value, ABATTEMENTS_DEFAUT.autre),
+  };
   return {
-    aba_directe: nombreSaisi(document.getElementById('p_aba_directe').value, ABATTEMENTS_DEFAUT.directe),
-    aba_frere:   nombreSaisi(document.getElementById('p_aba_frere').value, ABATTEMENTS_DEFAUT.frere),
-    aba_neveu:   nombreSaisi(document.getElementById('p_aba_neveu').value, ABATTEMENTS_DEFAUT.neveu),
-    aba_autre:   nombreSaisi(document.getElementById('p_aba_autre').value, ABATTEMENTS_DEFAUT.autre),
+    abattements,
+    aba_directe: abattements.directe,
+    aba_frere:   abattements.frere,
+    aba_neveu:   abattements.neveu,
+    aba_autre:   abattements.autre,
     tranches: TRANCHES_DEFAUT.map((tranche, index) => {
       const idx = index + 1;
       const derniere = index === TRANCHES_DEFAUT.length - 1;
@@ -843,19 +834,7 @@ function getParams() {
 // CALCUL DROITS PAR TRANCHES
 // ============================================================
 function calcDroits(base, tranches) {
-  let droits = 0;
-  const detail = [];
-  for (const t of tranches) {
-    if (base <= t.low) {
-      detail.push({ montant: 0, droits: 0, taux: t.taux, low: t.low, high: t.high });
-      continue;
-    }
-    const montant = Math.min(base, t.high === Infinity ? base : t.high) - t.low;
-    const d = montant * t.taux;
-    droits += d;
-    detail.push({ montant, droits: d, taux: t.taux, low: t.low, high: t.high });
-  }
-  return { droits, detail };
+  return MoteurDemembrement.calcDroits(base, tranches);
 }
 
 // ============================================================
@@ -949,28 +928,19 @@ function recalculate() {
   const nature = document.getElementById('natureOp').value;
   const params = getParams();
 
-  // Taux NP / affichage barème
-  const tauxNP = nature === 'np' ? getTauxNP(age) : 1.0;
-  const tauxUSU = 1 - tauxNP;
+  // Le calcul vit dans src/moteurs/demembrement.js : la page lit le
+  // formulaire, appelle le moteur, puis affiche.
+  const r = MoteurDemembrement.calculer(
+    { age, nbDonataires: nb, valeurPP: vpp, lien, nature },
+    { usufruit: USUFRUIT, abattements: params.abattements, tranches: params.tranches },
+  );
+  const { tauxNP, valeurNP, valeurUSU, partParDona, baseNetteParDona, baseNetteTotale,
+          droitsParDona, droitsTotaux } = r;
+  const aba = r.abattement;
+  const abaTotal = r.abattementTotal;
+  const tauxEff = r.tauxEffectif;
+
   updateBaremeUsufruit(nature === 'np' ? age : -1);
-
-  // Valeurs
-  const valeurNP  = vpp * tauxNP;
-  const valeurUSU = vpp * tauxUSU;
-  const partParDona = valeurNP / nb;
-
-  // Abattement
-  const aba = getAbattement(lien);
-  const abaTotal = aba * nb;
-  const baseNetteParDona = Math.max(0, partParDona - aba);
-  const baseNetteTotale  = baseNetteParDona * nb;
-
-  // Droits
-  const { droits: droitsParDona, detail } = calcDroits(baseNetteParDona, params.tranches);
-  const droitsTotaux = droitsParDona * nb;
-  const tauxEff = valeurNP > 0 ? droitsTotaux / valeurNP : 0;
-
-  // Barème progressif
   updateBaremeProgressif(baseNetteParDona, params.tranches);
 
   // --- Affichage section 2 ---

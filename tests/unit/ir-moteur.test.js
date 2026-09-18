@@ -1,26 +1,30 @@
 /**
- * Tests du moteur de l'impôt sur le revenu, exécutés sans navigateur.
+ * Tests du moteur « IR, CEHR et CDHR », exécutés sans navigateur.
  *
- * Ils montrent le patron à reprendre pour les autres simulateurs : charger le
- * simulateur avec le faux DOM, récupérer une fonction de calcul, puis
- * l'appeler directement.
+ * Depuis l'issue #23, le moteur est un module de `src/moteurs/` : il se charge
+ * par `require`, sans page ni faux DOM. C'est le patron des autres moteurs.
  */
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 
-const { chargerSimulateur, chemin } = require('../helpers/simulateurs');
+const { chemin } = require('../helpers/simulateurs');
+const { lecteur } = require('../helpers/referentiels');
 const { assertProche } = require('../helpers/assertions');
+const Moteur = require('../../src/moteurs/ir-cehr-cdhr');
 
 const fixture = JSON.parse(
   fs.readFileSync(chemin('tests', 'fixtures', 'ir-bareme-2025.json'), 'utf8')
 );
 
-const simulateur = chargerSimulateur('ir-cehr-cdhr');
-const bareme = simulateur.evaluer('bareme');
-const cehrBareme = simulateur.evaluer('cehrBareme');
-const irAvecQuotientFamilial = simulateur.evaluer('irAvecQuotientFamilial');
+// Le moteur est chargé par `require`, sans page ni faux DOM : ses fonctions
+// reçoivent explicitement les paramètres lus dans les référentiels.
+const parametres = Moteur.parametresDepuisReferentiels(lecteur('ir'), lecteur('prelevements-sociaux'));
+const bareme = (x) => Moteur.bareme(x, parametres.bareme);
+const cehrBareme = Moteur.cehrBareme;
+const irAvecQuotientFamilial = (revenu, parts, partsRef) =>
+  Moteur.irAvecQuotientFamilial(revenu, parts, partsRef, parametres);
 
 test('bareme — les cas de la fixture donnent les montants attendus', async (t) => {
   for (const cas of fixture.cas) {

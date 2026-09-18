@@ -263,9 +263,9 @@ test('Prélèvements sociaux — les deux simulateurs désignent des variantes d
     'le simulateur IRPP doit désigner explicitement sa variante',
   );
   assert.match(
-    lireHtml('ir-cehr-cdhr'),
+    fs.readFileSync(chemin('src', 'moteurs', 'ir-cehr-cdhr.js'), 'utf8'),
     /PS\.variante\('ps\.taux\.global', '18-6'\)/,
-    'le simulateur IR doit désigner explicitement sa variante',
+    'le moteur du simulateur IR doit désigner explicitement sa variante',
   );
 });
 
@@ -312,9 +312,9 @@ test('IFI — le barème du référentiel ne laisse plus aucun intervalle sans t
 
 test('Plus-value immobilière — le simulateur désigne la variante 17,2 %', () => {
   assert.match(
-    lireHtml('pv-immobiliere'),
-    /REF_PS\.variante\('ps\.taux\.global', '17-2'\)/,
-    'le simulateur doit désigner explicitement la variante qu’il applique',
+    fs.readFileSync(chemin('src', 'moteurs', 'pv-immobiliere.js'), 'utf8'),
+    /PS\.variante\('ps\.taux\.global', '17-2'\)/,
+    'le moteur doit désigner explicitement la variante qu’il applique',
   );
 });
 

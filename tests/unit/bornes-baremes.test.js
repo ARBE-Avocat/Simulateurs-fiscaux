@@ -21,12 +21,19 @@ const assert = require('node:assert/strict');
 
 const { chargerSimulateur } = require('../helpers/simulateurs');
 const { lecteur } = require('../helpers/referentiels');
+const MoteurIr = require('../../src/moteurs/ir-cehr-cdhr');
+
+/** `bareme()` du moteur de cession de titres, lié aux tranches du référentiel. */
+function baremeIrCehrCdhr() {
+  const parametres = MoteurIr.parametresDepuisReferentiels(lecteur('ir'), lecteur('prelevements-sociaux'));
+  return (revenu) => MoteurIr.bareme(revenu, parametres.bareme);
+}
 
 /** Seuils du barème de l'impôt sur le revenu, millésime employé par les tests. */
 const SEUILS_IR = [11600, 29579, 84577, 181917];
 
 test('IR — les deux simulateurs donnent le même impôt pour le même revenu', async (t) => {
-  const baremeIR = chargerSimulateur('ir-cehr-cdhr').evaluer('bareme');
+  const baremeIR = baremeIrCehrCdhr();
   const impotIRPP = chargerSimulateur('irpp').evaluer('impot');
 
   // Chaque seuil est éprouvé à −1, à l'euro près et à +1 : c'est exactement là

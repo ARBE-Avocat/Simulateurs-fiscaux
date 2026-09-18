@@ -638,6 +638,7 @@ footer a { color: var(--gold-light); text-decoration: none; }
 <script src="../../src/conventions.js"></script>
 <script src="../../src/lecture-referentiels.js"></script>
 <script src="../../src/millesime.js"></script>
+<script src="../../src/moteurs/succession.js"></script>
 <script>
 // ══════════════════════════════════════════════════════
 // BARÈMES ET ABATTEMENTS
@@ -667,37 +668,14 @@ function afficherMillesime() {
 afficherMillesime();
 
 
-const BAREME_DIRECT = DMTG.bareme('dmtg.bareme.ligne-directe');
-const BAREME_FRERES = DMTG.bareme('dmtg.bareme.frere-soeur');
-const BAREME_NEVEUX = DMTG.bareme('dmtg.bareme.neveu-niece');
-const BAREME_TIERS  = DMTG.bareme('dmtg.bareme.tiers');
-
-// L'exonération du conjoint et du partenaire de PACS était écrite comme un
-// abattement infini. Le référentiel la porte comme un booléen — `Infinity`
-// n'existe pas dans un fichier de données — et elle redevient ici la valeur
-// sentinelle qu'attend le reste du calcul. Aucun montant ne change.
-const ABAT_EXONERE = DMTG.valeur('dmtg.conjoint.exonere') ? Infinity : 0;
-
-const LIENS = {
-  conjoint:    {label:'Conjoint / PACS',               abat:ABAT_EXONERE,                                        bareme:[]},
-  enfant:      {label:'Enfant',                         abat:DMTG.valeur('dmtg.abattement.enfant'),               bareme:BAREME_DIRECT},
-  ascendant:   {label:'Père / Mère',                    abat:DMTG.valeur('dmtg.abattement.ascendant'),            bareme:BAREME_DIRECT},
-  petitenfant: {label:'Petit-enfant',                   abat:DMTG.valeur('dmtg.abattement.petit-enfant'),         bareme:BAREME_DIRECT},
-  arriere:     {label:'Arrière-petit-enfant',           abat:DMTG.valeur('dmtg.abattement.arriere-petit-enfant'), bareme:BAREME_DIRECT},
-  frere_soeur: {label:'Frère / Sœur',                  abat:DMTG.valeur('dmtg.abattement.frere-soeur'),          bareme:BAREME_FRERES},
-  neveu_niece: {label:'Neveu / Nièce',                  abat:DMTG.valeur('dmtg.abattement.neveu-niece'),          bareme:BAREME_NEVEUX},
-  handicape:   {label:'Handicapé (art. 779 II)',        abat:DMTG.valeur('dmtg.abattement.handicape'),            bareme:BAREME_DIRECT},
-  autre:       {label:'Autre (non-parent)',              abat:DMTG.valeur('dmtg.abattement.autre'),                bareme:BAREME_TIERS},
-};
+// Les valeurs fiscales sont lues une fois par le moteur, qui les reçoit à
+// chaque calcul. La page ne connaît plus les identifiants du référentiel :
+// voir src/moteurs/succession.js.
+const PARAMETRES = MoteurSuccession.parametresDepuisReferentiels(DMTG);
+const LIENS = PARAMETRES.liens;
 
 function calcDroits(base, bareme) {
-  if (!bareme || !bareme.length) return 0;
-  let imp = 0;
-  for (const t of bareme) {
-    if (base <= t.min) break;
-    imp += (Math.min(base, t.max) - t.min) * t.taux;
-  }
-  return imp;
+  return MoteurSuccession.calcDroits(base, bareme);
 }
 
 // ══════════════════════════════════════════════════════
@@ -741,7 +719,11 @@ function saveCurrentScenario() {
    'dutreilValeur','ruralValeur75','ruralValeur50','exoMonuments','exoAutres','av2Primes'].forEach(id => {
     s[id] = pf(id);
   });
-  s.dutreilTaux = nombreSaisi(val('dutreilTaux'), 0.75);
+  // Les valeurs mémorisées sont celles que le calcul emploie : un champ de
+  // frais funéraires laissé vide vaut 1 500 €, à l'écran comme dans le
+  // comparateur. Il était auparavant mémorisé à 0 €.
+  s.passifFuneraires = nombreSaisi(val('passifFuneraires'), MoteurSuccession.FRAIS_FUNERAIRES_PAR_DEFAUT);
+  s.dutreilTaux = nombreSaisi(val('dutreilTaux'), MoteurSuccession.TAUX_EXONERATION.dutreilParDefaut);
   s.heritiers = heritiers.map(h => ({...h}));
   s.av1List   = av1List.map(a => ({...a}));
   renderScenButtons();
@@ -820,11 +802,7 @@ function renderHeritiers() {
   const tbody = document.getElementById('heritTbody');
   tbody.innerHTML = '';
   heritiers.forEach(h => {
-    const info = LIENS[h.lien] || LIENS.autre;
-    const mont = ant * (h.part / 100);
-    const abat = info.abat === Infinity ? mont + h.donations : info.abat;
-    const base = Math.max(0, mont + h.donations - abat);
-    const drts = info.abat === Infinity ? 0 : calcDroits(base, info.bareme);
+    const r = MoteurSuccession.calculerHeritier(h, ant, PARAMETRES);
     const tr   = document.createElement('tr');
     tr.innerHTML = `
       <td><input type="text" value="${esc(h.nom)}" placeholder="Prénom NOM" oninput="setHV(${h.id},'nom',this.value)"></td>
@@ -832,11 +810,11 @@ function renderHeritiers() {
         ${Object.entries(LIENS).map(([k,v])=>`<option value="${k}" ${h.lien===k?'selected':''}>${v.label}</option>`).join('')}
       </select></td>
       <td><input type="number" value="${h.part}" min="0" max="100" step="0.01" style="width:65px" oninput="setHV(${h.id},'part',nombreSaisi(this.value, 0));compute()"> %</td>
-      <td class="val-cell">${fmtE(mont)}</td>
+      <td class="val-cell">${fmtE(r.montant)}</td>
       <td><input type="number" value="${h.donations}" placeholder="0" min="0" style="width:110px" oninput="setHV(${h.id},'donations',nombreSaisi(this.value, 0));compute()"></td>
-      <td class="val-cell">${info.abat===Infinity?'Exonéré':fmtE(abat)}</td>
-      <td class="val-cell">${info.abat===Infinity?'0 €':fmtE(base)}</td>
-      <td class="val-cell" style="font-weight:bold;color:${drts>0?'var(--danger)':'var(--success)'}">${fmtE(drts)}</td>
+      <td class="val-cell">${r.exonere?'Exonéré':fmtE(r.abattementApplicable)}</td>
+      <td class="val-cell">${r.exonere?'0 €':fmtE(r.base)}</td>
+      <td class="val-cell" style="font-weight:bold;color:${r.droits>0?'var(--danger)':'var(--success)'}">${fmtE(r.droits)}</td>
       <td><button class="del-btn" onclick="removeHeritier(${h.id})">✕</button></td>`;
     tbody.appendChild(tr);
   });
@@ -847,9 +825,8 @@ function renderHeritiers() {
 // ══════════════════════════════════════════════════════
 let av1List = [];
 let av1Id   = 0;
-const AV1_ABAT   = DMTG.valeur('dmtg.assurance-vie.avant-70.abattement');
-const AV2_ABAT   = DMTG.valeur('dmtg.assurance-vie.apres-70.abattement');
-const AV1_BAREME = DMTG.bareme('dmtg.assurance-vie.avant-70.bareme');
+const AV1_ABAT = PARAMETRES.assuranceVie.avant70.abattement;
+const AV2_ABAT = PARAMETRES.assuranceVie.apres70.abattement;
 
 function addAV1(data={}) {
   const id = ++av1Id;
@@ -859,10 +836,7 @@ function addAV1(data={}) {
 function removeAV1(id) { av1List=av1List.filter(a=>a.id!==id); renderAV1(); compute(); }
 function setA1V(id,f,v){ const a=av1List.find(a=>a.id===id); if(a) a[f]=v; }
 function av1Prel(base) {
-  if (base<=0) return 0;
-  // Le prélèvement suit un barème par tranches, comme les droits de mutation :
-  // il se lit désormais dans les données au lieu d'être écrit en formule.
-  return calcDroits(base, AV1_BAREME);
+  return MoteurSuccession.prelevementAssuranceVieAvant70(base, PARAMETRES);
 }
 function renderAV1() {
   const tbody=document.getElementById('av1Tbody');
@@ -913,77 +887,42 @@ function nombreSaisi(valeurBrute, valeurParDefaut = 0) {
 // ══════════════════════════════════════════════════════
 // CALCULS
 // ══════════════════════════════════════════════════════
-function calcActifBrut() {
-  return pf('actifImmo')+pf('actifTitres')+pf('actifLiquidites')+pf('actifAV')+pf('actifParts')+pf('actifMeubles')+pf('actifAutres');
+/** État de la succession tel que saisi : c'est ce que le moteur reçoit. */
+function lireActif() {
+  const s = {};
+  ['actifImmo','actifTitres','actifLiquidites','actifAV','actifParts','actifMeubles','actifAutres',
+   'passifEmprunt','passifFisc','passifAutres',
+   'dutreilValeur','ruralValeur75','ruralValeur50','exoMonuments','exoAutres'].forEach(id => { s[id] = pf(id); });
+  s.passifFuneraires = nombreSaisi(val('passifFuneraires'), MoteurSuccession.FRAIS_FUNERAIRES_PAR_DEFAUT);
+  s.dutreilTaux = nombreSaisi(val('dutreilTaux'), MoteurSuccession.TAUX_EXONERATION.dutreilParDefaut);
+  return s;
 }
-function calcPassif() {
-  return pf('passifEmprunt')+pf('passifFisc')+pf('passifAutres')+nombreSaisi(val('passifFuneraires'), 1500);
-}
-function calcExo() {
-  const dutreil=(pf('dutreilValeur'))*nombreSaisi(val('dutreilTaux'), 0.75);
-  const r75=pf('ruralValeur75')*0.75, r50=pf('ruralValeur50')*0.50;
-  const mon=pf('exoMonuments'), aut=pf('exoAutres');
-  return {dutreil,r75,r50,mon,aut,total:dutreil+r75+r50+mon+aut};
-}
-function calcActifNetTaxable() {
-  return Math.max(0, calcActifBrut()-calcPassif()-calcExo().total);
-}
+function calcActifBrut() { return MoteurSuccession.calculerActif(lireActif()).brut; }
+function calcPassif() { return MoteurSuccession.calculerActif(lireActif()).passif; }
+function calcExo() { return MoteurSuccession.calculerActif(lireActif()).exo; }
+function calcActifNetTaxable() { return MoteurSuccession.calculerActif(lireActif()).actifNetTaxable; }
 
 function getComputedTotals() {
-  const ant = calcActifNetTaxable();
-  let totMont=0, totDroits=0, totParts=0;
-  const hData = heritiers.map(h => {
-    const info=LIENS[h.lien]||LIENS.autre;
-    const mont=ant*(h.part/100);
-    const abat=info.abat===Infinity?mont+h.donations:info.abat;
-    const base=Math.max(0,mont+h.donations-abat);
-    const drts=info.abat===Infinity?0:calcDroits(base,info.bareme);
-    totMont+=mont; totDroits+=drts; totParts+=h.part;
-    return {...h, lienLabel:info.label, montant:mont, abat:Math.min(abat,mont+h.donations), base, droits:drts};
-  });
-  const av2primes=pf('av2Primes'), av2abat=Math.min(av2primes,AV2_ABAT), av2taxable=Math.max(0,av2primes-AV2_ABAT);
-  let av1TotCap=0,av1TotBase=0,av1TotPrel=0;
-  av1List.forEach(a=>{ av1TotCap+=a.capital; const b=Math.max(0,a.capital-AV1_ABAT); av1TotBase+=b; av1TotPrel+=av1Prel(b); });
-  return {
-    brut:calcActifBrut(), passif:calcPassif(), exo:calcExo(),
-    actifNet:Math.max(0,calcActifBrut()-calcPassif()),
-    actifNetTaxable:ant,
-    heritiers:hData, totalMontant:totMont, totalDroits:totDroits, totalParts:totParts,
-    av1TotCap, av1TotBase, av1TotPrel,
-    av2primes, av2abat, av2taxable,
-    nomDefunt:document.getElementById('nomDefunt').value,
-  };
+  const r = MoteurSuccession.calculer({ ...lireActif(), heritiers, av1List, av2Primes: pf('av2Primes') }, PARAMETRES);
+  r.nomDefunt = document.getElementById('nomDefunt').value;
+  return r;
 }
 
 function compute() {
-  const brut=calcActifBrut();
-  document.getElementById('totalActifBrut').textContent=fmtE(brut);
-  const passif=calcPassif();
-  document.getElementById('actifNet').textContent=fmtE(Math.max(0,brut-passif));
-  const exo=calcExo();
-  document.getElementById('dutreilResult').value=exo.dutreil||'';
-  document.getElementById('ruralResult').value=(exo.r75+exo.r50)||'';
-  const ant=calcActifNetTaxable();
-  document.getElementById('actifNetTaxable').textContent=fmtE(ant);
+  const r = getComputedTotals();
+  document.getElementById('totalActifBrut').textContent=fmtE(r.brut);
+  document.getElementById('actifNet').textContent=fmtE(r.actifNet);
+  document.getElementById('dutreilResult').value=r.exo.dutreil||'';
+  document.getElementById('ruralResult').value=(r.exo.r75+r.exo.r50)||'';
+  document.getElementById('actifNetTaxable').textContent=fmtE(r.actifNetTaxable);
   renderHeritiers();
   renderAV1();
-  // Héritiers totaux
-  let totP=0,totD=0,totM=0;
-  heritiers.forEach(h=>{
-    const info=LIENS[h.lien]||LIENS.autre;
-    const mont=ant*(h.part/100); totM+=mont; totP+=h.part;
-    const abat=info.abat===Infinity?mont+h.donations:info.abat;
-    const base=Math.max(0,mont+h.donations-abat);
-    totD+=info.abat===Infinity?0:calcDroits(base,info.bareme);
-  });
-  document.getElementById('totalParts').textContent=fmtN(totP,2)+' %';
-  document.getElementById('totalMontantRecu').textContent=fmtE(totM);
-  document.getElementById('totalDroits').textContent=fmtE(totD);
-  // AV2
-  const av2p=pf('av2Primes'),av2a=Math.min(av2p,AV2_ABAT);
-  document.getElementById('av2Abat').value=av2a||'';
-  document.getElementById('av2Taxable').value=Math.max(0,av2p-AV2_ABAT)||'';
-  renderResults(getComputedTotals());
+  document.getElementById('totalParts').textContent=fmtN(r.totalParts,2)+' %';
+  document.getElementById('totalMontantRecu').textContent=fmtE(r.totalMontant);
+  document.getElementById('totalDroits').textContent=fmtE(r.totalDroits);
+  document.getElementById('av2Abat').value=r.av2abat||'';
+  document.getElementById('av2Taxable').value=r.av2taxable||'';
+  renderResults(r);
   saveCurrentScenario();
 }
 
@@ -1102,26 +1041,12 @@ function openCompare() {
     document.getElementById('comparePanel').classList.add('open');
     return;
   }
-  // Recompute each scenario
+  // Chaque scénario est recalculé par le moteur, exactement comme l'écran
+  // principal : le comparateur ne recopie plus les formules.
   const results = scenarios.map(s => {
-    const brut = s.actifImmo+s.actifTitres+s.actifLiquidites+s.actifAV+s.actifParts+s.actifMeubles+s.actifAutres;
-    const passif = s.passifEmprunt+s.passifFisc+s.passifAutres+(s.passifFuneraires ?? 1500);
-    const actifNet = Math.max(0, brut-passif);
-    const dutreil=(s.dutreilValeur ?? 0)*(s.dutreilTaux ?? 0.75);
-    const r75=(s.ruralValeur75||0)*0.75, r50=(s.ruralValeur50||0)*0.50;
-    const exoTotal=dutreil+r75+r50+(s.exoMonuments||0)+(s.exoAutres||0);
-    const ant=Math.max(0,actifNet-exoTotal);
-    let totD=0, totM=0;
-    (s.heritiers||[]).forEach(h=>{
-      const info=LIENS[h.lien]||LIENS.autre;
-      const mont=ant*(h.part/100); totM+=mont;
-      const abat=info.abat===Infinity?mont+h.donations:info.abat;
-      const base=Math.max(0,mont+h.donations-abat);
-      totD+=info.abat===Infinity?0:calcDroits(base,info.bareme);
-    });
-    let av1P=0;
-    (s.av1List||[]).forEach(a=>{ const b=Math.max(0,a.capital-AV1_ABAT); av1P+=av1Prel(b); });
-    return {name:s.name||'Scénario', brut, passif, exoTotal, actifNet, actifNetTaxable:ant, totDroits:totD, totMontant:totM, av1Prel:av1P};
+    const r = MoteurSuccession.calculer(s, PARAMETRES);
+    return {name:s.name||'Scénario', brut:r.brut, passif:r.passif, exoTotal:r.exo.total, actifNet:r.actifNet,
+      actifNetTaxable:r.actifNetTaxable, totDroits:r.totalDroits, totMontant:r.totalMontant, av1Prel:r.av1TotPrel};
   });
 
   const minD = Math.min(...results.map(r=>r.totDroits));

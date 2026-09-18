@@ -631,6 +631,7 @@
 <script src="../../src/lecture-referentiels.js"></script>
 <script src="../../src/millesime.js"></script>
 <script src="../../src/change.js"></script>
+<script src="../../src/moteurs/ifi.js"></script>
 <script>
 // ============================================================
 // TAUX DE CHANGE (voir docs/ARCHITECTURE_CIBLE.md §7 bis et src/change.js)
@@ -824,11 +825,9 @@ function renderBiens() {
   biens.forEach(b => {
     const tr = document.createElement('tr');
     const eurVal = convertToEur(b.valeur, b.devise);
-    const rpAbat = b.rp ? (1 - ABATTEMENT_RESIDENCE_PRINCIPALE) : 1.0;
-    const decoteAbat = b.decote ? Math.max(0, 1 - (b.decotePct || 0) / 100) : 1.0;
     // eurVal vaut `null` tant que le taux de cette devise n'est pas encore
-    // résolu : ne jamais le traiter comme 0, ce sous-évaluerait le bien.
-    const taxable = eurVal === null ? null : eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
+    // résolu : le moteur rend alors `null`, jamais 0, ce sous-évaluerait le bien.
+    const taxable = MoteurIfi.valeurTaxableBien(b, eurVal, PARAMETRES);
     tr.innerHTML = `
       <td><input type="text" value="${esc(b.localisation)}" placeholder="ex. Paris 8e" oninput="setBienVal(${b.id},'localisation',this.value)"></td>
       <td>
@@ -882,9 +881,7 @@ function updateBienCells(id) {
   const b = biens.find(x => x.id === id);
   if (!b) return;
   const eurVal = convertToEur(b.valeur, b.devise);
-  const rpAbat = b.rp ? (1 - ABATTEMENT_RESIDENCE_PRINCIPALE) : 1.0;
-  const decoteAbat = b.decote ? Math.max(0, 1 - (b.decotePct || 0) / 100) : 1.0;
-  const taxable = eurVal === null ? null : eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
+  const taxable = MoteurIfi.valeurTaxableBien(b, eurVal, PARAMETRES);
   const eurCell = document.getElementById('eurCell_' + id);
   const taxCell = document.getElementById('taxCell_' + id);
   if (eurCell) eurCell.textContent = b.devise !== 'EUR' ? (eurVal === null ? 'chargement…' : fmtEur(eurVal)) : '—';
@@ -907,15 +904,7 @@ function updateTotalBrut() {
  * patrimoine taxable.
  */
 function computePatrimoineBrut() {
-  let indisponible = false;
-  const total = biens.reduce((sum, b) => {
-    const eurVal = convertToEur(b.valeur, b.devise);
-    if (eurVal === null) { indisponible = true; return sum; }
-    const rpAbat = b.rp ? (1 - ABATTEMENT_RESIDENCE_PRINCIPALE) : 1.0;
-    const decoteAbat = b.decote ? Math.max(0, 1 - (b.decotePct || 0) / 100) : 1.0;
-    return sum + eurVal * rpAbat * decoteAbat * (b.quotePart / 100);
-  }, 0);
-  return indisponible ? null : total;
+  return MoteurIfi.patrimoineBrut(biens, convertToEur, PARAMETRES);
 }
 
 // ============================================================
@@ -945,44 +934,11 @@ function afficherMillesime() {
 afficherMillesime();
 
 
-const BAREME = REF_IFI.bareme('ifi.bareme.progressif');
-
-const SEUIL_ASSUJETTISSEMENT = REF_IFI.valeur('ifi.seuil.assujettissement');
-const DECOTE = {
-  montant: REF_IFI.valeur('ifi.decote.montant'),
-  taux: REF_IFI.valeur('ifi.decote.taux'),
-  plafond: REF_IFI.valeur('ifi.decote.plafond'),
-};
-const ABATTEMENT_RESIDENCE_PRINCIPALE = REF_IFI.valeur('ifi.residence-principale.abattement');
-const EXONERATION_BIENS_RURAUX = {
-  tauxPlein: REF_IFI.valeur('ifi.exoneration.biens-ruraux.taux-plein'),
-  tauxReduit: REF_IFI.valeur('ifi.exoneration.biens-ruraux.taux-reduit'),
-};
-const PLAFONNEMENT_TAUX = REF_IFI.valeur('ifi.plafonnement.taux');
-const REDUCTION_DONS_TAUX = REF_IFI.valeur('ifi.reduction.dons.taux');
-
-function calcIFI(base) {
-  let total = 0;
-  const detail = [];
-  for (const tranche of BAREME) {
-    if (base <= tranche.min) { detail.push({ taux: tranche.taux, assiette: 0, impot: 0 }); continue; }
-    const upper = Math.min(base, tranche.max === Infinity ? base : tranche.max);
-    const assiette = Math.max(0, upper - tranche.min);
-    const impot = assiette * tranche.taux;
-    total += impot;
-    detail.push({ taux: tranche.taux, assiette, impot });
-  }
-  return { total, detail };
-}
-
-function calcDecote(patrimoineNet) {
-  // Méthode retenue par le référent fiscal comme référence commune aux deux
-  // simulateurs (fiche 2.4 de docs/CORRECTIONS_A_VALIDER.md) : la section IFI
-  // du simulateur IRPP applique désormais la même méthode en deux temps.
-  if (patrimoineNet >= DECOTE.plafond) return 0;
-  const decote = DECOTE.montant - DECOTE.taux * patrimoineNet;
-  return Math.max(0, decote);
-}
+// Les valeurs fiscales sont lues une fois par le moteur, qui les reçoit à
+// chaque calcul. La page ne connaît plus les identifiants du référentiel :
+// voir src/moteurs/ifi.js.
+const PARAMETRES = MoteurIfi.parametresDepuisReferentiels(REF_IFI);
+const BAREME = PARAMETRES.bareme;
 
 // ============================================================
 // FERMAGES
@@ -990,11 +946,11 @@ function calcDecote(patrimoineNet) {
 function computeFermages() {
   const val75 = nombreSaisi(document.getElementById('fermage75Valeur').value, 0);
   const val50 = nombreSaisi(document.getElementById('fermage50Valeur').value, 0);
-  const exo75 = val75 * EXONERATION_BIENS_RURAUX.tauxPlein;
-  const exo50 = val50 * EXONERATION_BIENS_RURAUX.tauxReduit;
-  const total = exo75 + exo50;
-  document.getElementById('fermage75Result').value = Math.round(exo75);
-  document.getElementById('fermage50Result').value = Math.round(exo50);
+  const { exo75, exo50, total } = MoteurIfi.exonerationFermages(val75, val50, PARAMETRES);
+  // L'affichage montre ce que le calcul emploie, sans arrondi intermédiaire
+  // (docs/CONVENTIONS.md §2.2) : le détail ne diffère plus du montant retenu.
+  document.getElementById('fermage75Result').value = exo75;
+  document.getElementById('fermage50Result').value = exo50;
   document.getElementById('fermageTotalExo').textContent = fmtEur(total);
   compute();
 }
@@ -1032,75 +988,30 @@ function compute() {
       '<div class="empty-state"><div class="big">⏳</div>Chargement des taux de change en cours…</div>';
     return;
   }
-  const dedTaxes = nombreSaisi(document.getElementById('dedTaxes').value, 0);
-  const dedInterets = nombreSaisi(document.getElementById('dedInterets').value, 0);
-  const dedTravaux = nombreSaisi(document.getElementById('dedTravaux').value, 0);
-  const dedAutres = nombreSaisi(document.getElementById('dedAutres').value, 0);
+  // La page lit le formulaire ; le calcul vit dans src/moteurs/ifi.js.
+  const lire = (id) => nombreSaisi(document.getElementById(id).value, 0);
+  const r = MoteurIfi.calculer({
+    patrimoineBrut,
+    dedTaxes: lire('dedTaxes'),
+    dedInterets: lire('dedInterets'),
+    dedTravaux: lire('dedTravaux'),
+    dedAutres: lire('dedAutres'),
+    fermage75Valeur: lire('fermage75Valeur'),
+    fermage50Valeur: lire('fermage50Valeur'),
+    donsVerses: lire('donsVerses'),
+    revenus: lire('plafRevenus'),
+    ir: lire('plafIR'),
+    autresImpots: lire('plafAutres'),
+  }, PARAMETRES);
 
-  // Fermages exonérations
-  const fermage75Val = nombreSaisi(document.getElementById('fermage75Valeur').value, 0);
-  const fermage50Val = nombreSaisi(document.getElementById('fermage50Valeur').value, 0);
-  const fermageExo = (fermage75Val * EXONERATION_BIENS_RURAUX.tauxPlein)
-    + (fermage50Val * EXONERATION_BIENS_RURAUX.tauxReduit);
-
-  const totalDed = dedTaxes + dedInterets + dedTravaux + dedAutres + fermageExo;
-  const donsVerses = nombreSaisi(document.getElementById('donsVerses').value, 0);
-  const donsReduction = donsVerses * REDUCTION_DONS_TAUX;
-
-  // Update dons display
-  document.getElementById('donsReduction').innerHTML = `Réduction : <strong>${fmtEur(donsReduction)}</strong>`;
-
-  const patrimoineNet = Math.max(0, patrimoineBrut - totalDed);
-
-  // Step 1: IFI théorique (barème sur patrimoine net AVANT déduction IFI théorique)
-  // Méthode : patrimoine net taxable avant IFI théorique = patrimoine net
-  const decote = calcDecote(patrimoineNet);
-  const { total: ifiTheorique, detail: detailTheo } = calcIFI(patrimoineNet);
-  const ifiTheoriqueApresDecote = Math.max(0, ifiTheorique - decote);
-  // Minoration de l'IFI théorique par les dons déductibles (art. 978 CGI)
-  const ifiTheoriqueNet = Math.max(0, ifiTheoriqueApresDecote - donsReduction);
-
-  // Step 2: IFI réel = barème sur (patrimoine net − IFI théorique net de dons)
-  const patrimoineNetApresIFITheo = Math.max(0, patrimoineNet - ifiTheoriqueNet);
-  const decoteFinale = calcDecote(patrimoineNetApresIFITheo);
-  const { total: ifiCalcule, detail: detailFinal } = calcIFI(patrimoineNetApresIFITheo);
-  const ifiAvantDecote = ifiCalcule;
-  const ifiApresDecote = Math.max(0, ifiCalcule - decoteFinale);
-  const ifiApresReduction = Math.max(0, ifiApresDecote - donsReduction);
-
-  // Plafonnement
-  const revenus = nombreSaisi(document.getElementById('plafRevenus').value, 0);
-  const ir = nombreSaisi(document.getElementById('plafIR').value, 0);
-  const autresImpots = nombreSaisi(document.getElementById('plafAutres').value, 0);
-  let plafond = 0, reductionPlafond = 0, ifiFinal = ifiApresReduction;
-
-  if (revenus > 0) {
-    plafond = revenus * PLAFONNEMENT_TAUX;
-    const totalImpots = ir + autresImpots + ifiApresReduction;
-    if (totalImpots > plafond) {
-      reductionPlafond = totalImpots - plafond;
-      ifiFinal = Math.max(0, ifiApresReduction - reductionPlafond);
-    }
-  }
-
+  document.getElementById('donsReduction').innerHTML = `Réduction : <strong>${fmtEur(r.donsReduction)}</strong>`;
   updateTotalBrut();
-  renderResults({
-    patrimoineBrut, totalDed, patrimoineNet,
-    ifiTheorique: ifiTheoriqueApresDecote,
-    ifiTheoriqueNet,
-    decote: decoteFinale,
-    patrimoineNetApresIFITheo,
-    ifiAvantDecote, ifiApresDecote,
-    donsReduction, ifiApresReduction,
-    detailFinal,
-    revenus, ir, autresImpots, plafond, reductionPlafond, ifiFinal,
-    fermageExo
-  });
+  renderResults(r);
 }
 
 function renderResults(r) {
   const body = document.getElementById('resultsBody');
-  const SEUIL = SEUIL_ASSUJETTISSEMENT;
+  const SEUIL = PARAMETRES.seuilAssujettissement;
 
   if (r.patrimoineNet < SEUIL) {
     body.innerHTML = `
