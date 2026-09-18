@@ -1449,12 +1449,16 @@ footer strong { color: var(--gold); font-weight: 400; }
 <script src="../../src/genere/referentiels/ir.js"></script>
 <script src="../../src/genere/referentiels/prelevements-sociaux.js"></script>
 <script src="../../src/conventions.js"></script>
+<script src="../../src/avertissements.js"></script>
 <script src="../../src/lecture-referentiels.js"></script>
 <script src="../../src/millesime.js"></script>
 <script src="../../src/moteurs/ifi.js"></script>
 <script src="../../src/moteurs/irpp.js"></script>
 <script>
 const $ = id => document.getElementById(id);
+// Une saisie réinjectée dans un gabarit HTML est toujours échappée : un
+// libellé contenant `"` ou `<` ne peut ni casser la page ni y injecter du code.
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 // `|| 0` ne se voyait pas ici car la valeur par défaut est déjà zéro. Passer
 // par le helper commun évite que le défaut de l'issue #8 réapparaisse le jour
 // où l'un de ces champs recevra une valeur par défaut non nulle (#11).
@@ -1868,7 +1872,7 @@ function renderPV() {
       <div class="pv-card-header">
         <div style="display:flex;align-items:center;gap:12px">
           <span class="pv-card-num">CESSION #${idx+1}</span>
-          <input type="text" value="${r.label||''}" placeholder="Libellé (ex : Apple Inc.)"
+          <input type="text" value="${esc(r.label||'')}" placeholder="Libellé (ex : Apple Inc.)"
             oninput="pr(${r.id},'label',this.value)"
             style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;font-family:var(--serif);font-size:15px;padding:3px 10px;border-radius:3px;width:260px">
         </div>
@@ -1880,20 +1884,20 @@ function renderPV() {
       <div class="pv-card-body">
         <div class="pv-section">
           <div class="pv-section-title" style="color:#0a5c38">Acquisition</div>
-          <div class="pv-field"><label>Devise</label><input type="text" value="${r.devise}" oninput="pr(${r.id},'devise',this.value)" style="max-width:80px"></div>
-          <div class="pv-field"><label>Date d'acquisition</label><input type="date" value="${r.da}" oninput="pr(${r.id},'da',this.value)"></div>
-          <div class="pv-field"><label>Prix unitaire d'achat</label><div class="pv-field-row"><input type="number" value="${r.pu_a||''}" placeholder="0" oninput="pr(${r.id},'pu_a',+this.value)"><span class="unit">${r.devise}</span></div></div>
+          <div class="pv-field"><label>Devise</label><input type="text" value="${esc(r.devise)}" oninput="pr(${r.id},'devise',this.value)" style="max-width:80px"></div>
+          <div class="pv-field"><label>Date d'acquisition</label><input type="date" value="${esc(r.da)}" oninput="pr(${r.id},'da',this.value)"></div>
+          <div class="pv-field"><label>Prix unitaire d'achat</label><div class="pv-field-row"><input type="number" value="${r.pu_a||''}" placeholder="0" oninput="pr(${r.id},'pu_a',+this.value)"><span class="unit">${esc(r.devise)}</span></div></div>
           <div class="pv-field"><label>Quantité</label><input type="number" value="${r.qte||''}" placeholder="0" oninput="pr(${r.id},'qte',+this.value)"></div>
-          <div class="pv-field"><label>Frais d'acquisition</label><div class="pv-field-row"><input type="number" value="${r.fr_a||''}" placeholder="0" oninput="pr(${r.id},'fr_a',+this.value)"><span class="unit">${r.devise}</span></div></div>
+          <div class="pv-field"><label>Frais d'acquisition</label><div class="pv-field-row"><input type="number" value="${r.fr_a||''}" placeholder="0" oninput="pr(${r.id},'fr_a',+this.value)"><span class="unit">${esc(r.devise)}</span></div></div>
           <div class="pv-field"><label>Taux de change (FX → €)</label><input type="number" value="${r.fx_a||1}" step="0.0001" oninput="pr(${r.id},'fx_a',+this.value)"></div>
           <div class="pv-field"><label>Prix de revient net (€)</label><div class="calc-val" id="pn_a_${r.id}">—</div></div>
         </div>
         <div class="pv-section">
           <div class="pv-section-title" style="color:#1a3a5c">Cession</div>
-          <div class="pv-field"><label>Date de cession</label><input type="date" value="${r.dc}" oninput="pr(${r.id},'dc',this.value)"></div>
-          <div class="pv-field"><label>Prix unitaire de cession</label><div class="pv-field-row"><input type="number" value="${r.pu_c||''}" placeholder="0" oninput="pr(${r.id},'pu_c',+this.value)"><span class="unit">${r.devise}</span></div></div>
+          <div class="pv-field"><label>Date de cession</label><input type="date" value="${esc(r.dc)}" oninput="pr(${r.id},'dc',this.value)"></div>
+          <div class="pv-field"><label>Prix unitaire de cession</label><div class="pv-field-row"><input type="number" value="${r.pu_c||''}" placeholder="0" oninput="pr(${r.id},'pu_c',+this.value)"><span class="unit">${esc(r.devise)}</span></div></div>
           <div class="pv-field"><label>Quantité (= acquisition)</label><div class="calc-val" style="color:var(--muted);font-size:12px;padding:7px 0">${r.qte||'—'}</div></div>
-          <div class="pv-field"><label>Frais de cession</label><div class="pv-field-row"><input type="number" value="${r.fr_c||''}" placeholder="0" oninput="pr(${r.id},'fr_c',+this.value)"><span class="unit">${r.devise}</span></div></div>
+          <div class="pv-field"><label>Frais de cession</label><div class="pv-field-row"><input type="number" value="${r.fr_c||''}" placeholder="0" oninput="pr(${r.id},'fr_c',+this.value)"><span class="unit">${esc(r.devise)}</span></div></div>
           <div class="pv-field"><label>Taux de change (FX → €)</label><input type="number" value="${r.fx_c||1}" step="0.0001" oninput="pr(${r.id},'fx_c',+this.value)"></div>
           <div class="pv-field"><label>Produit de cession net (€)</label><div class="calc-val" id="pn_c_${r.id}">—</div></div>
         </div>
@@ -2013,7 +2017,7 @@ function renderBiens() {
   ifiBiens.forEach((b) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><input type="text" value="${b.label}" placeholder="Ex : 10 rue de Paris" oninput="pb(${b.id},'label',this.value)" style="min-width:150px"></td>
+      <td><input type="text" value="${esc(b.label)}" placeholder="Ex : 10 rue de Paris" oninput="pb(${b.id},'label',this.value)" style="min-width:150px"></td>
       <td class="psx-cell">
         <input type="checkbox" ${b.rp?'checked':''} id="ifi_rp_${b.id}" onchange="pb(${b.id},'rp',this.checked)">
         <label for="ifi_rp_${b.id}" style="font-size:10px;cursor:pointer"> RP</label>

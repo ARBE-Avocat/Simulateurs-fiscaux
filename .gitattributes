@@ -1,0 +1,15 @@
+# Fins de ligne uniformes : LF dans le dépôt, quel que soit le poste.
+#
+# Sans cette règle, un poste Windows configuré en `core.autocrlf=true` et un
+# poste Linux ou macOS produisent des diffs entiers sur des fichiers dont pas
+# une ligne n'a changé, et les contrôles de fichiers générés (`npm run
+# donnees:generer -- --verifier`) peuvent échouer pour une simple différence de
+# retour à la ligne.
+* text=auto eol=lf
+
+# Fichiers binaires, jamais normalisés.
+*.png binary
+*.jpg binary
+*.ico binary
+*.pdf binary
+*.pptx binary

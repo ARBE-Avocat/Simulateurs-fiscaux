@@ -1,0 +1,20 @@
+# Réglages d'éditeur communs, lus par VS Code, JetBrains, Vim et la plupart des
+# éditeurs (extension EditorConfig parfois nécessaire). Ils évitent les diffs
+# de forme entre deux postes : indentation, fins de ligne, espaces en fin de
+# ligne.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.md]
+# Un double espace en fin de ligne est un retour à la ligne en Markdown.
+trim_trailing_whitespace = false
+
+[*.{json,yml,yaml}]
+indent_size = 2

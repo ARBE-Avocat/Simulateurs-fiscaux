@@ -265,13 +265,13 @@
       <div class="grid-3">
         <div class="field">
           <label>Âge du donateur <span class="ref">CGI art. 669</span></label>
-          <input type="number" id="age" min="0" max="123" value="68" oninput="recalculate()">
+          <input type="number" id="age" min="0" max="123" value="68" data-avertissement="manuel" oninput="recalculate()">
           <span class="hint">Âge au jour de l'acte de donation — 0 est une saisie valide (barème CGI art. 669 : moins de 21 ans révolus)</span>
           <span class="hint" id="ageWarning" style="display:none;color:var(--warning);font-weight:600">Âge hors des bornes plausibles (1 jour à 123 ans) — vérifiez la saisie.</span>
         </div>
         <div class="field">
           <label>Nombre de donataires <span class="ref">CGI art. 779</span></label>
-          <input type="number" id="nbDonataires" min="1" max="10" value="2" oninput="recalculate()">
+          <input type="number" id="nbDonataires" min="1" max="10" value="2" data-avertissement="manuel" oninput="recalculate()">
           <span class="hint">Enfants en ligne directe</span>
           <span class="hint" id="donatairesWarning" style="display:none;color:var(--warning);font-weight:600">Au moins un donataire est nécessaire pour partager la nue-propriété — la valeur par défaut a été rétablie.</span>
         </div>
@@ -722,6 +722,7 @@
 
 <script src="../../src/genere/referentiels/dmtg.js"></script>
 <script src="../../src/conventions.js"></script>
+<script src="../../src/avertissements.js"></script>
 <script src="../../src/lecture-referentiels.js"></script>
 <script src="../../src/millesime.js"></script>
 <script src="../../src/moteurs/demembrement.js"></script>
