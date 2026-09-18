@@ -122,6 +122,11 @@ chaque pull request : ce qui passe sur votre poste passe sur GitHub. En cas
 d'échec en ligne, relancer cette commande en local reproduit le problème sans
 attendre.
 
+## Contribuer
+
+`CONTRIBUTING.md` décrit le cycle d'une modification, de l'issue à la pull
+request, et la procédure de mise à jour d'une valeur fiscale.
+
 ## Avertissement
 
 Ces outils sont fournis à titre purement informatif et indicatif. Ils ne constituent en aucun cas un conseil juridique ou fiscal personnalisé. Pour toute situation réelle, consultez un professionnel du droit fiscal.

@@ -21,8 +21,9 @@ pour les décisions et l'historique de la migration.
 
 Chaque page porte son style et son câblage d'interface. Elle charge par
 `<script src="../../src/…">` les ressources partagées ci-dessous, dans cet
-ordre : référentiels générés du domaine, conventions, lecture des
-référentiels, millésime, puis le cas échéant taux de change et moteur.
+ordre : référentiels générés du domaine, conventions, avertissements,
+lecture des référentiels, millésime, puis le cas échéant taux de change et
+moteur.
 
 Une adresse est un dossier, sans millésime : renommer un dossier casserait
 des liens partagés. La liste des simulateurs est tenue à trois endroits qui
@@ -34,10 +35,11 @@ table des anciennes adresses de `scripts/lib/redirections.js`.
 | Chemin | Rôle | Testé par |
 |---|---|---|
 | `src/conventions.js` | Lecture d'une saisie, d'une case ; mise en forme des montants et taux ; règle du « — » | `tests/unit/conventions.test.js` |
+| `src/avertissements.js` | Avertit sans bloquer sur une valeur hors des bornes `min`/`max` déclarées par la page | `tests/unit/avertissements.test.js` |
 | `src/lecture-referentiels.js` | Accès aux référentiels générés : valeur, barème, variante d'une entrée contestée, résolution du millésime | `tests/unit/millesime.test.js` |
 | `src/millesime.js` | Résumé et bandeau du millésime employé | `tests/unit/millesime.test.js`, `tests/integration/millesime-simulateurs.test.js` |
 | `src/change.js` | Taux de change à une date : BCE en ligne, puis repli sur `data/change/` ; recherche du jour coté le plus proche | `tests/unit/change.test.js` |
-| `src/moteurs/<slug>.js` | Calculs d'un simulateur, sans DOM : entrées explicites, résultat structuré | `tests/unit/<slug>-moteur.test.js` |
+| `src/moteurs/<slug>.js` | Calculs d'un simulateur, sans DOM : entrées explicites, résultat structuré. `irpp.js` réemploie le barème IFI de `ifi.js` | `tests/unit/moteurs.test.js`, `tests/unit/ir-moteur.test.js`, instantanés d'intégration |
 | `src/genere/referentiels/<domaine>.js` | **Généré** depuis `data/referentiels/` par `npm run donnees:generer`. Ne jamais éditer | `tests/unit/importeur-referentiels.test.js` |
 | `src/genere/referentiels/manifeste.json` | **Généré** : quel domaine est chargé par quel simulateur | idem |
 
@@ -93,6 +95,9 @@ correction délibérée, documentée dans `CHANGELOG.md`.
 | Chemin | Rôle | Publié ? |
 |---|---|---|
 | `README.md` | Utilisation | non, hors `site/` |
+| `CONTRIBUTING.md` | Cycle d'une modification, pour les humains | non |
+| `.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/` | Gabarits de pull request et d'issues | non |
+| `.editorconfig`, `.gitattributes` | Réglages d'éditeur et fins de ligne LF uniformes | non |
 | `AGENTS.md`, `CLAUDE.md` | Règles communes des agents IA | non |
 | `CHANGELOG.md`, `VERSION` | Changements par version, version portée par la branche | non |
 | `docs/PLAN_ACTIONS_AGENTS_IA.md` | Ordre des chantiers, état des jalons | non |

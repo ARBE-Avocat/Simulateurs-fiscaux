@@ -6,10 +6,11 @@ jugé fautif mais **laissé en l'état** faute de certitude.
 
 Aucune connaissance technique n'est nécessaire pour le lire.
 
-**État du dossier :** `0.5.0-beta.16` — dossier complet du jalon `0.5` au
-28 août 2026. Il comprend les 20 fiches `1.1` à `4.4`, dont les derniers
-points relevés pendant les chantiers des taux de change, du millésime fiscal
-et des conventions de calcul.
+**État du dossier :** `0.6.0-beta.1` — dossier du jalon `0.5` au 28 août
+2026, complété le 18 septembre 2026 par trois fiches d'information (4.5 à
+4.7) relevées pendant le découplage des moteurs du jalon `0.6`. Il comprend
+23 fiches, `1.1` à `4.7`. **Aucune nouvelle décision n'est attendue** : les
+fiches ajoutées ne demandent qu'une lecture.
 
 **Réponses reçues le 28 août 2026.** Le référent fiscal a répondu à toutes les
 fiches, y compris 3.3, sauf 3.6 (délibérément traitée à part, voir cette
@@ -840,6 +841,34 @@ elle lit exactement les mêmes valeurs qu'avant.
 
 Ce point est mentionné pour information. La décision qu'il appelle est en fiche
 3.6.
+
+## 4.5 — Succession : le comparateur de scénarios ne recopie plus les formules
+
+Le comparateur, qui met plusieurs scénarios côte à côte, recalculait chaque
+scénario avec sa propre copie des formules de l'écran principal. Les deux
+copies s'écartaient sur un point : un champ « frais funéraires » laissé vide
+valait 1 500 € à l'écran principal, mais 0 € dans le comparateur et dans le
+scénario mémorisé.
+
+Le comparateur appelle désormais le même moteur que l'écran principal. Pour
+un champ vide, il retient donc 1 500 € comme l'écran ; pour tout champ
+renseigné, rien ne change. Aucune décision n'est attendue.
+
+## 4.6 — Plus-value immobilière : un taux de prélèvements sociaux effacé revient au défaut
+
+Le champ « taux des prélèvements sociaux », rendu modifiable à la suite de la
+fiche 2.2, conservait la dernière valeur saisie même après avoir été effacé,
+jusqu'au prochain changement d'année de cession. Un champ vide vaut désormais
+le taux du référentiel, comme partout ailleurs. Aucun montant ne change tant
+que le champ n'a pas été saisi puis effacé. Aucune décision n'est attendue.
+
+## 4.7 — IFI : l'exonération des fermages s'affiche sans arrondi
+
+Les deux montants d'exonération des biens ruraux affichés dans le formulaire
+étaient arrondis à l'euro, alors que le calcul employait la valeur exacte : le
+détail pouvait différer de quelques centimes du montant retenu. Ils affichent
+désormais la valeur exacte. Le montant retenu ne change pas. Aucune décision
+n'est attendue.
 
 ---
 

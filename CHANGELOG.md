@@ -6,6 +6,36 @@ Le projet suit les règles de versionnement décrites dans `AGENTS.md`. Chaque b
 
 ## [Non publié]
 
+## [0.6.0-beta.1] - 2026-09-18
+
+Première préversion du jalon `0.6` — architecture. Aucun taux, seuil ni barème ne change ; les instantanés de non-régression des six simulateurs sont inchangés, à l'exception de trois incohérences d'affichage décrites en fiches 4.5 à 4.7 de `docs/CORRECTIONS_A_VALIDER.md`, sans effet sur un montant retenu.
+
+### Ajouté
+
+- **Chaque simulateur a une adresse stable**, sans millésime ni accent : `simulateurs/irpp/`, `simulateurs/ir-cehr-cdhr/`, `simulateurs/plus-value-immobiliere/`, `simulateurs/ifi/`, `simulateurs/succession/`, `simulateurs/demembrement/`. Elle ne changera plus lors d'une mise à jour annuelle des barèmes. Les six anciennes adresses restent valides et renvoient vers la nouvelle (#20, étape M3).
+- **Un champ hors des bornes plausibles est signalé sans bloquer le calcul** : un montant négatif, un pourcentage au-delà de 100, moins d'un cédant reçoivent un court avertissement à côté du champ, et le calcul continue. Les bornes sont celles que chaque page déclarait déjà ; aucune n'est inventée (#11, reliquat de #8).
+- `npm run dev` sert le site en local sans Python ; `npm run build` construit le dossier `site/` publiable et échoue sur tout lien cassé. Ce contrôle est ajouté à `npm run verifier` et à la CI (#28, étape 3).
+- Publication automatique du seul dossier `site/` sur GitHub Pages à chaque fusion dans `main`, une fois la source Pages réglée sur « GitHub Actions » (`.github/workflows/publier.yml`). Tant que ce réglage n'est pas fait, l'ancienne publication de la branche `main` continue de fonctionner grâce à `_config.yml`.
+- `CONTRIBUTING.md`, `docs/CODEMAP.md`, gabarits de pull request et d'issues, `.editorconfig` et `.gitattributes` (#29).
+
+### Modifié
+
+- **Les six moteurs de calcul sont séparés de leur interface** (#21, sous-issues #22 à #27) : `src/moteurs/<slug>.js` reçoit des entrées explicites et rend un résultat structuré, sans accès à l'écran ni appel réseau. Chaque page lit son formulaire, appelle le moteur et affiche. Les moteurs se testent directement, sans navigateur. Le barème IFI et sa décote sont désormais partagés entre le simulateur IFI et la section IFI de l'IRPP, qui ne peuvent plus diverger.
+- IRPP : une saisie ne déclenche plus qu'un seul cycle de calcul, sans appel réentrant entre la majoration de l'emploi à domicile, les dons et le calcul principal.
+- IRPP : les libellés, devises et dates saisis dans les cartes de cession et les lignes IFI sont échappés avant d'être réaffichés (#29, sécurité du rendu).
+
+### Corrigé
+
+- Succession : le comparateur de scénarios recopiait les formules de l'écran principal et lisait 0 € de frais funéraires quand le champ était vide, là où l'écran retenait 1 500 €. Il appelle désormais le même moteur (fiche 4.5).
+- Plus-value immobilière : un taux de prélèvements sociaux saisi puis effacé restait appliqué jusqu'au prochain changement d'année de cession ; le champ vidé revient au taux du référentiel (fiche 4.6).
+- IFI : les deux montants d'exonération des fermages affichés dans le formulaire ne sont plus arrondis à l'euro alors que le calcul employait la valeur exacte (fiche 4.7, `docs/CONVENTIONS.md` §2.2).
+
+### Connu
+
+- Les décimales affichées restent hétérogènes — l'euro dans quatre simulateurs, le centime dans deux autres (`docs/CONVENTIONS.md` §2.1). Décision interne en attente.
+- L'unification visuelle (#31) n'est pas engagée : elle attend le choix du simulateur de référence par le référent métier.
+- Les tests de fumée en navigateur réel (#28, étape 4) ne sont pas en place ; le faux DOM des tests ne vérifie pas l'apparence.
+
 ## [0.5.0-beta.16] - 2026-08-28
 
 Issue #7 : les tranches de barème sont désormais jointives partout. Le point n'a pas été soumis au référent fiscal, contrairement aux corrections de la beta.14 : un euro qui n'est taxé dans aucune tranche n'est pas une règle fiscale, c'est une erreur d'écriture. La correction est portée en fiche 3.7 de `docs/CORRECTIONS_A_VALIDER.md` pour confirmation, comme toute modification d'un montant affiché.

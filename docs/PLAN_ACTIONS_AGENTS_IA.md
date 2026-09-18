@@ -2,7 +2,7 @@
 
 Ce document propose l’ordre de traitement des issues du dépôt `ARBE-Avocat/Simulateurs-fiscaux`. Il est destiné à un orchestrateur humain qui délègue chaque tâche à un ou plusieurs agents IA.
 
-Dernière mise à jour du plan : 28 août 2026 — synchronisé avec `v0.5.0-beta.16`.
+Dernière mise à jour du plan : 18 septembre 2026 — synchronisé avec `0.6.0-beta.1`.
 
 ## Objectifs de l’orchestration
 
@@ -55,6 +55,13 @@ Dernière mise à jour du plan : 28 août 2026 — synchronisé avec `v0.5.0-bet
 - **Ce qui dépend du référent, et ne bloque pas la clôture.** #9, dont l'outil `docs/sources-fiscales.html` est prêt mais n'a pas encore été soumis, et la fiche 3.6 de #19, chantier séparé. La confirmation de la fiche 3.7 n'est pas bloquante non plus : la correction est déjà appliquée.
 - **Reste à faire pour clore matériellement le jalon :** les préversions `0.5.0-beta.14`, `.15` et `.16` ne sont pas encore taguées — le dernier tag publié est `v0.5.0-beta.13`. Décision et publication appartiennent à CLV.
 - Leçon de méthode du 28 août 2026 : toute question n'est pas une question de droit. Décimales affichées, messages d'erreur et cohérence d'arrondi relèvent du produit et se tranchent en interne. Solliciter le référent sur ces points l'encombre et retarde le jalon sans rien sécuriser.
+- **Le jalon `Y = 0.6` est ouvert le 18 septembre 2026 sur la branche `clv/y-0.6-architecture`, créée depuis `clv/y-0.5-donnees`**, en préversion `0.6.0-beta.1`. Les tags des betas `0.5.0-beta.14` à `.16` ont été publiés entre-temps.
+- **M3 est réalisée** : les six pages vivent dans `simulateurs/<slug>/index.html`, à leur adresse stable ; `npm run build` construit `site/` par liste blanche avec les redirections depuis les anciennes adresses ; `.github/workflows/publier.yml` publie `site/` sur Pages depuis `main`. Amendement technique du §2.3 de `docs/ARCHITECTURE_CIBLE.md` : les pages sont à la racine, pas sous `src/`, pour que le dépôt ait l'arborescence exacte du site et que le build ne réécrive aucun chemin. **La bascule du réglage Pages sur « GitHub Actions » appartient au propriétaire**, au moment de la fusion dans `main` ; d'ici là `_config.yml` continue de protéger l'ancienne publication.
+- **M4 et l'epic #21 sont réalisés** : six moteurs dans `src/moteurs/`, sans DOM, chargés par `require` dans les tests. Aucun montant ne bouge sur les 432 contrôles. Trois incohérences d'affichage corrigées au passage, fiches 4.5 à 4.7, sans décision attendue. Le barème IFI est partagé entre les deux simulateurs qui le calculent.
+- **Le reliquat de #11 est livré** : `src/avertissements.js` avertit sans bloquer sur toute valeur hors des bornes `min`/`max` que les pages déclaraient déjà. #11 peut être close ; seule la question des décimales (`docs/CONVENTIONS.md` §2.1) reste ouverte, en décision interne.
+- **#28 étape 3 est livrée** (build vérifié en CI). L'étape 4, tests de fumée en navigateur réel, suppose un outil de pilotage de navigateur, donc une dépendance de développement : à décider.
+- **#29 est entamé** pour sa part sans décision : `CONTRIBUTING.md`, `docs/CODEMAP.md`, gabarits, `.editorconfig`, `.gitattributes`, échappement des saisies dans l'IRPP. Restent la protection de `main`, la licence, la politique de sécurité et l'accessibilité, qui appartiennent au propriétaire ou demandent un audit dédié.
+- **#31 n'est pas engagée** : le simulateur de référence et le niveau d'unification restent à choisir par le référent métier. Rien ne bloque techniquement.
 
 ## Décisions d'architecture déjà arbitrées
 
@@ -137,7 +144,7 @@ Phase 0 Gouvernance ✓ ─> #10 Socle de tests ✓
  └─> #6 ✓ -> #8 ✓  voie IFI / valeurs par défaut
 
 Jalon 0.5 : #11 (part technique) -> #7 ✓   bornes, unités et arrondis
-Jalon 0.6 : reliquat de #11               messages d'erreur, champ par champ
+Jalon 0.6 : reliquat de #11 ✓             avertir sans bloquer, champ par champ
 
 #20 Architecture cible ───────────────────> #12 Schéma des référentiels
 #9 et #11 alimentent les statuts,             │
@@ -151,13 +158,13 @@ sans bloquer l'extraction                     │
 
 #13 à #18 ─> #19 Millésimes ─> clôture de l’epic #2
 
-Référentiels stabilisés ─> epic #21
-  ├─> #22 IRPP
-  ├─> #23 Cession de titres
-  ├─> #24 Plus-value immobilière
-  ├─> #25 IFI
-  ├─> #26 Succession
-  └─> #27 Démembrement
+Référentiels stabilisés ─> epic #21 ✓ (jalon 0.6)
+  ├─> #22 IRPP ✓
+  ├─> #23 Cession de titres ✓
+  ├─> #24 Plus-value immobilière ✓
+  ├─> #25 IFI ✓
+  ├─> #26 Succession ✓
+  └─> #27 Démembrement ✓
 
 #20 Architecture cible ─> #31 Unification de l'interface
                               (par simulateur, après ou avec #21)
@@ -450,9 +457,11 @@ L’epic #2 n’est pas une branche de développement autonome. Il est clos uniq
 - Les simulateurs fonctionnent avec un référentiel explicitement fourni.
 - Le blob de changes n’est plus intégré au HTML de la PV immobilière.
 
-## Phase 3 — Découpler les moteurs et les interfaces
+## Phase 3 — Découpler les moteurs et les interfaces — réalisée pour #21
 
-Branche CLV du jalon : `clv/y-0.6-architecture`, créée depuis `clv/y-0.5-donnees`.
+Branche CLV du jalon : `clv/y-0.6-architecture`, créée depuis `clv/y-0.5-donnees` le 18 septembre 2026.
+
+Livré en `0.6.0-beta.1`, dans cet ordre : M3 (adresses stables, `site/`, redirections, workflow Pages), puis M4 (les six moteurs). Méthode suivie pour chaque moteur : lire la page, isoler les formules dans `src/moteurs/<slug>.js` sans en changer une ligne de calcul, faire lire le formulaire et afficher par la page, rejouer les instantanés. Les tests qui atteignaient une fonction de la page par `evaluer()` ont été redirigés vers le moteur quand la fonction était pure, et laissés en place quand elle lisait le formulaire.
 
 Epic parent :
 
@@ -464,24 +473,24 @@ L’epic ne reçoit pas de PR globale. Chaque sous-issue doit produire une PR in
 
 Ces trois sous-issues peuvent être parallélisées :
 
-- [#23 — Cession de titres](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/23)
-- [#26 — Succession](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/26)
-- [#27 — Démembrement](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/27)
+- [#23 — Cession de titres](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/23) — **réalisée**, `src/moteurs/ir-cehr-cdhr.js`
+- [#26 — Succession](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/26) — **réalisée**, `src/moteurs/succession.js` ; le comparateur de scénarios emploie le même moteur (fiche 4.5)
+- [#27 — Démembrement](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/27) — **réalisée**, `src/moteurs/demembrement.js`
 
 Condition : les interfaces des référentiels #14 et #16 sont figées avant le démarrage.
 
 ### Vague 2 — Simulateurs utilisant les changes
 
-- [#24 — Plus-value immobilière](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/24)
-- [#25 — IFI](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/25)
+- [#24 — Plus-value immobilière](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/24) — **réalisée**, `src/moteurs/pv-immobiliere.js` ; le résultat porte un état nommé (`incomplet`, `dates-invalides`, `taux-indisponible`, `moins-value`, `imposable`) et les taux de change lui sont fournis déjà résolus
+- [#25 — IFI](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/25) — **réalisée**, `src/moteurs/ifi.js` ; la conversion des devises est une fonction fournie par la page, un taux non résolu rend `null`
 
 Ils peuvent être parallélisés seulement si le module de change de #13 est considéré comme stable. Sinon, traiter #24 puis #25 afin d’éviter deux modifications simultanées de ce module.
 
 ### Vague 3 — Simulateur intégrateur
 
-- [#22 — IRPP complet](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/22)
+- [#22 — IRPP complet](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/22) — **réalisée**, `src/moteurs/irpp.js` ; un seul cycle de calcul par saisie, barème IFI partagé avec `ifi.js`
 
-Le simulateur IRPP passe en dernier car il combine IR, dons, plus-values et IFI. Il doit réutiliser les interfaces et moteurs stabilisés par les vagues précédentes plutôt que créer une nouvelle variante.
+Le simulateur IRPP est passé en dernier car il combine IR, dons, plus-values et IFI. Il doit réutiliser les interfaces et moteurs stabilisés par les vagues précédentes plutôt que créer une nouvelle variante.
 
 ### Étape 3.3 bis — Unification visuelle, en pull requests distinctes
 
@@ -492,6 +501,8 @@ Une fois un simulateur découplé, son habillage peut être aligné sur la chart
 Ne pas commencer avant que #20 ait fixé l’emplacement de la feuille de style commune, ni avant que le simulateur de référence et le niveau d’unification aient été choisis par le référent métier.
 
 ### Étape 3.4 — Clore l’epic de refactorisation
+
+Les cinq conditions ci-dessous sont remplies en `0.6.0-beta.1` ; #21 et ses six sous-issues peuvent être closes à la fusion.
 
 Clore #21 uniquement lorsque :
 
@@ -509,8 +520,8 @@ Cette issue peut être traitée en plusieurs PR liées à la même issue :
 
 1. après #10 : tests et contrôle de syntaxe obligatoires — **réalisé** ;
 2. après #18 : validation des référentiels — **réalisé** ;
-3. après #20 : build et vérification des livrables ;
-4. après #21 : smoke tests desktop des six simulateurs.
+3. après #20 : build et vérification des livrables — **réalisé** en `0.6.0-beta.1` (`npm run build -- --verifier` dans `controles.yml`, publication par `publier.yml`) ;
+4. après #21 : smoke tests desktop des six simulateurs — **à décider** : un test en navigateur réel suppose un outil de pilotage (Playwright ou équivalent), donc une première dépendance de développement, ce que `AGENTS.md` §7 soumet à une issue et une justification.
 
 Les deux premières étapes sont livrées sur `clv/y-0.5-donnees`. Le workflow
 `.github/workflows/controles.yml` exécute, à chaque `push` sur `main` ou sur une
@@ -530,8 +541,7 @@ Il compile sans les exécuter les fichiers `.js` de `scripts/`, `src/` et
 aujourd'hui, dont les six simulateurs. Il ne détecte aucune erreur de calcul :
 c'est un garde-fou, pas un test.
 
-Les étapes 3 et 4 restent à faire : la première suppose le dossier `site/`
-construit, qui appartient au jalon `0.6`, la seconde suppose #21.
+L'étape 4 reste à faire, sous réserve de la décision ci-dessus.
 
 Ne pas conserver une branche #28 ouverte pendant tout le projet. Pour CLV, chaque PR partielle repart de la dernière version de `clv/preprod` ; pour un autre contributeur, de la base indiquée ou de `main`. Chaque PR référence #28 avec `Part of #28`, et la dernière utilise `Closes #28`.
 
@@ -542,6 +552,8 @@ Branche CLV du jalon : `clv/y-0.7-qualite`, créée depuis `clv/y-0.6-architectu
 - [#29 — Chantier P2 commun](https://github.com/ARBE-Avocat/Simulateurs-fiscaux/issues/29)
 
 Le mobile et le responsive restent hors périmètre.
+
+Déjà livré en `0.6.0-beta.1`, parce que sans décision et sans dépendance : `CONTRIBUTING.md`, `docs/CODEMAP.md`, gabarits de pull request et d'issues, `.editorconfig`, `.gitattributes`, échappement des saisies réinjectées dans l'IRPP. Reste ce qui appartient au propriétaire — protection de `main`, licence, politique de sécurité, description du dépôt — et ce qui demande un audit dédié : accessibilité, retrait des événements inline, mot de passe client du verrou de l'onglet Données de l'IRPP.
 
 Ordre interne recommandé :
 
@@ -617,7 +629,7 @@ Chaque nouvelle version mineure `Y` reste soumise à une validation explicite de
 | Gouvernance initiale | `clv/preprod` | Phase 0, consignes, plan, changelog et préprod | `v0.3.0` — actuellement en beta |
 | Fiabilité | `clv/y-0.4-fiabilite` | #10, #6, #8, #5 et #4, tests de base et validation métier suffisante | `v0.4.0` indicatif |
 | Données | `clv/y-0.5-donnees` | #7, #2 terminé, #20 et CI données/build. #11 pour sa part technique ; son reliquat est reporté | `v0.5.0` indicatif |
-| Architecture | `clv/y-0.6-architecture` | #21 terminé, six moteurs découplés, #31 engagé et le reliquat de #11 | `v0.6.0` indicatif |
+| Architecture | `clv/y-0.6-architecture` | #21 terminé, six moteurs découplés, reliquat de #11 livré, M3 et #28 étape 3 livrées ; #31 non engagée faute de décision | `v0.6.0` indicatif, en beta depuis le 18 septembre 2026 |
 | Qualité | `clv/y-0.7-qualite` | #28, #29 et #31 terminés | `v0.7.0` indicatif |
 
 Chaque `beta.N` ou correctif stable `Z` possède son tag annoté immuable. Il n'existe toutefois qu'une seule GitHub Release par série `X.Y`.
