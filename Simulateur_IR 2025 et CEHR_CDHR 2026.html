@@ -4,46 +4,77 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simulateur IR · CEHR · CDHR — Cession de titres</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  *, *::before, *::after { box-sizing: border-box; }
   :root{
-    --paper: #EDF1EF;
+    --wine: #8A0707;
+    --wine-light: #A50909;
+    --brass: #C9504F;
+    --brass-soft: #FBEAE8;
+    --paper: #F7F4F3;
     --card: #FFFFFF;
-    --hairline: #D7DDD4;
-    --ink: #1C2B39;
-    --ink-soft: #56655F;
-    --wine: #7A2036;
-    --wine-soft: #F4E7E9;
-    --brass: #A9822F;
-    --brass-soft: #F4EFDF;
-    --good: #3F6B4F;
+    --hairline: #E2D4D4;
+    --ink: #241512;
+    --ink-soft: #6B5452;
+    --ink-light: #9a8182;
+    --wine-soft: #F6E4E1;
+    --good: #1f6b3a;
     --good-soft: #E7EFE7;
-    --radius: 10px;
+    --radius: 6px;
+    --radius-lg: 10px;
+    --shadow: 0 2px 16px rgba(138,7,7,0.10);
   }
-  *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
     background: var(--paper);
     color: var(--ink);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Calibri', Arial, sans-serif;
     line-height: 1.5;
-    padding: 40px 24px 80px;
+    font-size: 15px;
   }
-  .wrap{ max-width: 1180px; margin: 0 auto; }
+  .wrap{ max-width: 1180px; margin: 0 auto 0; padding: 0 1.5rem 4rem; }
 
-  /* ---------- Header ---------- */
-  header{ margin-bottom: 36px; }
-  .header-top{ display:flex; align-items:center; justify-content:space-between; gap: 16px; }
+  /* ---------- Header / Hero (charte IFI) ---------- */
+  .site-header{ background: var(--wine); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 160px; }
+  .site-header .logo-wrap{ display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .site-header .logo-text{ color: #fff; font-family: 'Calibri', Arial, sans-serif; font-size: 17px; font-weight: normal; letter-spacing: 0.02em; line-height: 1.3; }
+  .site-header .logo-text span{ display: block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brass); font-family: Arial, sans-serif; }
+  .site-header nav a{ color: rgba(255,255,255,0.75); text-decoration: none; font-family: Arial, sans-serif; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; margin-left: 2rem; transition: color 0.15s; }
+  .site-header nav a:hover{ color: var(--brass); }
+
+  .hero{ background: var(--wine-light); padding: 3rem 2rem 2.5rem; text-align: center; border-bottom: 3px solid var(--brass); margin-bottom: 2rem; }
+  .hero .eyebrow{ color: rgba(255,255,255,0.65); font-family: Arial, sans-serif; font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .hero .gold-rule{ width: 60px; height: 2px; background: var(--brass); margin: 1rem auto; }
+  h1{
+    color: #fff;
+    font-family: 'Calibri', Arial, sans-serif;
+    font-weight: normal;
+    font-size: 28px;
+    margin: 0 0 0.5rem;
+    letter-spacing: 0.01em;
+  }
+  .subhead{
+    color: rgba(255,255,255,0.65);
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    max-width: 640px;
+    margin: 0.5rem auto 0;
+  }
+
+  /* ---------- Disclaimer ---------- */
+  .disclaimer{ background: var(--wine-soft); border-left: 4px solid var(--brass); margin: 0 0 1.5rem; padding: 0.9rem 1.25rem; border-radius: 0 var(--radius) var(--radius) 0; display: flex; align-items: flex-start; gap: 12px; }
+  .disclaimer .icon{ font-size: 18px; line-height: 1.4; flex-shrink: 0; color: var(--wine); }
+  .disclaimer p{ font-family: Arial, sans-serif; font-size: 13px; color: var(--ink); line-height: 1.5; margin: 0; }
+
   .home-btn{
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 6px 14px;
-    border: 1px solid var(--wine);
+    border: 1px solid rgba(255,255,255,0.4);
     border-radius: 20px;
-    color: var(--wine);
-    font-family: 'IBM Plex Mono', monospace;
+    color: #fff;
+    font-family: Arial, sans-serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.06em;
@@ -52,43 +83,26 @@
     transition: background .15s, color .15s;
     white-space: nowrap;
   }
-  .home-btn:hover{ background: var(--wine); color: #fff; }
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--wine);
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-  h1{
-    font-family:'Fraunces', serif;
-    font-weight: 600;
-    font-size: clamp(28px, 4vw, 42px);
-    margin: 0 0 10px;
-    letter-spacing: -0.01em;
-  }
-  .subhead{
-    color: var(--ink-soft);
-    font-size: 15px;
-    max-width: 640px;
-  }
+  .home-btn:hover{ background: var(--brass); color: var(--wine); border-color: var(--brass); }
 
   /* ---------- Cards ---------- */
   .card{
     background: var(--card);
     border: 1px solid var(--hairline);
-    border-radius: var(--radius);
-    padding: 28px;
-    margin-bottom: 24px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    box-shadow: var(--shadow);
   }
-  .card h2{
-    font-family:'Fraunces', serif;
-    font-weight: 600;
-    font-size: 19px;
-    margin: 0 0 4px;
+  .card-header{ background: var(--wine); padding: 0.85rem 1.5rem; }
+  .card-header h2{
+    color: #fff;
+    font-family: 'Calibri', Arial, sans-serif;
+    font-weight: normal;
+    font-size: 16px;
+    margin: 0;
   }
+  .card-body{ padding: 28px; }
   .card .desc{
     color: var(--ink-soft);
     font-size: 13.5px;
@@ -111,7 +125,7 @@
   }
   .hint{ font-size: 11.5px; color: var(--ink-soft); font-weight: 400; }
   input[type=number], select{
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Calibri', Arial, sans-serif;
     font-variant-numeric: tabular-nums;
     font-size: 14px;
     padding: 9px 10px;
@@ -137,7 +151,7 @@
     padding: 9px 10px;
     border: none;
     background: #FCFCFB;
-    font-family: 'Inter';
+    font-family: Arial, sans-serif;
     font-size: 13px;
     font-weight: 600;
     color: var(--ink-soft);
@@ -150,7 +164,7 @@
   .slider-row{ display:flex; align-items:center; gap:14px; }
   input[type=range]{ flex:1; accent-color: var(--wine); }
   .slider-val{
-    font-family:'IBM Plex Mono', monospace;
+    font-family:'Calibri', Arial, sans-serif;
     font-weight:600;
     font-size: 14px;
     min-width: 46px;
@@ -177,7 +191,7 @@
   }
   .gauge-badge{
     position:absolute; top:14px; right:16px;
-    font-family:'IBM Plex Mono', monospace;
+    font-family: Arial, sans-serif;
     font-size: 10.5px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -185,16 +199,16 @@
     font-weight: 700;
   }
   .gauge-title{
-    font-family:'Fraunces', serif;
+    font-family: 'Calibri', Arial, sans-serif;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: normal;
     margin-bottom: 2px;
   }
   .gauge-sub{ font-size: 11.5px; color: var(--ink-soft); margin-bottom: 16px; }
   .gauge-total{
-    font-family:'IBM Plex Mono', monospace;
+    font-family: 'Calibri', Arial, sans-serif;
     font-size: 26px;
-    font-weight: 600;
+    font-weight: normal;
     color: var(--wine);
     letter-spacing: -0.01em;
   }
@@ -210,7 +224,7 @@
   .gauge-bar-fill{
     height: 100%;
     border-radius: 4px;
-    background: linear-gradient(90deg, var(--wine), #9C3A52);
+    background: linear-gradient(90deg, var(--wine), var(--brass));
   }
   .gauge-floor-mark{
     position:absolute;
@@ -224,7 +238,7 @@
     font-size: 10px;
     color: var(--ink-soft);
     display:flex; justify-content: space-between;
-    font-family:'IBM Plex Mono', monospace;
+    font-family: Arial, sans-serif;
   }
   .gauge-stack{
     display:flex;
@@ -246,26 +260,26 @@
     text-align: right;
     padding: 9px 10px;
     border-bottom: 1px solid var(--hairline);
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Calibri', Arial, sans-serif;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
   th:first-child, td:first-child{
     text-align: left;
-    font-family: 'Inter';
+    font-family: Arial, sans-serif;
     font-weight: 500;
     color: var(--ink);
     white-space: normal;
   }
   thead th{
-    font-family:'Inter'; font-weight:700; font-size: 12px;
+    font-family: Arial, sans-serif; font-weight:700; font-size: 12px;
     text-transform: uppercase; letter-spacing: 0.04em;
     color: var(--ink-soft);
     border-bottom: 2px solid var(--ink);
   }
   tr.total td{ font-weight: 700; border-top: 2px solid var(--ink); border-bottom: none; font-size: 14.5px; }
-  tr.total td:first-child{ font-family:'Fraunces', serif; font-size: 15px; }
-  tr.section td{ padding-top: 18px; font-weight:700; color: var(--wine); border-bottom: 1px solid var(--hairline); font-family:'Inter'; font-size:12px; text-transform:uppercase; letter-spacing:.04em;}
+  tr.total td:first-child{ font-family: 'Calibri', Arial, sans-serif; font-size: 15px; }
+  tr.section td{ padding-top: 18px; font-weight:700; color: var(--wine); border-bottom: 1px solid var(--hairline); font-family: Arial, sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:.04em;}
   tr.sub td{ color: var(--ink-soft); font-size: 12.5px; }
   tr.sub td:first-child{ padding-left: 18px; }
   tr.rate td{ font-style: italic; color: var(--ink-soft); }
@@ -291,11 +305,13 @@
     border-left: 3px solid var(--wine);
   }
   footer{
+    background: var(--wine);
+    border-top: 3px solid var(--brass);
+    padding: 2rem;
     text-align:center;
-    font-size: 11.5px;
-    color: var(--ink-soft);
-    margin-top: 36px;
+    margin-top: 3rem;
   }
+  footer p{ font-family: Arial, sans-serif; font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.6; max-width: 600px; margin: 0 auto; }
 
   @media (max-width: 860px){
     .form-grid{ grid-template-columns: repeat(2, 1fr); }
@@ -308,21 +324,49 @@
 <body>
 <div class="wrap">
 
-  <header>
-    <div class="header-top">
-      <div class="eyebrow">Simulateur fiscal — usage interne</div>
-      <a href="index.html" class="home-btn">Accueil</a>
-    </div>
-    <h1>IR · CEHR · CDHR sur cession de titres</h1>
-    <p class="subhead">Renseignez la situation du foyer et les données de la cession ci-dessous. Les trois hypothèses (flat tax, barème, barème + quotient) et l'impact d'un apport-cession 150-0 B ter se recalculent automatiquement.</p>
-  </header>
+</div>
+
+<header class="site-header">
+  <div class="logo-wrap">
+    <svg width="108" height="70" viewBox="0 0 4000 2588" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+      <g id="A">
+        <path fill="#fff" d="M1584.88,1654.46c-1.67-2.33-1-5.38-.31-7.75,16.02-1.54,30.8-6.31,44-15.56,10.09,9.45,21.51,15.87,33.16,23.02l-76.85.28h0Z"/>
+        <path fill="#fff" d="M1701.21,1629.64c-.12.78-.49.86-1.08.31-17.75-4.84-32.9-15.2-44.72-29.1,8.11-14.86,15.28-29.06,20.54-45.09l125.63-382.4c9.02-6.11,17.36-11.85,27.45-16.59l-58.5,182.26,226.49.05-116.71-339.18-36.01,108.87-24.65,9.6,60.35-184.03,52.36.06,114.56,327.71-11.1,27.27-31.7,75.69-242-.12-59.23,183.56c-4.96,15.37-7.92,30.21-8.74,46.03-.42,12.7,1.44,24.43,7.06,35.1h.01Z"/>
+        <path fill="#fff" d="M2009.54,1654.44c-1.94-2.5-1.03-5.06-.54-7.71,17.25-.02,33.98-1.04,50.62-5.37,22.55-5.88,24.8-27.69,22.74-47.73-1.85-12.22-4.79-23.26-8.91-34.96l-38.27-114.3c15.53-32.04,27.8-64.39,41.23-97.65l69.48,198.43c11.1,30.03,31.05,84.34,63.53,95.39,10.16,3.46,20.35,5.06,31.11,6.23.68,2.61.85,4.97-.12,7.66l-230.87.02h0Z"/>
+      </g>
+      <g id="B">
+        <path fill="#fff" d="M2244.95,1633.81c-1.75-.11-2.49-.83-.89-1.91,52.93-21.81,95.42-61.87,120.02-113.55,13.61-28.6,19.18-59.65,18.82-91.44-1.04-92.93-74.61-140.76-158.39-153.08-19.07,3.97-52.38,10.44-70.16,5.51-2.07-.57-4.28-2.12-3.91-4.02.22-1.16,1.91-2.93,3.72-3.47,21.9-6.61,42.82-5.57,65.87-3.52,49.65-15.52,96.32-46.45,123.7-91.63,23.27-38.41,24.35-89.76-3.1-126.35-22.42-30.76-57.32-50.81-92.35-64.12-43.63,40.3-73.16,85.65-98.2,139.13-22.37,47.75-42.22,95.86-60.18,145.57-15.97,44.23-32.3,87.49-50.52,130.73-14.22,33.74-29.89,65.84-48.63,97.33-38.18,64.16-88.78,117.38-160.4,142.68-25.83,9.13-51.97,13.01-79.16,14.55-19.67,1.11-38.55-.25-57.6-5.23-65.82-17.2-100.78-74.88-103.62-140.74-1.72-40.04,4.52-79.53,16.71-117.99,23.83-75.24,66.91-143.21,124.47-197.13,46.17-43.25,108.2-79.15,171.92-86.24,1.68,2.31,2.21,4.69,2.55,7.43-62.53,8.12-122.4,46.56-165.73,91.53-54,56.03-93.62,124.83-114.53,199.9-9.6,34.46-14.81,69.31-13.61,104.78.92,27.23,7.19,53.3,19.67,77.07,17.7,33.71,50.04,54.98,87.63,58.53,21.3,2.01,41.38.22,62.34-4.27,40.31-8.63,75.92-28.66,104.59-58.02,11.73-12.01,22.45-23.32,32.81-36.59,20.18-25.85,37.39-52.91,52.39-82.4,24.17-47.5,46.15-95.44,66.13-144.89,21.51-53.23,43.45-105.66,67.92-157.61,17.71-36.89,37.19-72.09,60.24-105.72,19.87-28.99,42.86-54.25,70.56-76.9-59.86-19.81-117.16-25.23-179.06-26.56-33.98-.33-67.11,1.45-100.89,5.1-1.64-2.44-2.42-4.73-2.13-7.15,29.99-4.04,59.22-5.5,89.39-6.21,69.64-.95,138.63,5.41,205.5,25.54,27.98-19.6,58.59-33.42,91.55-40.99,1.79,1.07,2.39,3.2,1.14,5.07-29.25,7.75-56.34,20.78-80.42,39.72,45.23,16.36,87.91,39.6,113.1,80.98,11.57,19.99,16.43,42.05,15.88,65.27-1.7,71.77-86.92,130.18-149.72,147.75,47.76,6.86,87.84,22.05,123.66,53.19,49.77,43.61,62.71,120.48,43.88,181.7-21.56,70.1-84.01,121.78-153.08,141.01l-.68-11.55c-3.4-.74-6.37-.99-9.22-.76h.01Z"/>
+      </g>
+    </svg>
+    <div class="logo-text">Arthur Beldi<span>Droit fiscal</span></div>
+  </div>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="#">IR · CEHR · CDHR</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <p class="eyebrow">Cession de titres — art. 223 sexies &amp; 224 du CGI</p>
+  <div class="gold-rule"></div>
+  <h1>IR · CEHR · CDHR sur cession de titres</h1>
+  <p class="subhead">Les trois hypothèses (flat tax, barème, barème + quotient) et l'impact d'un apport-cession 150-0 B ter se recalculent automatiquement.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="disclaimer">
+    <div class="icon">⚠</div>
+    <p><strong>Avertissement :</strong> cet outil est fourni à titre purement indicatif et ne constitue en aucun cas un conseil juridique ou fiscal. Les résultats sont des estimations. Pour une analyse personnalisée, veuillez consulter un professionnel du droit fiscal.</p>
+  </div>
 
   <!-- Millésime fiscal employé (#19) — rempli par src/millesime.js -->
   <div id="bandeauMillesime"></div>
 
   <!-- ============ INPUT FORM ============ -->
   <section class="card">
-    <h2>1. Foyer fiscal &amp; revenus</h2>
+    <div class="card-header"><h2>1. Foyer fiscal &amp; revenus</h2></div>
+    <div class="card-body">
     <p class="desc">Montants nets imposables, avant abattement pour frais professionnels.</p>
     <div class="form-grid">
 
@@ -371,10 +415,12 @@
       </div>
 
     </div>
+    </div>
   </section>
 
   <section class="card">
-    <h2>2. Cession de titres</h2>
+    <div class="card-header"><h2>2. Cession de titres</h2></div>
+    <div class="card-body">
     <p class="desc">Part cédée immédiatement, part éventuellement apportée à une holding sous 150-0 B ter (report d'imposition).</p>
     <div class="form-grid">
 
@@ -402,24 +448,28 @@
       </div>
 
     </div>
+    </div>
   </section>
 
   <!-- ============ RESULTS: GAUGES ============ -->
   <section class="card">
-    <h2>3. Synthèse comparative</h2>
+    <div class="card-header"><h2>3. Synthèse comparative</h2></div>
+    <div class="card-body">
     <p class="desc">Taux effectif global (IR + CEHR + CDHR + PS) rapporté au RFR de l'année — la ligne pointillée marque le plancher de 20 % visé par la CDHR.</p>
     <div class="gauges" id="gauges"></div>
     <div class="legend">
-      <span><i style="background:#1C2B39"></i>IR net</span>
-      <span><i style="background:#7A2036"></i>CEHR</span>
-      <span><i style="background:#A9822F"></i>CDHR</span>
-      <span><i style="background:#B9C4B6"></i>Prélèvements sociaux</span>
+      <span><i style="background:#241512"></i>IR net</span>
+      <span><i style="background:#8A0707"></i>CEHR</span>
+      <span><i style="background:#C9504F"></i>CDHR</span>
+      <span><i style="background:#D8C5C3"></i>Prélèvements sociaux</span>
+    </div>
     </div>
   </section>
 
   <!-- ============ RESULTS: TABLE ============ -->
   <section class="card">
-    <h2>4. Détail du calcul</h2>
+    <div class="card-header"><h2>4. Détail du calcul</h2></div>
+    <div class="card-body">
     <p class="desc">Hyp. 1 — flat tax (PFU 12,8 %) · Hyp. 2 — barème progressif · Hyp. 3 — barème + quotient de l'article 163-0-A CGI.</p>
     <table id="resultTable"></table>
 
@@ -431,11 +481,13 @@
     <div class="note">
       Simulateur indicatif fondé sur le barème IR 2025 (LFI 2026, +0,9 %), la CEHR (art. 223 sexies CGI) et la CDHR (art. 224 CGI, BOI-IR-CDHR). Plusieurs points restent d'interprétation à cette date (traitement brut/net de la PV dans le ratio CEHR de la CDHR, nombre d'années de lissage CEHR). À faire valider par un professionnel avant toute décision.
     </div>
+    </div>
   </section>
 
-  <footer>Simulateur généré à partir de la documentation BOFiP en vigueur — juillet 2026.</footer>
-
 </div>
+
+<footer><p>Simulateur IR · CEHR · CDHR — <a href="https://www.linkedin.com/in/arthurbe/" target="_blank" rel="noopener" style="color:var(--brass);text-decoration:none;">Arthur Beldi</a> · Droit fiscal<br>
+Généré à partir de la documentation BOFiP en vigueur — juillet 2026. Cet outil est fourni à titre indicatif uniquement et ne constitue pas un conseil fiscal ou juridique personnalisé.</p></footer>
 
 <script src="src/genere/referentiels/ir.js"></script>
 <script src="src/genere/referentiels/prelevements-sociaux.js"></script>
@@ -770,10 +822,10 @@ function render(R){
         </div>
         <div class="gauge-floor-label"><span>${fmtPct(rate)}</span><span>plancher 20 %</span></div>
         <div class="gauge-stack">
-          <div style="width:${seg(h.irNet)}%; background:#1C2B39;"></div>
-          <div style="width:${seg(R.cehrLissee)}%; background:#7A2036;"></div>
-          <div style="width:${seg(h.cdhrRetenue)}%; background:#A9822F;"></div>
-          <div style="width:${seg(R.ps)}%; background:#B9C4B6;"></div>
+          <div style="width:${seg(h.irNet)}%; background:#241512;"></div>
+          <div style="width:${seg(R.cehrLissee)}%; background:#8A0707;"></div>
+          <div style="width:${seg(h.cdhrRetenue)}%; background:#C9504F;"></div>
+          <div style="width:${seg(R.ps)}%; background:#D8C5C3;"></div>
         </div>
       </div>`;
   }).join('');
