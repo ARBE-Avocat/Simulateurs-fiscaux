@@ -34,6 +34,7 @@
       ],
       "source": {
         "reference": "CGI art. 150 VC",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000047970756",
         "dateConsultation": "2026-08-26"
       },
       "notes": "L’abattement commence à la sixième année : le code compare la durée à cette valeur."
@@ -53,6 +54,7 @@
       ],
       "source": {
         "reference": "CGI art. 150 VC",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000047970756",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -71,6 +73,7 @@
       ],
       "source": {
         "reference": "CGI art. 150 VC",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000047970756",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -88,7 +91,8 @@
         "pv-immobiliere"
       ],
       "source": {
-        "reference": "CGI art. 150 VC",
+        "reference": "CSS, art. L.136-7 VI 2.",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038836925/",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -106,7 +110,8 @@
         "pv-immobiliere"
       ],
       "source": {
-        "reference": "CGI art. 150 VC",
+        "reference": "CSS, art. L.136-7 VI 2.",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038836925/",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -124,7 +129,8 @@
         "pv-immobiliere"
       ],
       "source": {
-        "reference": "CGI art. 150 VC",
+        "reference": "CSS, art. L.136-7 VI 2.",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038836925/",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -142,7 +148,8 @@
         "pv-immobiliere"
       ],
       "source": {
-        "reference": "CGI art. 150 VC",
+        "reference": "CSS, art. L.136-7 VI 2.",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038836925/",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -159,7 +166,11 @@
       "utilisePar": [
         "pv-immobiliere"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 150 VB, II 4°",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025073549/2026-10-09",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Appliqué au prix d’acquisition. Les frais réels, s’ils sont renseignés, sont retenus à sa place."
     },
     {
@@ -175,7 +186,11 @@
       "utilisePar": [
         "pv-immobiliere"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 150 VB, II 4°",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025073549/2026-10-09",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Réservé aux immeubles bâtis détenus depuis plus de cinq ans. Le simulateur affiche un avertissement en deçà mais applique tout de même le forfait ; ce comportement n’est pas modifié par l’extraction."
     },
     {
@@ -191,7 +206,11 @@
       "utilisePar": [
         "pv-immobiliere"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 150 VB, II 4°",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000025073549/2026-10-09",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "pv-immobiliere.surtaxe.paliers",
@@ -264,6 +283,7 @@
       ],
       "source": {
         "reference": "CGI art. 1609 nonies G · BOI-RFPI-TPVIE-20",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048806252",
         "dateConsultation": "2026-08-26"
       },
       "notes": "Chaque palier s’applique tant que la plus-value ne dépasse pas son plafond ; le dernier n’en a pas. La surtaxe vaut le taux appliqué à la plus-value, diminué du lissage multiplié par ce qui manque pour atteindre le plafond. Un lissage nul signifie un palier plat."

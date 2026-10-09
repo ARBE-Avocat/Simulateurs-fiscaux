@@ -33,7 +33,8 @@
         "succession"
       ],
       "source": {
-        "reference": "CGI art. 779",
+        "reference": "CGI art. 788",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042194220",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -52,6 +53,7 @@
       ],
       "source": {
         "reference": "CGI art. 779",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000026292566",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -70,7 +72,8 @@
         "demembrement"
       ],
       "source": {
-        "reference": "CGI art. 779",
+        "reference": "CGI art. 788",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042194220",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -90,6 +93,7 @@
       ],
       "source": {
         "reference": "CGI art. 779",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000026292566",
         "dateConsultation": "2026-08-26"
       },
       "notes": "Le simulateur de démembrement pré-remplit cette valeur dans un champ modifiable."
@@ -110,6 +114,7 @@
       ],
       "source": {
         "reference": "CGI art. 779",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000026292566",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -128,6 +133,7 @@
       ],
       "source": {
         "reference": "CGI art. 779, II",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000026292566",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -147,6 +153,7 @@
       ],
       "source": {
         "reference": "CGI art. 779",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000026292566",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -164,7 +171,8 @@
         "succession"
       ],
       "source": {
-        "reference": "CGI art. 779",
+        "reference": "CGI art. 788",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042194220",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -197,7 +205,11 @@
       "utilisePar": [
         "succession"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 990 I",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000047288653",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Aucune source ne figure dans le code."
     },
     {
@@ -228,7 +240,11 @@
       "utilisePar": [
         "succession"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 990 I",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000047288653",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Aucune source ne figure dans le code."
     },
     {
@@ -328,6 +344,7 @@
       ],
       "source": {
         "reference": "CGI art. 777",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030061736",
         "dateConsultation": "2026-08-26"
       },
       "notes": "Tranches jointives : la borne haute appartient à la tranche, la borne basse à la précédente. Référence citée par le simulateur de démembrement ; le rattachement des montants à cet article reste à confirmer."
@@ -353,7 +370,11 @@
       "utilisePar": [
         "succession"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 777",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030061736",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Aucune source ne figure dans le code."
     },
     {
@@ -377,7 +398,11 @@
       "utilisePar": [
         "succession"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 777",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030061736",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Aucune source ne figure dans le code."
     },
     {
@@ -393,7 +418,11 @@
       "utilisePar": [
         "succession"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 796-0 bis",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006305480",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Le code représentait cette exonération par un abattement infini. Un booléen l'exprime sans recourir à une valeur qui n'existe pas en JSON."
     },
     {
@@ -475,6 +504,7 @@
       ],
       "source": {
         "reference": "CGI art. 669",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006310173",
         "dateConsultation": "2026-08-26"
       },
       "notes": "Les bornes sont des âges en années révolues, non des euros. Le code retient la tranche dès que l’âge est inférieur ou égal à la borne haute : un âge négatif relève donc de la première tranche et un âge de 200 ans de la dernière, sans avertissement. Point soumis au référent fiscal, fiche 3.2."

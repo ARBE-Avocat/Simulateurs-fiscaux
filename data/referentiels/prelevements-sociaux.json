@@ -20,7 +20,11 @@
             "irpp",
             "pv-immobiliere"
           ],
-          "source": "inconnue"
+          "source": {
+            "reference": "CSS, art. L.136-1 et s.",
+            "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006073189/LEGISCTA000006173055/#LEGISCTA000006173055",
+            "dateConsultation": "2026-10-09"
+          }
         },
         {
           "cle": "18-6",
@@ -28,7 +32,11 @@
           "utilisePar": [
             "ir-cehr-cdhr"
           ],
-          "source": "inconnue"
+          "source": {
+            "reference": "CSS, art. L.136-1 et s.",
+            "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006073189/LEGISCTA000006173055/#LEGISCTA000006173055",
+            "dateConsultation": "2026-10-09"
+          }
         }
       ],
       "arbitrage": {

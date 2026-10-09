@@ -33,7 +33,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 224",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051200465",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "cdhr.abattement.personne-a-charge",
@@ -49,7 +53,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 224",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051200465",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "cdhr.decote.borne-haute.celibataire",
@@ -65,7 +73,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 224",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051200465",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md : le référent fiscal a désigné la formule du simulateur « IR, CEHR et CDHR » comme celle qui fait foi. Le simulateur IRPP applique désormais la même bande de décote."
     },
     {
@@ -82,7 +94,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 224",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051200465",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md : même origine que cdhr.decote.borne-haute.celibataire."
     },
     {
@@ -99,7 +115,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 224",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051200465",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Les deux simulateurs emploient désormais ce coefficient dans la même formule, celle du simulateur « IR, CEHR et CDHR », choisie par le référent fiscal (fiche 2.1 de docs/CORRECTIONS_A_VALIDER.md, issue #4)."
     },
     {
@@ -116,7 +136,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 224",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051200465",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "cdhr.seuil.couple",
@@ -132,7 +156,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 224",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051200465",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "cdhr.taux.cible",
@@ -148,7 +176,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 224",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051200465",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "cehr.bareme.celibataire",
@@ -179,7 +211,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 223 sexies",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000036427364",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Le simulateur IRPP écrivait une tranche intermédiaire de 500 000 € à 1 000 000 € au même taux de 4 % que celle qui suit ; les deux se confondent et donnent le même impôt."
     },
     {
@@ -211,7 +247,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 223 sexies",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000036427364",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ir.abattement.pensions.plafond",
@@ -226,7 +266,11 @@
       "utilisePar": [
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 158",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051765203",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ir.abattement.pensions.plancher",
@@ -241,7 +285,11 @@
       "utilisePar": [
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 158",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051765203",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ir.abattement.pensions.taux",
@@ -256,7 +304,11 @@
       "utilisePar": [
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 158",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051765203",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ir.abattement.salaires.plafond",
@@ -272,7 +324,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 83",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000032701943/2026-10-09",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ir.abattement.salaires.taux",
@@ -288,7 +344,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 83",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000032701943/2026-10-09",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ir.bareme.progressif",
@@ -340,7 +400,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 197 I. 1.",
+        "url": "https://www.legifrance.gouv.fr/codes/id/LEGISCTA000006179577/",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Tranches jointives : la borne haute appartient à la tranche, la borne basse à la précédente. Les deux simulateurs appliquent désormais cette écriture. L’IRPP faisait auparavant commencer chaque tranche un euro au-dessus de la borne précédente et rendait, pour un même revenu, un impôt inférieur de 1,27 € à celui du simulateur « IR, CEHR et CDHR » (issue #7)."
     },
     {
@@ -356,7 +420,11 @@
       "utilisePar": [
         "ir-cehr-cdhr"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 200 quater B",
+        "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000021507967",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ir.credit.garde-enfants.taux",
@@ -371,7 +439,11 @@
       "utilisePar": [
         "ir-cehr-cdhr"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 200 quater B",
+        "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000021507967",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ir.decote.celibataire.montant",
@@ -446,7 +518,11 @@
       "utilisePar": [
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "BOI-IR-LIQ-20-20-30 §1",
+        "url": "https://bofip.impots.gouv.fr/bofip/2495-PGP.html/identifiant%3DBOI-IR-LIQ-20-20-30-20260407",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ir.quotient.plafond-demi-part",
@@ -462,7 +538,11 @@
         "ir-cehr-cdhr",
         "irpp"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "BOI-IR-LIQ-20-20-20 §40",
+        "url": "https://bofip.impots.gouv.fr/bofip/2494-PGP.html/identifiant=BOI-IR-LIQ-20-20-20-20260407",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Fiche 2.3 de docs/CORRECTIONS_A_VALIDER.md : le référent fiscal a demandé l’ajout du plafonnement dans le simulateur IRPP, avec la même méthode et le même plafond que le simulateur « IR, CEHR et CDHR ». Réserve non tranchée : l’IRPP déduit la part de référence de la case « second déclarant », faute de demander la situation familiale exacte."
     },
     {

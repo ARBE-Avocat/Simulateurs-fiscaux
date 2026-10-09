@@ -76,7 +76,11 @@
         "ifi",
         "irpp"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 977",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000036385041/2018-01-01",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Tranches jointives : la borne haute appartient à la tranche, la borne basse à la précédente. Même écriture que le barème de l’impôt sur le revenu et que celui des mutations à titre gratuit. Les deux simulateurs faisaient auparavant commencer chaque tranche un euro au-dessus de la borne précédente, laissant cinq euros sans taux et 0,05 € d’écart cumulé (issue #7)."
     },
     {
@@ -93,7 +97,11 @@
         "ifi",
         "irpp"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 977",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000036385041/2018-01-01",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Les deux simulateurs emploient cette formule mais ne l’appliquent ni au même patrimoine ni sous la même condition, et l’un retranche l’IFI théorique de l’assiette avant de recalculer. Divergence de méthode soumise au référent fiscal, fiche 2.4 de docs/CORRECTIONS_A_VALIDER.md : 668,39 € d’écart mesuré. Ces valeurs, elles, sont identiques des deux côtés."
     },
     {
@@ -110,7 +118,11 @@
         "ifi",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 977",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000036385041/2018-01-01",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ifi.decote.taux",
@@ -126,7 +138,11 @@
         "ifi",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 977",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000036385041/2018-01-01",
+        "dateConsultation": "2026-10-09"
+      }
     },
     {
       "id": "ifi.exoneration.biens-ruraux.taux-plein",
@@ -143,6 +159,7 @@
       ],
       "source": {
         "reference": "CGI art. 975, II",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000053542691",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -161,6 +178,7 @@
       ],
       "source": {
         "reference": "CGI art. 975, II",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000053542691",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -195,6 +213,7 @@
       ],
       "source": {
         "reference": "CGI art. 978",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037988624/",
         "dateConsultation": "2026-08-26"
       }
     },
@@ -212,7 +231,11 @@
         "ifi",
         "irpp"
       ],
-      "source": "inconnue",
+      "source": {
+        "reference": "CGI, art. 973",
+        "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000036385025/",
+        "dateConsultation": "2026-10-09"
+      },
       "notes": "Écrit dans le code sous la forme d’un coefficient de 0,70 appliqué à la valeur du bien."
     },
     {
@@ -229,7 +252,11 @@
         "ifi",
         "irpp"
       ],
-      "source": "inconnue"
+      "source": {
+        "reference": "CGI, art. 977",
+        "url": "https://www.legifrance.gouv.fr/codes/id/LEGISCTA000036385039/",
+        "dateConsultation": "2026-10-09"
+      }
     }
   ]
 };
