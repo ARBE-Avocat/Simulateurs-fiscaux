@@ -16,6 +16,7 @@ Ouvrez **`index.html`** : c'est la page d'accueil, qui liste tous les simulateur
 | `Simulation IFI - Avril 2026.html` | Estimation de l'Impôt sur la Fortune Immobilière (art. 964 et suivants du CGI). |
 | `Simulation Succession.html` | Calcul des droits de succession par héritier selon le lien de parenté et les abattements applicables. |
 | `Simulation démembrement immo - Juin 2026.html` | Simulation d'une donation avec démembrement de propriété (usufruit / nue-propriété). |
+| `Calcul intérêts de retard.html` | Calcul des intérêts de retard (art. 1727 du CGI) sur des droits rappelés par année, avec réduction de 50 % en cas de dépôt spontané d'une déclaration rectificative. |
 
 ## Structure du projet
 
@@ -27,6 +28,7 @@ Simulateur_PV_Immobilière Juillet 2026.html
 Simulation IFI - Avril 2026.html
 Simulation Succession.html
 Simulation démembrement immo - Juin 2026.html
+Calcul intérêts de retard.html
 ```
 
 Chaque simulateur est indépendant (pas de dépendance partagée entre les fichiers) : il peut être modifié, renommé ou distribué séparément. Seul le bouton « Accueil » de chaque page pointe vers `index.html`, situé dans le même dossier.
